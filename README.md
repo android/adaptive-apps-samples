@@ -1,4 +1,4 @@
-# Large screen canonical layouts
+# Adaptive apps samples
 
 The large screen canonical layouts are proven design patterns that provide an optimal user experience on large screen devices. The layouts are responsive and adaptive, supporting small screen phones as well as tablets, foldables, and ChromeOS devices.
 
