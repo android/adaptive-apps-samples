@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 The Android Open Source Project
+ * Copyright 2025 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,6 +34,7 @@ import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.layout.AnimatedPane
 import androidx.compose.material3.adaptive.layout.SupportingPaneScaffold
 import androidx.compose.material3.adaptive.layout.SupportingPaneScaffoldRole
+import androidx.compose.material3.adaptive.layout.defaultDragHandleSemantics
 import androidx.compose.material3.adaptive.layout.rememberPaneExpansionState
 import androidx.compose.material3.adaptive.navigation.rememberSupportingPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
@@ -62,7 +63,7 @@ private val data = mapOf(
 
 @ExperimentalMaterial3AdaptiveApi
 @Composable
-fun SupportingPaneSample() {
+fun SupportingPaneSample(modifier: Modifier = Modifier) {
     var selectedTopic: String by rememberSaveable { mutableStateOf(data.keys.first()) }
     val navigator = rememberSupportingPaneScaffoldNavigator()
     val scope = rememberCoroutineScope()
@@ -76,6 +77,7 @@ fun SupportingPaneSample() {
     SupportingPaneScaffold(
         directive = navigator.scaffoldDirective,
         value = navigator.scaffoldValue,
+        modifier = modifier,
         supportingPane = {
             AnimatedPane(
                 modifier = Modifier.padding(all = 16.dp)
@@ -149,11 +151,11 @@ fun SupportingPaneSample() {
                 remember { MutableInteractionSource() }
             VerticalDragHandle(
                 modifier =
-                Modifier.paneExpansionDraggable(
-                    state,
-                    LocalMinimumInteractiveComponentSize.current,
-                    interactionSource
-                ), interactionSource = interactionSource
+                    Modifier.paneExpansionDraggable(
+                        state,
+                        LocalMinimumInteractiveComponentSize.current,
+                        interactionSource, state.defaultDragHandleSemantics()
+                    ), interactionSource = interactionSource
             )
         })
 }
