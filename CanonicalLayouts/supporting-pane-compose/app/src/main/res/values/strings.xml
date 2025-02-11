@@ -18,4 +18,5 @@
     <string name="app_name">SupportingPaneCompose</string>
     <string name="related_content_label">Related Content</string>
     <string name="main_content_label">Main Content</string>
+    <string name="preferred_width_label">Preferred Width of the side panel</string>
 </resources>
