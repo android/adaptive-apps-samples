@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 The Android Open Source Project
+ * Copyright 2025 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,10 @@ package com.example.supportingpanecompose
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
+import androidx.compose.ui.Modifier
 import com.example.supportingpanecompose.ui.SupportingPaneSample
 import com.example.supportingpanecompose.ui.theme.SupportingPaneCompose
 
@@ -27,9 +30,10 @@ import com.example.supportingpanecompose.ui.theme.SupportingPaneCompose
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         setContent {
             SupportingPaneCompose {
-                SupportingPaneSample()
+                SupportingPaneSample(modifier = Modifier.safeDrawingPadding())
             }
         }
     }
