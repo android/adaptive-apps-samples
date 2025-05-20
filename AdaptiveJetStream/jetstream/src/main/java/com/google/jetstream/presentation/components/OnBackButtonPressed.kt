@@ -14,14 +14,26 @@
  * limitations under the License.
  */
 
-package com.google.jetstream.presentation.components.shim
+package com.google.jetstream.presentation.components
 
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.input.key.type
 
-fun Modifier.tvSelectTarget(onSelect: () -> Unit): Modifier =
-    onFocusChanged {
-        if (it.isFocused) {
-            onSelect()
+fun Modifier.onBackButtonPressed(
+    onBackPressed: () -> Unit,
+): Modifier {
+    return Modifier
+        .onPreviewKeyEvent {
+            if (it.key == Key.Back && it.type == KeyEventType.KeyUp) {
+                onBackPressed()
+                true
+            } else {
+                false
+            }
         }
-    }
+        .then(this)
+}

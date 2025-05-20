@@ -43,6 +43,7 @@ import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -53,7 +54,6 @@ import com.google.jetstream.presentation.app.UserAvatar
 import com.google.jetstream.presentation.components.feature.FormFactor
 import com.google.jetstream.presentation.components.feature.rememberUiMode
 import com.google.jetstream.presentation.components.shim.tryRequestFocus
-import com.google.jetstream.presentation.components.shim.tvSelectTarget
 import com.google.jetstream.presentation.screens.Screens
 
 @Composable
@@ -191,8 +191,10 @@ private fun TopBarTab(
     Tab(
         selected = selected,
         modifier = Modifier
-            .tvSelectTarget {
-                onSelect()
+            .onFocusChanged {
+                if (it.isFocused) {
+                    onSelect()
+                }
             }
             .then(modifier),
         onClick = onClick,

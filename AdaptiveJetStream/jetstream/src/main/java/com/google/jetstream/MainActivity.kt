@@ -42,7 +42,6 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.xr.compose.material3.EnableXrComponentOverrides
 import androidx.xr.compose.material3.ExperimentalMaterial3XrApi
 import com.google.jetstream.presentation.App
-import com.google.jetstream.presentation.components.feature.FormFactor
 import com.google.jetstream.presentation.components.feature.UiMode
 import com.google.jetstream.presentation.theme.JetStreamTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -55,7 +54,7 @@ class MainActivity : ComponentActivity() {
         installSplashScreen()
         super.onCreate(savedInstanceState)
 
-        tryEnableEdgeToEdge()
+        enableEdgeToEdge()
         tryEnableCustomHeader()
         setContent {
             JetStreamTheme {
@@ -90,12 +89,6 @@ class MainActivity : ComponentActivity() {
         data?.addAll(keyboardShortcuts)
     }
 
-    private fun tryEnableEdgeToEdge() {
-        if (toEnableEdgeToEdge()) {
-            enableEdgeToEdge()
-        }
-    }
-
     private fun tryEnableCustomHeader() {
         if (toEnableCustomHeader()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
@@ -112,16 +105,6 @@ class MainActivity : ComponentActivity() {
 
     private val currentUiMode: UiMode
         get() = UiMode.from(resources.configuration)
-
-    private fun toEnableEdgeToEdge(
-        uiMode: UiMode = currentUiMode
-    ): Boolean {
-        return when (uiMode.formFactor) {
-            FormFactor.Normal -> true
-            FormFactor.Desk -> true
-            else -> false
-        }
-    }
 
     private fun toEnableCustomHeader(): Boolean {
         val reliedFeatures = listOf(

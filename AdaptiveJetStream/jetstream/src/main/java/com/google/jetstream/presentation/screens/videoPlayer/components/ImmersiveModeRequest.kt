@@ -23,42 +23,42 @@ import androidx.core.view.WindowInsetsCompat
 
 internal fun Activity.toggleImmersiveMode() {
     if (isImmersive) {
-        requestImmersiveMode(ImmersiveModeRequest.Exit)
+        ImmersiveModeRequest.Exit.request(this)
     } else {
-        requestImmersiveMode(ImmersiveModeRequest.Enter)
+        ImmersiveModeRequest.Enter.request(this)
     }
+    isImmersive = !isImmersive
 }
 
 internal sealed interface ImmersiveModeRequest {
 
-    fun intoFullScreenModeRequest(): Int
+    fun request(activity: Activity)
 
     data object Enter : ImmersiveModeRequest {
-        override fun intoFullScreenModeRequest(): Int {
-            return Activity.FULLSCREEN_MODE_REQUEST_ENTER
+        override fun request(activity: Activity) {
+            val insetsController =
+                WindowCompat.getInsetsController(activity.window, activity.window.decorView)
+            insetsController.hide(WindowInsetsCompat.Type.systemBars())
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                activity.requestFullscreenMode(
+                    Activity.FULLSCREEN_MODE_REQUEST_ENTER,
+                    null
+                )
+            }
         }
     }
 
     data object Exit : ImmersiveModeRequest {
-        override fun intoFullScreenModeRequest(): Int {
-            return Activity.FULLSCREEN_MODE_REQUEST_EXIT
-        }
-    }
-}
-
-private fun Activity.requestImmersiveMode(request: ImmersiveModeRequest) {
-    val insetsController = WindowCompat.getInsetsController(window, window.decorView)
-    when (request) {
-        ImmersiveModeRequest.Enter -> {
-            insetsController.hide(WindowInsetsCompat.Type.systemBars())
-        }
-        else -> {
+        override fun request(activity: Activity) {
+            val insetsController =
+                WindowCompat.getInsetsController(activity.window, activity.window.decorView)
             insetsController.show(WindowInsetsCompat.Type.systemBars())
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                activity.requestFullscreenMode(
+                    Activity.FULLSCREEN_MODE_REQUEST_EXIT,
+                    null
+                )
+            }
         }
-    }
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-        requestFullscreenMode(request.intoFullScreenModeRequest(), null)
-        isImmersive = !isImmersive
     }
 }

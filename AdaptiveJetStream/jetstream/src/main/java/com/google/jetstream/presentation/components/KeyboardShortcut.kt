@@ -16,9 +16,6 @@
 
 package com.google.jetstream.presentation.components
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEvent
@@ -32,26 +29,14 @@ import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.input.key.type
 import com.google.jetstream.data.convert.Into
 
-@Composable
-fun KeyboardShortcutHandleArea(
-    shortcuts: List<KeyboardShortcut>,
-    modifier: Modifier = Modifier,
-    content: @Composable BoxScope.() -> Unit
-) {
-    Box(
-        modifier = Modifier
-            .handleKeyboardShortcuts(shortcuts)
-            .then(modifier),
-        content = content
-    )
-}
-
 fun Modifier.handleKeyboardShortcuts(
     shortcuts: List<KeyboardShortcut>,
 ): Modifier {
-    return onPreviewKeyEvent { keyEvent ->
-        keyEvent.type == KeyEventType.KeyUp && shortcuts.any { it.callActionIfMatch(keyEvent) }
-    }
+    return Modifier
+        .onPreviewKeyEvent { keyEvent ->
+            keyEvent.type == KeyEventType.KeyUp && shortcuts.any { it.callActionIfMatch(keyEvent) }
+        }
+        .then(this)
 }
 
 data class KeyboardShortcut(

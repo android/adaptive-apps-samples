@@ -22,7 +22,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Fullscreen
 import androidx.compose.material.icons.filled.FullscreenExit
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,7 +29,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.google.jetstream.data.util.StringConstants
 import com.google.jetstream.presentation.screens.videoPlayer.components.toggleImmersiveMode
-import kotlinx.coroutines.delay
 
 @Composable
 fun ImmersiveModeButton(
@@ -52,13 +50,6 @@ private fun ActualImmersiveButton(
 ) {
     var isImmersive by remember(activity) { mutableStateOf(activity.isImmersive) }
 
-    LaunchedEffect(activity) {
-        while (true) {
-            delay(300)
-            isImmersive = activity.isImmersive
-        }
-    }
-
     VideoPlayerControlsIcon(
         icon = if (activity.isImmersive) {
             Icons.Default.FullscreenExit
@@ -70,7 +61,10 @@ private fun ActualImmersiveButton(
         } else {
             StringConstants.Composable.VideoPlayerEnterImmersiveMode
         },
-        onClick = activity::toggleImmersiveMode,
+        onClick = {
+            activity.toggleImmersiveMode()
+            isImmersive = activity.isImmersive
+        },
         modifier = modifier
     )
 }

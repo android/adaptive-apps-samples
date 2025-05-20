@@ -40,14 +40,12 @@ import androidx.xr.compose.platform.LocalSpatialConfiguration
 import com.google.jetstream.presentation.app.AppState
 import com.google.jetstream.presentation.app.NavigationTree
 import com.google.jetstream.presentation.app.updateTopBarVisibility
-import com.google.jetstream.presentation.components.BackPressHandledArea
 import com.google.jetstream.presentation.screens.Screens
 
 @Composable
 fun AppWithNavigationSuiteScaffold(
     appState: AppState,
     navController: NavHostController,
-    onActivityBackPressed: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
 
@@ -99,42 +97,38 @@ fun AppWithNavigationSuiteScaffold(
             }
         }
     ) {
-        BackPressHandledArea(
-            onBackPressed = onActivityBackPressed
-        ) {
-            Scaffold(
-                modifier = Modifier.fillMaxSize(),
-                topBar = {
-                    AnimatedVisibility(
-                        visible = shouldShowTopBar,
-                        enter = slideInVertically(),
-                        exit = slideOutVertically()
-                    ) {
-                        val horizontalPadding = remember(navigationType) {
-                            when (navigationType) {
-                                NavigationSuiteType.NavigationRail -> 32.dp
-                                else -> 8.dp
-                            }
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+            topBar = {
+                AnimatedVisibility(
+                    visible = shouldShowTopBar,
+                    enter = slideInVertically(),
+                    exit = slideOutVertically()
+                ) {
+                    val horizontalPadding = remember(navigationType) {
+                        when (navigationType) {
+                            NavigationSuiteType.NavigationRail -> 32.dp
+                            else -> 8.dp
                         }
-                        TopBar(
-                            appState = appState,
-                            navController = navController,
-                            modifier = Modifier.padding(
-                                start = horizontalPadding,
-                                end = horizontalPadding,
-                                top = paddingTop
-                            )
-                        )
                     }
+                    TopBar(
+                        appState = appState,
+                        navController = navController,
+                        modifier = Modifier.padding(
+                            start = horizontalPadding,
+                            end = horizontalPadding,
+                            top = paddingTop
+                        )
+                    )
                 }
-            ) { padding ->
-                NavigationTree(
-                    navController = navController,
-                    isTopBarVisible = appState.isTopBarVisible,
-                    modifier = modifier.padding(padding),
-                    onScroll = { updateTopBarVisibility(appState, it) }
-                )
             }
+        ) { padding ->
+            NavigationTree(
+                navController = navController,
+                isTopBarVisible = appState.isTopBarVisible,
+                modifier = modifier.padding(padding),
+                onScroll = { updateTopBarVisibility(appState, it) }
+            )
         }
     }
 }

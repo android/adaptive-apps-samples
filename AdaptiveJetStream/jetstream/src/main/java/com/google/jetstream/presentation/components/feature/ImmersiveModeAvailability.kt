@@ -26,6 +26,7 @@ fun rememberImmersiveModeAvailability(): Boolean {
         when (uiMode.formFactor) {
             FormFactor.Normal -> true
             FormFactor.Desk -> true
+            FormFactor.Car -> true
             else -> false
         }
     }

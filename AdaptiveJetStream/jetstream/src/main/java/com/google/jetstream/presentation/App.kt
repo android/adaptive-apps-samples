@@ -30,8 +30,8 @@ import com.google.jetstream.presentation.app.withNavigationSuiteScaffold.AppWith
 import com.google.jetstream.presentation.app.withNavigationSuiteScaffold.EnableProminentMovieListOverride
 import com.google.jetstream.presentation.app.withTopBarNavigation.AppWithTopBarNavigation
 import com.google.jetstream.presentation.components.KeyboardShortcut
-import com.google.jetstream.presentation.components.KeyboardShortcutHandleArea
 import com.google.jetstream.presentation.components.ModifierKey
+import com.google.jetstream.presentation.components.handleKeyboardShortcuts
 import com.google.jetstream.presentation.screens.Screens
 
 @Composable
@@ -138,27 +138,24 @@ fun App(
         appState.updateNavigationComponentType(navigationComponentType)
     }
 
-    KeyboardShortcutHandleArea(keyboardShortcuts) {
-        when (navigationComponentType) {
-            NavigationComponentType.NavigationSuiteScaffold -> {
-                EnableProminentMovieListOverride {
-                    AppWithNavigationSuiteScaffold(
-                        appState = appState,
-                        onActivityBackPressed = onActivityBackPressed,
-                        navController = navController,
-                        modifier = modifier,
-                    )
-                }
-            }
-
-            NavigationComponentType.Custom -> {
-                AppWithTopBarNavigation(
+    when (navigationComponentType) {
+        NavigationComponentType.NavigationSuiteScaffold -> {
+            EnableProminentMovieListOverride {
+                AppWithNavigationSuiteScaffold(
                     appState = appState,
-                    onActivityBackPressed = onActivityBackPressed,
                     navController = navController,
-                    modifier = modifier,
+                    modifier = modifier.handleKeyboardShortcuts(keyboardShortcuts),
                 )
             }
+        }
+
+        NavigationComponentType.Custom -> {
+            AppWithTopBarNavigation(
+                appState = appState,
+                onActivityBackPressed = onActivityBackPressed,
+                navController = navController,
+                modifier = modifier.handleKeyboardShortcuts(keyboardShortcuts),
+            )
         }
     }
 }
