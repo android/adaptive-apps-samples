@@ -1,0 +1,82 @@
+<!--
+ Copyright 2023 Google LLC
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+https://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+<resources>
+    <string name="app_name">JetStream</string>
+    <string name="generic_error_msg">Couldn\'t get %1s. Reason: %2s</string>
+    <string name="brand_logo_text">JET STREAM</string>
+    <string name="watch_now">Watch Now</string>
+    <string name="cast_and_crew"><![CDATA[Cast & Crew]]></string>
+    <string name="director">Director</string>
+    <string name="screenplay">Screenplay</string>
+    <string name="music">Music</string>
+    <string name="watch_trailer">Watch trailer</string>
+    <string name="status">Status</string>
+    <string name="original_language">Original Language</string>
+    <string name="budget">Budget</string>
+    <string name="revenue">Revenue</string>
+    <string name="reviews">Reviews</string>
+    <string name="delete_account_dialog_title">Delete account?</string>
+    <string name="delete_account_dialog_text">"By deactivating your account, you will no longer be able to sign in, your activity will be removed from JetStream and your profile preferences will go away.\n\nDo you wish to continue?\n"</string>
+    <string name="yes_delete_account">Yes, delete my account</string>
+    <string name="no_keep_it">No, keep it</string>
+    <string name="search_screen_et_placeholder">Search for movies, shows and more…</string>
+    <string name="top_10_movies_title">Top 10 in the US</string>
+    <string name="profile_screen_listItem_icon_content_description">%s icon</string>
+    <string name="language_section_listItem_icon_content_description">%s language option</string>
+    <string name="movie_category_desc">movie category %s</string>
+    <string name="favorites_movies">Movies</string>
+    <string name="favorites_tv_shows">TV Shows</string>
+    <string name="favorites_added_last_week">Added Last Week</string>
+    <string name="favorites_available_in_4k">Available in 4K</string>
+    <string name="favorites_unknown">Unknown filter</string>
+    <string name="ad">Ad</string>
+    <string name="live">Live</string>
+    <string name="message_loading">Loading…</string>
+    <string name="message_error">Wops, something went wrong…</string>
+    <string name="back_content_description">Back</string>
+
+    <string name="show_search_screen">Show search screen</string>
+    <string name="close_dialog">Close dialog</string>
+    <string name="scroll_down">Scroll down</string>
+    <string name="scroll_up">Scroll up</string>
+    <string name="show_keyboard_shortcuts_helper">Show keyboard shortcuts helper</string>
+    <string name="show_profile_screen">Show profile screen</string>
+    <string name="show_home_screen">Show home screen</string>
+    <string name="show_category_screen">Show category screen</string>
+    <string name="show_movies_screen">Show movies screen</string>
+    <string name="show_shows_screen">Show shows screen</string>
+    <string name="show_favorites_screen">Show favorites screen</string>
+    <string name="toggle_full_screen">Toggle full screen</string>
+    <string name="back_from_video_player">Back from video player screen</string>
+    <string name="back_from_movie_details">Back from movie details screen</string>
+    <string name="toggle_play_pause">Toggle play/pause</string>
+    <string name="rewind_10_sec">Rewind 10 seconds</string>
+    <string name="skip_10_sec">Skip 10 seconds</string>
+    <string name="pan_up">Pan up</string>
+    <string name="pan_left">Pan left</string>
+    <string name="pan_down">Pan down</string>
+    <string name="pan_right">Pan right</string>
+    <string name="zoom_in">Zoom in</string>
+    <string name="zoom_out">Zoom out</string>
+
+    <string name="general">General</string>
+    <string name="video_playback">Video playback</string>
+    <string name="spatial_video">Spatial video</string>
+
+    <string name="full_space_mode">Full space</string>
+    <string name="home_space_mode">Home space</string>
+</resources>
