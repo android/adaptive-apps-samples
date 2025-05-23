@@ -26,9 +26,6 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven {
-            url = uri("https://androidx.dev/snapshots/builds/13505055/artifacts/repository")
-        }
     }
 }
 rootProject.name = "JetStream"

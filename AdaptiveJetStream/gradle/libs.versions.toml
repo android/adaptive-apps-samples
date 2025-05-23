@@ -25,7 +25,7 @@ uiautomator = "2.3.0"
 rules = "1.6.1"
 window = "1.4.0-rc02"
 xr = "1.0.0-alpha04"
-xr-material3 = "1.0.0-SNAPSHOT"
+xr-material3 = "1.0.0-alpha08"
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity-compose" }
