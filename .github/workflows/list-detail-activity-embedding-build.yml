@@ -26,8 +26,8 @@ jobs:
 
       - name: Make gradlew executable
         run: chmod +x ./gradlew
-        working-directory: ./adaptive-apps-samples/CanonicalLayouts/list-detail-activity-embedding
+        working-directory: ./CanonicalLayouts/list-detail-activity-embedding
 
       - name: Build list-detail-activity-embedding app
-        working-directory: ./adaptive-apps-samples/CanonicalLayouts/list-detail-activity-embedding
+        working-directory: ./CanonicalLayouts/list-detail-activity-embedding
         run: ./gradlew :app:assembleDebug
