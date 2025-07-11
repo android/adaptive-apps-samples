@@ -36,7 +36,7 @@ import com.google.sample.wsc.lxl.utils.windowManager
 @Composable
 fun Content(modifier: Modifier = Modifier) {
 
-    val wm = LocalActivity.current!!.windowManager()
+    val wm = LocalActivity.current?.windowManager() ?: return
     val material = material()
     val numberOfColumns = calculateColumns(wm.first)
     val numberOfColumnsForTitles = calculateColumnsForTitles(wm.first)
