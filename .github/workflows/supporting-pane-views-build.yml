@@ -26,8 +26,8 @@ jobs:
 
       - name: Make gradlew executable
         run: chmod +x ./gradlew
-        working-directory: ./adaptive-apps-samples/CanonicalLayouts/supporting-pane-views
+        working-directory: ./CanonicalLayouts/supporting-pane-views
 
       - name: Build supporting-pane-views app
-        working-directory: ./adaptive-apps-samples/CanonicalLayouts/supporting-pane-views
+        working-directory: ./CanonicalLayouts/supporting-pane-views
         run: ./gradlew :app:assembleDebug

@@ -26,8 +26,8 @@ jobs:
 
       - name: Make gradlew executable
         run: chmod +x ./gradlew
-        working-directory: ./adaptive-apps-samples/CanonicalLayouts/feed-view
+        working-directory: ./CanonicalLayouts/feed-view
 
       - name: Build feed-view app
-        working-directory: ./adaptive-apps-samples/CanonicalLayouts/feed-view
+        working-directory: ./CanonicalLayouts/feed-view
         run: ./gradlew :app:assembleDebug
