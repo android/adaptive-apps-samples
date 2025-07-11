@@ -26,8 +26,8 @@ jobs:
 
       - name: Make gradlew executable
         run: chmod +x ./gradlew
-        working-directory: ./adaptive-apps-samples/CanonicalLayouts/list-detail-sliding-pane
+        working-directory: ./CanonicalLayouts/list-detail-sliding-pane
 
       - name: Build list-detail-sliding-pane app
-        working-directory: ./adaptive-apps-samples/CanonicalLayouts/list-detail-sliding-pane
+        working-directory: ./CanonicalLayouts/list-detail-sliding-pane
         run: ./gradlew :app:assembleDebug
