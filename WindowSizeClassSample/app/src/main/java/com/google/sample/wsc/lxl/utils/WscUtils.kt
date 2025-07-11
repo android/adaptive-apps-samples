@@ -42,7 +42,7 @@ fun Activity.windowManager(): WindowSize {
     return wsc.width() to wsc.height()
 }
 
-private fun WindowSizeClass.width() : Width =
+private fun WindowSizeClass.width(): Width =
     when {
         isWidthAtLeastBreakpoint(WIDTH_DP_EXTRA_LARGE_LOWER_BOUND) -> Width.EXTRALARGE
         isWidthAtLeastBreakpoint(WIDTH_DP_LARGE_LOWER_BOUND) -> Width.LARGE
@@ -51,7 +51,7 @@ private fun WindowSizeClass.width() : Width =
         else -> Width.COMPACT
     }
 
-private fun WindowSizeClass.height() : Height =
+private fun WindowSizeClass.height(): Height =
     when {
         isHeightAtLeastBreakpoint(HEIGHT_DP_EXPANDED_LOWER_BOUND) -> Height.EXPANDED
         isHeightAtLeastBreakpoint(HEIGHT_DP_MEDIUM_LOWER_BOUND) -> Height.MEDIUM
@@ -59,21 +59,19 @@ private fun WindowSizeClass.height() : Height =
     }
 
 @Composable
-fun material() : WindowSize {
+fun material(): WindowSize {
     val wsc = currentWindowAdaptiveInfo().windowSizeClass
     return wsc.width() to wsc.height()
 }
 
-fun calculateColumns(width: Width) : Int =
-    when(width){
+fun calculateColumns(width: Width): Int =
+    when (width) {
         Width.EXTRALARGE, Width.LARGE -> 4
         Width.EXPANDED, Width.MEDIUM -> 2
         Width.COMPACT -> 1
     }
 
-fun calculateColumnsForTitles(width: Width) : Int =
-    if(width == Width.COMPACT) {
-        1
-    } else {
-        2
-    }
+fun calculateColumnsForTitles(width: Width): Int = when (width) {
+    Width.COMPACT -> 1
+    else -> 2
+}
