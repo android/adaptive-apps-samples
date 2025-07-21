@@ -60,7 +60,7 @@ private fun WindowSizeClass.height(): Height =
 
 @Composable
 fun material(): WindowSize {
-    val wsc = currentWindowAdaptiveInfo().windowSizeClass
+    val wsc = currentWindowAdaptiveInfo(supportLargeAndXLargeWidth = true).windowSizeClass
     return wsc.width() to wsc.height()
 }
 
