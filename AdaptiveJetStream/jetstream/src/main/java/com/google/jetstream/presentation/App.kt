@@ -16,6 +16,7 @@
 
 package com.google.jetstream.presentation
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -24,8 +25,10 @@ import androidx.compose.ui.input.key.Key
 import androidx.navigation.compose.rememberNavController
 import com.google.jetstream.presentation.app.AppState
 import com.google.jetstream.presentation.app.NavigationComponentType
+import com.google.jetstream.presentation.app.NavigationTree
 import com.google.jetstream.presentation.app.rememberAppState
 import com.google.jetstream.presentation.app.rememberNavigationComponentType
+import com.google.jetstream.presentation.app.updateTopBarVisibility
 import com.google.jetstream.presentation.app.withNavigationSuiteScaffold.AppWithNavigationSuiteScaffold
 import com.google.jetstream.presentation.app.withNavigationSuiteScaffold.EnableProminentMovieListOverride
 import com.google.jetstream.presentation.app.withTopBarNavigation.AppWithTopBarNavigation
@@ -141,11 +144,18 @@ fun App(
     when (navigationComponentType) {
         NavigationComponentType.NavigationSuiteScaffold -> {
             EnableProminentMovieListOverride {
-                AppWithNavigationSuiteScaffold(
+
+                NavigationTree(
                     appState = appState,
                     navController = navController,
-                    modifier = modifier.handleKeyboardShortcuts(keyboardShortcuts),
+                    isTopBarVisible = appState.isTopBarVisible,
+                    onScroll = { updateTopBarVisibility(appState, it) }
                 )
+                /*  AppWithNavigationSuiteScaffold(
+                      appState = appState,
+                      navController = navController,
+                      modifier = modifier.handleKeyboardShortcuts(keyboardShortcuts),
+                  )*/
             }
         }
 
