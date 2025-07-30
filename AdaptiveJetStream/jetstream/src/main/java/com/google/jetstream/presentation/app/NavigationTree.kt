@@ -22,6 +22,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.google.jetstream.data.entities.Movie
+import com.google.jetstream.presentation.app.withNavigationSuiteScaffold.AppWithNavigationSuiteScaffold
 import com.google.jetstream.presentation.screens.Screens.Categories
 import com.google.jetstream.presentation.screens.Screens.CategoryMovieList
 import com.google.jetstream.presentation.screens.Screens.Favourites
@@ -47,6 +48,7 @@ import com.google.jetstream.presentation.screens.videoPlayer.VideoPlayerScreen
 
 @Composable
 fun NavigationTree(
+    appState: AppState,
     navController: NavHostController,
     modifier: Modifier = Modifier,
     isTopBarVisible: Boolean = true,
@@ -93,39 +95,49 @@ fun NavigationTree(
             ProfileScreen()
         }
         composable(Home()) {
-            HomeScreen(
-                onMovieClick = { movie -> navController.openMovieDetailsScreen(movie.id) },
-                goToVideoPlayer = { movie: Movie -> navController.openVideoPlayer(movie.id) },
-                onScroll = onScroll,
-                isTopBarVisible = isTopBarVisible
-            )
+            AppWithNavigationSuiteScaffold(appState,navController,modifier) {
+                HomeScreen(
+                    onMovieClick = { movie -> navController.openMovieDetailsScreen(movie.id) },
+                    goToVideoPlayer = { movie: Movie -> navController.openVideoPlayer(movie.id) },
+                    onScroll = onScroll,
+                    isTopBarVisible = isTopBarVisible
+                )
+            }
         }
         composable(Categories()) {
-            CategoriesScreen(
-                onCategoryClick = navController.openCategoryMovieList(),
-                onScroll = onScroll,
-            )
+            AppWithNavigationSuiteScaffold(appState,navController,modifier) {
+                CategoriesScreen(
+                    onCategoryClick = navController.openCategoryMovieList(),
+                    onScroll = onScroll,
+                )
+            }
         }
         composable(Movies()) {
-            MoviesScreen(
-                onMovieClick = { movie -> navController.openMovieDetailScreen(movie) },
-                onScroll = onScroll,
-                isTopBarVisible = isTopBarVisible
-            )
+            AppWithNavigationSuiteScaffold(appState,navController,modifier) {
+                MoviesScreen(
+                    onMovieClick = { movie -> navController.openMovieDetailScreen(movie) },
+                    onScroll = onScroll,
+                    isTopBarVisible = isTopBarVisible
+                )
+            }
         }
         composable(Shows()) {
-            ShowsScreen(
-                onTVShowClick = { movie -> navController.openMovieDetailScreen(movie) },
-                onScroll = onScroll,
-                isTopBarVisible = isTopBarVisible
-            )
+            AppWithNavigationSuiteScaffold(appState,navController,modifier) {
+                ShowsScreen(
+                    onTVShowClick = { movie -> navController.openMovieDetailScreen(movie) },
+                    onScroll = onScroll,
+                    isTopBarVisible = isTopBarVisible
+                )
+            }
         }
         composable(Favourites()) {
-            FavouritesScreen(
-                onMovieClick = navController::openMovieDetailsScreen,
-                onScroll = onScroll,
-                isTopBarVisible = isTopBarVisible
-            )
+            AppWithNavigationSuiteScaffold(appState,navController,modifier) {
+                FavouritesScreen(
+                    onMovieClick = navController::openMovieDetailsScreen,
+                    onScroll = onScroll,
+                    isTopBarVisible = isTopBarVisible
+                )
+            }
         }
         composable(Search()) {
             SearchScreen(

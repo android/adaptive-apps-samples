@@ -19,6 +19,7 @@ package com.google.jetstream.presentation.app.withNavigationSuiteScaffold
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -47,6 +48,7 @@ fun AppWithNavigationSuiteScaffold(
     appState: AppState,
     navController: NavHostController,
     modifier: Modifier = Modifier,
+    content: @Composable (PaddingValues) -> Unit,
 ) {
 
     val navigationSuiteScaffoldState = rememberNavigationSuiteScaffoldState()
@@ -123,12 +125,13 @@ fun AppWithNavigationSuiteScaffold(
                 }
             }
         ) { padding ->
-            NavigationTree(
+            content(padding)
+            /*NavigationTree(
                 navController = navController,
                 isTopBarVisible = appState.isTopBarVisible,
                 modifier = modifier.padding(padding),
                 onScroll = { updateTopBarVisibility(appState, it) }
-            )
+            )*/
         }
     }
 }

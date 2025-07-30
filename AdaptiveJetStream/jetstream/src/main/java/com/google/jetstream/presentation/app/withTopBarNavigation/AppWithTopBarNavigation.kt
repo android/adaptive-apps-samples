@@ -72,7 +72,7 @@ fun AppWithTopBarNavigation(
     ) {
         AnimatedVisibility(
             appState.isNavigationVisible &&
-                appState.isTopBarVisible
+                    appState.isTopBarVisible
         ) {
             TopBar(
                 items,
@@ -94,6 +94,7 @@ fun AppWithTopBarNavigation(
             )
         }
         NavigationTree(
+            appState = appState,
             navController = navController,
             isTopBarVisible = appState.isTopBarVisible,
             onScroll = { updateTopBarVisibility(appState, it) }
