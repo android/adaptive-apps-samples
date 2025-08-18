@@ -31,12 +31,12 @@ kotlin {
 android {
     namespace = "com.google.jetstream"
     // Needed for latest androidx snapshot build
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.google.jetstream"
         minSdk = 28
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
@@ -67,8 +67,9 @@ android {
         }
     }
 
-    kotlinOptions {
-        jvmTarget = "17"
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 }
 
@@ -82,9 +83,6 @@ dependencies {
 
     // extra material icons
     implementation(libs.androidx.material.icons.extended)
-
-    // Material components optimized for TV apps
-    implementation(libs.androidx.tv.material)
 
     // Material components for mobile
     implementation(libs.androidx.compose.material3)

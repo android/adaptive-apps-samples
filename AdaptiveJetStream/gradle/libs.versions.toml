@@ -1,31 +1,30 @@
 [versions]
 activity-compose = "1.10.1"
-android-gradle-plugin = "8.9.3"
-android-test-plugin = "8.9.3"
-androidx-baselineprofile = "1.3.4"
-benchmark-macro-junit4 = "1.3.4"
+android-gradle-plugin = "8.12.1"
+android-test-plugin = "8.12.1"
+androidx-baselineprofile = "1.4.0"
+benchmark-macro-junit4 = "1.4.0"
 coil-compose = "2.7.0"
-compose-bom = "2025.05.00"
-tv-material = "1.0.0"
-core-ktx = "1.16.0"
+compose-bom = "2025.08.00"
+core-ktx = "1.17.0"
 core-splashscreen = "1.0.1"
 hilt-navigation-compose = "1.2.0"
-hilt-android = "2.56.1"
-junit = "1.2.1"
-kotlin-android = "2.1.10"
-kotlinx-serialization = "1.8.1"
-ksp = "2.1.10-1.0.30"
-lifecycle-runtime-ktx = "2.9.0"
+hilt-android = "2.57"
+junit = "1.3.0"
+kotlin-android = "2.2.10"
+kotlinx-serialization = "1.9.0"
+ksp = "2.2.10-2.0.2"
+lifecycle-runtime-ktx = "2.9.2"
 material3-adaptive = "1.1.0"
-material3-adaptive-navigation = "1.4.0-alpha14"
-media3 = "1.6.1"
-navigation-compose = "2.9.0"
+material3-adaptive-navigation = "1.4.0-beta02"
+media3 = "1.8.0"
+navigation-compose = "2.9.3"
 profileinstaller = "1.4.1"
 uiautomator = "2.3.0"
-rules = "1.6.1"
-window = "1.4.0-rc02"
-xr = "1.0.0-alpha04"
-xr-material3 = "1.0.0-alpha08"
+rules = "1.7.0"
+window = "1.4.0"
+xr = "1.0.0-alpha06"
+xr-material3 = "1.0.0-alpha10"
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity-compose" }
@@ -52,7 +51,6 @@ androidx-media3-ui = { module = "androidx.media3:media3-ui-compose", version.ref
 androidx-media3-exoplayer = { module = "androidx.media3:media3-exoplayer", version.ref = "media3" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigation-compose" }
 androidx-profileinstaller = { module = "androidx.profileinstaller:profileinstaller", version.ref = "profileinstaller" }
-androidx-tv-material = { module = "androidx.tv:tv-material", version.ref = "tv-material" }
 androidx-uiautomator = { module = "androidx.test.uiautomator:uiautomator", version.ref = "uiautomator" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil-compose" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt-android" }

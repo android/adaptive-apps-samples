@@ -27,10 +27,16 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.google.jetstream.R
+import com.google.jetstream.presentation.components.feature.FormFactor
+import com.google.jetstream.presentation.components.feature.rememberFormFactor
 import com.google.jetstream.presentation.theme.JetStreamButtonShape
 
 @Composable
@@ -39,9 +45,18 @@ fun WatchNowButton(
     interactionSource: MutableInteractionSource? = null,
     onClick: () -> Unit = {},
 ) {
+    val focusRequester = remember { FocusRequester() }
+    val formFactor = rememberFormFactor()
+
+    LaunchedEffect(Unit) {
+        if (formFactor == FormFactor.Tv) {
+            focusRequester.requestFocus()
+        }
+    }
+
     Button(
         onClick = onClick,
-        modifier = modifier,
+        modifier = modifier.focusRequester(focusRequester),
         shape = JetStreamButtonShape,
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.onSurface,
