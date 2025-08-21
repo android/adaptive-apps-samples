@@ -34,7 +34,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.parcelize.Parcelize
 
 @OptIn(ExperimentalMaterial3Api::class)
-class FeaturedMoviesCarouselState(
+internal class FeaturedMoviesCarouselState(
     internal val itemCount: Int,
     initialActiveIndex: Int = 0,
     initialWatchNowButtonVisibility: Boolean = false,
@@ -123,7 +123,7 @@ private enum class CarouselStateUpdateRequest {
 }
 
 @Parcelize
-data class FeaturedMoviesCarouselSnapshot(
+internal data class FeaturedMoviesCarouselSnapshot(
     val itemCount: Int,
     val activeItemIndex: Int,
     val watchButtonVisibility: Boolean,
@@ -146,7 +146,7 @@ data class FeaturedMoviesCarouselSnapshot(
 }
 
 @Composable
-fun rememberFeaturedMoviesCarouselState(
+internal fun rememberFeaturedMoviesCarouselState(
     movies: List<Movie>,
     initialWatchNowButtonVisibility: Boolean = true,
 ): FeaturedMoviesCarouselState {

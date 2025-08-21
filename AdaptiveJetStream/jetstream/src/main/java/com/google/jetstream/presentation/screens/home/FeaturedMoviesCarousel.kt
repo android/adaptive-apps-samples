@@ -91,13 +91,13 @@ fun FeaturedMoviesCarousel(
                 .onPreviewKeyEvent { keyEvent ->
                     when {
                         keyEvent.type == KeyEventType.KeyDown &&
-                                keyEvent.key == Key.DirectionRight -> {
+                            keyEvent.key == Key.DirectionRight -> {
                             featuredMoviesCarouselState.nextItem()
                             true
                         }
 
                         keyEvent.type == KeyEventType.KeyDown &&
-                                keyEvent.key == Key.DirectionLeft -> {
+                            keyEvent.key == Key.DirectionLeft -> {
                             featuredMoviesCarouselState.previousItem()
                             true
                         }
