@@ -122,9 +122,9 @@ private fun Catalog(
         item(contentType = "FeaturedMoviesCarousel") {
             FeaturedMoviesCarousel(
                 movies = featuredMovies,
-                padding = contentPadding,
                 goToVideoPlayer = goToVideoPlayer,
                 modifier = Modifier
+                    .padding(contentPadding.intoPaddingValues())
                     .fillMaxWidth()
                     .height(LocalFeaturedCarouselHeight.current)
                     .focusRequester(carousel)

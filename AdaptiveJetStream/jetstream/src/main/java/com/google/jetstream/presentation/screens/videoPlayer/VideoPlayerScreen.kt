@@ -49,8 +49,8 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.ui.compose.PlayerSurface
 import androidx.media3.ui.compose.modifiers.resizeWithContentScale
 import androidx.xr.compose.platform.LocalSpatialCapabilities
+import androidx.xr.compose.spatial.ContentEdge
 import androidx.xr.compose.spatial.Orbiter
-import androidx.xr.compose.spatial.OrbiterEdge
 import com.google.jetstream.R
 import com.google.jetstream.data.entities.MovieDetails
 import com.google.jetstream.presentation.components.BackButton
@@ -299,8 +299,7 @@ private fun SpatialVideoPlayerControls(
         videoPlayerState.isControlsVisible
     ) {
         Orbiter(
-            position = OrbiterEdge.Bottom,
-            offset = 140.dp
+            position = ContentEdge.Bottom,
         ) {
             Box(
                 modifier = Modifier

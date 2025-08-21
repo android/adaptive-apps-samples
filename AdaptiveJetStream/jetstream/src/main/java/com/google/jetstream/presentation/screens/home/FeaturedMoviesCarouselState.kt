@@ -17,41 +17,93 @@
 package com.google.jetstream.presentation.screens.home
 
 import android.os.Parcelable
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.carousel.CarouselState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.tv.material3.CarouselState
-import androidx.tv.material3.ExperimentalTvMaterial3Api
+import com.google.jetstream.data.entities.Movie
+import com.google.jetstream.presentation.components.feature.rememberFormFactor
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.parcelize.Parcelize
 
-@OptIn(ExperimentalTvMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 internal class FeaturedMoviesCarouselState(
     internal val itemCount: Int,
     initialActiveIndex: Int = 0,
     initialWatchNowButtonVisibility: Boolean = false,
+    private val autoScrollDelay: Long = 10000L
 ) {
-    var carouselState by mutableStateOf(CarouselState(initialActiveIndex))
-        private set
+    val carouselState = CarouselState(initialActiveIndex) {
+        itemCount
+    }
 
-    val activeItemIndex: Int
-        get() = carouselState.activeItemIndex
+    val currentItem: Int
+        get() = carouselState.currentItem
 
     var watchNowButtonVisibility by mutableStateOf(initialWatchNowButtonVisibility)
         private set
 
-    fun moveToNextItem() {
-        val updatedIndex = (activeItemIndex + 1) % itemCount
-        carouselState = CarouselState(updatedIndex)
+    private val carouselStateUpdateRequestQueue =
+        MutableStateFlow(CarouselStateUpdateRequest.None)
+
+    fun nextItem() {
+        carouselStateUpdateRequestQueue
+            .tryEmit(CarouselStateUpdateRequest.ImmediateScrollToNextItem)
     }
 
-    fun moveToPreviousItem() {
-        val updatedIndex = (activeItemIndex - 1 + itemCount) % itemCount
-        carouselState = CarouselState(updatedIndex)
+    fun previousItem() {
+        carouselStateUpdateRequestQueue
+            .tryEmit(CarouselStateUpdateRequest.ImmediateScrollToPreviousItem)
+    }
+
+    private suspend fun scrollToNextItem() {
+        val updatedIndex = (currentItem + 1) % itemCount
+        carouselState.animateScrollToItem(updatedIndex)
+    }
+
+    private suspend fun scrollToPreviousItem() {
+        val updatedIndex = (currentItem - 1 + itemCount) % itemCount
+        carouselState.animateScrollToItem(updatedIndex)
     }
 
     fun updateWatchNowButtonVisibility(isVisible: Boolean) {
         watchNowButtonVisibility = isVisible
+    }
+
+    internal suspend fun startAutoScroll() {
+        carouselStateUpdateRequestQueue.collectLatest { request ->
+            when (request) {
+                CarouselStateUpdateRequest.ImmediateScrollToNextItem -> {
+                    scrollToNextItem()
+                    carouselStateUpdateRequestQueue
+                        .tryEmit(CarouselStateUpdateRequest.ScrollToNextItem)
+                }
+
+                CarouselStateUpdateRequest.ImmediateScrollToPreviousItem -> {
+                    scrollToPreviousItem()
+                    carouselStateUpdateRequestQueue
+                        .tryEmit(CarouselStateUpdateRequest.ScrollToNextItem)
+                }
+
+                CarouselStateUpdateRequest.ScrollToNextItem -> {
+                    delay(autoScrollDelay)
+                    carouselStateUpdateRequestQueue
+                        .tryEmit(CarouselStateUpdateRequest.ImmediateScrollToNextItem)
+                }
+
+                CarouselStateUpdateRequest.None -> {
+                    carouselStateUpdateRequestQueue
+                        .tryEmit(CarouselStateUpdateRequest.ScrollToNextItem)
+                }
+            }
+        }
     }
 
     companion object {
@@ -61,6 +113,13 @@ internal class FeaturedMoviesCarouselState(
                 restore = { it.into() }
             )
     }
+}
+
+private enum class CarouselStateUpdateRequest {
+    ImmediateScrollToNextItem,
+    ImmediateScrollToPreviousItem,
+    ScrollToNextItem,
+    None,
 }
 
 @Parcelize
@@ -80,8 +139,30 @@ internal data class FeaturedMoviesCarouselSnapshot(
         fun from(state: FeaturedMoviesCarouselState) =
             FeaturedMoviesCarouselSnapshot(
                 itemCount = state.itemCount,
-                activeItemIndex = state.activeItemIndex,
+                activeItemIndex = state.currentItem,
                 watchButtonVisibility = state.watchNowButtonVisibility
             )
+    }
+}
+
+@Composable
+internal fun rememberFeaturedMoviesCarouselState(
+    movies: List<Movie>,
+    initialWatchNowButtonVisibility: Boolean = true,
+): FeaturedMoviesCarouselState {
+    val formFactor = rememberFormFactor()
+    return rememberSaveable(
+        movies,
+        formFactor,
+        saver = FeaturedMoviesCarouselState.Saver
+    ) {
+        FeaturedMoviesCarouselState(
+            itemCount = movies.size,
+            initialWatchNowButtonVisibility = initialWatchNowButtonVisibility
+        )
+    }.also {
+        LaunchedEffect(it) {
+            it.startAutoScroll()
+        }
     }
 }
