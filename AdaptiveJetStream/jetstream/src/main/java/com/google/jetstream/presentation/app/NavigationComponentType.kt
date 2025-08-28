@@ -19,39 +19,40 @@ package com.google.jetstream.presentation.app
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.window.core.layout.WindowSizeClass
-import com.google.jetstream.presentation.components.feature.FormFactor
+import com.google.jetstream.presentation.components.feature.isAutomotiveEnabled
+import com.google.jetstream.presentation.components.feature.isLeanbackEnabled
 import com.google.jetstream.presentation.components.feature.isWidthAtLeastLarge
-import com.google.jetstream.presentation.components.feature.rememberFormFactor
 
 enum class NavigationComponentType {
     NavigationSuiteScaffold,
-    Custom
+    TopBar
 }
 
 @Composable
-fun rememberNavigationComponentType(
-    formFactor: FormFactor = rememberFormFactor(),
-    windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
-): NavigationComponentType {
-    return remember(formFactor, windowSizeClass) {
-        selectNavigationComponentType(formFactor, windowSizeClass.isWidthAtLeastLarge())
+fun rememberNavigationComponentType(): NavigationComponentType {
+    val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
+    val isLeanbackEnabled = isLeanbackEnabled()
+    val isAutomotiveEnabled = isAutomotiveEnabled()
+
+    return remember(isLeanbackEnabled, isAutomotiveEnabled, windowSizeClass) {
+        selectNavigationComponentType(
+            isLeanbackEnabled = isLeanbackEnabled,
+            isAutomotiveEnabled = isAutomotiveEnabled,
+            isLargeWindow = windowSizeClass.isWidthAtLeastLarge()
+        )
     }
 }
 
+// Select the navigation component type based on the available input devices.
 private fun selectNavigationComponentType(
-    formFactor: FormFactor,
+    isLeanbackEnabled: Boolean,
+    isAutomotiveEnabled: Boolean,
     isLargeWindow: Boolean,
 ): NavigationComponentType {
-    return when (formFactor) {
-        FormFactor.Tv -> NavigationComponentType.Custom
-        FormFactor.Car -> NavigationComponentType.Custom
-        else -> {
-            if (isLargeWindow) {
-                NavigationComponentType.Custom
-            } else {
-                NavigationComponentType.NavigationSuiteScaffold
-            }
-        }
+    return when {
+        isLeanbackEnabled -> NavigationComponentType.TopBar
+        isAutomotiveEnabled -> NavigationComponentType.TopBar
+        isLargeWindow -> NavigationComponentType.TopBar
+        else -> NavigationComponentType.NavigationSuiteScaffold
     }
 }

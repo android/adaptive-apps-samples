@@ -481,7 +481,7 @@ internal fun DialogFlowRow(
         // Return whether the placeable can be added to the current sequence.
         fun canAddToCurrentSequence(placeable: Placeable) =
             currentSequence.isEmpty() || currentMainAxisSize + mainAxisSpacing.roundToPx() +
-                placeable.width <= constraints.maxWidth
+                    placeable.width <= constraints.maxWidth
 
         // Store current sequence information and start a new sequence.
         fun startNewSequence() {
@@ -528,7 +528,7 @@ internal fun DialogFlowRow(
             sequences.forEachIndexed { i, placeables ->
                 val childrenMainAxisSizes = IntArray(placeables.size) { j ->
                     placeables[j].width +
-                        if (j < placeables.lastIndex) mainAxisSpacing.roundToPx() else 0
+                            if (j < placeables.lastIndex) mainAxisSpacing.roundToPx() else 0
                 }
                 val arrangement = Arrangement.Bottom
                 // Handle vertical direction
@@ -564,7 +564,7 @@ private fun Modifier.dialogFocusable() = composed {
     this.then(
         Modifier
             .focusRequester(focusRequester)
-            .focusProperties { exit = { FocusRequester.Cancel } }
+            .focusProperties { onExit = { FocusRequester.Cancel.requestFocus() } }
             .focusGroup()
     )
 }

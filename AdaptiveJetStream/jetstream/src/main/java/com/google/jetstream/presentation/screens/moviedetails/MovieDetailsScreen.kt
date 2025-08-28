@@ -43,7 +43,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
@@ -58,7 +58,7 @@ import com.google.jetstream.presentation.components.Error
 import com.google.jetstream.presentation.components.Loading
 import com.google.jetstream.presentation.components.MoviesRow
 import com.google.jetstream.presentation.components.desktop.BackNavigationContextMenu
-import com.google.jetstream.presentation.components.feature.rememberIsBackButtonRequired
+import com.google.jetstream.presentation.components.feature.isBackButtonRequired
 import com.google.jetstream.presentation.screens.moviedetails.components.CastAndCrewList
 import com.google.jetstream.presentation.screens.moviedetails.components.MovieDetails
 import com.google.jetstream.presentation.screens.moviedetails.components.MovieReviews
@@ -118,7 +118,7 @@ private fun Details(
 ) {
     val navigationComponentType = rememberNavigationComponentType()
     val isBackButtonRequired =
-        rememberIsBackButtonRequired() && navigationComponentType == NavigationComponentType.Custom
+        isBackButtonRequired() && navigationComponentType == NavigationComponentType.TopBar
 
     val lazyListState = rememberLazyListState()
     val isBackButtonVisible by remember {

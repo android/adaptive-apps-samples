@@ -16,18 +16,20 @@
 
 package com.google.jetstream.presentation.components.feature
 
+import android.util.Log
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.LaunchedEffect
 
 @Composable
-fun rememberIsBackButtonRequired(): Boolean {
-    val formFactor = rememberFormFactor()
-    return remember(formFactor) {
-        when (formFactor) {
-            FormFactor.Desk -> true
-            FormFactor.Car -> true
-            FormFactor.Xr -> true
-            else -> false
-        }
+fun isBackButtonRequired(): Boolean {
+    val mouse = isMouseAvailable()
+    val touchPad = isTouchPadAvailable()
+    LaunchedEffect(mouse, touchPad) {
+        Log.d("isBackButtonRequired", "mouse: $mouse, touchPad: $touchPad")
     }
+
+    return isAutomotiveEnabled() ||
+        isMouseAvailable() ||
+        isTouchPadAvailable() ||
+        isXrSessionAvailable()
 }

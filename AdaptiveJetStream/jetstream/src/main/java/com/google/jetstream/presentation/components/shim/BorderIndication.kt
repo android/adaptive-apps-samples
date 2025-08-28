@@ -96,6 +96,7 @@ private class BorderIndicationNode(
 
     private var state: Border = Border.None
 
+    // Snip onAttach method and attribute declarations
     override fun onAttach() {
         coroutineScope.launch {
             interactionSource.interactions.collect { interaction ->

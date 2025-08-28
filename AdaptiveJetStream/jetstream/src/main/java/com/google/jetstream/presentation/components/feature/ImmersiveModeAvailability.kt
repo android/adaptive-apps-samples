@@ -17,17 +17,8 @@
 package com.google.jetstream.presentation.components.feature
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 
 @Composable
 fun rememberImmersiveModeAvailability(): Boolean {
-    val uiMode = rememberUiMode()
-    return remember(uiMode) {
-        when (uiMode.formFactor) {
-            FormFactor.Normal -> true
-            FormFactor.Desk -> true
-            FormFactor.Car -> true
-            else -> false
-        }
-    }
+    return !(isLeanbackEnabled() || isXrSessionAvailable())
 }

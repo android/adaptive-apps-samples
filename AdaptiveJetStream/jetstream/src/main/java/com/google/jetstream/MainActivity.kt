@@ -42,7 +42,6 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.xr.compose.material3.EnableXrComponentOverrides
 import androidx.xr.compose.material3.ExperimentalMaterial3XrApi
 import com.google.jetstream.presentation.App
-import com.google.jetstream.presentation.components.feature.UiMode
 import com.google.jetstream.presentation.theme.JetStreamTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -102,9 +101,6 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
-    private val currentUiMode: UiMode
-        get() = UiMode.from(resources.configuration)
 
     private fun toEnableCustomHeader(): Boolean {
         val reliedFeatures = listOf(
