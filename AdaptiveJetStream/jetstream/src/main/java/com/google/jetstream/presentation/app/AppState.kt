@@ -74,7 +74,7 @@ class AppState internal constructor(
                 selectedScreen.navigationVisibility.isVisibleInNavigationSuite
             }
 
-            NavigationComponentType.Custom -> {
+            NavigationComponentType.TopBar -> {
                 selectedScreen.navigationVisibility.isVisibleInCustomNavigation
             }
         }

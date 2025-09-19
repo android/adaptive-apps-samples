@@ -16,7 +16,6 @@
 
 package com.google.jetstream.presentation.screens.videoPlayer.components
 
-import android.util.Log
 import androidx.annotation.IntRange
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -25,7 +24,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.geometry.Size
-import androidx.media3.common.Metadata
 import androidx.media3.common.Player
 import androidx.media3.common.VideoSize
 import androidx.media3.common.util.UnstableApi
@@ -76,27 +74,12 @@ class VideoPlayerState internal constructor(
             }
 
             override fun onVideoSizeChanged(videoSize: VideoSize) {
-                Log.d(
-                    "VideoPlayerState",
-                    "onVideoSizeChanged: ${videoSize.width} x ${videoSize.height}"
-                )
                 val event = if (videoSize.width > 0 && videoSize.height > 0) {
                     PlayerEvent.SizeChanged(videoSize)
                 } else {
                     PlayerEvent.SizeUnknown
                 }
                 trySend(event)
-            }
-
-            override fun onMetadata(metadata: Metadata) {
-                Log.d("VideoPlayerState", "onVideoSizeChanged: ${player.videoSize}")
-            }
-
-            override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
-                Log.d(
-                    "VideoPlayerState",
-                    "onPlayWhenReadyChanged: $playWhenReady, $reason, ${player.videoSize}"
-                )
             }
         }
         player.addListener(listener)

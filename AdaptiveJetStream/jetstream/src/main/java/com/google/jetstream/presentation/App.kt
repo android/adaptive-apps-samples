@@ -149,7 +149,7 @@ fun App(
             }
         }
 
-        NavigationComponentType.Custom -> {
+        NavigationComponentType.TopBar -> {
             AppWithTopBarNavigation(
                 appState = appState,
                 onActivityBackPressed = onActivityBackPressed,

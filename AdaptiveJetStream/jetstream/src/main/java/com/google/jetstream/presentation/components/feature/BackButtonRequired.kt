@@ -17,17 +17,11 @@
 package com.google.jetstream.presentation.components.feature
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 
 @Composable
-fun rememberIsBackButtonRequired(): Boolean {
-    val formFactor = rememberFormFactor()
-    return remember(formFactor) {
-        when (formFactor) {
-            FormFactor.Desk -> true
-            FormFactor.Car -> true
-            FormFactor.Xr -> true
-            else -> false
-        }
-    }
+fun isBackButtonRequired(): Boolean {
+    return isAutomotiveEnabled() ||
+        isMouseAvailable() ||
+        isTouchPadAvailable() ||
+        isXrSessionAvailable()
 }

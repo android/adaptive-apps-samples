@@ -39,7 +39,7 @@ private fun calculateFilteredMoviesGridColumns(
     windowSizeClass: WindowSizeClass
 ): GridCells {
     return when (navigationComponentType) {
-        NavigationComponentType.Custom -> {
+        NavigationComponentType.TopBar -> {
             GridCells.Fixed(6)
         }
         NavigationComponentType.NavigationSuiteScaffold -> {

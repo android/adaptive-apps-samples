@@ -16,30 +16,31 @@
 
 package com.google.jetstream.presentation.components.feature
 
+import android.content.pm.PackageManager
 import androidx.compose.runtime.Composable
-import androidx.xr.compose.platform.LocalSession
-
-enum class FormFactor {
-    Undefined,
-    Normal,
-    Desk,
-    Car,
-    Tv,
-    Appliance,
-    Watch,
-    VRHeadset,
-    Xr,
-}
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
+import androidx.xr.compose.platform.LocalSpatialConfiguration
 
 @Composable
-fun rememberFormFactor(): FormFactor {
-    return when {
-        hasXrCapabilities() -> FormFactor.Xr
-        else -> rememberUiMode().formFactor
+private fun hasSystemFeature(feature: String): Boolean {
+    val context = LocalContext.current
+    return remember(feature) {
+        context.packageManager.hasSystemFeature(feature)
     }
 }
 
 @Composable
-fun hasXrCapabilities(): Boolean {
-    return LocalSession.current != null
+internal fun isLeanbackEnabled(): Boolean {
+    return hasSystemFeature(PackageManager.FEATURE_LEANBACK)
+}
+
+@Composable
+internal fun isAutomotiveEnabled(): Boolean {
+    return hasSystemFeature(PackageManager.FEATURE_AUTOMOTIVE)
+}
+
+@Composable
+internal fun isXrSessionAvailable(): Boolean {
+    return LocalSpatialConfiguration.current.hasXrSpatialFeature
 }

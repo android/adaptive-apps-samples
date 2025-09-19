@@ -564,7 +564,7 @@ private fun Modifier.dialogFocusable() = composed {
     this.then(
         Modifier
             .focusRequester(focusRequester)
-            .focusProperties { exit = { FocusRequester.Cancel } }
+            .focusProperties { onExit = { FocusRequester.Cancel.requestFocus() } }
             .focusGroup()
     )
 }

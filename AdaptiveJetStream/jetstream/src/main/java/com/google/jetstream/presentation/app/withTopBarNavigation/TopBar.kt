@@ -51,8 +51,7 @@ import androidx.compose.ui.unit.dp
 import com.google.jetstream.data.util.StringConstants
 import com.google.jetstream.presentation.app.JetStreamLogo
 import com.google.jetstream.presentation.app.UserAvatar
-import com.google.jetstream.presentation.components.feature.FormFactor
-import com.google.jetstream.presentation.components.feature.rememberUiMode
+import com.google.jetstream.presentation.components.feature.isDpadAvailable
 import com.google.jetstream.presentation.components.shim.tryRequestFocus
 import com.google.jetstream.presentation.screens.Screens
 
@@ -66,14 +65,12 @@ internal fun TopBar(
     val focusManager = LocalFocusManager.current
     val (tabRow, avatar) = remember { FocusRequester.createRefs() }
 
-    val uiMode = rememberUiMode()
-    val onClickHandler: (Screens) -> Unit = remember(uiMode) {
-        when (uiMode.formFactor) {
-            FormFactor.Tv -> {
-                { focusManager.moveFocus(FocusDirection.Down) }
-            }
-
-            else -> { it -> showScreen(it) }
+    val isDpadAvailable = isDpadAvailable()
+    val onClickHandler: (Screens) -> Unit = remember(isDpadAvailable) {
+        if (isDpadAvailable) {
+            { focusManager.moveFocus(FocusDirection.Down) }
+        } else {
+            { it -> showScreen(it) }
         }
     }
 

@@ -42,15 +42,15 @@ import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.ui.compose.PlayerSurface
 import androidx.media3.ui.compose.modifiers.resizeWithContentScale
 import androidx.xr.compose.platform.LocalSpatialCapabilities
+import androidx.xr.compose.spatial.ContentEdge
 import androidx.xr.compose.spatial.Orbiter
-import androidx.xr.compose.spatial.OrbiterEdge
 import com.google.jetstream.R
 import com.google.jetstream.data.entities.MovieDetails
 import com.google.jetstream.presentation.components.BackButton
@@ -58,8 +58,8 @@ import com.google.jetstream.presentation.components.Error
 import com.google.jetstream.presentation.components.KeyboardShortcut
 import com.google.jetstream.presentation.components.Loading
 import com.google.jetstream.presentation.components.desktop.BackNavigationContextMenu
+import com.google.jetstream.presentation.components.feature.isBackButtonRequired
 import com.google.jetstream.presentation.components.feature.rememberImmersiveModeAvailability
-import com.google.jetstream.presentation.components.feature.rememberIsBackButtonRequired
 import com.google.jetstream.presentation.components.handleKeyboardShortcuts
 import com.google.jetstream.presentation.components.shim.onSpaceBarPressed
 import com.google.jetstream.presentation.components.shim.tryRequestFocus
@@ -299,7 +299,7 @@ private fun SpatialVideoPlayerControls(
         videoPlayerState.isControlsVisible
     ) {
         Orbiter(
-            position = OrbiterEdge.Bottom,
+            position = ContentEdge.Bottom,
             offset = 140.dp
         ) {
             Box(
@@ -346,7 +346,7 @@ fun VideoPlayerControlsInOverlay(
             BackButton(
                 onBackPressed,
                 description = stringResource(R.string.back_from_video_player),
-                isRequired = rememberIsBackButtonRequired()
+                isRequired = isBackButtonRequired()
             )
         }
     )
