@@ -58,8 +58,8 @@ import com.google.jetstream.presentation.components.Error
 import com.google.jetstream.presentation.components.KeyboardShortcut
 import com.google.jetstream.presentation.components.Loading
 import com.google.jetstream.presentation.components.desktop.BackNavigationContextMenu
-import com.google.jetstream.presentation.components.feature.rememberImmersiveModeAvailability
 import com.google.jetstream.presentation.components.feature.isBackButtonRequired
+import com.google.jetstream.presentation.components.feature.rememberImmersiveModeAvailability
 import com.google.jetstream.presentation.components.handleKeyboardShortcuts
 import com.google.jetstream.presentation.components.shim.onSpaceBarPressed
 import com.google.jetstream.presentation.components.shim.tryRequestFocus

@@ -19,7 +19,6 @@ package com.google.jetstream
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.KeyEvent
 import android.view.KeyboardShortcutGroup
 import android.view.KeyboardShortcutInfo
@@ -91,7 +90,6 @@ class MainActivity : ComponentActivity() {
     private fun tryEnableCustomHeader() {
         if (toEnableCustomHeader()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
-                Log.d("MainActivity", "Custom header enabled")
                 window.insetsController?.apply {
                     setSystemBarsAppearance(
                         WindowInsetsController.APPEARANCE_TRANSPARENT_CAPTION_BAR_BACKGROUND,

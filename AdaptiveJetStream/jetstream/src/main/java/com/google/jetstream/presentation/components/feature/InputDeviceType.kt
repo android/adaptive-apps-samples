@@ -20,7 +20,6 @@ import android.content.Context
 import android.hardware.input.InputManager
 import android.os.Handler
 import android.os.HandlerThread
-import android.util.Log
 import android.view.InputDevice
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
@@ -85,7 +84,6 @@ class InputDeviceMonitor(
                 .toSet()
                 .toList()
 
-            Log.d("InputDeviceMonitor", "Available device types: $updatedList")
             onInputDeviceUpdated(updatedList)
         }
     }
@@ -95,7 +93,6 @@ class InputDeviceMonitor(
         handler = Handler(looper)
         inputManager.registerInputDeviceListener(listener, handler)
     }
-
 }
 
 @Composable

@@ -16,11 +16,9 @@
 
 package com.google.jetstream.presentation.components
 
-import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.google.jetstream.presentation.components.feature.isBackButtonRequired
@@ -49,9 +47,6 @@ fun BackButton(
     description: String? = null,
     isRequired: Boolean = isBackButtonRequired()
 ) {
-    LaunchedEffect(isRequired) {
-        Log.d("BackButton", "isBackButton: $isRequired")
-    }
     if (isRequired) {
         BackButton(
             onClick = onClick,
