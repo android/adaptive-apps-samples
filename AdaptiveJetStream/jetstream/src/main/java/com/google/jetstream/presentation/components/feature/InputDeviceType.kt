@@ -22,6 +22,7 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.view.InputDevice
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -51,7 +52,7 @@ enum class InputDeviceType {
 
 class InputDeviceMonitor(
     private var inputManager: InputManager,
-    onInputDeviceUpdated: (List<InputDeviceType>) -> Unit
+    private val onInputDeviceUpdated: (List<InputDeviceType>) -> Unit
 ) : HandlerThread("InputDeviceMonitor") {
 
     private lateinit var handler: Handler
@@ -67,31 +68,36 @@ class InputDeviceMonitor(
         override fun onInputDeviceChanged(deviceId: Int) {
             updateDeviceList()
         }
+    }
 
-        private fun updateDeviceList() {
-            val updatedList = inputManager.inputDeviceIds
-                .map { deviceId ->
-                    inputManager.getInputDevice(deviceId)
-                }
-                .filterNotNull()
-                .filter { device ->
-                    device.isEnabled && !device.isVirtual
-                }
-                .map { device ->
-                    device.deviceType()
-                }
-                .flatten()
-                .toSet()
-                .toList()
-
-            onInputDeviceUpdated(updatedList)
-        }
+    private fun updateDeviceList() {
+        val updatedList = inputManager.inputDeviceIds
+            .map { deviceId ->
+                inputManager.getInputDevice(deviceId)
+            }
+            .filterNotNull()
+            .filter { device ->
+                device.isEnabled && !device.isVirtual
+            }
+            .map { device ->
+                device.deviceType()
+            }
+            .flatten()
+            .toSet()
+            .toList()
+        onInputDeviceUpdated(updatedList)
     }
 
     override fun onLooperPrepared() {
         super.onLooperPrepared()
         handler = Handler(looper)
         inputManager.registerInputDeviceListener(listener, handler)
+        updateDeviceList()
+    }
+
+    override fun quitSafely(): Boolean {
+        inputManager.unregisterInputDeviceListener(listener)
+        return super.quitSafely()
     }
 }
 
@@ -108,8 +114,14 @@ internal fun rememberInputDeviceMonitor(
         InputDeviceMonitor(
             inputManager = inputManager,
             onInputDeviceUpdated = onInputDeviceUpdated
-        ).also { monitor ->
+        )
+    }.also { monitor ->
+        DisposableEffect(monitor) {
             monitor.start()
+
+            onDispose {
+                monitor.quitSafely()
+            }
         }
     }
 }
