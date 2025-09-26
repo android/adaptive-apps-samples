@@ -20,7 +20,7 @@ import com.google.jetstream.data.models.MoviesResponseItem
 
 data class Movie(
     val id: String,
-    val videoUri: String,
+    val sources: List<Source>,
     val subtitleUri: String?,
     val posterUri: String,
     val name: String,
@@ -30,7 +30,7 @@ data class Movie(
         fun from(movieDetails: MovieDetails): Movie {
             return Movie(
                 id = movieDetails.id,
-                videoUri = movieDetails.videoUri,
+                sources = movieDetails.sources,
                 subtitleUri = movieDetails.subtitleUri,
                 posterUri = movieDetails.posterUri,
                 name = movieDetails.name,
@@ -45,9 +45,10 @@ fun MoviesResponseItem.toMovie(thumbnailType: ThumbnailType = ThumbnailType.Stan
         ThumbnailType.Standard -> image_2_3
         ThumbnailType.Long -> image_16_9
     }
+
     return Movie(
-        id,
-        videoUri,
+        id = id,
+        sources = sources.map(Source::from),
         subtitleUri,
         thumbnail,
         title,

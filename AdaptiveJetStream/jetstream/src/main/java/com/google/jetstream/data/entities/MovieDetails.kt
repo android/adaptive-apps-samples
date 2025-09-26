@@ -18,7 +18,7 @@ package com.google.jetstream.data.entities
 
 data class MovieDetails(
     val id: String,
-    val videoUri: String,
+    val sources: List<Source>,
     val subtitleUri: String?,
     val posterUri: String,
     val name: String,
@@ -38,3 +38,4 @@ data class MovieDetails(
     val similarMovies: MovieList,
     val reviewsAndRatings: List<MovieReviewsAndRatings>
 )
+

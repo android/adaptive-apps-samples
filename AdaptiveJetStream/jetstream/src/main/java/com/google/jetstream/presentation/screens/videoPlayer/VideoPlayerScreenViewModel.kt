@@ -181,7 +181,7 @@ private fun MovieDetails.intoMediaItem(): MediaItem {
 private fun Movie.intoMediaItem(): MediaItem {
     return MediaItem.Builder()
         .setMediaId(id)
-        .setUri(videoUri)
+        .setUri(sources[0].url)
         .setSubtitleConfigurations(
             if (subtitleUri == null) {
                 emptyList()
