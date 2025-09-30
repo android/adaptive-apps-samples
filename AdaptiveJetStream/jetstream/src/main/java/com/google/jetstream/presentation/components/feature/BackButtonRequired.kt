@@ -17,17 +17,14 @@
 package com.google.jetstream.presentation.components.feature
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 
+// This function determines if the back button is required
+// so that users can comfortably navigate back to the previous screen when they are using
+// the app in the environment without touch screen or hardware back button as d-pad has.
 @Composable
-fun rememberIsBackButtonRequired(): Boolean {
-    val formFactor = rememberFormFactor()
-    return remember(formFactor) {
-        when (formFactor) {
-            FormFactor.Desk -> true
-            FormFactor.Car -> true
-            FormFactor.Xr -> true
-            else -> false
-        }
-    }
+fun isBackButtonRequired(): Boolean {
+    return isAutomotiveEnabled() ||
+        isMouseAvailable() ||
+        isTouchPadAvailable() ||
+        isXrSessionAvailable()
 }

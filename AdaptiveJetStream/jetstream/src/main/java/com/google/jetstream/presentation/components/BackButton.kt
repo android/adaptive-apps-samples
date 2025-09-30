@@ -21,7 +21,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.google.jetstream.presentation.components.feature.rememberIsBackButtonRequired
+import com.google.jetstream.presentation.components.feature.isBackButtonRequired
 import com.google.jetstream.presentation.screens.videoPlayer.components.button.VideoPlayerControlsIcon
 
 @Composable
@@ -45,7 +45,7 @@ fun BackButton(
     modifier: Modifier = Modifier,
     icon: ImageVector = Icons.AutoMirrored.Filled.ArrowBack,
     description: String? = null,
-    isRequired: Boolean = rememberIsBackButtonRequired()
+    isRequired: Boolean = isBackButtonRequired()
 ) {
     if (isRequired) {
         BackButton(
