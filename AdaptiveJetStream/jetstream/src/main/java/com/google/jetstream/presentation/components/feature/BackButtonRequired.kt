@@ -18,6 +18,9 @@ package com.google.jetstream.presentation.components.feature
 
 import androidx.compose.runtime.Composable
 
+// This function determines if the back button is required
+// so that users can comfortably navigate back to the previous screen when they are using
+// the app in the environment without touch screen or hardware back button as d-pad has.
 @Composable
 fun isBackButtonRequired(): Boolean {
     return isAutomotiveEnabled() ||
