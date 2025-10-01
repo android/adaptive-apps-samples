@@ -58,7 +58,7 @@ fun AdaptiveAppNavigationItems(
 }
 
 @Composable
-fun ToggleFullSpaceModeItems(
+fun ToggleFullSpaceModeItem(
     xrSession: Session?,
     spatialConfiguration: SpatialConfiguration,
     isSpatialUiEnabled: Boolean,
