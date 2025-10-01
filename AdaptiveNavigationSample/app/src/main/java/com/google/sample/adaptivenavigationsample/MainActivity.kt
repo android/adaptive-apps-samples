@@ -17,7 +17,6 @@ package com.google.sample.adaptivenavigationsample
  */
 
 import android.os.Bundle
-import android.widget.RadioGroup
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -56,7 +55,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import com.google.sample.adaptivenavigationsample.ui.theme.AdaptiveNavigationSampleTheme
@@ -137,7 +135,10 @@ fun NavigationSample() {
                         .height(56.dp)
                         .selectable(
                             selected = (text == selectedOption),
-                            onClick = { onOptionSelected(text); verticalArrangement = arrangement },
+                            onClick = {
+                                onOptionSelected(text);
+                                verticalArrangement = arrangement
+                            },
                             role = Role.RadioButton
                         )
                         .padding(horizontal = 16.dp),

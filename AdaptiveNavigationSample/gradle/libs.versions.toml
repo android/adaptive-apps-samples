@@ -9,7 +9,7 @@ lifecycleRuntimeKtx = "2.9.4"
 activityCompose = "1.11.0"
 composeBom = "2025.09.01"
 material3-adaptive = "1.2.0-beta03"
-material3-adaptive-navigation = "1.5.0-alpha04"
+material3-adaptive-navigation-suite = "1.5.0-alpha04"
 material-icons = "1.7.8"
 
 [libraries]
@@ -28,7 +28,7 @@ androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-man
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-material3-adaptive = { group = "androidx.compose.material3.adaptive", name = "adaptive", version.ref = "material3-adaptive" }
-androidx-material3-adaptive-navigation = { group = "androidx.compose.material3", name = "material3-adaptive-navigation-suite", version.ref = "material3-adaptive-navigation" }
+androidx-material3-adaptive-navigation-suite = { group = "androidx.compose.material3", name = "material3-adaptive-navigation-suite", version.ref = "material3-adaptive-navigation-suite" }
 androidx-material-icons = { group = "androidx.compose.material", name = "material-icons-core", version.ref = "material-icons" }
 androidx-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "material-icons" }
 

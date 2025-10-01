@@ -50,7 +50,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.material3.adaptive)
-    implementation(libs.androidx.material3.adaptive.navigation)
+    implementation(libs.androidx.material3.adaptive.navigation.suite)
     implementation(libs.androidx.material.icons)
     implementation(libs.androidx.material.icons.extended)
     testImplementation(libs.junit)
