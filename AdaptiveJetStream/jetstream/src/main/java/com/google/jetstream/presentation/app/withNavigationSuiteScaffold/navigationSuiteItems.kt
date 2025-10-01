@@ -20,7 +20,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScope
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteItem
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
@@ -31,13 +32,14 @@ import androidx.xr.runtime.Session
 import com.google.jetstream.R
 import com.google.jetstream.presentation.screens.Screens
 
-fun NavigationSuiteScope.navigationSuiteItems(
+@Composable
+fun AdaptiveAppNavigationItems(
     currentScreen: Screens,
     screens: List<Screens>,
     onSelectScreen: (Screens) -> Unit,
 ) {
     screens.forEach { screen ->
-        item(
+        NavigationSuiteItem(
             selected = screen == currentScreen,
             onClick = {
                 onSelectScreen(screen)
@@ -55,7 +57,8 @@ fun NavigationSuiteScope.navigationSuiteItems(
     }
 }
 
-fun NavigationSuiteScope.toggleFullSpaceMode(
+@Composable
+fun ToggleFullSpaceModeItem(
     xrSession: Session?,
     spatialConfiguration: SpatialConfiguration,
     isSpatialUiEnabled: Boolean,
@@ -73,7 +76,7 @@ fun NavigationSuiteScope.toggleFullSpaceMode(
             R.string.full_space_mode
         }
 
-        item(
+        NavigationSuiteItem(
             selected = false,
             onClick = {
                 if (isSpatialUiEnabled) {

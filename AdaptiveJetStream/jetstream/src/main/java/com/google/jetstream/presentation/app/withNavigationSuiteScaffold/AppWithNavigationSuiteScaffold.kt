@@ -19,6 +19,7 @@ package com.google.jetstream.presentation.app.withNavigationSuiteScaffold
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -82,20 +83,21 @@ fun AppWithNavigationSuiteScaffold(
     NavigationSuiteScaffold(
         modifier = modifier.fillMaxSize(),
         state = navigationSuiteScaffoldState,
-        navigationSuiteItems = {
-            navigationSuiteItems(appState.selectedScreen, screensInGlobalNavigation) {
+        navigationItems = {
+            AdaptiveAppNavigationItems(appState.selectedScreen, screensInGlobalNavigation) {
                 if (it != appState.selectedScreen) {
                     navController.navigate(it())
                 }
             }
             if (xrSession != null) {
-                toggleFullSpaceMode(
+                ToggleFullSpaceModeItem(
                     xrSession = xrSession,
                     isSpatialUiEnabled = isSpatialUiEnabled,
                     spatialConfiguration = spatialConfiguration
                 )
             }
-        }
+        },
+        navigationItemVerticalArrangement = Arrangement.Center
     ) {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
