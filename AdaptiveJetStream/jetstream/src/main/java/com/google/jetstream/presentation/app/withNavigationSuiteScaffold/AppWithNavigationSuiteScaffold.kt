@@ -90,7 +90,7 @@ fun AppWithNavigationSuiteScaffold(
                 }
             }
             if (xrSession != null) {
-                ToggleFullSpaceModeItems(
+                ToggleFullSpaceModeItem(
                     xrSession = xrSession,
                     isSpatialUiEnabled = isSpatialUiEnabled,
                     spatialConfiguration = spatialConfiguration
