@@ -8,7 +8,7 @@ The core changes to an existing codebase are:
 - Pass the `Arrangement.Vertical` value to the `navigationItemVerticalArrangement` parameter in the `NavigationSuiteScaffold` declaration.
 
 ## Screenshot
-![Animation of the Navigation Suite Scaffold changing arrangement based on user's choice](/resources/scaffold_animated.gif)
+![Animation of the Navigation Suite Scaffold changing arrangement based on user's choice](https://github.com/android/adaptive-apps-samples/blob/main/AdaptiveNavigationSample/resources/scaffold_animated.gif)
 
 ### License
 
