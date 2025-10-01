@@ -65,8 +65,7 @@ enum class AppDestinations(
     val iconSelected: ImageVector,
     @StringRes val contentDescription: Int
 ) {
-    HOME(R.string.home, Icons.Outlined.Home, Icons.Filled.Home, R.string.home),
-    FAVORITES(
+    HOME(R.string.home, Icons.Outlined.Home, Icons.Filled.Home, R.string.home), FAVORITES(
         R.string.favorites, Icons.Outlined.Favorite, Icons.Filled.Favorite, R.string.favorites
     ),
     SHOPPING(
@@ -92,16 +91,15 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun NavigationSample() {
     var selectedItem by remember { mutableIntStateOf(0) }
-    var verticalArrangement by remember { mutableStateOf<Arrangement.Vertical>(Arrangement.Center) }
-    val radioOptions = listOf(
-        "Top" to Arrangement.Top,
-        "Center" to Arrangement.Center,
-        "Bottom" to Arrangement.Bottom
+    val options = listOf(
+        "Top" to Arrangement.Top, "Center" to Arrangement.Center, "Bottom" to Arrangement.Bottom
     )
-    val (selectedOption, onOptionSelected) = remember { mutableStateOf(radioOptions[1].first) }
+
+    val (verticalArrangement, onOptionSelected) = remember { mutableStateOf(options[1]) }
 
     NavigationSuiteScaffold(
-        modifier = Modifier.fillMaxSize(), navigationItems = {
+        modifier = Modifier.fillMaxSize(),
+        navigationItems = {
             AppDestinations.entries.forEachIndexed { index, item ->
                 NavigationSuiteItem(
                     icon = {
@@ -118,7 +116,8 @@ fun NavigationSample() {
                     selected = index == selectedItem,
                     onClick = { selectedItem = index })
             }
-        }, navigationItemVerticalArrangement = verticalArrangement
+        },
+        navigationItemVerticalArrangement = verticalArrangement.second
     ) {
         Column(
             modifier = Modifier
@@ -127,29 +126,24 @@ fun NavigationSample() {
             verticalArrangement = Arrangement.Center
         ) {
             Text("NavRail icons arrangement", style = MaterialTheme.typography.headlineSmall)
-            radioOptions.forEach { item ->
-                val (text, arrangement) = item
+            options.forEach { item ->
                 Row(
                     Modifier
                         .fillMaxWidth()
                         .height(56.dp)
                         .selectable(
-                            selected = (text == selectedOption),
-                            onClick = {
-                                onOptionSelected(text);
-                                verticalArrangement = arrangement
-                            },
-                            role = Role.RadioButton
+                            selected = (item == verticalArrangement), onClick = {
+                                onOptionSelected(item)
+                            }, role = Role.RadioButton
                         )
                         .padding(horizontal = 16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     RadioButton(
-                        selected = (text == selectedOption),
-                        onClick = null
+                        selected = (item == verticalArrangement), onClick = null
                     )
                     Text(
-                        text = text,
+                        text = item.first,
                         style = MaterialTheme.typography.bodyLarge,
                         modifier = Modifier.padding(start = 16.dp)
                     )
