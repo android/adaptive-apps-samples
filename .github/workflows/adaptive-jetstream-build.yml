@@ -25,8 +25,8 @@ jobs:
 
       - name: Make gradlew executable
         run: chmod +x ./gradlew
-        working-directory: /AdaptiveJetStream
+        working-directory: ./AdaptiveJetStream
 
       - name: Build feed-compose app
-        working-directory: /AdaptiveJetStream
+        working-directory: ./AdaptiveJetStream
         run: ./gradlew :jetstream:assembleDebug
