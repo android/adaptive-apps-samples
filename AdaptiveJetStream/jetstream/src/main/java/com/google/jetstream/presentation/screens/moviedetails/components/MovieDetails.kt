@@ -69,7 +69,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun MovieDetails(
     movieDetails: MovieDetails,
-    goToMoviePlayer: () -> Unit,
+    goToMoviePlayer: (MovieDetails) -> Unit,
     contentPadding: Padding = LocalContentPadding.current
 ) {
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
@@ -118,7 +118,7 @@ fun MovieDetails(
                             coroutineScope.launch { bringIntoViewRequester.bringIntoView() }
                         }
                     },
-                    goToMoviePlayer = goToMoviePlayer
+                    goToMoviePlayer = { goToMoviePlayer(movieDetails) }
                 )
             }
         }

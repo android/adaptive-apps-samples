@@ -99,8 +99,8 @@ class VideoPlayerState internal constructor(
         it is PlayerEvent.SizeChanged || it == PlayerEvent.SizeUnknown
     }.map { event ->
         when (event) {
-            is PlayerEvent.SizeChanged -> event.toSize()
-            else -> null
+            is PlayerEvent.SizeChanged -> Size.from(event)
+            else -> Size(1920f, 1080f)
         }
     }
 
@@ -149,13 +149,20 @@ fun rememberVideoPlayerState(
 private sealed interface PlayerEvent {
     data object Paused : PlayerEvent
     data object Started : PlayerEvent
-    data class SizeChanged(val size: VideoSize) : PlayerEvent {
-        fun toSize(): Size {
-            return Size(size.width.toFloat(), size.height.toFloat())
-        }
-    }
-
+    data class SizeChanged(val size: VideoSize) : PlayerEvent
     data object SizeUnknown : PlayerEvent
+}
+
+
+private fun Size.Companion.from(event: PlayerEvent.SizeChanged): Size {
+    return Size.from(event.size)
+}
+
+private fun Size.Companion.from(videoSize: VideoSize): Size {
+    return Size(
+        width = videoSize.width.toFloat(),
+        height = videoSize.height.toFloat()
+    )
 }
 
 private enum class ControlsHideOperation {

@@ -16,16 +16,33 @@
 
 package com.google.jetstream.data.entities
 
+import android.net.Uri
+import androidx.core.net.toUri
 import com.google.jetstream.data.models.MoviesResponseItem
 
 data class Movie(
     val id: String,
-    val sources: List<Source>,
+    val sources: Map<StereoscopicVisionType, Uri>,
     val subtitleUri: String?,
     val posterUri: String,
     val name: String,
     val description: String
 ) {
+    fun videoUriFor(
+        stereoscopicVisionType: StereoscopicVisionType = StereoscopicVisionType.Mono
+    ): Uri? {
+        return sources[stereoscopicVisionType]
+    }
+
+    fun supportingStereoModes(): List<StereoscopicVisionType> {
+        return sources.keys.toList() - StereoscopicVisionType.Mono
+    }
+
+    val videoUri: Uri
+        get() {
+            return videoUriFor() ?: sources.values.first()
+        }
+
     companion object {
         fun from(movieDetails: MovieDetails): Movie {
             return Movie(
@@ -46,9 +63,13 @@ fun MoviesResponseItem.toMovie(thumbnailType: ThumbnailType = ThumbnailType.Stan
         ThumbnailType.Long -> image_16_9
     }
 
+    val sourceMap = sources.associate {
+        StereoscopicVisionType.from(it.stereoMode) to it.uri.toUri()
+    }
+
     return Movie(
         id = id,
-        sources = sources.map(Source::from),
+        sources = sourceMap,
         subtitleUri,
         thumbnail,
         title,

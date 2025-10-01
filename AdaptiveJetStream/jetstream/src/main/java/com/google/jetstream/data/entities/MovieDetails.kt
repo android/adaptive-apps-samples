@@ -16,9 +16,11 @@
 
 package com.google.jetstream.data.entities
 
+import android.net.Uri
+
 data class MovieDetails(
     val id: String,
-    val sources: List<Source>,
+    val sources: Map<StereoscopicVisionType, Uri>,
     val subtitleUri: String?,
     val posterUri: String,
     val name: String,
