@@ -70,12 +70,11 @@ class AppState internal constructor(
 
     private fun updateNavigationVisibility() {
         isNavigationVisible = when (navigationComponentType) {
-            NavigationComponentType.NavigationSuiteScaffold -> {
-                selectedScreen.navigationVisibility.isVisibleInNavigationSuite
-            }
-
             NavigationComponentType.TopBar -> {
-                selectedScreen.navigationVisibility.isVisibleInCustomNavigation
+                selectedScreen.navigationVisibility.isVisibleInTopBar
+            }
+            else -> {
+                selectedScreen.navigationVisibility.isVisibleInNavigationSuite
             }
         }
     }
