@@ -19,13 +19,16 @@ package com.google.jetstream.presentation.app
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import com.google.jetstream.presentation.components.feature.SpatialMode
+import com.google.jetstream.presentation.components.feature.currentSpatialMode
 import com.google.jetstream.presentation.components.feature.isAutomotiveEnabled
 import com.google.jetstream.presentation.components.feature.isLeanbackEnabled
 import com.google.jetstream.presentation.components.feature.isWidthAtLeastLarge
 
 enum class NavigationComponentType {
     NavigationSuiteScaffold,
-    TopBar
+    TopBar,
+    Spatial
 }
 
 @Composable
@@ -33,12 +36,14 @@ fun rememberNavigationComponentType(): NavigationComponentType {
     val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
     val isLeanbackEnabled = isLeanbackEnabled()
     val isAutomotiveEnabled = isAutomotiveEnabled()
+    val spatialMode = currentSpatialMode()
 
-    return remember(isLeanbackEnabled, isAutomotiveEnabled, windowSizeClass) {
+    return remember(isLeanbackEnabled, isAutomotiveEnabled, windowSizeClass, spatialMode) {
         selectNavigationComponentType(
             isLeanbackEnabled = isLeanbackEnabled,
             isAutomotiveEnabled = isAutomotiveEnabled,
-            isLargeWindow = windowSizeClass.isWidthAtLeastLarge()
+            isLargeWindow = windowSizeClass.isWidthAtLeastLarge(),
+            spatialMode = spatialMode
         )
     }
 }
@@ -48,8 +53,10 @@ private fun selectNavigationComponentType(
     isLeanbackEnabled: Boolean,
     isAutomotiveEnabled: Boolean,
     isLargeWindow: Boolean,
+    spatialMode: SpatialMode,
 ): NavigationComponentType {
     return when {
+        spatialMode == SpatialMode.Full -> NavigationComponentType.Spatial
         isLeanbackEnabled -> NavigationComponentType.TopBar
         isAutomotiveEnabled -> NavigationComponentType.TopBar
         isLargeWindow -> NavigationComponentType.TopBar

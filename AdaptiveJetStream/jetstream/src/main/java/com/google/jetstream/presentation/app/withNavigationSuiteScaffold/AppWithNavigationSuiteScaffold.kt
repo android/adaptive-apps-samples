@@ -34,12 +34,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import androidx.xr.compose.platform.LocalSession
-import androidx.xr.compose.platform.LocalSpatialCapabilities
 import androidx.xr.compose.platform.LocalSpatialConfiguration
 import com.google.jetstream.presentation.app.AppState
 import com.google.jetstream.presentation.app.NavigationTree
 import com.google.jetstream.presentation.app.updateTopBarVisibility
+import com.google.jetstream.presentation.components.feature.hasXrSpatialFeature
 import com.google.jetstream.presentation.screens.Screens
 
 @Composable
@@ -54,8 +53,7 @@ fun AppWithNavigationSuiteScaffold(
         Screens.entries.filter { it.isMainNavigation }
     }
 
-    val xrSession = LocalSession.current
-    val isSpatialUiEnabled = LocalSpatialCapabilities.current.isSpatialUiEnabled
+    val hasXrSpatialFeature = hasXrSpatialFeature()
     val spatialConfiguration = LocalSpatialConfiguration.current
     val navigationType =
         NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(currentWindowAdaptiveInfo())
@@ -68,8 +66,8 @@ fun AppWithNavigationSuiteScaffold(
         }
     }
 
-    val paddingTop = remember(xrSession) {
-        if (xrSession != null) {
+    val paddingTop = remember(hasXrSpatialFeature) {
+        if (hasXrSpatialFeature) {
             32.dp
         } else {
             0.dp
@@ -88,13 +86,10 @@ fun AppWithNavigationSuiteScaffold(
                     navController.navigate(it())
                 }
             }
-            if (xrSession != null) {
-                toggleFullSpaceMode(
-                    xrSession = xrSession,
-                    isSpatialUiEnabled = isSpatialUiEnabled,
-                    spatialConfiguration = spatialConfiguration
-                )
-            }
+            requestFullSpaceMode(
+                hasXrSpatialFeature = hasXrSpatialFeature,
+                spatialConfiguration = spatialConfiguration
+            )
         }
     ) {
         Scaffold(
