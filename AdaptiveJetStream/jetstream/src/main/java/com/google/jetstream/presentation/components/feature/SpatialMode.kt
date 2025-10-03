@@ -16,25 +16,26 @@
 
 package com.google.jetstream.presentation.components.feature
 
-import android.content.pm.PackageManager
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.ui.platform.LocalContext
+import androidx.xr.compose.platform.LocalSpatialCapabilities
+import androidx.xr.compose.platform.LocalSpatialConfiguration
+
+enum class SpatialMode {
+    None,
+    Home,
+    Full
+}
 
 @Composable
-private fun hasSystemFeature(feature: String): Boolean {
-    val context = LocalContext.current
-    return remember(feature) {
-        context.packageManager.hasSystemFeature(feature)
+fun hasXrSpatialFeature(): Boolean {
+    return LocalSpatialConfiguration.current.hasXrSpatialFeature
+}
+
+@Composable
+fun currentSpatialMode(): SpatialMode {
+    return when {
+        !hasXrSpatialFeature() -> SpatialMode.None
+        LocalSpatialCapabilities.current.isSpatialUiEnabled -> SpatialMode.Full
+        else -> SpatialMode.Home
     }
-}
-
-@Composable
-internal fun isLeanbackEnabled(): Boolean {
-    return hasSystemFeature(PackageManager.FEATURE_LEANBACK)
-}
-
-@Composable
-internal fun isAutomotiveEnabled(): Boolean {
-    return hasSystemFeature(PackageManager.FEATURE_AUTOMOTIVE)
 }

@@ -99,18 +99,18 @@ enum class Screens(
 
 sealed interface NavigationVisibility {
     val isVisibleInNavigationSuite: Boolean
-    val isVisibleInCustomNavigation: Boolean
+    val isVisibleInTopBar: Boolean
 
     data object Visible : NavigationVisibility {
         override val isVisibleInNavigationSuite = true
-        override val isVisibleInCustomNavigation = true
+        override val isVisibleInTopBar = true
     }
     data object Hidden : NavigationVisibility {
         override val isVisibleInNavigationSuite = false
-        override val isVisibleInCustomNavigation = false
+        override val isVisibleInTopBar = false
     }
     data object VisibleInNavigationSuite : NavigationVisibility {
         override val isVisibleInNavigationSuite = true
-        override val isVisibleInCustomNavigation = false
+        override val isVisibleInTopBar = false
     }
 }

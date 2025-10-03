@@ -16,6 +16,7 @@
 
 package com.google.jetstream.presentation
 
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -28,6 +29,7 @@ import com.google.jetstream.presentation.app.rememberAppState
 import com.google.jetstream.presentation.app.rememberNavigationComponentType
 import com.google.jetstream.presentation.app.withNavigationSuiteScaffold.AppWithNavigationSuiteScaffold
 import com.google.jetstream.presentation.app.withNavigationSuiteScaffold.EnableProminentMovieListOverride
+import com.google.jetstream.presentation.app.withSpatialNavigation.AppWithSpatialNavigation
 import com.google.jetstream.presentation.app.withTopBarNavigation.AppWithTopBarNavigation
 import com.google.jetstream.presentation.components.KeyboardShortcut
 import com.google.jetstream.presentation.components.ModifierKey
@@ -141,21 +143,35 @@ fun App(
     when (navigationComponentType) {
         NavigationComponentType.NavigationSuiteScaffold -> {
             EnableProminentMovieListOverride {
-                AppWithNavigationSuiteScaffold(
+                Surface {
+                    AppWithNavigationSuiteScaffold(
+                        appState = appState,
+                        navController = navController,
+                        modifier = modifier.handleKeyboardShortcuts(keyboardShortcuts),
+                    )
+                }
+            }
+        }
+
+        NavigationComponentType.TopBar -> {
+            Surface {
+                AppWithTopBarNavigation(
                     appState = appState,
+                    onActivityBackPressed = onActivityBackPressed,
                     navController = navController,
                     modifier = modifier.handleKeyboardShortcuts(keyboardShortcuts),
                 )
             }
         }
 
-        NavigationComponentType.TopBar -> {
-            AppWithTopBarNavigation(
-                appState = appState,
-                onActivityBackPressed = onActivityBackPressed,
-                navController = navController,
-                modifier = modifier.handleKeyboardShortcuts(keyboardShortcuts),
-            )
+        NavigationComponentType.Spatial -> {
+            EnableProminentMovieListOverride {
+                AppWithSpatialNavigation(
+                    appState = appState,
+                    navController = navController,
+                    modifier = modifier.handleKeyboardShortcuts(keyboardShortcuts),
+                )
+            }
         }
     }
 }

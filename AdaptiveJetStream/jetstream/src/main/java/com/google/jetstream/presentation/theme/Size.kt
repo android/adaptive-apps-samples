@@ -57,8 +57,8 @@ fun rememberFeaturedCarouselHeight(
 ): Dp {
     return remember(navigationComponentType) {
         when (navigationComponentType) {
-            NavigationComponentType.NavigationSuiteScaffold -> 385.dp
             NavigationComponentType.TopBar -> 324.dp
+            else -> 385.dp
         }
     }
 }
@@ -69,8 +69,8 @@ fun rememberVerticalCardAspectRatio(
 ): Float {
     return remember(navigationComponentType) {
         when (navigationComponentType) {
-            NavigationComponentType.NavigationSuiteScaffold -> 0.67021f
             NavigationComponentType.TopBar -> 0.65625f // 10.5f / 16f
+            else -> 0.67021f
         }
     }
 }
@@ -124,8 +124,8 @@ fun rememberCategoryGridColumns(
 ): GridCells {
     return remember(navigationComponentType) {
         when (navigationComponentType) {
-            NavigationComponentType.NavigationSuiteScaffold -> GridCells.Fixed(3)
             NavigationComponentType.TopBar -> GridCells.Fixed(4)
+            else -> GridCells.Fixed(3)
         }
     }
 }

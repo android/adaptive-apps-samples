@@ -26,5 +26,5 @@ fun isBackButtonRequired(): Boolean {
     return isAutomotiveEnabled() ||
         isMouseAvailable() ||
         isTouchPadAvailable() ||
-        isXrSessionAvailable()
+        hasXrSpatialFeature()
 }

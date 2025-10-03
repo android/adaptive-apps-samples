@@ -42,7 +42,7 @@ private fun calculateFilteredMoviesGridColumns(
         NavigationComponentType.TopBar -> {
             GridCells.Fixed(6)
         }
-        NavigationComponentType.NavigationSuiteScaffold -> {
+        else -> {
             windowSizeClass.filteredMoviesGridColumns()
         }
     }

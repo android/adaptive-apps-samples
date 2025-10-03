@@ -27,9 +27,10 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
+import androidx.xr.compose.platform.LocalSpatialConfiguration
 import androidx.xr.compose.platform.SpatialConfiguration
-import androidx.xr.runtime.Session
 import com.google.jetstream.R
+import com.google.jetstream.presentation.components.feature.hasXrSpatialFeature
 import com.google.jetstream.presentation.screens.Screens
 
 @Composable
@@ -58,43 +59,28 @@ fun AdaptiveAppNavigationItems(
 }
 
 @Composable
-fun ToggleFullSpaceModeItem(
-    xrSession: Session?,
-    spatialConfiguration: SpatialConfiguration,
-    isSpatialUiEnabled: Boolean,
+fun RequestFullSpaceModeItem(
+    hasXrSpatialFeature: Boolean = hasXrSpatialFeature(),
+    spatialConfiguration: SpatialConfiguration = LocalSpatialConfiguration.current
 ) {
 
-    if (xrSession != null) {
-        val icon = if (isSpatialUiEnabled) {
-            R.drawable.ic_collapse_content
-        } else {
-            R.drawable.ic_expand_content
-        }
-        val description = if (isSpatialUiEnabled) {
-            R.string.home_space_mode
-        } else {
-            R.string.full_space_mode
-        }
-
+    if (hasXrSpatialFeature) {
         NavigationSuiteItem(
             selected = false,
-            onClick = {
-                if (isSpatialUiEnabled) {
-                    spatialConfiguration.requestHomeSpaceMode()
-                } else {
-                    spatialConfiguration.requestFullSpaceMode()
-                }
-            },
+            onClick = spatialConfiguration::requestFullSpaceMode,
             icon = {
                 Icon(
-                    imageVector = ImageVector.vectorResource(icon),
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_expand_content),
                     modifier = Modifier.size(24.dp),
-                    contentDescription = stringResource(description),
+                    contentDescription = stringResource(R.string.full_space_mode),
                     tint = MaterialTheme.colorScheme.primary
                 )
             },
             label = {
-                Text(stringResource(description), color = MaterialTheme.colorScheme.primary)
+                Text(
+                    stringResource(R.string.full_space_mode),
+                    color = MaterialTheme.colorScheme.primary
+                )
             }
         )
     }
