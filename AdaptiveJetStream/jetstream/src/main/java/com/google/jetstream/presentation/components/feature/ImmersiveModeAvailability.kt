@@ -20,5 +20,5 @@ import androidx.compose.runtime.Composable
 
 @Composable
 fun rememberImmersiveModeAvailability(): Boolean {
-    return !(isLeanbackEnabled() || isXrSessionAvailable())
+    return !(isLeanbackEnabled() || hasXrSpatialFeature())
 }

@@ -33,12 +33,10 @@ import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material3.LocalAbsoluteTonalElevation
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.xr.compose.material3.EnableXrComponentOverrides
 import androidx.xr.compose.material3.ExperimentalMaterial3XrApi
 import com.google.jetstream.presentation.App
 import com.google.jetstream.presentation.theme.JetStreamTheme
@@ -59,21 +57,17 @@ class MainActivity : ComponentActivity() {
                 CompositionLocalProvider(
                     LocalContentColor provides MaterialTheme.colorScheme.onSurface
                 ) {
-                    EnableXrComponentOverrides {
-                        Surface {
-                            App(
-                                onActivityBackPressed = onBackPressedDispatcher::onBackPressed,
-                                modifier = Modifier
-                                    .safeDrawingPadding()
-                                    .fillMaxSize()
-                                    .background(
-                                        MaterialTheme.colorScheme.surfaceColorAtElevation(
-                                            LocalAbsoluteTonalElevation.current
-                                        )
-                                    )
+                    App(
+                        onActivityBackPressed = onBackPressedDispatcher::onBackPressed,
+                        modifier = Modifier
+                            .safeDrawingPadding()
+                            .fillMaxSize()
+                            .background(
+                                MaterialTheme.colorScheme.surfaceColorAtElevation(
+                                    LocalAbsoluteTonalElevation.current
+                                )
                             )
-                        }
-                    }
+                    )
                 }
             }
         }

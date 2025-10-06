@@ -19,13 +19,16 @@ package com.google.jetstream.presentation.app
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import com.google.jetstream.presentation.components.feature.hasXrSpatialFeature
 import com.google.jetstream.presentation.components.feature.isAutomotiveEnabled
 import com.google.jetstream.presentation.components.feature.isLeanbackEnabled
+import com.google.jetstream.presentation.components.feature.isSpatialUiEnabled
 import com.google.jetstream.presentation.components.feature.isWidthAtLeastLarge
 
 enum class NavigationComponentType {
     NavigationSuiteScaffold,
-    TopBar
+    TopBar,
+    Spatial
 }
 
 @Composable
@@ -33,12 +36,14 @@ fun rememberNavigationComponentType(): NavigationComponentType {
     val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
     val isLeanbackEnabled = isLeanbackEnabled()
     val isAutomotiveEnabled = isAutomotiveEnabled()
+    val isSpatialUiEnabled = hasXrSpatialFeature() && isSpatialUiEnabled()
 
-    return remember(isLeanbackEnabled, isAutomotiveEnabled, windowSizeClass) {
+    return remember(isLeanbackEnabled, isAutomotiveEnabled, windowSizeClass, isSpatialUiEnabled) {
         selectNavigationComponentType(
             isLeanbackEnabled = isLeanbackEnabled,
             isAutomotiveEnabled = isAutomotiveEnabled,
-            isLargeWindow = windowSizeClass.isWidthAtLeastLarge()
+            isLargeWindow = windowSizeClass.isWidthAtLeastLarge(),
+            isSpatialUiEnabled = isSpatialUiEnabled
         )
     }
 }
@@ -48,8 +53,10 @@ private fun selectNavigationComponentType(
     isLeanbackEnabled: Boolean,
     isAutomotiveEnabled: Boolean,
     isLargeWindow: Boolean,
+    isSpatialUiEnabled: Boolean,
 ): NavigationComponentType {
     return when {
+        isSpatialUiEnabled -> NavigationComponentType.Spatial
         isLeanbackEnabled -> NavigationComponentType.TopBar
         isAutomotiveEnabled -> NavigationComponentType.TopBar
         isLargeWindow -> NavigationComponentType.TopBar
