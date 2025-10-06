@@ -19,10 +19,10 @@ package com.google.jetstream.presentation.app
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import com.google.jetstream.presentation.components.feature.SpatialMode
-import com.google.jetstream.presentation.components.feature.currentSpatialMode
+import com.google.jetstream.presentation.components.feature.hasXrSpatialFeature
 import com.google.jetstream.presentation.components.feature.isAutomotiveEnabled
 import com.google.jetstream.presentation.components.feature.isLeanbackEnabled
+import com.google.jetstream.presentation.components.feature.isSpatialUiEnabled
 import com.google.jetstream.presentation.components.feature.isWidthAtLeastLarge
 
 enum class NavigationComponentType {
@@ -36,14 +36,14 @@ fun rememberNavigationComponentType(): NavigationComponentType {
     val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
     val isLeanbackEnabled = isLeanbackEnabled()
     val isAutomotiveEnabled = isAutomotiveEnabled()
-    val spatialMode = currentSpatialMode()
+    val isSpatialUiEnabled = hasXrSpatialFeature() && isSpatialUiEnabled()
 
-    return remember(isLeanbackEnabled, isAutomotiveEnabled, windowSizeClass, spatialMode) {
+    return remember(isLeanbackEnabled, isAutomotiveEnabled, windowSizeClass, isSpatialUiEnabled) {
         selectNavigationComponentType(
             isLeanbackEnabled = isLeanbackEnabled,
             isAutomotiveEnabled = isAutomotiveEnabled,
             isLargeWindow = windowSizeClass.isWidthAtLeastLarge(),
-            spatialMode = spatialMode
+            isSpatialUiEnabled = isSpatialUiEnabled
         )
     }
 }
@@ -53,10 +53,10 @@ private fun selectNavigationComponentType(
     isLeanbackEnabled: Boolean,
     isAutomotiveEnabled: Boolean,
     isLargeWindow: Boolean,
-    spatialMode: SpatialMode,
+    isSpatialUiEnabled: Boolean,
 ): NavigationComponentType {
     return when {
-        spatialMode == SpatialMode.Full -> NavigationComponentType.Spatial
+        isSpatialUiEnabled -> NavigationComponentType.Spatial
         isLeanbackEnabled -> NavigationComponentType.TopBar
         isAutomotiveEnabled -> NavigationComponentType.TopBar
         isLargeWindow -> NavigationComponentType.TopBar

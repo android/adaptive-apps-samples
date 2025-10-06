@@ -20,22 +20,12 @@ import androidx.compose.runtime.Composable
 import androidx.xr.compose.platform.LocalSpatialCapabilities
 import androidx.xr.compose.platform.LocalSpatialConfiguration
 
-enum class SpatialMode {
-    None,
-    Home,
-    Full
-}
-
 @Composable
 fun hasXrSpatialFeature(): Boolean {
     return LocalSpatialConfiguration.current.hasXrSpatialFeature
 }
 
 @Composable
-fun currentSpatialMode(): SpatialMode {
-    return when {
-        !hasXrSpatialFeature() -> SpatialMode.None
-        LocalSpatialCapabilities.current.isSpatialUiEnabled -> SpatialMode.Full
-        else -> SpatialMode.Home
-    }
+fun isSpatialUiEnabled(): Boolean {
+    return LocalSpatialCapabilities.current.isSpatialUiEnabled
 }
