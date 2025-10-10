@@ -71,7 +71,9 @@ fun NavigationTree(
             arguments = movieDetailsScreenArguments
         ) {
             MovieDetailsScreen(
-                goToMoviePlayer = { navController.navigate(VideoPlayer()) },
+                goToMoviePlayer = { movieDetails ->
+                    navController.openVideoPlayer(movieDetails.id)
+                },
                 refreshScreenWithNewMovie = { movie ->
                     navController.navigate(
                         MovieDetails.withArgs(movie.id)

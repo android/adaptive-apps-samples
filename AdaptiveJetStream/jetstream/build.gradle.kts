@@ -135,6 +135,9 @@ dependencies {
     implementation(libs.androidx.xr.compose)
     implementation(libs.androidx.xr.compose.material3)
 
+    // Concurrency & coroutine
+    implementation(libs.androidx.concurrent.futures.ktx)
+
     // Compose Previews
     debugImplementation(libs.androidx.compose.ui.tooling)
 

@@ -85,7 +85,7 @@ class MovieRepositoryImpl @Inject constructor(
 
         return MovieDetails(
             id = movie.id,
-            videoUri = movie.videoUri,
+            sources = movie.sources,
             subtitleUri = movie.subtitleUri,
             posterUri = movie.posterUri,
             name = movie.name,

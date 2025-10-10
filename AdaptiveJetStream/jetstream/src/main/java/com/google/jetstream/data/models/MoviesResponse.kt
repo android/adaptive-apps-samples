@@ -21,7 +21,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class MoviesResponseItem(
     val id: String,
-    val videoUri: String,
+    val sources: List<SourceDescription>,
     val subtitleUri: String?,
     val rank: Int,
     val rankUpDown: String,
@@ -41,4 +41,10 @@ data class MoviesResponseItem(
     val genres: String,
     val directors: String,
     val stars: String,
+)
+
+@Serializable
+data class SourceDescription(
+    val uri: String,
+    val stereoMode: String,
 )
