@@ -83,6 +83,9 @@ https://www.apache.org/licenses/LICENSE-2.0
                 android:defaultHeight="540dp"
                 android:gravity="center" />
 
+            <property
+                android:name="android.window.PROPERTY_XR_ACTIVITY_START_MODE"
+                android:value="XR_ACTIVITY_START_MODE_FULL_SPACE_MANAGED" />
         </activity>
 
         <service

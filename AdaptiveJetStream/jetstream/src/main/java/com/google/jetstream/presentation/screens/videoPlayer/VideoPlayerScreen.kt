@@ -54,6 +54,7 @@ import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.ui.compose.PlayerSurface
 import androidx.media3.ui.compose.modifiers.resizeWithContentScale
+import androidx.xr.compose.platform.LocalSpatialConfiguration
 import androidx.xr.compose.spatial.ContentEdge
 import androidx.xr.compose.spatial.Orbiter
 import androidx.xr.compose.spatial.Subspace
@@ -72,6 +73,7 @@ import com.google.jetstream.presentation.components.Error
 import com.google.jetstream.presentation.components.KeyboardShortcut
 import com.google.jetstream.presentation.components.Loading
 import com.google.jetstream.presentation.components.desktop.BackNavigationContextMenu
+import com.google.jetstream.presentation.components.feature.hasXrSpatialFeature
 import com.google.jetstream.presentation.components.feature.isBackButtonRequired
 import com.google.jetstream.presentation.components.feature.isSpatialUiEnabled
 import com.google.jetstream.presentation.components.feature.rememberImmersiveModeAvailability
@@ -197,6 +199,10 @@ private fun VideoPlayer(
         .videoSize
         .collectAsStateWithLifecycle(Size(1980f, 1080f))
 
+    val hasXrSpatialFeature = hasXrSpatialFeature()
+    val isSpatialUiEnabled = isSpatialUiEnabled()
+    val spatialConfiguration = LocalSpatialConfiguration.current
+
     val focusRequester = remember { FocusRequester() }
 
     val keyboardShortcuts = remember {
@@ -204,7 +210,17 @@ private fun VideoPlayer(
             KeyboardShortcut(
                 key = Key.F,
                 action = {
-                    activity?.toggleImmersiveMode()
+                    when {
+                        !hasXrSpatialFeature -> {
+                            activity?.toggleImmersiveMode()
+                        }
+                        isSpatialUiEnabled -> {
+                            spatialConfiguration.requestHomeSpaceMode()
+                        }
+                        else -> {
+                            spatialConfiguration.requestFullSpaceMode()
+                        }
+                    }
                 }
             ),
             KeyboardShortcut(
@@ -377,6 +393,13 @@ private fun VideoPlayer2D(
     onBackPressed: () -> Unit = {}
 ) {
     val focusRequester = remember { FocusRequester() }
+
+    val size = if(videoSize == Size.Zero) {
+        null
+    } else {
+        videoSize
+    }
+
     Box(
         modifier = modifier
     ) {
@@ -384,7 +407,7 @@ private fun VideoPlayer2D(
             player = player,
             modifier = Modifier.resizeWithContentScale(
                 contentScale = ContentScale.Fit,
-                sourceSizeDp = videoSize
+                sourceSizeDp = size
             )
         )
         VideoPlayerControlsInOverlay(
