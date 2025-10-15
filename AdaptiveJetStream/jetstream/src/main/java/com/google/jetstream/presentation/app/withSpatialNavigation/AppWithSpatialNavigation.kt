@@ -27,8 +27,12 @@ import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -38,7 +42,7 @@ import androidx.xr.compose.material3.ExperimentalMaterial3XrApi
 import androidx.xr.compose.material3.NavigationRail
 import androidx.xr.compose.platform.LocalSpatialConfiguration
 import androidx.xr.compose.platform.SpatialConfiguration
-import androidx.xr.compose.spatial.Subspace
+import androidx.xr.compose.spatial.ApplicationSubspace
 import androidx.xr.compose.subspace.MovePolicy
 import androidx.xr.compose.subspace.ResizePolicy
 import androidx.xr.compose.subspace.SpatialPanel
@@ -70,7 +74,22 @@ fun AppWithSpatialNavigation(
     val screensInGlobalNavigation = remember {
         Screens.entries.filter { it.isMainNavigation }
     }
-    Subspace {
+
+    // Workaround to make video player visible.
+    val defaultContainerColor = MaterialTheme.colorScheme.background
+    var containerColor by remember {
+        mutableStateOf(defaultContainerColor)
+    }
+    navController.addOnDestinationChangedListener { _, destination, _ ->
+        val isVideoPlayer = destination.route?.startsWith(Screens.VideoPlayer.name) ?: false
+        containerColor = if (isVideoPlayer) {
+            Color.Transparent
+        } else {
+            defaultContainerColor
+        }
+    }
+
+    ApplicationSubspace {
         SpatialPanel(
             resizePolicy = resizePolicy,
             dragPolicy = dragPolicy,
@@ -93,7 +112,8 @@ fun AppWithSpatialNavigation(
                             )
                         )
                     }
-                }
+                },
+                containerColor = containerColor,
             ) { padding ->
                 NavigationTree(
                     navController = navController,

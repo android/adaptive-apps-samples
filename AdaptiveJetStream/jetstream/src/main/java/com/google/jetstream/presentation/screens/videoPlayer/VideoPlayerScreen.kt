@@ -28,37 +28,54 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onPlaced
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.ui.compose.PlayerSurface
 import androidx.media3.ui.compose.modifiers.resizeWithContentScale
-import androidx.xr.compose.platform.LocalSpatialCapabilities
+import androidx.xr.compose.platform.LocalSpatialConfiguration
 import androidx.xr.compose.spatial.ContentEdge
 import androidx.xr.compose.spatial.Orbiter
+import androidx.xr.compose.spatial.Subspace
+import androidx.xr.compose.subspace.SpatialExternalSurface
+import androidx.xr.compose.subspace.SpatialPanel
+import androidx.xr.compose.subspace.layout.SubspaceModifier
+import androidx.xr.compose.subspace.layout.fillMaxSize
+import androidx.xr.compose.subspace.layout.height
+import androidx.xr.compose.subspace.layout.offset
+import androidx.xr.compose.subspace.layout.width
 import com.google.jetstream.R
 import com.google.jetstream.data.entities.MovieDetails
+import com.google.jetstream.data.entities.StereoscopicVisionType
 import com.google.jetstream.presentation.components.BackButton
 import com.google.jetstream.presentation.components.Error
 import com.google.jetstream.presentation.components.KeyboardShortcut
 import com.google.jetstream.presentation.components.Loading
 import com.google.jetstream.presentation.components.desktop.BackNavigationContextMenu
+import com.google.jetstream.presentation.components.feature.hasXrSpatialFeature
 import com.google.jetstream.presentation.components.feature.isBackButtonRequired
+import com.google.jetstream.presentation.components.feature.isSpatialUiEnabled
 import com.google.jetstream.presentation.components.feature.rememberImmersiveModeAvailability
 import com.google.jetstream.presentation.components.handleKeyboardShortcuts
 import com.google.jetstream.presentation.components.shim.onSpaceBarPressed
@@ -91,41 +108,47 @@ fun VideoPlayerScreen(
     videoPlayerScreenViewModel: VideoPlayerScreenViewModel = hiltViewModel()
 ) {
     val uiState by videoPlayerScreenViewModel.uiState.collectAsStateWithLifecycle()
+    val isSpatialUiEnabled = isSpatialUiEnabled()
+    LaunchedEffect(isSpatialUiEnabled) {
+        videoPlayerScreenViewModel.updateSpatialUiEnabled(isSpatialUiEnabled)
+    }
 
-    // TODO: Handle Loading & Error states
     when (val s = uiState) {
         is VideoPlayerScreenUiState.Loading -> {
-            Loading(modifier = Modifier.fillMaxSize())
+            Loading(
+                modifier = Modifier
+                    .fillMaxSize()
+                    // Workaround to make video player visible when spatial UI is enabled.
+                    .background(MaterialTheme.colorScheme.background)
+            )
         }
 
         is VideoPlayerScreenUiState.Error -> {
-            Error(modifier = Modifier.fillMaxSize())
+            Error(
+                modifier = Modifier
+                    .fillMaxSize()
+                    // Workaround to make video player visible when spatial UI is enabled.
+                    .background(MaterialTheme.colorScheme.background)
+            )
         }
 
         is VideoPlayerScreenUiState.Done -> {
             VideoPlayerScreenContent(
-                movieDetails = s.movieDetails,
+                nowPlayingInfo = s.nowPlayingInfo,
                 player = s.player,
                 isReadyToPlay = s.isReadyToPlay,
-                onBackPressed = onBackPressed
+                onBackPressed = onBackPressed,
             )
-        }
-    }
-
-    DisposableEffect(videoPlayerScreenViewModel) {
-        videoPlayerScreenViewModel.requestPlayer()
-        onDispose {
-            videoPlayerScreenViewModel.releasePlayer()
         }
     }
 }
 
 @Composable
 private fun VideoPlayerScreenContent(
-    movieDetails: MovieDetails,
+    nowPlayingInfo: NowPlayingInfo,
     player: Player,
     isReadyToPlay: Boolean,
-    onBackPressed: () -> Unit
+    onBackPressed: () -> Unit,
 ) {
     val keyboardShortcuts = remember {
         listOf(KeyboardShortcut(Key.Escape, action = onBackPressed))
@@ -137,18 +160,31 @@ private fun VideoPlayerScreenContent(
         modifier = Modifier.handleKeyboardShortcuts(keyboardShortcuts)
     ) {
         VideoPlayer(
-            movieDetails = movieDetails,
+            nowPlayingInfo = nowPlayingInfo,
             player = player,
             isReadyToPlay = isReadyToPlay,
             onBackPressed = onBackPressed
         )
     }
+
+    LifecycleResumeEffect(player) {
+        if (!player.isPlaying) {
+            player.play()
+        }
+
+        onPauseOrDispose {
+            if (player.isPlaying) {
+                player.pause()
+            }
+        }
+    }
+
 }
 
 @androidx.annotation.OptIn(UnstableApi::class)
 @Composable
 private fun VideoPlayer(
-    movieDetails: MovieDetails,
+    nowPlayingInfo: NowPlayingInfo,
     player: Player,
     isReadyToPlay: Boolean,
     onBackPressed: () -> Unit = {}
@@ -159,7 +195,13 @@ private fun VideoPlayer(
     val pulseState = rememberVideoPlayerPulseState()
 
     val videoPlayerState = rememberVideoPlayerState(player = player, hideSeconds = 4)
-    val videoSize by videoPlayerState.videoSize.collectAsStateWithLifecycle(null)
+    val videoSize by videoPlayerState
+        .videoSize
+        .collectAsStateWithLifecycle(Size(1980f, 1080f))
+
+    val hasXrSpatialFeature = hasXrSpatialFeature()
+    val isSpatialUiEnabled = isSpatialUiEnabled()
+    val spatialConfiguration = LocalSpatialConfiguration.current
 
     val focusRequester = remember { FocusRequester() }
 
@@ -168,7 +210,17 @@ private fun VideoPlayer(
             KeyboardShortcut(
                 key = Key.F,
                 action = {
-                    activity?.toggleImmersiveMode()
+                    when {
+                        !hasXrSpatialFeature -> {
+                            activity?.toggleImmersiveMode()
+                        }
+                        isSpatialUiEnabled -> {
+                            spatialConfiguration.requestHomeSpaceMode()
+                        }
+                        else -> {
+                            spatialConfiguration.requestFullSpaceMode()
+                        }
+                    }
                 }
             ),
             KeyboardShortcut(
@@ -214,28 +266,158 @@ private fun VideoPlayer(
         }
     }
 
+    if (isSpatialUiEnabled()) {
+        SpatialVideoPlayer(
+            nowPlayingInfo = nowPlayingInfo,
+            player = player,
+            videoPlayerState = videoPlayerState,
+            pulseState = pulseState,
+            videoSize = videoSize,
+            onBackPressed = onBackPressed,
+            modifier = Modifier
+                .focusRequester(focusRequester)
+                .dPadEvents(player, videoPlayerState, pulseState)
+                .handleKeyboardShortcuts(keyboardShortcuts)
+                .onClick(player, videoPlayerState)
+        )
+    } else {
+        VideoPlayer2D(
+            nowPlayingInfo = nowPlayingInfo,
+            player = player,
+            videoPlayerState = videoPlayerState,
+            pulseState = pulseState,
+            videoSize = videoSize,
+            onBackPressed = onBackPressed,
+            modifier = Modifier
+                .focusRequester(focusRequester)
+                .dPadEvents(player, videoPlayerState, pulseState)
+                .handleKeyboardShortcuts(keyboardShortcuts)
+                .onClick(player, videoPlayerState)
+        )
+    }
+}
+
+@Composable
+private fun SpatialVideoPlayer(
+    nowPlayingInfo: NowPlayingInfo,
+    player: Player,
+    videoPlayerState: VideoPlayerState,
+    pulseState: VideoPlayerPulseState,
+    videoSize: Size,
+    modifier: Modifier = Modifier,
+    zOffset: Dp = 8.dp,
+    onBackPressed: () -> Unit = {}
+) {
+    val density = LocalDensity.current
+    var subspaceSize by remember { mutableStateOf(Size.Zero) }
+
+    // Calculate the size of the surface from the video resolution and given subspace size
+    val dpSize = remember(density, videoSize, subspaceSize, nowPlayingInfo.stereoscopicVisionType) {
+        val size = when (nowPlayingInfo.stereoscopicVisionType) {
+            StereoscopicVisionType.SideBySide -> {
+                Size(width = videoSize.width / 2, height = videoSize.height)
+            }
+
+            StereoscopicVisionType.TopBottom -> {
+                Size(width = videoSize.width, height = videoSize.height / 2)
+            }
+
+            else -> videoSize
+        }
+
+        val scale = when {
+            subspaceSize == Size.Zero -> 1.0f
+            size.height > size.width -> {
+                subspaceSize.height / size.height
+            }
+
+            else -> {
+                subspaceSize.width / size.width
+            }
+        }
+        with(density) {
+            (size * scale).toDpSize()
+        }
+    }
+
+    Subspace {
+        SpatialExternalSurface(
+            stereoMode = nowPlayingInfo.stereoscopicVisionType.into(),
+            modifier = SubspaceModifier
+                .offset(z = zOffset)
+                .height(dpSize.height)
+                .width(dpSize.width)
+        ) {
+            onSurfaceCreated { surface ->
+                player.setVideoSurface(surface)
+            }
+        }
+        SpatialPanel(
+            modifier = SubspaceModifier.fillMaxSize().offset(z = zOffset)
+        ) {
+            Box(
+                modifier = modifier.onPlaced { layoutCoordinates ->
+                    // Measure the size of the subspace
+                    subspaceSize = Size(
+                        width = layoutCoordinates.size.width.toFloat(),
+                        height = layoutCoordinates.size.height.toFloat()
+                    )
+                }
+            ) {
+                VideoPlayerOverlay(
+                    isControlsVisible = videoPlayerState.isControlsVisible,
+                    backButton = {
+                        BackButton(onClick = onBackPressed)
+                    }
+                )
+                SpatialVideoPlayerControls(
+                    movieDetails = nowPlayingInfo.movieDetails,
+                    player = player,
+                    videoPlayerState = videoPlayerState,
+                    modifier = Modifier
+                        .focusGroup(),
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun VideoPlayer2D(
+    nowPlayingInfo: NowPlayingInfo,
+    player: Player,
+    videoPlayerState: VideoPlayerState,
+    pulseState: VideoPlayerPulseState,
+    videoSize: Size,
+    modifier: Modifier = Modifier,
+    onBackPressed: () -> Unit = {}
+) {
+    val focusRequester = remember { FocusRequester() }
+
+    val size = if(videoSize == Size.Zero) {
+        null
+    } else {
+        videoSize
+    }
+
     Box(
-        modifier = Modifier
-            .focusRequester(focusRequester)
-            .dPadEvents(player, videoPlayerState, pulseState)
-            .handleKeyboardShortcuts(keyboardShortcuts)
-            .onClick(player, videoPlayerState),
-        contentAlignment = Alignment.Center
+        modifier = modifier
     ) {
         PlayerSurface(
             player = player,
             modifier = Modifier.resizeWithContentScale(
                 contentScale = ContentScale.Fit,
-                sourceSizeDp = videoSize
+                sourceSizeDp = size
             )
         )
-        VideoPlaybackControls(
-            movieDetails = movieDetails,
+        VideoPlayerControlsInOverlay(
+            movieDetails = nowPlayingInfo.movieDetails,
             player = player,
             videoPlayerState = videoPlayerState,
-            pulseState = pulseState,
+            videoPlayerPulseState = pulseState,
             onBackPressed = onBackPressed,
             modifier = Modifier
+                .align(Alignment.BottomCenter)
                 .focusRequester(focusRequester)
                 .onPreviewKeyEvent {
                     if (videoPlayerState.isControlsVisible) {
@@ -245,46 +427,6 @@ private fun VideoPlayer(
                 }
                 .focusGroup()
         )
-    }
-}
-
-@Composable
-private fun VideoPlaybackControls(
-    movieDetails: MovieDetails,
-    player: Player,
-    videoPlayerState: VideoPlayerState,
-    pulseState: VideoPlayerPulseState,
-    modifier: Modifier = Modifier,
-    isSpatialUiEnabled: Boolean = LocalSpatialCapabilities.current.isSpatialUiEnabled,
-    onBackPressed: () -> Unit = {}
-) {
-    Box(modifier = modifier) {
-        if (!isSpatialUiEnabled) {
-            VideoPlayerControlsInOverlay(
-                movieDetails = movieDetails,
-                player = player,
-                videoPlayerState = videoPlayerState,
-                videoPlayerPulseState = pulseState,
-                onBackPressed = onBackPressed,
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .focusGroup()
-            )
-        } else {
-            VideoPlayerOverlay(
-                isControlsVisible = videoPlayerState.isControlsVisible,
-                backButton = {
-                    BackButton(onClick = onBackPressed)
-                }
-            )
-            SpatialVideoPlayerControls(
-                movieDetails = movieDetails,
-                player = player,
-                videoPlayerState = videoPlayerState,
-                modifier = Modifier
-                    .focusGroup(),
-            )
-        }
     }
 }
 
@@ -300,7 +442,7 @@ private fun SpatialVideoPlayerControls(
     ) {
         Orbiter(
             position = ContentEdge.Bottom,
-            offset = 140.dp
+            offset = 200.dp
         ) {
             Box(
                 modifier = Modifier

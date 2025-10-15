@@ -27,13 +27,10 @@ import android.view.WindowInsetsController
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.safeDrawingPadding
-import androidx.compose.material3.LocalAbsoluteTonalElevation
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -62,11 +59,6 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier
                             .safeDrawingPadding()
                             .fillMaxSize()
-                            .background(
-                                MaterialTheme.colorScheme.surfaceColorAtElevation(
-                                    LocalAbsoluteTonalElevation.current
-                                )
-                            )
                     )
                 }
             }

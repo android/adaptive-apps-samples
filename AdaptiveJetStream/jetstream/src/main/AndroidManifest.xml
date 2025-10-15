@@ -42,7 +42,7 @@ https://www.apache.org/licenses/LICENSE-2.0
         android:required="false" />
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"  />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
 
     <application
@@ -83,12 +83,15 @@ https://www.apache.org/licenses/LICENSE-2.0
                 android:defaultHeight="540dp"
                 android:gravity="center" />
 
+            <property
+                android:name="android.window.PROPERTY_XR_ACTIVITY_START_MODE"
+                android:value="XR_ACTIVITY_START_MODE_FULL_SPACE_MANAGED" />
         </activity>
 
         <service
             android:name=".PlaybackService"
             android:foregroundServiceType="mediaPlayback"
-            android:exported="true">
+            android:exported="false">
             <intent-filter>
                 <action android:name="androidx.media3.session.MediaSessionService"/>
                 <action android:name="android.media.browse.MediaBrowserService"/>
