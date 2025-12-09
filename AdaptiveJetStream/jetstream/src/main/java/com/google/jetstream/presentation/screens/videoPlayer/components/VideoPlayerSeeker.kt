@@ -43,6 +43,7 @@ fun VideoPlayerSeeker(
     onSeek: (Float) -> Unit = {
         player.seekTo(player.duration.times(it).toLong())
     },
+    shouldShowPlayPauseButton: Boolean
 ) {
     var contentCurrentPosition by remember(contentDuration) {
         mutableLongStateOf(player.currentPosition)
@@ -84,10 +85,12 @@ fun VideoPlayerSeeker(
             }
         }
     ) {
-        PlayPauseButton(
-            player = player,
-            modifier = Modifier.focusRequester(playPauseButton),
-        )
+        if (shouldShowPlayPauseButton) {
+            PlayPauseButton(
+                player = player,
+                modifier = Modifier.focusRequester(playPauseButton),
+            )
+        }
         VideoPlayerControllerText(text = contentProgressString)
         VideoPlayerControllerIndicator(
             progress = (contentProgress / contentDuration).toFloat(),

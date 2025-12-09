@@ -46,6 +46,15 @@ fun VideoPlayerMainFrame(
     windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
 ) {
     when {
+        currentWindowAdaptiveInfo().windowPosture.isTabletop -> {
+            TabletopVideoPlayerFrame(
+                mediaTitle = mediaTitle,
+                seeker = seeker,
+                mediaActions = mediaActions,
+                more = more
+            )
+        }
+
         windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND) -> {
             NonCompactVideoPlayerFrame(
                 mediaTitle = mediaTitle,
@@ -54,6 +63,7 @@ fun VideoPlayerMainFrame(
                 more = more
             )
         }
+
         else -> {
             CompactVideoPlayerFrame(
                 mediaTitle = mediaTitle,
@@ -81,6 +91,35 @@ private fun CompactVideoPlayerFrame(
         if (more != null) {
             Spacer(Modifier.height(12.dp))
             more()
+        }
+    }
+}
+
+@Composable
+private fun TabletopVideoPlayerFrame(
+    mediaTitle: @Composable () -> Unit,
+    seeker: @Composable () -> Unit,
+    mediaActions: @Composable () -> Unit = {},
+    more: (@Composable () -> Unit)? = null
+) {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Spacer(Modifier.height(16.dp))
+        Row(modifier = Modifier.fillMaxWidth()) {
+            seeker()
+        }
+        Spacer(Modifier.height(16.dp))
+        Row {
+            mediaTitle()
+        }
+        Spacer(Modifier.height(16.dp))
+        Row {
+            mediaActions()
+        }
+        if (more != null) {
+            Spacer(Modifier.height(12.dp))
+            Row {
+                more()
+            }
         }
     }
 }
