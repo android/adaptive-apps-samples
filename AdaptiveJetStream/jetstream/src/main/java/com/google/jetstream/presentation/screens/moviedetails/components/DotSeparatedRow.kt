@@ -42,6 +42,7 @@ fun DotSeparatedRow(
     ) {
         texts.forEachIndexed { index, text ->
             Text(
+                modifier = Modifier.weight(1f, fill = false),
                 text = text,
                 style = MaterialTheme.typography.titleSmall.copy(
                     fontWeight = FontWeight.Normal
