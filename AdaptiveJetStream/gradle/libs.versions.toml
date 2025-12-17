@@ -19,13 +19,14 @@ lifecycle-runtime-ktx = "2.9.4"
 material3-adaptive = "1.1.0"
 material3-adaptive-navigation = "1.4.0-rc01"
 media3 = "1.8.0"
-navigation-compose = "2.9.4"
 profileinstaller = "1.4.1"
 uiautomator = "2.3.0"
 rules = "1.7.0"
 window = "1.4.0"
 xr = "1.0.0-alpha06"
 xr-material3 = "1.0.0-alpha11"
+nav3Core = "1.0.0"
+lifecycleViewmodelNav3 = "2.10.0"
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity-compose" }
@@ -50,7 +51,6 @@ androidx-material3-adaptive-navigation-suite = { module = "androidx.compose.mate
 androidx-media3-session = { module = "androidx.media3:media3-session", version.ref = "media3" }
 androidx-media3-ui = { module = "androidx.media3:media3-ui-compose", version.ref = "media3" }
 androidx-media3-exoplayer = { module = "androidx.media3:media3-exoplayer", version.ref = "media3" }
-androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigation-compose" }
 androidx-profileinstaller = { module = "androidx.profileinstaller:profileinstaller", version.ref = "profileinstaller" }
 androidx-tv-material = { module = "androidx.tv:tv-material", version.ref = "tv-material" }
 androidx-uiautomator = { module = "androidx.test.uiautomator:uiautomator", version.ref = "uiautomator" }
@@ -64,6 +64,10 @@ androidx-window-core = { module = "androidx.window:window-core", version.ref = "
 androidx-xr-scenecore = { module = "androidx.xr.scenecore:scenecore", version.ref = "xr" }
 androidx-xr-compose = { module = "androidx.xr.compose:compose", version.ref = "xr" }
 androidx-xr-compose-material3 = { module = "androidx.xr.compose.material3:material3", version.ref = "xr-material3" }
+androidx-navigation3-runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "nav3Core" }
+androidx-navigation3-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "nav3Core" }
+androidx-lifecycle-viewmodel-navigation3 = { module = "androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "lifecycleViewmodelNav3" }
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-gradle-plugin" }

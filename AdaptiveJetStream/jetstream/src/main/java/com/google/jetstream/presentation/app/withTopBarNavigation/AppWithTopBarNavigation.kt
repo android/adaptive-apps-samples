@@ -26,8 +26,9 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
+import androidx.navigation3.runtime.NavKey
 import com.google.jetstream.presentation.app.AppState
+import com.google.jetstream.presentation.app.Navigator
 import com.google.jetstream.presentation.app.NavigationTree
 import com.google.jetstream.presentation.app.updateTopBarVisibility
 import com.google.jetstream.presentation.components.onBackButtonPressed
@@ -37,11 +38,11 @@ import com.google.jetstream.presentation.screens.Screens
 @Composable
 fun AppWithTopBarNavigation(
     appState: AppState,
-    navController: NavHostController,
+    navigator: Navigator,
+    topLevelRoutes: List<Screens>,
     onActivityBackPressed: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val items = remember { Screens.entries.filter { it.isTabItem } }
     val topBar = remember { FocusRequester() }
 
     Column(
@@ -61,7 +62,7 @@ fun AppWithTopBarNavigation(
                 }
 
                 appState.selectedScreen != Screens.Home -> {
-                    navController.navigate(Screens.Home())
+                    navigator.navigate(Screens.Home as NavKey)
                 }
 
                 else -> {
@@ -75,13 +76,9 @@ fun AppWithTopBarNavigation(
                 appState.isTopBarVisible
         ) {
             TopBar(
-                items,
+                topLevelRoutes,
                 appState.selectedScreen,
-                {
-                    if (it != appState.selectedScreen) {
-                        navController.navigate(it())
-                    }
-                },
+                navigator,
                 modifier = Modifier
                     .padding(
                         vertical = 16.dp,
@@ -94,7 +91,7 @@ fun AppWithTopBarNavigation(
             )
         }
         NavigationTree(
-            navController = navController,
+            navigator = navigator,
             isTopBarVisible = appState.isTopBarVisible,
             onScroll = { updateTopBarVisibility(appState, it) }
         )

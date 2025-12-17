@@ -30,7 +30,9 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.unit.dp
+import androidx.navigation3.runtime.NavKey
 import com.google.jetstream.presentation.app.JetStreamLogo
+import com.google.jetstream.presentation.app.Navigator
 import com.google.jetstream.presentation.app.UserAvatar
 import com.google.jetstream.presentation.components.shim.tryRequestFocus
 import com.google.jetstream.presentation.screens.Screens
@@ -38,7 +40,7 @@ import com.google.jetstream.presentation.screens.Screens
 @Composable
 fun TopAppBar(
     selectedScreen: Screens,
-    showScreen: (Screens) -> Unit,
+    navigator: Navigator,
     modifier: Modifier = Modifier,
 ) {
     val (avatar, search) = remember { FocusRequester.createRefs() }
@@ -72,12 +74,12 @@ fun TopAppBar(
         Spacer(modifier.weight(1f))
         SearchButton(
             modifier = Modifier.focusRequester(search),
-            onClick = { showScreen(Screens.Search) }
+            onClick = { navigator.navigate(Screens.Search as NavKey) }
         )
         UserAvatar(
             modifier = Modifier.focusRequester(avatar),
             selected = selectedScreen == Screens.Profile,
-            onClick = { showScreen(Screens.Profile) }
+            onClick = { navigator.navigate(Screens.Profile as NavKey) }
         )
     }
 }

@@ -17,28 +17,19 @@
 package com.google.jetstream.presentation.app
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import com.google.jetstream.data.entities.Movie
-import com.google.jetstream.presentation.screens.Screens.Categories
-import com.google.jetstream.presentation.screens.Screens.CategoryMovieList
-import com.google.jetstream.presentation.screens.Screens.Favourites
-import com.google.jetstream.presentation.screens.Screens.Home
-import com.google.jetstream.presentation.screens.Screens.MovieDetails
-import com.google.jetstream.presentation.screens.Screens.Movies
-import com.google.jetstream.presentation.screens.Screens.Profile
-import com.google.jetstream.presentation.screens.Screens.Search
-import com.google.jetstream.presentation.screens.Screens.Shows
-import com.google.jetstream.presentation.screens.Screens.VideoPlayer
+import androidx.navigation3.runtime.NavEntry
+import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.scene.DialogSceneStrategy
+import androidx.navigation3.ui.NavDisplay
+import com.google.jetstream.presentation.screens.Screens
 import com.google.jetstream.presentation.screens.categories.CategoriesScreen
 import com.google.jetstream.presentation.screens.categories.CategoryMovieListScreen
-import com.google.jetstream.presentation.screens.categories.categoryMovieListScreenArguments
 import com.google.jetstream.presentation.screens.favourites.FavouritesScreen
 import com.google.jetstream.presentation.screens.home.HomeScreen
 import com.google.jetstream.presentation.screens.moviedetails.MovieDetailsScreen
-import com.google.jetstream.presentation.screens.moviedetails.movieDetailsScreenArguments
 import com.google.jetstream.presentation.screens.movies.MoviesScreen
 import com.google.jetstream.presentation.screens.profile.ProfileScreen
 import com.google.jetstream.presentation.screens.search.SearchScreen
@@ -47,91 +38,84 @@ import com.google.jetstream.presentation.screens.videoPlayer.VideoPlayerScreen
 
 @Composable
 fun NavigationTree(
-    navController: NavHostController,
+    navigator: Navigator,
     modifier: Modifier = Modifier,
     isTopBarVisible: Boolean = true,
     onScroll: (Boolean) -> Unit = {}
 ) {
-    NavHost(
-        navController = navController,
-        startDestination = Home(),
-        modifier = modifier,
-    ) {
-        composable(
-            route = CategoryMovieList(),
-            arguments = categoryMovieListScreenArguments
-        ) {
+    val entryProvider: (NavKey) -> NavEntry<NavKey> = entryProvider {
+        entry<Screens.CategoryMovieList> {
             CategoryMovieListScreen(
-                onBackPressed = navController::navigateUp,
-                onMovieSelected = { movie -> navController.openMovieDetailScreen(movie) }
+                onBackPressed = navigator::goBack,
+                onMovieSelected = { movie -> navigator.navigate(Screens.MovieDetails(movie.id)) }
             )
         }
-        composable(
-            route = MovieDetails(),
-            arguments = movieDetailsScreenArguments
-        ) {
+        entry<Screens.MovieDetails> {key ->
             MovieDetailsScreen(
-                goToMoviePlayer = { navController.navigate(VideoPlayer()) },
+                goToMoviePlayer = { navigator.navigate(Screens.VideoPlayer(key.movieId)) },
                 refreshScreenWithNewMovie = { movie ->
-                    navController.navigate(
-                        MovieDetails.withArgs(movie.id)
-                    ) {
-                        popUpTo(MovieDetails()) {
-                            inclusive = true
-                        }
-                    }
+                    navigator.navigate(Screens.MovieDetails(movie.id))
                 },
-                onBackPressed = navController::navigateUp,
+                onBackPressed = navigator::goBack,
             )
         }
-        composable(route = VideoPlayer()) {
+        entry<Screens.VideoPlayer> {
             VideoPlayerScreen(
-                onBackPressed = navController::navigateUp,
+                onBackPressed = navigator::goBack,
             )
         }
-        composable(Profile()) {
+        entry<Screens.Profile> {
             ProfileScreen()
         }
-        composable(Home()) {
+        entry<Screens.Home> {
             HomeScreen(
-                onMovieClick = { movie -> navController.openMovieDetailsScreen(movie.id) },
-                goToVideoPlayer = { movie: Movie -> navController.openVideoPlayer(movie.id) },
+                onMovieClick = { movie -> navigator.navigate(Screens.MovieDetails(movie.id)) },
+                goToVideoPlayer = { movie -> navigator.navigate(Screens.VideoPlayer(movie.id)) },
                 onScroll = onScroll,
                 isTopBarVisible = isTopBarVisible
             )
         }
-        composable(Categories()) {
+        entry<Screens.Categories> {
             CategoriesScreen(
-                onCategoryClick = navController.openCategoryMovieList(),
+                onCategoryClick = { categoryId ->
+                    navigator.navigate(Screens.CategoryMovieList(categoryId))
+                },
                 onScroll = onScroll,
             )
         }
-        composable(Movies()) {
+        entry<Screens.Movies> {
             MoviesScreen(
-                onMovieClick = { movie -> navController.openMovieDetailScreen(movie) },
+                onMovieClick = { movie -> navigator.navigate(Screens.MovieDetails(movie.id)) },
                 onScroll = onScroll,
                 isTopBarVisible = isTopBarVisible
             )
         }
-        composable(Shows()) {
+        entry<Screens.Shows> {
             ShowsScreen(
-                onTVShowClick = { movie -> navController.openMovieDetailScreen(movie) },
+                onTVShowClick = { movie -> navigator.navigate(Screens.MovieDetails(movie.id)) },
                 onScroll = onScroll,
                 isTopBarVisible = isTopBarVisible
             )
         }
-        composable(Favourites()) {
+        entry<Screens.Favourites> {
             FavouritesScreen(
-                onMovieClick = navController::openMovieDetailsScreen,
+                onMovieClick = { movieId -> navigator.navigate(Screens.MovieDetails(movieId)) },
                 onScroll = onScroll,
                 isTopBarVisible = isTopBarVisible
             )
         }
-        composable(Search()) {
+        entry<Screens.Search> {
             SearchScreen(
-                onMovieClick = { movie -> navController.openMovieDetailsScreen(movie.id) },
+                onMovieClick = { movie -> navigator.navigate(Screens.MovieDetails(movie.id)) },
                 onScroll = onScroll,
             )
         }
     }
+
+    NavDisplay(
+        entries = navigator.state.toEntries(entryProvider),
+        onBack = { navigator.goBack() },
+        sceneStrategy = remember { DialogSceneStrategy() },
+        modifier = modifier
+    )
 }

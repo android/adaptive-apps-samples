@@ -21,6 +21,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.jetstream.data.entities.MovieCategoryDetails
 import com.google.jetstream.data.repositories.MovieRepository
+import com.google.jetstream.presentation.screens.Screens
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.SharingStarted
@@ -34,14 +35,14 @@ class CategoryMovieListScreenViewModel @Inject constructor(
 ) : ViewModel() {
 
     val uiState =
-        savedStateHandle.getStateFlow<String?>(
-            CategoryMovieListScreen.CategoryIdBundleKey,
+        savedStateHandle.getStateFlow<Screens.CategoryMovieList?>(
+            "screen",
             null
-        ).map { id ->
-            if (id == null) {
+        ).map { screen ->
+            if (screen == null) {
                 CategoryMovieListScreenUiState.Error
             } else {
-                val categoryDetails = movieRepository.getMovieCategoryDetails(id)
+                val categoryDetails = movieRepository.getMovieCategoryDetails(screen.categoryId)
                 CategoryMovieListScreenUiState.Done(categoryDetails)
             }
         }.stateIn(

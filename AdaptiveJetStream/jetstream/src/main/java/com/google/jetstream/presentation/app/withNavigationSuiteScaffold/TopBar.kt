@@ -9,6 +9,7 @@
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
@@ -22,13 +23,13 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.navigation.NavController
 import com.google.jetstream.presentation.app.AppState
+import com.google.jetstream.presentation.app.Navigator
 
 @Composable
 internal fun TopBar(
     appState: AppState,
-    navController: NavController,
+    navigator: Navigator,
     modifier: Modifier = Modifier,
 ) {
     AnimatedVisibility(
@@ -42,10 +43,7 @@ internal fun TopBar(
                     appState.updateTopBarFocusState(it.hasFocus)
                 },
             selectedScreen = appState.selectedScreen,
-            showScreen = {
-                appState.updateSelectedScreen(it)
-                navController.navigate(it())
-            },
+            navigator = navigator,
         )
     }
 }

@@ -34,11 +34,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
+import androidx.navigation3.runtime.NavKey
 import androidx.xr.compose.platform.LocalSession
 import androidx.xr.compose.platform.LocalSpatialCapabilities
 import androidx.xr.compose.platform.LocalSpatialConfiguration
 import com.google.jetstream.presentation.app.AppState
+import com.google.jetstream.presentation.app.Navigator
 import com.google.jetstream.presentation.app.NavigationTree
 import com.google.jetstream.presentation.app.updateTopBarVisibility
 import com.google.jetstream.presentation.screens.Screens
@@ -46,14 +47,12 @@ import com.google.jetstream.presentation.screens.Screens
 @Composable
 fun AppWithNavigationSuiteScaffold(
     appState: AppState,
-    navController: NavHostController,
+    navigator: Navigator,
+    topLevelRoutes: List<Screens>,
     modifier: Modifier = Modifier,
 ) {
 
     val navigationSuiteScaffoldState = rememberNavigationSuiteScaffoldState()
-    val screensInGlobalNavigation = remember {
-        Screens.entries.filter { it.isMainNavigation }
-    }
 
     val xrSession = LocalSession.current
     val isSpatialUiEnabled = LocalSpatialCapabilities.current.isSpatialUiEnabled
@@ -84,9 +83,9 @@ fun AppWithNavigationSuiteScaffold(
         modifier = modifier.fillMaxSize(),
         state = navigationSuiteScaffoldState,
         navigationItems = {
-            AdaptiveAppNavigationItems(appState.selectedScreen, screensInGlobalNavigation) {
+            AdaptiveAppNavigationItems(appState.selectedScreen, topLevelRoutes) {
                 if (it != appState.selectedScreen) {
-                    navController.navigate(it())
+                    navigator.navigate(it as NavKey)
                 }
             }
             if (xrSession != null) {
@@ -115,7 +114,7 @@ fun AppWithNavigationSuiteScaffold(
                     }
                     TopBar(
                         appState = appState,
-                        navController = navController,
+                        navigator = navigator,
                         modifier = Modifier.padding(
                             start = horizontalPadding,
                             end = horizontalPadding,
@@ -126,7 +125,7 @@ fun AppWithNavigationSuiteScaffold(
             }
         ) { padding ->
             NavigationTree(
-                navController = navController,
+                navigator = navigator,
                 isTopBarVisible = appState.isTopBarVisible,
                 modifier = modifier.padding(padding),
                 onScroll = { updateTopBarVisibility(appState, it) }

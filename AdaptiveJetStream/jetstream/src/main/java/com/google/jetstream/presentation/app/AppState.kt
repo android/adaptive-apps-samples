@@ -7,7 +7,7 @@
  *
  * https://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
+ * Unless required by a_i_generated_fs_write_error in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
@@ -22,7 +22,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.navigation.NavDestination
+import androidx.navigation3.runtime.NavKey
 import com.google.jetstream.presentation.screens.Screens
 
 class AppState internal constructor(
@@ -54,13 +54,11 @@ class AppState internal constructor(
         isTopBarFocused = hasFocus
     }
 
-    fun updateSelectedScreen(screen: Screens) {
-        selectedScreen = screen
-        updateNavigationVisibility()
-    }
-
-    fun updateSelectedScreen(destination: NavDestination) {
-        updateSelectedScreen(destination.route ?: Screens.Home.name)
+    fun updateSelectedScreen(navKey: NavKey) {
+        if (navKey is Screens) {
+            selectedScreen = navKey
+            updateNavigationVisibility()
+        }
     }
 
     fun updateNavigationComponentType(type: NavigationComponentType) {
@@ -80,21 +78,15 @@ class AppState internal constructor(
         }
     }
 
-    private fun updateSelectedScreen(destination: String) {
-        val screen = Screens.tryFrom(destination) ?: Screens.Home
-        updateSelectedScreen(screen)
-    }
-
-    private fun snapshot(): Pair<Boolean, Int> {
-        return isTopBarVisible to selectedScreen.toIndex()
+    private fun snapshot(): Pair<Boolean, Screens> {
+        return isTopBarVisible to selectedScreen
     }
 
     companion object {
-        val Saver = Saver<AppState, Pair<Boolean, Int>>(
+        val Saver = Saver<AppState, Pair<Boolean, Screens>>(
             save = { it.snapshot() },
             restore = {
-                val screen = Screens.fromIndex(it.second) ?: Screens.Home
-                AppState(it.first, screen)
+                AppState(it.first, it.second)
             }
         )
     }

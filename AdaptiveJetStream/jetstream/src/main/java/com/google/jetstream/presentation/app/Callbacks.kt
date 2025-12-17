@@ -16,27 +16,25 @@
 
 package com.google.jetstream.presentation.app
 
-import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import com.google.jetstream.data.entities.Movie
 import com.google.jetstream.presentation.screens.Screens
 
-internal fun NavHostController.openMovieDetailScreen(movie: Movie) =
+internal fun Navigator.openMovieDetailScreen(movie: Movie) =
     openMovieDetailsScreen(movieId = movie.id)
 
-internal fun NavHostController.openMovieDetailsScreen(movieId: String) {
+internal fun Navigator.openMovieDetailsScreen(movieId: String) {
     navigate(
-        Screens.MovieDetails.withArgs(movieId)
+        Screens.MovieDetails(movieId)
     )
 }
 
-internal fun NavController.openVideoPlayer(movieId: String) {
-    navigate(Screens.VideoPlayer.withArgs(movieId))
+internal fun Navigator.openVideoPlayer(movieId: String) {
+    navigate(Screens.VideoPlayer(movieId))
 }
 
-internal fun NavController.openCategoryMovieList() = { categoryId: String ->
+internal fun Navigator.openCategoryMovieList() = { categoryId: String ->
     navigate(
-        Screens.CategoryMovieList.withArgs(categoryId)
+        Screens.CategoryMovieList(categoryId)
     )
 }
 

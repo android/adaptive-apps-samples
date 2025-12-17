@@ -17,84 +17,52 @@
 package com.google.jetstream.presentation.screens
 
 import androidx.annotation.DrawableRes
-import androidx.annotation.IntRange
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.google.jetstream.R
-import com.google.jetstream.data.convert.TryFrom
-import com.google.jetstream.presentation.screens.categories.CategoryMovieListScreen
-import com.google.jetstream.presentation.screens.moviedetails.MovieDetailsScreen
-import com.google.jetstream.presentation.screens.videoPlayer.VideoPlayerScreen
+import kotlinx.serialization.Serializable
+import androidx.navigation3.runtime.NavKey
+import kotlinx.serialization.Transient
 
-enum class Screens(
-    private val args: List<String>? = null,
-    val isTabItem: Boolean = false,
-    val isMainNavigation: Boolean = false,
+@Serializable
+sealed class Screens(
+    @Transient
     val tabIcon: ImageVector? = null,
     val navigationVisibility: NavigationVisibility = NavigationVisibility.Visible,
     @DrawableRes val navIcon: Int = 0
 ) {
-    Profile,
-    Home(isTabItem = true, isMainNavigation = true, navIcon = R.drawable.ic_home),
-    Categories(isTabItem = true, isMainNavigation = true, navIcon = R.drawable.ic_category),
-    Movies(isTabItem = true, isMainNavigation = true, navIcon = R.drawable.ic_movies),
-    Shows(isTabItem = true, isMainNavigation = true, navIcon = R.drawable.ic_shows),
-    Favourites(isTabItem = true, isMainNavigation = true, navIcon = R.drawable.ic_favorites),
-    Search(isTabItem = true, tabIcon = Icons.Default.Search, navIcon = R.drawable.ic_search),
-    CategoryMovieList(listOf(CategoryMovieListScreen.CategoryIdBundleKey)),
-    MovieDetails(
-        listOf(MovieDetailsScreen.MOVIE_ID_BUNDLE_KEY),
-        navigationVisibility = NavigationVisibility.VisibleInNavigationSuite
-    ),
-    VideoPlayer(
-        listOf(VideoPlayerScreen.MOVIE_ID_BUNDLE_KEY),
-        navigationVisibility = NavigationVisibility.Hidden
-    );
+    @Serializable
+    data object Profile : Screens(), NavKey
 
-    operator fun invoke(): String {
-        val argList = StringBuilder()
-        args?.let { nnArgs ->
-            nnArgs.forEach { arg -> argList.append("/{$arg}") }
-        }
-        return name + argList
-    }
+    @Serializable
+    data object Home : Screens(navIcon = R.drawable.ic_home), NavKey
 
-    fun withArgs(vararg args: Any): String {
-        val destination = StringBuilder()
-        args.forEach { arg -> destination.append("/$arg") }
-        return name + destination
-    }
+    @Serializable
+    data object Categories : Screens(navIcon = R.drawable.ic_category), NavKey
 
-    fun toIndex(): Int {
-        return entries.indexOf(this)
-    }
+    @Serializable
+    data object Movies : Screens(navIcon = R.drawable.ic_movies), NavKey
 
-    companion object : TryFrom<String, Screens?> {
-        fun fromIndex(@IntRange(from = 0) index: Int): Screens? {
-            return when {
-                index < 0 -> null
-                index >= entries.size -> null
-                else -> entries[index]
-            }
-        }
+    @Serializable
+    data object Shows : Screens(navIcon = R.drawable.ic_shows), NavKey
 
-        override fun tryFrom(from: String): Screens? {
-            return when (from) {
-                Profile() -> Profile
-                Home() -> Home
-                Categories() -> Categories
-                Movies() -> Movies
-                Shows() -> Shows
-                Favourites() -> Favourites
-                Search() -> Search
-                CategoryMovieList() -> CategoryMovieList
-                MovieDetails() -> MovieDetails
-                VideoPlayer() -> VideoPlayer
-                else -> null
-            }
-        }
-    }
+    @Serializable
+    data object Favourites : Screens(navIcon = R.drawable.ic_favorites), NavKey
+
+    @Serializable
+    data object Search : Screens(tabIcon = Icons.Default.Search, navIcon = R.drawable.ic_search), NavKey
+
+    @Serializable
+    data class CategoryMovieList(val categoryId: String) : Screens(), NavKey
+
+    @Serializable
+    data class MovieDetails(val movieId: String) :
+        Screens(navigationVisibility = NavigationVisibility.VisibleInNavigationSuite), NavKey
+
+    @Serializable
+    data class VideoPlayer(val movieId: String) :
+        Screens(navigationVisibility = NavigationVisibility.Hidden), NavKey
 }
 
 sealed interface NavigationVisibility {

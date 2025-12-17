@@ -36,6 +36,7 @@ import com.google.jetstream.PlaybackService
 import com.google.jetstream.data.entities.Movie
 import com.google.jetstream.data.entities.MovieDetails
 import com.google.jetstream.data.repositories.MovieRepository
+import com.google.jetstream.presentation.screens.Screens
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -56,10 +57,10 @@ class VideoPlayerScreenViewModel @Inject constructor(
     private val player = MutableStateFlow<Player?>(null)
 
     private val movieDetails = savedStateHandle
-        .getStateFlow<String?>(VideoPlayerScreen.MOVIE_ID_BUNDLE_KEY, null)
+        .getStateFlow<Screens.VideoPlayer?>("screen", null)
         .map {
             if (it != null) {
-                repository.getMovieDetails(movieId = it)
+                repository.getMovieDetails(movieId = it.movieId)
             } else {
                 null
             }

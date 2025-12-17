@@ -37,8 +37,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavType
-import androidx.navigation.navArgument
 import com.google.jetstream.data.entities.Movie
 import com.google.jetstream.data.entities.MovieCategoryDetails
 import com.google.jetstream.presentation.components.Error
@@ -50,16 +48,6 @@ import com.google.jetstream.presentation.theme.JetStreamBottomListPadding
 import com.google.jetstream.presentation.theme.LocalContentPadding
 import com.google.jetstream.presentation.theme.Padding
 import com.google.jetstream.presentation.utils.focusOnInitialVisibility
-
-object CategoryMovieListScreen {
-    const val CategoryIdBundleKey = "categoryId"
-}
-
-val categoryMovieListScreenArguments = listOf(
-    navArgument(CategoryMovieListScreen.CategoryIdBundleKey) {
-        type = NavType.StringType
-    }
-)
 
 @Composable
 fun CategoryMovieListScreen(

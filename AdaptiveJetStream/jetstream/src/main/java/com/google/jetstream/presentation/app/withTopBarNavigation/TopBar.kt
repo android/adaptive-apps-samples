@@ -48,8 +48,10 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import androidx.navigation3.runtime.NavKey
 import com.google.jetstream.data.util.StringConstants
 import com.google.jetstream.presentation.app.JetStreamLogo
+import com.google.jetstream.presentation.app.Navigator
 import com.google.jetstream.presentation.app.UserAvatar
 import com.google.jetstream.presentation.components.feature.isDpadAvailable
 import com.google.jetstream.presentation.components.shim.tryRequestFocus
@@ -59,7 +61,7 @@ import com.google.jetstream.presentation.screens.Screens
 internal fun TopBar(
     items: List<Screens>,
     selectedScreen: Screens,
-    showScreen: (Screens) -> Unit,
+    navigator: Navigator,
     modifier: Modifier = Modifier,
 ) {
     val focusManager = LocalFocusManager.current
@@ -70,7 +72,7 @@ internal fun TopBar(
         if (isDpadAvailable) {
             { focusManager.moveFocus(FocusDirection.Down) }
         } else {
-            { it -> showScreen(it) }
+            { it -> navigator.navigate(it as NavKey) }
         }
     }
 
@@ -98,14 +100,14 @@ internal fun TopBar(
                     }
                     .focusRequester(avatar),
                 selected = selectedScreen == Screens.Profile,
-                onClick = { showScreen(Screens.Profile) }
+                onClick = { navigator.navigate(Screens.Profile as NavKey) }
             )
         }
         TopBarTabRow(
             tabs = items,
             selectedScreen = selectedScreen,
             onClick = onClickHandler,
-            onTabSelected = showScreen,
+            onTabSelected = { navigator.navigate(it as NavKey) },
             modifier = Modifier
                 .weight(1f)
                 .focusRequester(tabRow)
@@ -218,7 +220,7 @@ private fun TopBarTabContent(
     } else {
         Text(
             modifier = modifier,
-            text = screen.name,
+            text = screen::class.java.simpleName,
             style = MaterialTheme.typography.titleSmall.copy(
                 color = LocalContentColor.current
             )

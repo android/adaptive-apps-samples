@@ -21,11 +21,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.key.Key
-import androidx.navigation.compose.rememberNavController
 import com.google.jetstream.presentation.app.AppState
 import com.google.jetstream.presentation.app.NavigationComponentType
+import com.google.jetstream.presentation.app.Navigator
 import com.google.jetstream.presentation.app.rememberAppState
 import com.google.jetstream.presentation.app.rememberNavigationComponentType
+import com.google.jetstream.presentation.app.rememberNavigationState
 import com.google.jetstream.presentation.app.withNavigationSuiteScaffold.AppWithNavigationSuiteScaffold
 import com.google.jetstream.presentation.app.withNavigationSuiteScaffold.EnableProminentMovieListOverride
 import com.google.jetstream.presentation.app.withTopBarNavigation.AppWithTopBarNavigation
@@ -40,7 +41,21 @@ fun App(
     modifier: Modifier = Modifier,
     appState: AppState = rememberAppState()
 ) {
-    val navController = rememberNavController()
+    val topLevelRoutes = remember {
+        listOf(
+            Screens.Home,
+            Screens.Categories,
+            Screens.Movies,
+            Screens.Shows,
+            Screens.Favourites,
+            Screens.Search
+        )
+    }
+    val navigationState = rememberNavigationState(
+        startRoute = Screens.Home,
+        topLevelRoutes = topLevelRoutes.toSet()
+    )
+    val navigator = remember { Navigator(navigationState) }
     val navigationComponentType = rememberNavigationComponentType()
 
     val keyboardShortcuts = remember {
@@ -50,7 +65,7 @@ fun App(
                 modifierKeys = setOf(ModifierKey.Ctrl),
                 action = {
                     if (appState.selectedScreen != Screens.Profile) {
-                        navController.navigate(Screens.Profile())
+                        navigator.navigate(Screens.Profile)
                     }
                 }
             ),
@@ -59,7 +74,7 @@ fun App(
                 modifierKeys = setOf(ModifierKey.Ctrl, ModifierKey.Alt),
                 action = {
                     if (appState.selectedScreen != Screens.Profile) {
-                        navController.navigate(Screens.Profile())
+                        navigator.navigate(Screens.Profile)
                     }
                 }
             ),
@@ -68,7 +83,7 @@ fun App(
                 modifierKeys = setOf(ModifierKey.Ctrl, ModifierKey.Alt),
                 action = {
                     if (appState.selectedScreen != Screens.Home) {
-                        navController.navigate(Screens.Home())
+                        navigator.navigate(Screens.Home)
                     }
                 }
             ),
@@ -77,7 +92,7 @@ fun App(
                 modifierKeys = setOf(ModifierKey.Ctrl, ModifierKey.Alt),
                 action = {
                     if (appState.selectedScreen != Screens.Categories) {
-                        navController.navigate(Screens.Categories())
+                        navigator.navigate(Screens.Categories)
                     }
                 }
             ),
@@ -86,7 +101,7 @@ fun App(
                 modifierKeys = setOf(ModifierKey.Ctrl, ModifierKey.Alt),
                 action = {
                     if (appState.selectedScreen != Screens.Movies) {
-                        navController.navigate(Screens.Movies())
+                        navigator.navigate(Screens.Movies)
                     }
                 }
             ),
@@ -95,7 +110,7 @@ fun App(
                 modifierKeys = setOf(ModifierKey.Ctrl, ModifierKey.Alt),
                 action = {
                     if (appState.selectedScreen != Screens.Shows) {
-                        navController.navigate(Screens.Shows())
+                        navigator.navigate(Screens.Shows)
                     }
                 }
             ),
@@ -104,7 +119,7 @@ fun App(
                 modifierKeys = setOf(ModifierKey.Ctrl, ModifierKey.Alt),
                 action = {
                     if (appState.selectedScreen != Screens.Favourites) {
-                        navController.navigate(Screens.Favourites())
+                        navigator.navigate(Screens.Favourites)
                     }
                 }
             ),
@@ -112,7 +127,7 @@ fun App(
                 key = Key.Slash,
                 action = {
                     if (appState.selectedScreen != Screens.Search) {
-                        navController.navigate(Screens.Search())
+                        navigator.navigate(Screens.Search)
                     }
                 }
             ),
@@ -121,17 +136,15 @@ fun App(
                 modifierKeys = setOf(ModifierKey.Ctrl, ModifierKey.Alt),
                 action = {
                     if (appState.selectedScreen != Screens.Search) {
-                        navController.navigate(Screens.Search())
+                        navigator.navigate(Screens.Search)
                     }
                 }
             ),
         )
     }
 
-    LaunchedEffect(Unit) {
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            appState.updateSelectedScreen(destination)
-        }
+    LaunchedEffect(navigationState.topLevelRoute) {
+        appState.updateSelectedScreen(navigationState.topLevelRoute)
     }
 
     LaunchedEffect(navigationComponentType) {
@@ -143,8 +156,9 @@ fun App(
             EnableProminentMovieListOverride {
                 AppWithNavigationSuiteScaffold(
                     appState = appState,
-                    navController = navController,
+                    navigator = navigator,
                     modifier = modifier.handleKeyboardShortcuts(keyboardShortcuts),
+                    topLevelRoutes = topLevelRoutes
                 )
             }
         }
@@ -153,8 +167,9 @@ fun App(
             AppWithTopBarNavigation(
                 appState = appState,
                 onActivityBackPressed = onActivityBackPressed,
-                navController = navController,
+                navigator = navigator,
                 modifier = modifier.handleKeyboardShortcuts(keyboardShortcuts),
+                topLevelRoutes = topLevelRoutes
             )
         }
     }

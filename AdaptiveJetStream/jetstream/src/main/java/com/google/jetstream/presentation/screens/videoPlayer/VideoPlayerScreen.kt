@@ -75,10 +75,6 @@ import com.google.jetstream.presentation.screens.videoPlayer.components.remember
 import com.google.jetstream.presentation.screens.videoPlayer.components.toggleImmersiveMode
 import com.google.jetstream.presentation.utils.handleDPadKeyEvents
 
-object VideoPlayerScreen {
-    const val MOVIE_ID_BUNDLE_KEY = "movieId"
-}
-
 /**
  * [Work in progress] A composable screen for playing a video.
  *

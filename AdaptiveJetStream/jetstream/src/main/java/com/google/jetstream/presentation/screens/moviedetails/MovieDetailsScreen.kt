@@ -45,8 +45,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavType
-import androidx.navigation.navArgument
 import com.google.jetstream.R
 import com.google.jetstream.data.entities.Movie
 import com.google.jetstream.data.entities.MovieDetails
@@ -66,19 +64,9 @@ import com.google.jetstream.presentation.screens.moviedetails.components.TitleVa
 import com.google.jetstream.presentation.theme.LocalContentPadding
 import com.google.jetstream.presentation.theme.Padding
 
-object MovieDetailsScreen {
-    const val MOVIE_ID_BUNDLE_KEY = "movieId"
-}
-
-val movieDetailsScreenArguments = listOf(
-    navArgument(MovieDetailsScreen.MOVIE_ID_BUNDLE_KEY) {
-        type = NavType.StringType
-    }
-)
-
 @Composable
 fun MovieDetailsScreen(
-    goToMoviePlayer: () -> Unit,
+    goToMoviePlayer: (movieId: String) -> Unit,
     onBackPressed: () -> Unit,
     refreshScreenWithNewMovie: (Movie) -> Unit,
     movieDetailsScreenViewModel: MovieDetailsScreenViewModel = hiltViewModel()
@@ -97,7 +85,7 @@ fun MovieDetailsScreen(
         is MovieDetailsScreenUiState.Done -> {
             Details(
                 movieDetails = s.movieDetails,
-                goToMoviePlayer = goToMoviePlayer,
+                goToMoviePlayer = { goToMoviePlayer(s.movieDetails.id) },
                 onBackPressed = onBackPressed,
                 refreshScreenWithNewMovie = refreshScreenWithNewMovie,
                 modifier = Modifier

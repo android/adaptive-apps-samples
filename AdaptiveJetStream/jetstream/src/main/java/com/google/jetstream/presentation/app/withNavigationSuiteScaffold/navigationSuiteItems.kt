@@ -44,12 +44,12 @@ fun AdaptiveAppNavigationItems(
             onClick = {
                 onSelectScreen(screen)
             },
-            label = { Text(screen.name, color = MaterialTheme.colorScheme.primary) },
+            label = { Text(screen::class.java.simpleName, color = MaterialTheme.colorScheme.primary) },
             icon = {
                 Icon(
                     imageVector = ImageVector.vectorResource(screen.navIcon),
                     modifier = Modifier.size(24.dp),
-                    contentDescription = screen.name,
+                    contentDescription = screen::class.java.simpleName,
                     tint = MaterialTheme.colorScheme.primary
                 )
             },
