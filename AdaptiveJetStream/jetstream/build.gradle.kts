@@ -143,4 +143,7 @@ dependencies {
 
     // For baseline profile generation
     baselineProfile(project(":benchmark"))
+
+    testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
 }
