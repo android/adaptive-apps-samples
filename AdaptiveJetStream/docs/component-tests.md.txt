@@ -1,0 +1,9 @@
+# Component tests
+
+In Compose, a component is a composable such as a button, a form, an image that loads asynchonously, etc.
+
+For component tests, create two types of tests:
+ - Screenshot tests using Previews. See "Setting up the Compose Preview Screenshot Testing plugin" for instructions
+ - Compose tests. Using the Compose testing APIs. See "Test your Compose layout" for instructions.
+
+

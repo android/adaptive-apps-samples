@@ -1,0 +1,128 @@
+
+# Setting up the Compose Preview Screenshot Testing plugin
+
+## Requirements
+
+- Compose Compiler, which requires Kotlin 2. Stop if not met.
+- Android Gradle Plugin (AGP): Version 8.5.0 or higher.
+
+## Plugin setup
+
+### gradle.properties
+
+Add to gradle.properties:
+```
+android.experimental.enableScreenshotTest=true
+```
+
+
+### Versions catalog
+
+Check the latest version of `com.android.compose.screenshot` and add the plugin to your version catalogs file:
+
+```
+          [versions]
+          agp = "8.11.0-alpha06"
+          kotlin = "2.1.20"
+          screenshot = "0.0.1-alpha12"
+
+          [plugins]
+          screenshot = { id = "com.android.compose.screenshot", version.ref = "screenshot"}
+
+
+          [libraries]
+          screenshot-validation-api = { group = "com.android.tools.screenshot", name = "screenshot-validation-api", version.ref = "screenshot"}
+          androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling"}
+
+```
+
+### build files
+
+
+In the `android {}` block of your module-level build.gradle.kts file, set:
+
+```
+android {
+    experimentalProperties["android.experimental.enableScreenshotTest"] = true
+}
+```
+And add the plugin:
+
+```
+          plugins {
+              alias(libs.plugins.screenshot)
+          }
+```
+
+And add the dependencies:
+
+```
+          dependencies {
+            screenshotTestImplementation(libs.screenshot.validation.api)
+            screenshotTestImplementation(libs.androidx.ui.tooling)
+          }
+```
+
+
+## Designate Previews to use with screenshot testing
+
+To designate the composable previews you want to use for screenshot tests, mark
+the previews with the `@PreviewTest` annotation. The previews must be located in
+the new `screenshotTest` source set, for example
+`app/src/screenshotTest/kotlin/com/example/yourapp/ExamplePreviewScreenshotTest.kt`.
+
+You can add more composables and/or previews, including multi-previews, in
+this file or other files created in the same source set.
+
+```kotlin
+package com.example.yourapp
+
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.tooling.preview.Preview
+import com.android.tools.screenshot.PreviewTest
+import com.example.yourapp.ui.theme.MyApplicationTheme
+
+@PreviewTest
+@Preview(showBackground = true)
+@Composable
+fun GreetingPreview() {
+    MyApplicationTheme {
+        Greeting("Android!")
+    }
+}
+```
+
+
+## Generate reference images
+
+After you set up a test class, you need to generate reference images for each
+preview. These reference images are used to identify changes later, after you
+make code changes. To generate reference images for your composable preview
+screenshot tests, run the following Gradle task:
+
+* Linux and macOS: `./gradlew updateDebugScreenshotTest`
+(`./gradlew :{module}:update{Variant}ScreenshotTest`)
+* Windows: `gradlew updateDebugScreenshotTest`
+(`gradlew :{module}:update{Variant}ScreenshotTest`)
+
+After the task completes, find the reference images in
+`app/src/screenshotTestDebug/reference`
+(`{module}/src/screenshotTest{Variant}/reference`).
+
+Note: The reference images are named with a concatenation of the fully-qualified
+name of the test function and a hash of the preview parameters, for example
+`com.sample.screenshottests.test1_da39a3ee_c2200e98_0.png`.
+
+
+## Generate a test report {:#generate-test-report}
+
+Once the reference images exist, run the validate task to take a new screenshot
+and compare it with the reference image:
+
+* Linux and macOS: `./gradlew validateDebugScreenshotTest`
+(`./gradlew :{module}:validate{Variant}ScreenshotTest`)
+* Windows: `gradlew validateDebugScreenshotTest`
+(`gradlew :{module}:validate{Variant}ScreenshotTest`)
+
+The verification task creates an HTML report at
+`{module}/build/reports/screenshotTest/preview/{variant}/index.html`.
