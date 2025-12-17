@@ -57,9 +57,9 @@ fun HomeScreen(
     goToVideoPlayer: (movie: Movie) -> Unit,
     onScroll: (isTopBarVisible: Boolean) -> Unit,
     isTopBarVisible: Boolean,
-    homeScreeViewModel: HomeScreeViewModel = hiltViewModel(),
+    homeScreenViewModel: HomeScreenViewModel = hiltViewModel(),
 ) {
-    val uiState by homeScreeViewModel.uiState.collectAsStateWithLifecycle()
+    val uiState by homeScreenViewModel.uiState.collectAsStateWithLifecycle()
 
     when (val s = uiState) {
         is HomeScreenUiState.Ready -> {

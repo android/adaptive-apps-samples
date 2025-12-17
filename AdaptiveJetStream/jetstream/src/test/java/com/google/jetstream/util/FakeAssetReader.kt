@@ -14,26 +14,23 @@
  * limitations under the License.
  */
 
-package com.google.jetstream.data.util
+package com.google.jetstream.util
 
-import android.content.Context
-import dagger.hilt.android.qualifiers.ApplicationContext
-import java.io.IOException
-import javax.inject.Inject
+import com.google.jetstream.data.util.AssetReader
 
-interface AssetReader {
-    fun getJsonDataFromAsset(fileName: String): Result<String>
-}
+class FakeAssetReader : AssetReader {
+    private val responses = mutableMapOf<String, String>()
 
-class AssetsReader @Inject constructor(
-    @ApplicationContext private val context: Context,
-) : AssetReader {
+    fun setResponse(fileName: String, content: String) {
+        responses[fileName] = content
+    }
+
     override fun getJsonDataFromAsset(fileName: String): Result<String> {
-        return try {
-            val jsonString = context.assets.open(fileName).bufferedReader().use { it.readText() }
-            Result.success(jsonString)
-        } catch (e: IOException) {
-            Result.failure(e)
+        val content = responses[fileName]
+        return if (content != null) {
+            Result.success(content)
+        } else {
+            Result.failure(Exception("File not found: $fileName"))
         }
     }
 }
