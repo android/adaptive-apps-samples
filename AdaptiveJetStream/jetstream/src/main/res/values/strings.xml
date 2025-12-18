@@ -46,7 +46,7 @@ https://www.apache.org/licenses/LICENSE-2.0
     <string name="ad">Ad</string>
     <string name="live">Live</string>
     <string name="message_loading">Loading…</string>
-    <string name="message_error">Wops, something went wrong…</string>
+    <string name="message_error">Whoops, something went wrong…</string>
     <string name="back_content_description">Back</string>
 
     <string name="show_search_screen">Show search screen</string>
