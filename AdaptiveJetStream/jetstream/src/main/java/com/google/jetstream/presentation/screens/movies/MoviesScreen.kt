@@ -70,7 +70,7 @@ fun MoviesScreen(
 }
 
 @Composable
-private fun Catalog(
+internal fun Catalog(
     movieList: MovieList,
     popularFilmsThisWeek: MovieList,
     onMovieClick: (movie: Movie) -> Unit,

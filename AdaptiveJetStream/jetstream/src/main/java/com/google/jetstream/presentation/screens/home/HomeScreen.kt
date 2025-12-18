@@ -82,7 +82,7 @@ fun HomeScreen(
 }
 
 @Composable
-private fun Catalog(
+internal fun Catalog(
     featuredMovies: MovieList,
     trendingMovies: MovieList,
     top10Movies: MovieList,
