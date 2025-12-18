@@ -61,5 +61,5 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         if: steps.screenshotsrecord.outcome == 'success'
         with:
-          file_pattern: 'AdaptiveJetStream/jetstream/screenshotTestDebug/reference/**/*.png'
+          file_pattern: 'AdaptiveJetStream/jetstream/src/screenshotTestDebug/reference/**/*.png'
           commit_message: "🤖 Updates screenshots"
