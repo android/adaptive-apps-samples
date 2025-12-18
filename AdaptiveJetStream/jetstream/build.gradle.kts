@@ -74,7 +74,20 @@ android {
         }
     }
 
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+        }
+    }
+
     experimentalProperties["android.experimental.enableScreenshotTest"] = true
+}
+
+tasks.withType<com.android.compose.screenshot.tasks.PreviewScreenshotValidationTask> {
+    maxHeapSize = "2g"
+}
+tasks.withType<com.android.compose.screenshot.tasks.PreviewScreenshotUpdateTask> {
+    maxHeapSize = "2g"
 }
 
 dependencies {
@@ -151,6 +164,8 @@ dependencies {
 
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.androidx.compose.ui.test.junit4)
 
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)

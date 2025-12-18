@@ -87,7 +87,7 @@ fun CategoriesScreen(
 }
 
 @Composable
-private fun Catalog(
+internal fun Catalog(
     movieCategories: MovieCategoryList,
     modifier: Modifier = Modifier,
     gridCells: GridCells = LocalCategoryGridGridCells.current,

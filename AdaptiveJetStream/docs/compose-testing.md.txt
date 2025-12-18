@@ -47,7 +47,7 @@ either [`createComposeRule`][12] or, if you need access to an activity,
 [`createAndroidComposeRule`][13]. A typical UI test for Compose looks like this:
 
 ```kotlin
-// file: app/src/androidTest/java/com/package/MyComposeTest.kt
+// file: app/src/test/java/com/package/MyComposeTest.kt
 
 class MyComposeTest {
 
@@ -70,6 +70,8 @@ class MyComposeTest {
     }
 }
 ```
+
+Note that the location of Robolectric tests is always the `test` source set, not `androidTest`.
 
 ### Finders {:#finders }
 

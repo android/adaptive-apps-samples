@@ -29,6 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.android.tools.screenshot.PreviewTest
+import com.google.jetstream.presentation.app.UserAvatar
 
 @PreviewTest
 @Preview
@@ -100,6 +101,19 @@ fun BackButtonScreenshot() {
         Surface {
             Box(Modifier.padding(16.dp)) {
                 BackButton(onClick = {}, isRequired = true)
+            }
+        }
+    }
+}
+
+@PreviewTest
+@Preview
+@Composable
+fun UserAvatarScreenshot() {
+    JetStreamPreview {
+        Surface {
+            Box(Modifier.padding(16.dp)) {
+                UserAvatar(selected = true, onClick = {})
             }
         }
     }

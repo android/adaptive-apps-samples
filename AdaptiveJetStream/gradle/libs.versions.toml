@@ -32,6 +32,7 @@ xr-material3 = "1.0.0-alpha11"
 screenshot = "0.0.1-alpha12"
 ui-tooling-preview = "1.10.0"
 ui-tooling = "1.10.0"
+robolectric = "4.16"
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity-compose" }
@@ -78,6 +79,7 @@ androidx-xr-compose-material3 = { module = "androidx.xr.compose.material3:materi
 screenshot-validation-api = { group = "com.android.tools.screenshot", name = "screenshot-validation-api", version.ref = "screenshot"}
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview", version.ref = "ui-tooling-preview" }
 androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "ui-tooling" }
+robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-gradle-plugin" }

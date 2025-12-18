@@ -126,3 +126,10 @@ and compare it with the reference image:
 
 The verification task creates an HTML report at
 `{module}/build/reports/screenshotTest/preview/{variant}/index.html`.
+
+
+## Choosing which composable to test
+
+If you follow the practice of stateful and stateless composables,
+you should test the stateless as they're in charge of rendering UI and
+they're easier to test.
