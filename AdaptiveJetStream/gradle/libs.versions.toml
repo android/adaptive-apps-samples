@@ -29,6 +29,9 @@ rules = "1.7.0"
 window = "1.5.0"
 xr = "1.0.0-alpha07"
 xr-material3 = "1.0.0-alpha11"
+screenshot = "0.0.1-alpha12"
+ui-tooling-preview = "1.10.0"
+ui-tooling = "1.10.0"
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity-compose" }
@@ -38,6 +41,8 @@ androidx-compose-material3 = { module = "androidx.compose.material3:material3" }
 androidx-compose-runtime = { module = "androidx.compose.runtime:runtime" }
 androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
+androidx-compose-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4" }
+androidx-compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
 androidx-concurrent-futures-ktx = { module = "androidx.concurrent:concurrent-futures-ktx", version.ref = "concurrent-futures-ktx" }
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "core-ktx" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "core-splashscreen" }
@@ -70,6 +75,9 @@ androidx-window-core = { module = "androidx.window:window-core", version.ref = "
 androidx-xr-scenecore = { module = "androidx.xr.scenecore:scenecore", version.ref = "xr" }
 androidx-xr-compose = { module = "androidx.xr.compose:compose", version.ref = "xr" }
 androidx-xr-compose-material3 = { module = "androidx.xr.compose.material3:material3", version.ref = "xr-material3" }
+screenshot-validation-api = { group = "com.android.tools.screenshot", name = "screenshot-validation-api", version.ref = "screenshot"}
+androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview", version.ref = "ui-tooling-preview" }
+androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "ui-tooling" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-gradle-plugin" }
@@ -81,3 +89,4 @@ compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt-android" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 kotlin-parcelize = { id = "kotlin-parcelize" }
+screenshot = { id = "com.android.compose.screenshot", version.ref = "screenshot"}

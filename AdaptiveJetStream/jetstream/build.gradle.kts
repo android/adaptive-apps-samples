@@ -24,13 +24,14 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.androidx.baselineprofile)
     alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.screenshot)
 }
 
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(21)
 
     compilerOptions {
-        jvmTarget = JvmTarget.JVM_17
+        jvmTarget = JvmTarget.JVM_21
     }
 }
 
@@ -73,6 +74,7 @@ android {
         }
     }
 
+    experimentalProperties["android.experimental.enableScreenshotTest"] = true
 }
 
 dependencies {
@@ -121,6 +123,8 @@ dependencies {
     // Hilt
     implementation(libs.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.androidx.ui.tooling.preview)
+    debugImplementation(libs.androidx.ui.tooling)
     ksp(libs.hilt.compiler)
 
     // Baseline profile installer
@@ -140,10 +144,17 @@ dependencies {
 
     // Compose Previews
     debugImplementation(libs.androidx.compose.ui.tooling)
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
 
     // For baseline profile generation
     baselineProfile(project(":benchmark"))
 
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
+
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
+
+    "screenshotTestImplementation"(libs.screenshot.validation.api)
+    "screenshotTestImplementation"(libs.androidx.compose.ui.tooling)
 }
