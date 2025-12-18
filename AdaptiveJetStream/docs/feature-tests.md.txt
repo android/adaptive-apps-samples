@@ -1,0 +1,17 @@
+# Feature tests
+
+A feature test verifies the interaction of two or more independent components or modules.
+Feature tests are larger and more complex, and usually operate at the feature level.
+
+First, make a list of all the features in the scope of the prompt. A feature is a screen (such as
+Home, Settings, Profile) or it can also be a supporting panel (such as a details screen,
+filters for a list, sign in form...)
+
+For feature tests, create two types of tests:
+ - Screenshot tests using Previews. See "docs/screenshot-testing.md.txt" for instructions. These
+ tests let you verify the visual aspects of full screens or panels. Test it in different sizes
+ to make sure it looks good across form factors.
+ - Compose tests. Using the Compose testing APIs. See "docs/compose-testing.md.txt" for
+ instructions. These apps let you verify the behavior of the features.
+
+

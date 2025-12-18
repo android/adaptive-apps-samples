@@ -28,7 +28,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 
 @HiltViewModel
-class HomeScreeViewModel @Inject constructor(movieRepository: MovieRepository) : ViewModel() {
+class HomeScreenViewModel @Inject constructor(movieRepository: MovieRepository) : ViewModel() {
 
     val uiState: StateFlow<HomeScreenUiState> = combine(
         movieRepository.getFeaturedMovies(),

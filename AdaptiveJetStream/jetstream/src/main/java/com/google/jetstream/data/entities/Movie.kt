@@ -70,10 +70,10 @@ fun MoviesResponseItem.toMovie(thumbnailType: ThumbnailType = ThumbnailType.Stan
     return Movie(
         id = id,
         sources = sourceMap,
-        subtitleUri,
-        thumbnail,
-        title,
-        fullTitle
+        subtitleUri = subtitleUri,
+        posterUri = thumbnail,
+        name = title,
+        description = plot
     )
 }
 

@@ -98,7 +98,7 @@ fun SearchScreen(
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-private fun SearchResult(
+internal fun SearchResult(
     searchText: TextFieldValue,
     movieList: MovieList,
     searchMovies: () -> Unit,

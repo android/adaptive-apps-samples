@@ -17,12 +17,12 @@
 package com.google.jetstream.data.repositories
 
 import com.google.jetstream.data.entities.toMovieCategory
-import com.google.jetstream.data.util.AssetsReader
+import com.google.jetstream.data.util.AssetReader
 import com.google.jetstream.data.util.StringConstants
 import javax.inject.Inject
 
 class MovieCategoryDataSource @Inject constructor(
-    assetsReader: AssetsReader
+    assetsReader: AssetReader
 ) {
 
     private val movieCategoryDataReader = CachedDataReader {

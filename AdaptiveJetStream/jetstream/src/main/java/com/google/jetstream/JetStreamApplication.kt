@@ -19,6 +19,8 @@ package com.google.jetstream
 import android.app.Application
 import com.google.jetstream.data.repositories.MovieRepository
 import com.google.jetstream.data.repositories.MovieRepositoryImpl
+import com.google.jetstream.data.util.AssetReader
+import com.google.jetstream.data.util.AssetsReader
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -36,4 +38,14 @@ abstract class MovieRepositoryModule {
     abstract fun bindMovieRepository(
         movieRepositoryImpl: MovieRepositoryImpl
     ): MovieRepository
+}
+
+@InstallIn(SingletonComponent::class)
+@Module
+abstract class AssetReaderModule {
+
+    @Binds
+    abstract fun bindAssetReader(
+        assetsReader: AssetsReader
+    ): AssetReader
 }

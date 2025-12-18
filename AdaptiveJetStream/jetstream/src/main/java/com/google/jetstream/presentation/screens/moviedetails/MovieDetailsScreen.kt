@@ -109,7 +109,7 @@ fun MovieDetailsScreen(
 }
 
 @Composable
-private fun Details(
+internal fun Details(
     movieDetails: MovieDetails,
     goToMoviePlayer: (MovieDetails) -> Unit,
     onBackPressed: () -> Unit,
@@ -151,7 +151,7 @@ private fun Details(
 }
 
 @Composable
-private fun MovieDetailsList(
+internal fun MovieDetailsList(
     movieDetails: MovieDetails,
     goToMoviePlayer: (MovieDetails) -> Unit,
     refreshScreenWithNewMovie: (Movie) -> Unit,

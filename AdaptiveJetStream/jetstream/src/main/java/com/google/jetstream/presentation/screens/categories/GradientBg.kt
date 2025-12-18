@@ -45,6 +45,7 @@ import com.google.jetstream.presentation.theme.Purple300
 import com.google.jetstream.presentation.theme.Red300
 import com.google.jetstream.presentation.theme.Teal300
 import com.google.jetstream.presentation.theme.Yellow300
+import kotlin.random.Random
 
 val pairs = listOf(
     Coral to LightYellow,
@@ -61,10 +62,10 @@ val pairs = listOf(
 )
 
 @Composable
-fun GradientBg() {
+fun GradientBg(seed: Long = 0) {
     Box(
         modifier = Modifier
-            .background(Brush.radialGradient(pairs.random().toList()))
+            .background(Brush.radialGradient(pairs.random(Random(seed)).toList()))
             .fillMaxWidth()
             .height(200.dp)
     )

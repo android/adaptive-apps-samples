@@ -19,6 +19,7 @@ package com.google.jetstream.presentation.app
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalInspectionMode
 import com.google.jetstream.presentation.components.feature.hasXrSpatialFeature
 import com.google.jetstream.presentation.components.feature.isAutomotiveEnabled
 import com.google.jetstream.presentation.components.feature.isLeanbackEnabled
@@ -36,7 +37,13 @@ fun rememberNavigationComponentType(): NavigationComponentType {
     val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
     val isLeanbackEnabled = isLeanbackEnabled()
     val isAutomotiveEnabled = isAutomotiveEnabled()
-    val isSpatialUiEnabled = hasXrSpatialFeature() && isSpatialUiEnabled()
+    
+    val isPreview = LocalInspectionMode.current
+    val isSpatialUiEnabled = if (isPreview) {
+        false
+    } else {
+        hasXrSpatialFeature() && isSpatialUiEnabled()
+    }
 
     return remember(isLeanbackEnabled, isAutomotiveEnabled, windowSizeClass, isSpatialUiEnabled) {
         selectNavigationComponentType(

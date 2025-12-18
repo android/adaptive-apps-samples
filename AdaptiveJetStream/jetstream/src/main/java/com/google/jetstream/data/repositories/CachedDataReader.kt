@@ -20,7 +20,7 @@ import com.google.jetstream.data.entities.Movie
 import com.google.jetstream.data.models.MovieCastResponseItem
 import com.google.jetstream.data.models.MovieCategoriesResponseItem
 import com.google.jetstream.data.models.MoviesResponseItem
-import com.google.jetstream.data.util.AssetsReader
+import com.google.jetstream.data.util.AssetReader
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.sync.Mutex
@@ -45,7 +45,7 @@ internal class CachedDataReader<T>(private val reader: suspend () -> List<T>) {
 internal typealias MovieDataReader = CachedDataReader<Movie>
 
 internal suspend fun readMovieData(
-    assetsReader: AssetsReader,
+    assetsReader: AssetReader,
     resourceId: String,
     dispatcher: CoroutineDispatcher = Dispatchers.IO
 ): List<MoviesResponseItem> = withContext(dispatcher) {
@@ -55,7 +55,7 @@ internal suspend fun readMovieData(
 }
 
 internal suspend fun readMovieCastData(
-    assetsReader: AssetsReader,
+    assetsReader: AssetReader,
     resourceId: String,
     dispatcher: CoroutineDispatcher = Dispatchers.IO
 ): List<MovieCastResponseItem> = withContext(dispatcher) {
@@ -65,7 +65,7 @@ internal suspend fun readMovieCastData(
 }
 
 internal suspend fun readMovieCategoryData(
-    assetsReader: AssetsReader,
+    assetsReader: AssetReader,
     resourceId: String,
     dispatcher: CoroutineDispatcher = Dispatchers.IO
 ): List<MovieCategoriesResponseItem> = withContext(dispatcher) {

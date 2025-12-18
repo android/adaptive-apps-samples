@@ -18,12 +18,12 @@ package com.google.jetstream.data.repositories
 
 import com.google.jetstream.data.entities.ThumbnailType
 import com.google.jetstream.data.entities.toMovie
-import com.google.jetstream.data.util.AssetsReader
+import com.google.jetstream.data.util.AssetReader
 import com.google.jetstream.data.util.StringConstants
 import javax.inject.Inject
 
 class TvDataSource @Inject constructor(
-    assetsReader: AssetsReader
+    assetsReader: AssetReader
 ) {
     private val mostPopularTvShowsReader = CachedDataReader {
         readMovieData(assetsReader, StringConstants.Assets.MostPopularTVShows)
