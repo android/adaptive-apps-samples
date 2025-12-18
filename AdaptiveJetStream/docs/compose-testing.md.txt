@@ -378,7 +378,7 @@ composeTestRule.setContent {
     ) {
         MyScreen() // Will be rendered in the space for 1280dp by 800dp without clipping.
     }
-}https://github.com/android/snippets/blob/aea6b599716bf76907c8df560ab1903f968e1031/compose/snippets/src/androidTest/java/com/example/compose/snippets/deviceconfigurationoverride/DeviceConfigurationOverrideSnippets.kt#L41-L47
+}
 ```
 
 <br />
@@ -395,5 +395,5 @@ composeTestRule.setContent {
     ) {
         Text(text = "text with increased scale and weight")
     }
-}https://github.com/android/snippets/blob/aea6b599716bf76907c8df560ab1903f968e1031/compose/snippets/src/androidTest/java/com/example/compose/snippets/deviceconfigurationoverride/DeviceConfigurationOverrideSnippets.kt#L55-L62
+}
 ```
