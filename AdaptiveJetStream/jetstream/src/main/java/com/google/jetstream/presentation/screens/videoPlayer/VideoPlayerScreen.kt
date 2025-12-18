@@ -23,10 +23,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.focusGroup
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -193,8 +196,12 @@ private fun VideoPlayer(
 
     // TODO: Move to ViewModel for better reuse
     val pulseState = rememberVideoPlayerPulseState()
-
-    val videoPlayerState = rememberVideoPlayerState(player = player, hideSeconds = 4)
+    val isTabletopMode = currentWindowAdaptiveInfo().windowPosture.isTabletop
+    val videoPlayerState = rememberVideoPlayerState(
+        player = player,
+        isTabletopMode = isTabletopMode,
+        hideSeconds = 4
+    )
     val videoSize by videoPlayerState
         .videoSize
         .collectAsStateWithLifecycle(Size(1980f, 1080f))
@@ -214,9 +221,11 @@ private fun VideoPlayer(
                         !hasXrSpatialFeature -> {
                             activity?.toggleImmersiveMode()
                         }
+
                         isSpatialUiEnabled -> {
                             spatialConfiguration.requestHomeSpaceMode()
                         }
+
                         else -> {
                             spatialConfiguration.requestFullSpaceMode()
                         }
@@ -392,23 +401,102 @@ private fun VideoPlayer2D(
     modifier: Modifier = Modifier,
     onBackPressed: () -> Unit = {}
 ) {
-    val focusRequester = remember { FocusRequester() }
-
-    val size = if(videoSize == Size.Zero) {
+    val size = if (videoSize == Size.Zero) {
         null
     } else {
         videoSize
     }
 
+    if (videoPlayerState.isTabletopMode) {
+        TabletopVideoPlayer(
+            modifier = modifier,
+            player = player,
+            size = size,
+            nowPlayingInfo = nowPlayingInfo,
+            videoPlayerState = videoPlayerState,
+            pulseState = pulseState,
+            onBackPressed = onBackPressed
+        )
+    } else {
+        DefaultVideoPlayer(
+            modifier = modifier,
+            player = player,
+            size = size,
+            nowPlayingInfo = nowPlayingInfo,
+            videoPlayerState = videoPlayerState,
+            pulseState = pulseState,
+            onBackPressed = onBackPressed
+        )
+    }
+}
+
+@Composable
+private fun TabletopVideoPlayer(
+    modifier: Modifier = Modifier,
+    player: Player,
+    size: Size?,
+    nowPlayingInfo: NowPlayingInfo,
+    videoPlayerState: VideoPlayerState,
+    pulseState: VideoPlayerPulseState,
+    onBackPressed: () -> Unit
+) {
+    Column(modifier = modifier.fillMaxSize()) {
+        Box(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth(),
+            contentAlignment = Alignment.Center
+        ) {
+            PlayerSurface(
+                player = player,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .resizeWithContentScale(
+                        contentScale = ContentScale.Fit,
+                        sourceSizeDp = size
+                    )
+            )
+        }
+        Box(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth(),
+            contentAlignment = Alignment.Center
+        ) {
+            VideoPlayerControlsInOverlay(
+                movieDetails = nowPlayingInfo.movieDetails,
+                player = player,
+                videoPlayerState = videoPlayerState,
+                videoPlayerPulseState = pulseState,
+                onBackPressed = onBackPressed,
+                modifier = Modifier
+            )
+        }
+    }
+}
+
+@Composable
+private fun DefaultVideoPlayer(
+    modifier: Modifier = Modifier,
+    player: Player,
+    size: Size?,
+    nowPlayingInfo: NowPlayingInfo,
+    videoPlayerState: VideoPlayerState,
+    pulseState: VideoPlayerPulseState,
+    onBackPressed: () -> Unit
+) {
+    val focusRequester = remember { FocusRequester() }
     Box(
-        modifier = modifier
+        modifier = modifier.fillMaxSize()
     ) {
         PlayerSurface(
             player = player,
-            modifier = Modifier.resizeWithContentScale(
-                contentScale = ContentScale.Fit,
-                sourceSizeDp = size
-            )
+            modifier = Modifier
+                .fillMaxSize()
+                .resizeWithContentScale(
+                    contentScale = ContentScale.Fit,
+                    sourceSizeDp = size
+                )
         )
         VideoPlayerControlsInOverlay(
             movieDetails = nowPlayingInfo.movieDetails,

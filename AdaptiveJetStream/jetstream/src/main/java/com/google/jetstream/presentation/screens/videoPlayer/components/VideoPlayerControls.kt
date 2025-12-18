@@ -18,9 +18,13 @@ package com.google.jetstream.presentation.screens.videoPlayer.components
 
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -36,10 +40,16 @@ import com.google.jetstream.presentation.screens.videoPlayer.components.button.C
 import com.google.jetstream.presentation.screens.videoPlayer.components.button.ImmersiveModeButton
 import com.google.jetstream.presentation.screens.videoPlayer.components.button.NextButton
 import com.google.jetstream.presentation.screens.videoPlayer.components.button.PlayListButton
+import com.google.jetstream.presentation.screens.videoPlayer.components.button.PlayPauseButton
 import com.google.jetstream.presentation.screens.videoPlayer.components.button.PreviousButton
 import com.google.jetstream.presentation.screens.videoPlayer.components.button.RepeatButton
 import com.google.jetstream.presentation.screens.videoPlayer.components.button.SettingsButton
 import kotlin.time.Duration.Companion.milliseconds
+
+private val DefaultActionSpacing = 12.dp
+private val TabletopActionSpacing = 15.dp
+private val TabletopButtonSize = 70.dp
+private val BottomPadding = 16.dp
 
 @Composable
 fun VideoPlayerControls(
@@ -53,7 +63,7 @@ fun VideoPlayerControls(
         focusRequester.tryRequestFocus()
     }
 
-    val scrollState = rememberScrollState()
+    val isTabletop = currentWindowAdaptiveInfo().windowPosture.isTabletop
 
     VideoPlayerMainFrame(
         mediaTitle = {
@@ -61,26 +71,15 @@ fun VideoPlayerControls(
                 title = movieDetails.name,
                 secondaryText = movieDetails.releaseDate,
                 tertiaryText = movieDetails.director,
-                type = VideoPlayerMediaTitleType.DEFAULT
+                type = VideoPlayerMediaTitleType.DEFAULT,
+                modifier = Modifier.fillMaxWidth()
             )
         },
         mediaActions = {
-            Row(
-                modifier = Modifier
-                    .padding(bottom = 16.dp)
-                    .horizontalScroll(scrollState),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-            ) {
-                PreviousButton(player = player)
-                NextButton(player = player)
-                RepeatButton(player = player)
-                PlayListButton()
-                ClosedCaptionButton()
-                SettingsButton()
-                if (isImmersiveModeAvailable) {
-                    ImmersiveModeButton()
-                }
+            if (isTabletop) {
+                TabletopMediaActions(player, isImmersiveModeAvailable)
+            } else {
+                DefaultMediaActions(player, isImmersiveModeAvailable)
             }
         },
         seeker = {
@@ -88,10 +87,87 @@ fun VideoPlayerControls(
                 player = player,
                 onSeek = { player.seekTo(player.duration.times(it).toLong()) },
                 contentDuration = player.duration.milliseconds,
-                modifier = Modifier.focusRequester(focusRequester)
+                modifier = Modifier.focusRequester(focusRequester),
+                shouldShowPlayPauseButton = !isTabletop
             )
         },
         more = null,
         modifier = modifier
     )
+}
+
+@Composable
+private fun TabletopMediaActions(
+    player: Player,
+    isImmersiveModeAvailable: Boolean,
+) {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(bottom = BottomPadding)
+                .weight(1f),
+            horizontalArrangement = Arrangement.spacedBy(
+                TabletopActionSpacing,
+                Alignment.CenterHorizontally
+            ),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            PreviousButton(player = player, modifier = Modifier.size(TabletopButtonSize))
+            PlayPauseButton(player = player, modifier = Modifier.size(TabletopButtonSize))
+            NextButton(player = player, modifier = Modifier.size(TabletopButtonSize))
+        }
+        PlayerActions(
+            player = player,
+            isImmersiveModeAvailable = isImmersiveModeAvailable,
+            modifier = Modifier.weight(1f),
+            horizontalArrangement = Arrangement.spacedBy(
+                TabletopActionSpacing,
+                Alignment.CenterHorizontally
+            )
+        )
+    }
+}
+
+@Composable
+private fun DefaultMediaActions(
+    player: Player,
+    isImmersiveModeAvailable: Boolean,
+) {
+    val scrollState = rememberScrollState()
+    Row(
+        modifier = Modifier
+            .padding(bottom = BottomPadding)
+            .horizontalScroll(scrollState),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(DefaultActionSpacing),
+    ) {
+        PreviousButton(player = player)
+        NextButton(player = player)
+        PlayerActions(player, isImmersiveModeAvailable)
+    }
+}
+
+@Composable
+private fun PlayerActions(
+    player: Player,
+    isImmersiveModeAvailable: Boolean,
+    modifier: Modifier = Modifier,
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(DefaultActionSpacing)
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = horizontalArrangement,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        RepeatButton(player = player)
+        PlayListButton()
+        ClosedCaptionButton()
+        SettingsButton()
+        if (isImmersiveModeAvailable) {
+            ImmersiveModeButton()
+        }
+    }
 }

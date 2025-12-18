@@ -40,9 +40,10 @@ import kotlinx.coroutines.flow.onEach
 
 class VideoPlayerState internal constructor(
     val player: Player,
+    val isTabletopMode: Boolean = false,
     @IntRange(from = 0) val hideSeconds: Int = 4,
 ) {
-    var isControlsVisible by mutableStateOf(false)
+    var isControlsVisible by mutableStateOf(true)
         private set
 
     fun showControls() {
@@ -108,14 +109,18 @@ class VideoPlayerState internal constructor(
         channel
             .consumeAsFlow()
             .collectLatest { operation ->
-                isControlsVisible = when (operation) {
-                    ControlsHideOperation.Hide -> {
-                        delay(hideSeconds * 1000L)
-                        false
-                    }
+                isControlsVisible = if (isTabletopMode) {
+                    true
+                } else {
+                    when (operation) {
+                        ControlsHideOperation.Hide -> {
+                            delay(hideSeconds * 1000L)
+                            false
+                        }
 
-                    ControlsHideOperation.Cancel -> {
-                        true
+                        ControlsHideOperation.Cancel -> {
+                            true
+                        }
                     }
                 }
             }
@@ -131,11 +136,13 @@ class VideoPlayerState internal constructor(
 @Composable
 fun rememberVideoPlayerState(
     player: Player,
+    isTabletopMode: Boolean,
     @IntRange(from = 0) hideSeconds: Int = 4,
 ): VideoPlayerState {
-    return remember(player, hideSeconds) {
+    return remember(player, isTabletopMode, hideSeconds) {
         VideoPlayerState(
             player = player,
+            isTabletopMode = isTabletopMode,
             hideSeconds = hideSeconds,
         )
     }
