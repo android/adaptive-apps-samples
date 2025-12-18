@@ -146,7 +146,7 @@ private fun CategoryCard(
     ) {
         Box(contentAlignment = Alignment.Center) {
             Box(modifier = Modifier.alpha(itemAlpha)) {
-                GradientBg()
+                GradientBg(seed = movieCategory.id.hashCode().toLong())
             }
             Text(
                 text = movieCategory.name,
