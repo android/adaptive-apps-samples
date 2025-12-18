@@ -32,3 +32,34 @@ jobs:
       - name: Run Unit Tests
         run: ./gradlew testDebugUnitTest
         working-directory: ./AdaptiveJetStream
+
+      - name: Run all local screenshot tests
+        id: screenshotsverify
+        continue-on-error: true
+        run: ./gradlew validateDebugScreenshotTest
+        working-directory: ./AdaptiveJetStream
+
+      - name: Prevent pushing new screenshots if this is a fork
+        id: checkfork_screenshots
+        continue-on-error: false
+        if: steps.screenshotsverify.outcome == 'failure' && github.event.pull_request.head.repo.full_name != github.repository
+        run: |
+          echo "::error::Screenshot tests failed, please create a PR in your fork first." 
+          echo "Your fork's CI will take screenshots for your fork."
+          exit 1
+        working-directory: ./AdaptiveJetStream
+
+      # Runs if previous job failed
+      - name: Generate new screenshots if verification failed and it's a PR
+        id: screenshotsrecord
+        if: steps.screenshotsverify.outcome == 'failure' && github.event_name == 'pull_request'
+        run: |
+          ./gradlew updateDebugScreenshotTest
+        working-directory: ./AdaptiveJetStream
+
+      - name: Push new screenshots if available
+        uses: stefanzweifel/git-auto-commit-action@v5
+        if: steps.screenshotsrecord.outcome == 'success'
+        with:
+          file_pattern: 'AdaptiveJetStream/jetstream/screenshotTestDebug/reference/**/*.png'
+          commit_message: "🤖 Updates screenshots"
