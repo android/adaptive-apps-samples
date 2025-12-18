@@ -14,48 +14,42 @@
  * limitations under the License.
  */
 
-package com.google.jetstream.presentation.screens.movies
+package com.google.jetstream.presentation.screens.categories
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
-import com.google.jetstream.data.entities.Movie
-import com.google.jetstream.data.util.StringConstants
+import com.google.jetstream.data.entities.MovieCategoryDetails
 import com.google.jetstream.presentation.theme.JetStreamTheme
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 
-class MoviesScreenTest {
+@RunWith(RobolectricTestRunner::class)
+class CategoryMovieListScreenTest {
 
     @get:Rule
     val composeTestRule = createComposeRule()
 
-    private val testMovie = Movie(
+    private val testCategoryDetails = MovieCategoryDetails(
         id = "1",
-        sources = emptyMap(),
-        subtitleUri = null,
-        posterUri = "",
-        name = "Movie Name",
-        description = "Movie Description"
+        name = "Action Movies",
+        movies = emptyList()
     )
-    private val testMovieList = List(5) { testMovie.copy(id = it.toString(), name = "Movie $it") }
 
     @Test
-    fun moviesScreen_displaysPopularFilmsSection() {
+    fun categoryMovieList_displaysCategoryName() {
         composeTestRule.setContent {
             JetStreamTheme {
-                Catalog(
-                    movieList = testMovieList,
-                    popularFilmsThisWeek = testMovieList,
-                    onMovieClick = { _ -> },
-                    onScroll = { _ -> },
-                    isTopBarVisible = true
+                CategoryDetails(
+                    categoryDetails = testCategoryDetails,
+                    onBackPressed = {},
+                    onMovieSelected = {}
                 )
             }
         }
 
-        composeTestRule
-            .onNodeWithText(StringConstants.Composable.PopularFilmsThisWeekTitle)
-            .assertIsDisplayed()
+        composeTestRule.onNodeWithText(testCategoryDetails.name).assertIsDisplayed()
     }
 }

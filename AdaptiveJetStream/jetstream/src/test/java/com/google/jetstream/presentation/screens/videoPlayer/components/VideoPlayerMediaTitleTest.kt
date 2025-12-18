@@ -22,7 +22,10 @@ import androidx.compose.ui.test.onNodeWithText
 import com.google.jetstream.presentation.theme.JetStreamTheme
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 
+@RunWith(RobolectricTestRunner::class)
 class VideoPlayerMediaTitleTest {
 
     @get:Rule

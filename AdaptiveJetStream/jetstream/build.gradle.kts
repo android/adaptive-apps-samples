@@ -25,6 +25,7 @@ plugins {
     alias(libs.plugins.androidx.baselineprofile)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.screenshot)
+    id("jacoco")
 }
 
 kotlin {
@@ -54,6 +55,9 @@ android {
     }
 
     buildTypes {
+        debug {
+            enableUnitTestCoverage = true
+        }
         getByName("release") {
             isMinifyEnabled = true
             signingConfig = signingConfigs.getByName("debug")
@@ -81,6 +85,52 @@ android {
     }
 
     experimentalProperties["android.experimental.enableScreenshotTest"] = true
+}
+
+jacoco {
+    toolVersion = libs.versions.jacoco.get()
+}
+
+tasks.withType<Test> {
+    configure<JacocoTaskExtension> {
+        isIncludeNoLocationClasses = true
+        excludes = listOf("jdk.internal.*")
+    }
+}
+
+tasks.register<JacocoReport>("jacocoTestReport") {
+    dependsOn("testDebugUnitTest")
+
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+    }
+
+    val fileFilter = listOf(
+        "**/R.class",
+        "**/R$*.class",
+        "**/BuildConfig.*",
+        "**/Manifest*.*",
+        "**/*Test*.*",
+        "android/**/*.*",
+        "**/hilt_aggregated_deps/**",
+        "**/*_HiltModules*.*",
+        "**/*_Factory*.*",
+        "**/*_MembersInjector*.*"
+    )
+
+    val javaClasses = fileTree("${project.layout.buildDirectory.get()}/intermediates/javac/debug/classes") {
+        exclude(fileFilter)
+    }
+    val kotlinClasses = fileTree("${project.layout.buildDirectory.get()}/tmp/kotlin-classes/debug") {
+        exclude(fileFilter)
+    }
+
+    classDirectories.setFrom(files(javaClasses, kotlinClasses))
+    sourceDirectories.setFrom(files("${project.projectDir}/src/main/java", "${project.projectDir}/src/main/kotlin"))
+    executionData.setFrom(fileTree("${project.layout.buildDirectory.get()}") {
+        include("outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec")
+    })
 }
 
 tasks.withType<com.android.compose.screenshot.tasks.PreviewScreenshotValidationTask> {

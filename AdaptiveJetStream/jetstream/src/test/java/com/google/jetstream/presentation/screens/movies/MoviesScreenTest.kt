@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.jetstream.presentation.screens.home
+package com.google.jetstream.presentation.screens.movies
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -24,8 +24,13 @@ import com.google.jetstream.data.util.StringConstants
 import com.google.jetstream.presentation.theme.JetStreamTheme
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 
-class HomeScreenTest {
+@RunWith(RobolectricTestRunner::class)
+@Config(qualifiers = "w1280dp-h800dp")
+class MoviesScreenTest {
 
     @get:Rule
     val composeTestRule = createComposeRule()
@@ -41,44 +46,21 @@ class HomeScreenTest {
     private val testMovieList = List(5) { testMovie.copy(id = it.toString(), name = "Movie $it") }
 
     @Test
-    fun homeScreen_displaysTrendingSection() {
+    fun moviesScreen_displaysPopularFilmsSection() {
         composeTestRule.setContent {
             JetStreamTheme {
                 Catalog(
-                    featuredMovies = testMovieList,
-                    trendingMovies = testMovieList,
-                    top10Movies = testMovieList,
-                    nowPlayingMovies = testMovieList,
-                    onMovieClick = {},
-                    onScroll = {},
-                    goToVideoPlayer = {}
+                    movieList = testMovieList,
+                    popularFilmsThisWeek = testMovieList,
+                    onMovieClick = { _ -> },
+                    onScroll = { _ -> },
+                    isTopBarVisible = true
                 )
             }
         }
 
         composeTestRule
-            .onNodeWithText(StringConstants.Composable.HomeScreenTrendingTitle)
-            .assertIsDisplayed()
-    }
-
-    @Test
-    fun homeScreen_displaysNowPlayingSection() {
-        composeTestRule.setContent {
-            JetStreamTheme {
-                Catalog(
-                    featuredMovies = testMovieList,
-                    trendingMovies = testMovieList,
-                    top10Movies = testMovieList,
-                    nowPlayingMovies = testMovieList,
-                    onMovieClick = {},
-                    onScroll = {},
-                    goToVideoPlayer = {}
-                )
-            }
-        }
-
-        composeTestRule
-            .onNodeWithText(StringConstants.Composable.HomeScreenNowPlayingMoviesTitle)
+            .onNodeWithText(StringConstants.Composable.PopularFilmsThisWeekTitle)
             .assertIsDisplayed()
     }
 }
