@@ -3,7 +3,7 @@
     "id": "8daa7d22d13a9",
     "sources": [
       {
-        "uri": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "uri": "http://storage.googleapis.com/androiddevelopers/samples_assets/gtv-videos-bucket/sample/BigBuckBunny.mp4",
         "stereoMode": "mono"
       },
       {
@@ -35,7 +35,7 @@
     "id": "6f251d94cc5c2",
     "sources": [
       {
-        "uri": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "uri": "http://storage.googleapis.com/androiddevelopers/samples_assets/gtv-videos-bucket/sample/BigBuckBunny.mp4",
         "stereoMode": "mono"
       },
       {
@@ -67,7 +67,7 @@
     "id": "b168b710fcbea",
     "sources": [
       {
-        "uri": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "uri": "http://storage.googleapis.com/androiddevelopers/samples_assets/gtv-videos-bucket/sample/BigBuckBunny.mp4",
         "stereoMode": "mono"
       },
       {
@@ -99,7 +99,7 @@
     "id": "51df9ee9a5c29",
     "sources": [
       {
-        "uri": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "uri": "http://storage.googleapis.com/androiddevelopers/samples_assets/gtv-videos-bucket/sample/BigBuckBunny.mp4",
         "stereoMode": "mono"
       },
       {
@@ -131,7 +131,7 @@
     "id": "ecde1713c9d3b",
     "sources": [
       {
-        "uri": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "uri": "http://storage.googleapis.com/androiddevelopers/samples_assets/gtv-videos-bucket/sample/BigBuckBunny.mp4",
         "stereoMode": "mono"
       },
       {
@@ -163,7 +163,7 @@
     "id": "040fab3d5e08e",
     "sources": [
       {
-        "uri": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "uri": "http://storage.googleapis.com/androiddevelopers/samples_assets/gtv-videos-bucket/sample/BigBuckBunny.mp4",
         "stereoMode": "mono"
       },
       {
@@ -195,7 +195,7 @@
     "id": "814b01214546b",
     "sources": [
       {
-        "uri": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "uri": "http://storage.googleapis.com/androiddevelopers/samples_assets/gtv-videos-bucket/sample/BigBuckBunny.mp4",
         "stereoMode": "mono"
       },
       {
@@ -227,7 +227,7 @@
     "id": "c4278acc58c31",
     "sources": [
       {
-        "uri": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "uri": "http://storage.googleapis.com/androiddevelopers/samples_assets/gtv-videos-bucket/sample/BigBuckBunny.mp4",
         "stereoMode": "mono"
       },
       {
@@ -259,7 +259,7 @@
     "id": "4371b4ae71a42",
     "sources": [
       {
-        "uri": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "uri": "http://storage.googleapis.com/androiddevelopers/samples_assets/gtv-videos-bucket/sample/BigBuckBunny.mp4",
         "stereoMode": "mono"
       },
       {
@@ -291,7 +291,7 @@
     "id": "feee7e2119c28",
     "sources": [
       {
-        "uri": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "uri": "http://storage.googleapis.com/androiddevelopers/samples_assets/gtv-videos-bucket/sample/BigBuckBunny.mp4",
         "stereoMode": "mono"
       },
       {
@@ -323,7 +323,7 @@
     "id": "09810df603d1f",
     "sources": [
       {
-        "uri": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "uri": "http://storage.googleapis.com/androiddevelopers/samples_assets/gtv-videos-bucket/sample/BigBuckBunny.mp4",
         "stereoMode": "mono"
       },
       {
@@ -355,7 +355,7 @@
     "id": "66f35ba9d671d",
     "sources": [
       {
-        "uri": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "uri": "http://storage.googleapis.com/androiddevelopers/samples_assets/gtv-videos-bucket/sample/BigBuckBunny.mp4",
         "stereoMode": "mono"
       },
       {
@@ -387,7 +387,7 @@
     "id": "2cf93763fab89",
     "sources": [
       {
-        "uri": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "uri": "http://storage.googleapis.com/androiddevelopers/samples_assets/gtv-videos-bucket/sample/BigBuckBunny.mp4",
         "stereoMode": "mono"
       },
       {
@@ -419,7 +419,7 @@
     "id": "523d5cdae88f7",
     "sources": [
       {
-        "uri": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "uri": "http://storage.googleapis.com/androiddevelopers/samples_assets/gtv-videos-bucket/sample/BigBuckBunny.mp4",
         "stereoMode": "mono"
       },
       {
@@ -451,7 +451,7 @@
     "id": "e267a161bb286",
     "sources": [
       {
-        "uri": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "uri": "http://storage.googleapis.com/androiddevelopers/samples_assets/gtv-videos-bucket/sample/BigBuckBunny.mp4",
         "stereoMode": "mono"
       },
       {
@@ -483,7 +483,7 @@
     "id": "c10133062b2aa",
     "sources": [
       {
-        "uri": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "uri": "http://storage.googleapis.com/androiddevelopers/samples_assets/gtv-videos-bucket/sample/BigBuckBunny.mp4",
         "stereoMode": "mono"
       },
       {
@@ -515,7 +515,7 @@
     "id": "68ca154f8ec3f",
     "sources": [
       {
-        "uri": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "uri": "http://storage.googleapis.com/androiddevelopers/samples_assets/gtv-videos-bucket/sample/BigBuckBunny.mp4",
         "stereoMode": "mono"
       },
       {
@@ -547,7 +547,7 @@
     "id": "af69b8b439cb9",
     "sources": [
       {
-        "uri": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "uri": "http://storage.googleapis.com/androiddevelopers/samples_assets/gtv-videos-bucket/sample/BigBuckBunny.mp4",
         "stereoMode": "mono"
       },
       {
@@ -579,7 +579,7 @@
     "id": "073a571e5f4a2",
     "sources": [
       {
-        "uri": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "uri": "http://storage.googleapis.com/androiddevelopers/samples_assets/gtv-videos-bucket/sample/BigBuckBunny.mp4",
         "stereoMode": "mono"
       },
       {
@@ -611,7 +611,7 @@
     "id": "5d428a566a71c",
     "sources": [
       {
-        "uri": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "uri": "http://storage.googleapis.com/androiddevelopers/samples_assets/gtv-videos-bucket/sample/BigBuckBunny.mp4",
         "stereoMode": "mono"
       },
       {
@@ -643,7 +643,7 @@
     "id": "84e74ee74bfc",
     "sources": [
       {
-        "uri": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "uri": "http://storage.googleapis.com/androiddevelopers/samples_assets/gtv-videos-bucket/sample/BigBuckBunny.mp4",
         "stereoMode": "mono"
       },
       {
@@ -675,7 +675,7 @@
     "id": "4d86c42a30293",
     "sources": [
       {
-        "uri": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "uri": "http://storage.googleapis.com/androiddevelopers/samples_assets/gtv-videos-bucket/sample/BigBuckBunny.mp4",
         "stereoMode": "mono"
       },
       {
@@ -707,7 +707,7 @@
     "id": "aa723f7cb6d5d",
     "sources": [
       {
-        "uri": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "uri": "http://storage.googleapis.com/androiddevelopers/samples_assets/gtv-videos-bucket/sample/BigBuckBunny.mp4",
         "stereoMode": "mono"
       },
       {
@@ -739,7 +739,7 @@
     "id": "f06206ea6ae99",
     "sources": [
       {
-        "uri": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "uri": "http://storage.googleapis.com/androiddevelopers/samples_assets/gtv-videos-bucket/sample/BigBuckBunny.mp4",
         "stereoMode": "mono"
       },
       {
@@ -771,7 +771,7 @@
     "id": "f1b81e90f812",
     "sources": [
       {
-        "uri": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "uri": "http://storage.googleapis.com/androiddevelopers/samples_assets/gtv-videos-bucket/sample/BigBuckBunny.mp4",
         "stereoMode": "mono"
       },
       {
@@ -803,7 +803,7 @@
     "id": "b1135e52c720d",
     "sources": [
       {
-        "uri": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "uri": "http://storage.googleapis.com/androiddevelopers/samples_assets/gtv-videos-bucket/sample/BigBuckBunny.mp4",
         "stereoMode": "mono"
       },
       {
@@ -835,7 +835,7 @@
     "id": "504431d1aca8",
     "sources": [
       {
-        "uri": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "uri": "http://storage.googleapis.com/androiddevelopers/samples_assets/gtv-videos-bucket/sample/BigBuckBunny.mp4",
         "stereoMode": "mono"
       },
       {
@@ -867,7 +867,7 @@
     "id": "f5aa589b50458",
     "sources": [
       {
-        "uri": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "uri": "http://storage.googleapis.com/androiddevelopers/samples_assets/gtv-videos-bucket/sample/BigBuckBunny.mp4",
         "stereoMode": "mono"
       },
       {
@@ -899,7 +899,7 @@
     "id": "c08e5ae6ecc9f",
     "sources": [
       {
-        "uri": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "uri": "http://storage.googleapis.com/androiddevelopers/samples_assets/gtv-videos-bucket/sample/BigBuckBunny.mp4",
         "stereoMode": "mono"
       },
       {
@@ -931,7 +931,7 @@
     "id": "d94abed9c1e34",
     "sources": [
       {
-        "uri": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "uri": "http://storage.googleapis.com/androiddevelopers/samples_assets/gtv-videos-bucket/sample/BigBuckBunny.mp4",
         "stereoMode": "mono"
       },
       {
@@ -963,7 +963,7 @@
     "id": "40353aa9623af",
     "sources": [
       {
-        "uri": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "uri": "http://storage.googleapis.com/androiddevelopers/samples_assets/gtv-videos-bucket/sample/BigBuckBunny.mp4",
         "stereoMode": "mono"
       },
       {
@@ -995,7 +995,7 @@
     "id": "64e067f836ca2",
     "sources": [
       {
-        "uri": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "uri": "http://storage.googleapis.com/androiddevelopers/samples_assets/gtv-videos-bucket/sample/BigBuckBunny.mp4",
         "stereoMode": "mono"
       },
       {
@@ -1027,7 +1027,7 @@
     "id": "f801ef0d2032",
     "sources": [
       {
-        "uri": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "uri": "http://storage.googleapis.com/androiddevelopers/samples_assets/gtv-videos-bucket/sample/BigBuckBunny.mp4",
         "stereoMode": "mono"
       },
       {
@@ -1059,7 +1059,7 @@
     "id": "61946ea9ede15",
     "sources": [
       {
-        "uri": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "uri": "http://storage.googleapis.com/androiddevelopers/samples_assets/gtv-videos-bucket/sample/BigBuckBunny.mp4",
         "stereoMode": "mono"
       },
       {
@@ -1091,7 +1091,7 @@
     "id": "78862e025d2fc",
     "sources": [
       {
-        "uri": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "uri": "http://storage.googleapis.com/androiddevelopers/samples_assets/gtv-videos-bucket/sample/BigBuckBunny.mp4",
         "stereoMode": "mono"
       },
       {
@@ -1123,7 +1123,7 @@
     "id": "4b93d1a0e0ae3",
     "sources": [
       {
-        "uri": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "uri": "http://storage.googleapis.com/androiddevelopers/samples_assets/gtv-videos-bucket/sample/BigBuckBunny.mp4",
         "stereoMode": "mono"
       },
       {
@@ -1155,7 +1155,7 @@
     "id": "08ef353fd4def",
     "sources": [
       {
-        "uri": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "uri": "http://storage.googleapis.com/androiddevelopers/samples_assets/gtv-videos-bucket/sample/BigBuckBunny.mp4",
         "stereoMode": "mono"
       },
       {
@@ -1187,7 +1187,7 @@
     "id": "4d3aedaa48b06",
     "sources": [
       {
-        "uri": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "uri": "http://storage.googleapis.com/androiddevelopers/samples_assets/gtv-videos-bucket/sample/BigBuckBunny.mp4",
         "stereoMode": "mono"
       },
       {
@@ -1219,7 +1219,7 @@
     "id": "43e5a062e2bfc",
     "sources": [
       {
-        "uri": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "uri": "http://storage.googleapis.com/androiddevelopers/samples_assets/gtv-videos-bucket/sample/BigBuckBunny.mp4",
         "stereoMode": "mono"
       },
       {
@@ -1251,7 +1251,7 @@
     "id": "bd72e5f8d32a6",
     "sources": [
       {
-        "uri": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "uri": "http://storage.googleapis.com/androiddevelopers/samples_assets/gtv-videos-bucket/sample/BigBuckBunny.mp4",
         "stereoMode": "mono"
       },
       {
@@ -1283,7 +1283,7 @@
     "id": "73ce574852058",
     "sources": [
       {
-        "uri": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "uri": "http://storage.googleapis.com/androiddevelopers/samples_assets/gtv-videos-bucket/sample/BigBuckBunny.mp4",
         "stereoMode": "mono"
       },
       {
@@ -1315,7 +1315,7 @@
     "id": "9cf37611cc5c2",
     "sources": [
       {
-        "uri": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "uri": "http://storage.googleapis.com/androiddevelopers/samples_assets/gtv-videos-bucket/sample/BigBuckBunny.mp4",
         "stereoMode": "mono"
       },
       {
@@ -1347,7 +1347,7 @@
     "id": "defa276de73e5",
     "sources": [
       {
-        "uri": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "uri": "http://storage.googleapis.com/androiddevelopers/samples_assets/gtv-videos-bucket/sample/BigBuckBunny.mp4",
         "stereoMode": "mono"
       },
       {
@@ -1379,7 +1379,7 @@
     "id": "d84978bdf9622",
     "sources": [
       {
-        "uri": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "uri": "http://storage.googleapis.com/androiddevelopers/samples_assets/gtv-videos-bucket/sample/BigBuckBunny.mp4",
         "stereoMode": "mono"
       },
       {
@@ -1411,7 +1411,7 @@
     "id": "e00d47b121c31",
     "sources": [
       {
-        "uri": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "uri": "http://storage.googleapis.com/androiddevelopers/samples_assets/gtv-videos-bucket/sample/BigBuckBunny.mp4",
         "stereoMode": "mono"
       },
       {
@@ -1443,7 +1443,7 @@
     "id": "834ce43565946",
     "sources": [
       {
-        "uri": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "uri": "http://storage.googleapis.com/androiddevelopers/samples_assets/gtv-videos-bucket/sample/BigBuckBunny.mp4",
         "stereoMode": "mono"
       },
       {
@@ -1475,7 +1475,7 @@
     "id": "291ffb81b9e06",
     "sources": [
       {
-        "uri": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "uri": "http://storage.googleapis.com/androiddevelopers/samples_assets/gtv-videos-bucket/sample/BigBuckBunny.mp4",
         "stereoMode": "mono"
       },
       {
@@ -1507,7 +1507,7 @@
     "id": "07c92f3a31737",
     "sources": [
       {
-        "uri": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "uri": "http://storage.googleapis.com/androiddevelopers/samples_assets/gtv-videos-bucket/sample/BigBuckBunny.mp4",
         "stereoMode": "mono"
       },
       {
@@ -1539,7 +1539,7 @@
     "id": "56964e7e8aa4a",
     "sources": [
       {
-        "uri": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "uri": "http://storage.googleapis.com/androiddevelopers/samples_assets/gtv-videos-bucket/sample/BigBuckBunny.mp4",
         "stereoMode": "mono"
       },
       {
@@ -1571,7 +1571,7 @@
     "id": "b995170bc926",
     "sources": [
       {
-        "uri": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "uri": "http://storage.googleapis.com/androiddevelopers/samples_assets/gtv-videos-bucket/sample/BigBuckBunny.mp4",
         "stereoMode": "mono"
       },
       {
@@ -1603,7 +1603,7 @@
     "id": "0d3929fb4428f",
     "sources": [
       {
-        "uri": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "uri": "http://storage.googleapis.com/androiddevelopers/samples_assets/gtv-videos-bucket/sample/BigBuckBunny.mp4",
         "stereoMode": "mono"
       },
       {
@@ -1635,7 +1635,7 @@
     "id": "5be58f705ee35",
     "sources": [
       {
-        "uri": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "uri": "http://storage.googleapis.com/androiddevelopers/samples_assets/gtv-videos-bucket/sample/BigBuckBunny.mp4",
         "stereoMode": "mono"
       },
       {
