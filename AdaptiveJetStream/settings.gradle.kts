@@ -19,6 +19,9 @@ pluginManagement {
         gradlePluginPortal()
         google()
         mavenCentral()
+        maven {
+            url = uri("https://androidx.dev/snapshots/builds/14741426/artifacts/repository")
+        }
     }
 }
 dependencyResolutionManagement {
@@ -26,6 +29,9 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven {
+            url = uri("https://androidx.dev/snapshots/builds/14741426/artifacts/repository")
+        }
     }
 }
 rootProject.name = "JetStream"

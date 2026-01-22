@@ -71,7 +71,7 @@ dependencies {
     implementation(libs.androidx.benchmark.macro.junit4)
     implementation(libs.androidx.rules)
 
-    implementation(platform(libs.androidx.compose.bom))
+
     implementation(libs.androidx.compose.runtime)
 }
 
