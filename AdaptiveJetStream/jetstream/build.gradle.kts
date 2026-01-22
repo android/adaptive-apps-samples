@@ -80,8 +80,10 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.activity.compose)
-    implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.ui.tooling.preview)
+
+    // New layout APIs
+    implementation(libs.androidx.compose.foundation.layout)
 
     // extra material icons
     implementation(libs.androidx.material.icons.extended)
