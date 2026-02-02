@@ -68,7 +68,7 @@ fun FavouritesScreen(
 }
 
 @Composable
-private fun Catalog(
+internal fun Catalog(
     favouriteMovieList: MovieList,
     filterList: FilterList,
     selectedFilterList: FilterList,

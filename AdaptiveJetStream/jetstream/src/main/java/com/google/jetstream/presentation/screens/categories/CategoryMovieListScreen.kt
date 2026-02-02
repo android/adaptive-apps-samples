@@ -90,7 +90,7 @@ fun CategoryMovieListScreen(
 }
 
 @Composable
-private fun CategoryDetails(
+internal fun CategoryDetails(
     categoryDetails: MovieCategoryDetails,
     onBackPressed: () -> Unit,
     onMovieSelected: (Movie) -> Unit,
@@ -107,7 +107,7 @@ private fun CategoryDetails(
 }
 
 @Composable
-private fun CategoryMovieList(
+internal fun CategoryMovieList(
     categoryDetails: MovieCategoryDetails,
     onMovieSelected: (Movie) -> Unit,
     modifier: Modifier = Modifier,

@@ -17,6 +17,7 @@
 package com.google.jetstream.presentation.screens.moviedetails.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -64,6 +65,7 @@ import com.google.jetstream.presentation.theme.JetStreamButtonShape
 import com.google.jetstream.presentation.theme.LocalContentPadding
 import com.google.jetstream.presentation.theme.Padding
 import kotlinx.coroutines.launch
+import kotlin.math.absoluteValue
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -215,15 +217,8 @@ private fun MovieImageWithGradients(
     modifier: Modifier = Modifier,
     gradientColor: Color = MaterialTheme.colorScheme.surface,
 ) {
-    AsyncImage(
-        model = ImageRequest.Builder(LocalContext.current).data(movieDetails.posterUri)
-            .crossfade(true).build(),
-        contentDescription = StringConstants
-            .Composable
-            .ContentDescription
-            .moviePoster(movieDetails.name),
-        contentScale = ContentScale.Crop,
-        modifier = modifier.drawWithContent {
+    val drawGradients: Modifier.() -> Modifier = {
+        this.drawWithContent {
             drawContent()
             drawRect(
                 Brush.verticalGradient(
@@ -246,5 +241,33 @@ private fun MovieImageWithGradients(
                 )
             )
         }
-    )
+    }
+
+    if (movieDetails.posterUri.isEmpty()) {
+        val seed = movieDetails.id.hashCode()
+        val color1 = remember(seed) {
+            val h = (seed.absoluteValue % 360).toFloat()
+            Color.hsl(h, 0.4f, 0.5f)
+        }
+        val color2 = remember(seed) {
+            val h = ((seed.absoluteValue + 120) % 360).toFloat()
+            Color.hsl(h, 0.6f, 0.3f)
+        }
+        Box(
+            modifier = modifier
+                .background(Brush.linearGradient(listOf(color1, color2)))
+                .then(Modifier.drawGradients())
+        )
+    } else {
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current).data(movieDetails.posterUri)
+                .crossfade(true).build(),
+            contentDescription = StringConstants
+                .Composable
+                .ContentDescription
+                .moviePoster(movieDetails.name),
+            contentScale = ContentScale.Crop,
+            modifier = modifier.then(Modifier.drawGradients())
+        )
+    }
 }

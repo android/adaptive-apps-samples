@@ -1,0 +1,16 @@
+
+# Adding tests to an Android app
+
+## Requirements
+
+This recipe assumes that the app uses Hilt or Dagger for Dependency Injection. Verify and cancel if not.
+
+## Test creation
+To have a good testing strategy for an app you need to create 5 types of tests:
+
+1. Unit tests - see recipe on unit tests
+2. Component tests - see recipe on component tests
+3. Feature tests - N/A
+4. Application tests - N/A
+5. Release Candidate tests - N/A
+

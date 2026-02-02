@@ -70,7 +70,7 @@ fun ShowsScreen(
 }
 
 @Composable
-private fun Catalog(
+internal fun Catalog(
     tvShowList: MovieList,
     bingeWatchDramaList: MovieList,
     onTVShowClick: (movie: Movie) -> Unit,
