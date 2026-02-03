@@ -2,7 +2,7 @@
 activity-compose = "1.12.3"
 android-gradle-plugin = "9.0.0"
 android-test-plugin = "9.0.0"
-androidx-baselineprofile = "1.4.1"
+androidx-baselineprofile = "1.5.0-alpha02"
 benchmark-macro-junit4 = "1.4.1"
 coil-compose = "2.7.0"
 compose-bom = "2026.01.01"
