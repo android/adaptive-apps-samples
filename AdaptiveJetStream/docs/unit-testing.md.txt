@@ -1,0 +1,25 @@
+
+# Unit tests
+
+## Requirements
+
+These dependencies are almost always used:
+ - junit:junit
+ - org.jetbrains.kotlinx:kotlinx-coroutines-test
+
+Unless noted by the user, only run the local tests using the "debug" build type.
+
+## Refactoring
+
+Feel free to refactor classes to make unit tests simpler.
+
+Avoid mocks as much as possible. Prefer fakes. Consider creating interfaces for classes that need to be mocked and then fake versions in the test sourceset. Only use mocks when the usage of a library makes wrapping it not worth it.
+
+You shouldn't have to change anything related to Dependency Injection to create unit tests.
+
+Don't unit test UIs (Compose components, Views, etc.)
+
+- Find all the files that can be unit tested with JUnit without mocks. For example ViewModels, repositories, utils classes, etc.
+- Ask the user if they want to use mocks in every other file that requires mocks to be unit tested.
+
+

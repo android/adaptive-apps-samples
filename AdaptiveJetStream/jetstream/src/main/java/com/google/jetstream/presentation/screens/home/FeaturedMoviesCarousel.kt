@@ -61,6 +61,7 @@ import com.google.jetstream.presentation.components.WatchNowButton
 import com.google.jetstream.presentation.components.feature.isLeanbackEnabled
 import com.google.jetstream.presentation.theme.Padding
 import com.google.jetstream.presentation.theme.jetStreamBorderIndication
+import kotlin.math.absoluteValue
 
 @OptIn(ExperimentalTvMaterial3Api::class)
 @Composable
@@ -223,24 +224,51 @@ private fun CarouselItemForeground(
 
 @Composable
 private fun CarouselItemBackground(movie: Movie, modifier: Modifier = Modifier) {
-    AsyncImage(
-        model = movie.posterUri,
-        contentDescription = StringConstants
-            .Composable
-            .ContentDescription
-            .moviePoster(movie.name),
-        modifier = modifier
-            .drawWithContent {
-                drawContent()
-                drawRect(
-                    Brush.verticalGradient(
-                        colors = listOf(
-                            Color.Transparent,
-                            Color.Black.copy(alpha = 0.5f)
+    if (movie.posterUri.isEmpty()) {
+        val seed = movie.id.hashCode()
+        val color1 = remember(seed) {
+            val h = (seed.absoluteValue % 360).toFloat()
+            Color.hsl(h, 0.4f, 0.5f)
+        }
+        val color2 = remember(seed) {
+            val h = ((seed.absoluteValue + 120) % 360).toFloat()
+            Color.hsl(h, 0.6f, 0.3f)
+        }
+        Box(
+            modifier = modifier
+                .background(Brush.linearGradient(listOf(color1, color2)))
+                .drawWithContent {
+                    drawContent()
+                    drawRect(
+                        Brush.verticalGradient(
+                            colors = listOf(
+                                Color.Transparent,
+                                Color.Black.copy(alpha = 0.5f)
+                            )
                         )
                     )
-                )
-            },
-        contentScale = ContentScale.Crop
-    )
+                }
+        )
+    } else {
+        AsyncImage(
+            model = movie.posterUri,
+            contentDescription = StringConstants
+                .Composable
+                .ContentDescription
+                .moviePoster(movie.name),
+            modifier = modifier
+                .drawWithContent {
+                    drawContent()
+                    drawRect(
+                        Brush.verticalGradient(
+                            colors = listOf(
+                                Color.Transparent,
+                                Color.Black.copy(alpha = 0.5f)
+                            )
+                        )
+                    )
+                },
+            contentScale = ContentScale.Crop
+        )
+    }
 }
