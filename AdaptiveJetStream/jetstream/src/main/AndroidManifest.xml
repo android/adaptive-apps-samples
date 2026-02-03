@@ -56,7 +56,7 @@ https://www.apache.org/licenses/LICENSE-2.0
         android:supportsRtl="true"
         android:theme="@style/Theme.App.Starting"
         android:usesCleartextTraffic="true"
-        tools:targetApi="35">
+        tools:targetApi="36">
 
         <!-- Enable profiling by macrobenchmark -->
         <profileable

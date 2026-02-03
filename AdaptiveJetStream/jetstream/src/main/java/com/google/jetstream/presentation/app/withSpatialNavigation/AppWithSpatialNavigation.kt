@@ -42,7 +42,7 @@ import androidx.xr.compose.material3.ExperimentalMaterial3XrApi
 import androidx.xr.compose.material3.NavigationRail
 import androidx.xr.compose.platform.LocalSpatialConfiguration
 import androidx.xr.compose.platform.SpatialConfiguration
-import androidx.xr.compose.spatial.ApplicationSubspace
+import androidx.xr.compose.spatial.Subspace
 import androidx.xr.compose.subspace.MovePolicy
 import androidx.xr.compose.subspace.ResizePolicy
 import androidx.xr.compose.subspace.SpatialPanel
@@ -89,7 +89,7 @@ fun AppWithSpatialNavigation(
         }
     }
 
-    ApplicationSubspace {
+    Subspace {
         SpatialPanel(
             resizePolicy = resizePolicy,
             dragPolicy = dragPolicy,
