@@ -1,32 +1,32 @@
 [versions]
-activity-compose = "1.11.0"
-android-gradle-plugin = "8.13.0"
-android-test-plugin = "8.13.0"
+activity-compose = "1.12.3"
+android-gradle-plugin = "9.0.0"
+android-test-plugin = "9.0.0"
 androidx-baselineprofile = "1.4.1"
 benchmark-macro-junit4 = "1.4.1"
 coil-compose = "2.7.0"
-compose-bom = "2025.09.01"
+compose-bom = "2026.01.01"
 concurrent-futures-ktx = "1.3.0"
 tv-material = "1.0.1"
 core-ktx = "1.17.0"
-core-splashscreen = "1.0.1"
+core-splashscreen = "1.2.0"
 hilt-navigation-compose = "1.3.0"
-hilt-android = "2.57.2"
+hilt-android = "2.59"
 junit = "1.3.0"
-kotlin-android = "2.2.20"
-kotlinx-serialization = "1.9.0"
-ksp = "2.2.20-2.0.3"
-lifecycle-runtime-ktx = "2.9.4"
-material3-adaptive = "1.1.0"
+kotlin = "2.3.0"
+kotlinx-serialization = "1.10.0"
+ksp = "2.3.4"
+lifecycle-runtime-ktx = "2.10.0"
+material3-adaptive = "1.2.0"
 material3-adaptive-navigation = "1.4.0"
-media3 = "1.8.0"
-navigation-compose = "2.9.5"
+media3 = "1.9.1"
+navigation-compose = "2.9.7"
 profileinstaller = "1.4.1"
 uiautomator = "2.3.0"
 rules = "1.7.0"
-window = "1.5.0"
-xr = "1.0.0-alpha07"
-xr-material3 = "1.0.0-alpha11"
+window = "1.5.1"
+xr = "1.0.0-alpha10"
+xr-material3 = "1.0.0-alpha14"
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity-compose" }
@@ -71,9 +71,9 @@ androidx-xr-compose-material3 = { module = "androidx.xr.compose.material3:materi
 android-application = { id = "com.android.application", version.ref = "android-gradle-plugin" }
 android-test = { id = "com.android.test", version.ref = "android-test-plugin" }
 androidx-baselineprofile = { id = "androidx.baselineprofile", version.ref = "androidx-baselineprofile" }
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin-android" }
-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin-android" }
-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin-android" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt-android" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 kotlin-parcelize = { id = "kotlin-parcelize" }

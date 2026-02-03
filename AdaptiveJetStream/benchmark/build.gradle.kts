@@ -30,11 +30,11 @@ kotlin {
 
 android {
     namespace = "com.google.jetstream.benchmark"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 28
-        targetSdk = 35
+        targetSdk = 36
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments["androidx.benchmark.suppressErrors"] = "EMULATOR"
@@ -45,8 +45,8 @@ android {
         buildConfig = true
     }
 
-    testOptions.managedDevices.devices {
-        create<ManagedVirtualDevice>("tvApi34") {
+    testOptions.managedDevices.localDevices {
+        create("tvApi34") {
             device = "Television (1080p)"
             apiLevel = 34
             systemImageSource = "aosp"
