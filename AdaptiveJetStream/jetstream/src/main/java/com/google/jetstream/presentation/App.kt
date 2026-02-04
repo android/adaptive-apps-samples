@@ -212,6 +212,14 @@ fun App(
                     onActivityBackPressed = onActivityBackPressed,
                     navController = navController,
                     modifier = modifier.handleKeyboardShortcuts(keyboardShortcuts),
+                    // TODO: Use trailing lambda syntax here and throughout
+                    content = {
+                        NavigationTree(
+                            navController = navController,
+                            isTopBarVisible = appState.isTopBarVisible,
+                            onScroll = { updateTopBarVisibility(appState, it) }
+                        )
+                    }
                 )
             }
         }

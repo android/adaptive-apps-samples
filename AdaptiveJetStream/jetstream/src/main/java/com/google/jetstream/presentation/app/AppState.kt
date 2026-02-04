@@ -29,7 +29,6 @@ class AppState internal constructor(
     initialTopBarVisibility: Boolean = true,
     initialScreen: Screens = Screens.Home,
 ) {
-    // TODO: This is specific to the TopBar layout and should be scoped to that layout
     var isTopBarVisible by mutableStateOf(initialTopBarVisibility)
         private set
 

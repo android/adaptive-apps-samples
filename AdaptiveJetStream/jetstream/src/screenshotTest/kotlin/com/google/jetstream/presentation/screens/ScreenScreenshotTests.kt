@@ -24,10 +24,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.rememberNavController
 import com.android.tools.screenshot.PreviewTest
 import com.google.jetstream.presentation.app.AppState
 import com.google.jetstream.presentation.app.withNavigationSuiteScaffold.AdaptiveAppNavigationItems
 import com.google.jetstream.presentation.app.withNavigationSuiteScaffold.AppWithNavigationSuiteScaffold
+import com.google.jetstream.presentation.app.withTopBarNavigation.AppWithTopBarNavigation
 import com.google.jetstream.presentation.components.AdaptivePreview
 import com.google.jetstream.presentation.components.JetStreamPreview
 import com.google.jetstream.presentation.components.mockCategoryScreenState
@@ -207,5 +209,22 @@ fun AppWithNavigationSuiteScaffoldPreview(){
         content = { padding ->
             Text("Preview content", modifier = Modifier.padding(padding))
         },
+    )
+}
+
+
+@PreviewTest
+@AdaptivePreview
+@Composable
+fun AppWithTopBarNavigationPreview(){
+    val appState = AppState()
+    val navController = rememberNavController()
+    AppWithTopBarNavigation(
+        appState = appState,
+        onActivityBackPressed = { },
+        navController = navController,
+        content = {
+            Text("Preview content")
+        }
     )
 }

@@ -41,10 +41,14 @@ annotation class DesktopPreview
 @Preview(device = Devices.TV_1080p, name = "TV Preview")
 annotation class TvPreview
 
+@Preview(device = Devices.AUTOMOTIVE_1024p, name = "Auto Preview")
+annotation class AutoPreview
+
 @FoldablePreview
 @TabletPreview
 @DesktopPreview
 @TvPreview
+@AutoPreview
 annotation class LargeScreensPreview
 
 @PhonePreview

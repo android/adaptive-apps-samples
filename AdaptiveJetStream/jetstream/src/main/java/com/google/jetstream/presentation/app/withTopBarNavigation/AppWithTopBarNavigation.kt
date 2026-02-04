@@ -28,8 +28,6 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.google.jetstream.presentation.app.AppState
-import com.google.jetstream.presentation.app.NavigationTree
-import com.google.jetstream.presentation.app.updateTopBarVisibility
 import com.google.jetstream.presentation.components.onBackButtonPressed
 import com.google.jetstream.presentation.components.shim.tryRequestFocus
 import com.google.jetstream.presentation.screens.Screens
@@ -39,6 +37,7 @@ fun AppWithTopBarNavigation(
     appState: AppState,
     navController: NavHostController,
     onActivityBackPressed: () -> Unit,
+    content: @Composable () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val items = remember { Screens.entries.filter { it.isTabItem } }
@@ -103,10 +102,6 @@ fun AppWithTopBarNavigation(
                     }
             )
         }
-        NavigationTree(
-            navController = navController,
-            isTopBarVisible = appState.isTopBarVisible,
-            onScroll = { updateTopBarVisibility(appState, it) }
-        )
+        content()
     }
 }
