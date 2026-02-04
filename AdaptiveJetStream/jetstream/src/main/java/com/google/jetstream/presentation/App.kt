@@ -197,16 +197,14 @@ fun App(
                                 RequestFullSpaceModeItem()
                             }
                         },
-                        // TODO: Use trailing lambda syntax here and throughout
-                        content = { padding ->
-                            NavigationTree(
-                                navController = navController,
-                                isTopBarVisible = appState.isTopBarVisible,
-                                modifier = modifier.padding(padding),
-                                onScroll = { updateTopBarVisibility(appState, it) }
-                            )
-                        }
-                    )
+                    ) { padding ->
+                        NavigationTree(
+                            navController = navController,
+                            isTopBarVisible = appState.isTopBarVisible,
+                            modifier = modifier.padding(padding),
+                            onScroll = { updateTopBarVisibility(appState, it) }
+                        )
+                    }
                 }
             }
         }
@@ -245,7 +243,8 @@ fun App(
                 }
 
                 navController.addOnDestinationChangedListener { _, destination, _ ->
-                    val isVideoPlayer = destination.route?.startsWith(Screens.VideoPlayer.name) ?: false
+                    val isVideoPlayer =
+                        destination.route?.startsWith(Screens.VideoPlayer.name) ?: false
                     containerColor = if (isVideoPlayer) {
                         Color.Transparent
                     } else {

@@ -42,8 +42,8 @@ fun AppWithNavigationSuiteScaffold(
     onFocusChanged: (Boolean) -> Unit,
     onShowScreen: (Screens) -> Unit,
     navigationItems: @Composable () -> Unit,
-    content: @Composable (PaddingValues) -> Unit,
     modifier: Modifier = Modifier,
+    content: @Composable (PaddingValues) -> Unit,
 ) {
     val navigationSuiteScaffoldState = rememberNavigationSuiteScaffoldState()
 
