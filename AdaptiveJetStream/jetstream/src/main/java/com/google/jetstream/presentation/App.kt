@@ -188,10 +188,11 @@ fun App(
                                     }
                                 },
                             )
-                            if (hasXrSpatialFeature){
+                            if (hasXrSpatialFeature) {
                                 RequestFullSpaceModeItem()
                             }
                         },
+                        // TODO: Use trailing lambda syntax here and throughout
                         content = { padding ->
                             NavigationTree(
                                 navController = navController,
@@ -208,19 +209,24 @@ fun App(
         NavigationComponentType.TopBar -> {
             Surface {
                 AppWithTopBarNavigation(
-                    appState = appState,
+                    selectedScreen = appState.selectedScreen,
+                    isNavigationVisible = appState.isNavigationVisible,
+                    isTopBarVisible = appState.isNavigationVisible && appState.isTopBarVisible,
+                    isTopBarFocussed = appState.isTopBarFocused,
+                    onTopBarFocusChanged = { hasFocus ->
+                        appState.updateTopBarFocusState(hasFocus)
+                    },
+                    onTopBarVisible = { appState.showTopBar() },
                     onActivityBackPressed = onActivityBackPressed,
                     navController = navController,
                     modifier = modifier.handleKeyboardShortcuts(keyboardShortcuts),
-                    // TODO: Use trailing lambda syntax here and throughout
-                    content = {
-                        NavigationTree(
-                            navController = navController,
-                            isTopBarVisible = appState.isTopBarVisible,
-                            onScroll = { updateTopBarVisibility(appState, it) }
-                        )
-                    }
-                )
+                ) {
+                    NavigationTree(
+                        navController = navController,
+                        isTopBarVisible = appState.isTopBarVisible,
+                        onScroll = { updateTopBarVisibility(appState, it) }
+                    )
+                }
             }
         }
 

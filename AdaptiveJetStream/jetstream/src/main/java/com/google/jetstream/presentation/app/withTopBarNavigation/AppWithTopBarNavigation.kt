@@ -27,18 +27,22 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.google.jetstream.presentation.app.AppState
 import com.google.jetstream.presentation.components.onBackButtonPressed
 import com.google.jetstream.presentation.components.shim.tryRequestFocus
 import com.google.jetstream.presentation.screens.Screens
 
 @Composable
 fun AppWithTopBarNavigation(
-    appState: AppState,
+    selectedScreen: Screens,
+    isNavigationVisible: Boolean,
+    isTopBarVisible: Boolean,
+    isTopBarFocussed: Boolean,
+    onTopBarVisible: () -> Unit,
+    onTopBarFocusChanged: (Boolean) -> Unit,
     navController: NavHostController,
     onActivityBackPressed: () -> Unit,
-    content: @Composable () -> Unit,
     modifier: Modifier = Modifier,
+    content: @Composable () -> Unit,
 ) {
     val items = remember { Screens.entries.filter { it.isTabItem } }
     val topBar = remember { FocusRequester() }
@@ -51,25 +55,25 @@ fun AppWithTopBarNavigation(
                 // The MovieDetails screen doesn't have any navigation when it's displayed in a
                 // TopBar layout.
                 // These are the only two scenarios where appState.isNavigationVisible is false
-                !appState.isNavigationVisible -> {
+                !isNavigationVisible -> {
                     onActivityBackPressed()
                 }
 
                 // If the top bar isn't visible then show it - my guess is this is to handle
                 // the case where the user has scrolled down and the top menu has disappeared.
                 // When testing this on the TV emulator, the app just quits when I tap back.
-                !appState.isTopBarVisible -> {
-                    appState.showTopBar()
+                !isTopBarVisible -> {
+                    onTopBarVisible()
                     topBar.tryRequestFocus()
                 }
 
                 // If the top bar isn't focussed then focus it
-                !appState.isTopBarFocused -> {
+                !isTopBarFocussed -> {
                     topBar.tryRequestFocus()
                 }
 
                 // It feels strange to be doing conditional navigation here
-                appState.selectedScreen != Screens.Home -> {
+                selectedScreen != Screens.Home -> {
                     navController.navigate(Screens.Home())
                 }
 
@@ -79,15 +83,12 @@ fun AppWithTopBarNavigation(
             }
         }
     ) {
-        AnimatedVisibility(
-            appState.isNavigationVisible &&
-                appState.isTopBarVisible
-        ) {
+        AnimatedVisibility(isTopBarVisible) {
             TopBar(
                 items,
-                appState.selectedScreen,
+                selectedScreen,
                 {
-                    if (it != appState.selectedScreen) {
+                    if (it != selectedScreen) {
                         navController.navigate(it())
                     }
                 },
@@ -97,9 +98,7 @@ fun AppWithTopBarNavigation(
                         horizontal = 74.dp,
                     )
                     .focusRequester(topBar)
-                    .onFocusChanged {
-                        appState.updateTopBarFocusState(it.hasFocus)
-                    }
+                    .onFocusChanged { onTopBarFocusChanged(it.hasFocus) }
             )
         }
         content()

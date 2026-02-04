@@ -27,11 +27,14 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import com.android.tools.screenshot.PreviewTest
 import com.google.jetstream.presentation.app.AppState
+import com.google.jetstream.presentation.app.NavigationTree
+import com.google.jetstream.presentation.app.updateTopBarVisibility
 import com.google.jetstream.presentation.app.withNavigationSuiteScaffold.AdaptiveAppNavigationItems
 import com.google.jetstream.presentation.app.withNavigationSuiteScaffold.AppWithNavigationSuiteScaffold
 import com.google.jetstream.presentation.app.withTopBarNavigation.AppWithTopBarNavigation
 import com.google.jetstream.presentation.components.AdaptivePreview
 import com.google.jetstream.presentation.components.JetStreamPreview
+import com.google.jetstream.presentation.components.handleKeyboardShortcuts
 import com.google.jetstream.presentation.components.mockCategoryScreenState
 import com.google.jetstream.presentation.screens.categories.CategoryDetails
 import com.google.jetstream.presentation.screens.favourites.FavouriteScreenViewModel
@@ -189,7 +192,7 @@ fun SearchScreenScreenshot() {
 @PreviewTest
 @AdaptivePreview
 @Composable
-fun AppWithNavigationSuiteScaffoldPreview(){
+fun AppWithNavigationSuiteScaffoldPreview() {
     val appState = AppState()
 
     AppWithNavigationSuiteScaffold(
@@ -216,15 +219,21 @@ fun AppWithNavigationSuiteScaffoldPreview(){
 @PreviewTest
 @AdaptivePreview
 @Composable
-fun AppWithTopBarNavigationPreview(){
+fun AppWithTopBarNavigationPreview() {
     val appState = AppState()
     val navController = rememberNavController()
     AppWithTopBarNavigation(
-        appState = appState,
+        selectedScreen = appState.selectedScreen,
+        isNavigationVisible = appState.isNavigationVisible,
+        isTopBarVisible = appState.isNavigationVisible && appState.isTopBarVisible,
+        isTopBarFocussed = appState.isTopBarFocused,
+        onTopBarFocusChanged = { hasFocus ->
+            appState.updateTopBarFocusState(hasFocus)
+        },
+        onTopBarVisible = { appState.showTopBar() },
         onActivityBackPressed = { },
         navController = navController,
-        content = {
-            Text("Preview content")
-        }
-    )
+    ) {
+        Text("Preview content")
+    }
 }
