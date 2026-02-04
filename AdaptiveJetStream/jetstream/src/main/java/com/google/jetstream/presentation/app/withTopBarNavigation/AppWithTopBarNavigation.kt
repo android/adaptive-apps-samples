@@ -47,19 +47,29 @@ fun AppWithTopBarNavigation(
     Column(
         modifier = modifier.onBackButtonPressed {
             when {
+                // TODO: This logic is difficult to understand and should be refactored
+                // The VideoPlayer screen doesn't have any navigation
+                // The MovieDetails screen doesn't have any navigation when it's displayed in a
+                // TopBar layout.
+                // These are the only two scenarios where appState.isNavigationVisible is false
                 !appState.isNavigationVisible -> {
                     onActivityBackPressed()
                 }
 
+                // If the top bar isn't visible then show it - my guess is this is to handle
+                // the case where the user has scrolled down and the top menu has disappeared.
+                // When testing this on the TV emulator, the app just quits when I tap back.
                 !appState.isTopBarVisible -> {
                     appState.showTopBar()
                     topBar.tryRequestFocus()
                 }
 
+                // If the top bar isn't focussed then focus it
                 !appState.isTopBarFocused -> {
                     topBar.tryRequestFocus()
                 }
 
+                // It feels strange to be doing conditional navigation here
                 appState.selectedScreen != Screens.Home -> {
                     navController.navigate(Screens.Home())
                 }

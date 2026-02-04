@@ -23,16 +23,31 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.google.jetstream.R
 import com.google.jetstream.data.convert.TryFrom
+import com.google.jetstream.presentation.app.NavigationComponentType
 import com.google.jetstream.presentation.screens.categories.CategoryMovieListScreen
 import com.google.jetstream.presentation.screens.moviedetails.MovieDetailsScreen
 import com.google.jetstream.presentation.screens.videoPlayer.VideoPlayerScreen
 
+/**
+ * Represents a screen.
+ *
+ * @param args - The navigation arguments for the screen.
+ * @param isTabItem - indicates whether this screen's icon can appear in a tab.
+ * @param isMainNavigation - indicates whether this is a top level screen that will appear in the
+ * main navigation area.
+ * @param tabIcon - The icon to be shown in the tab. Only applicable if this is a tab item.
+ * @param shouldShowNavigation - A function that indicates whether the navigation area should be
+ * shown for the given `NavigationComponentType`.
+ * @param navIcon - The icon to be shown in the navigation area. Only applicable if this is a main
+ * navigation item.
+ */
 enum class Screens(
     private val args: List<String>? = null,
     val isTabItem: Boolean = false,
     val isMainNavigation: Boolean = false,
+    // TODO: Can we remove either tabIcon or navIcon?
     val tabIcon: ImageVector? = null,
-    val navigationVisibility: NavigationVisibility = NavigationVisibility.Visible,
+    val shouldShowNavigation: (NavigationComponentType) -> Boolean = { true },
     @DrawableRes val navIcon: Int = 0
 ) {
     Profile,
@@ -44,12 +59,13 @@ enum class Screens(
     Search(isTabItem = true, tabIcon = Icons.Default.Search, navIcon = R.drawable.ic_search),
     CategoryMovieList(listOf(CategoryMovieListScreen.CategoryIdBundleKey)),
     MovieDetails(
-        listOf(MovieDetailsScreen.MOVIE_ID_BUNDLE_KEY),
-        navigationVisibility = NavigationVisibility.VisibleInNavigationSuite
+        args = listOf(MovieDetailsScreen.MOVIE_ID_BUNDLE_KEY),
+        // Don't show the navigation in the top bar
+        shouldShowNavigation = { it != NavigationComponentType.TopBar }
     ),
     VideoPlayer(
         listOf(VideoPlayerScreen.MOVIE_ID_BUNDLE_KEY),
-        navigationVisibility = NavigationVisibility.Hidden
+        shouldShowNavigation = { false }
     );
 
     operator fun invoke(): String {
@@ -94,23 +110,5 @@ enum class Screens(
                 else -> null
             }
         }
-    }
-}
-
-sealed interface NavigationVisibility {
-    val isVisibleInNavigationSuite: Boolean
-    val isVisibleInTopBar: Boolean
-
-    data object Visible : NavigationVisibility {
-        override val isVisibleInNavigationSuite = true
-        override val isVisibleInTopBar = true
-    }
-    data object Hidden : NavigationVisibility {
-        override val isVisibleInNavigationSuite = false
-        override val isVisibleInTopBar = false
-    }
-    data object VisibleInNavigationSuite : NavigationVisibility {
-        override val isVisibleInNavigationSuite = true
-        override val isVisibleInTopBar = false
     }
 }

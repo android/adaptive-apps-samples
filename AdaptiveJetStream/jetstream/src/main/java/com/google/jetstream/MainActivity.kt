@@ -55,6 +55,7 @@ class MainActivity : ComponentActivity() {
                     LocalContentColor provides MaterialTheme.colorScheme.onSurface
                 ) {
                     App(
+                        // TODO: Figure out why this is being used instead of a BackHandler
                         onActivityBackPressed = onBackPressedDispatcher::onBackPressed,
                         modifier = Modifier
                             .safeDrawingPadding()

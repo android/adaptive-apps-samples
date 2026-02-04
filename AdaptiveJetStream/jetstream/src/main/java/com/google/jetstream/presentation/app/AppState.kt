@@ -29,6 +29,7 @@ class AppState internal constructor(
     initialTopBarVisibility: Boolean = true,
     initialScreen: Screens = Screens.Home,
 ) {
+    // TODO: This is specific to the TopBar layout and should be scoped to that layout
     var isTopBarVisible by mutableStateOf(initialTopBarVisibility)
         private set
 
@@ -36,8 +37,10 @@ class AppState internal constructor(
         private set
 
     var isTopBarFocused by mutableStateOf(false)
+        private set
 
     var isNavigationVisible by mutableStateOf(true)
+        private set
 
     private var navigationComponentType
         by mutableStateOf(NavigationComponentType.NavigationSuiteScaffold)
@@ -69,14 +72,7 @@ class AppState internal constructor(
     }
 
     private fun updateNavigationVisibility() {
-        isNavigationVisible = when (navigationComponentType) {
-            NavigationComponentType.TopBar -> {
-                selectedScreen.navigationVisibility.isVisibleInTopBar
-            }
-            else -> {
-                selectedScreen.navigationVisibility.isVisibleInNavigationSuite
-            }
-        }
+        isNavigationVisible = selectedScreen.shouldShowNavigation(navigationComponentType)
     }
 
     private fun updateSelectedScreen(destination: String) {
