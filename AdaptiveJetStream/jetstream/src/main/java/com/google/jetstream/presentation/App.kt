@@ -178,7 +178,6 @@ fun App(
                         isTopBarVisible = appState.isTopBarVisible,
                         topBarPaddingTop = topBarPaddingTop,
                         onShowScreen = { screen ->
-                            appState.updateSelectedScreen(screen)
                             navController.navigate(screen())
                         },
                         onFocusChanged = { appState.updateTopBarFocusState(it) },
@@ -257,7 +256,6 @@ fun App(
                     isNavigationVisible = appState.isNavigationVisible,
                     isTopBarVisible = appState.isTopBarVisible,
                     onShowScreen = { screen ->
-                        appState.updateSelectedScreen(screen)
                         navController.navigate(screen())
                     },
                     onTopBarFocusChanged = { appState.updateTopBarFocusState(it) },

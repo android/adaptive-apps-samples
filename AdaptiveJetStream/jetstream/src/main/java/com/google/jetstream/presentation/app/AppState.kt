@@ -75,6 +75,7 @@ class AppState internal constructor(
     }
 
     private fun updateSelectedScreen(destination: String) {
+        // TODO: This should throw an error rather than returning Home
         val screen = Screens.tryFrom(destination) ?: Screens.Home
         updateSelectedScreen(screen)
     }
