@@ -29,7 +29,6 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.jetstream.presentation.app.JetStreamLogo
 import com.google.jetstream.presentation.app.UserAvatar
@@ -44,6 +43,13 @@ fun TopAppBar(
 ) {
     val (avatar, search) = remember { FocusRequester.createRefs() }
 
+    /**
+     * When the row becomes focussed, automatically focus either the search or profile
+     * composables depending on the current screen.
+     *
+     * TODO: This could be refactored to take a list of
+     *  navigation items rather than a hardcoded list
+     */
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
@@ -73,7 +79,9 @@ fun TopAppBar(
         Spacer(modifier.weight(1f))
         SearchButton(
             modifier = Modifier.focusRequester(search),
-            onClick = { showScreen(Screens.Search) }
+            onClick = {
+                showScreen(Screens.Search)
+            }
         )
         UserAvatar(
             modifier = Modifier.focusRequester(avatar),

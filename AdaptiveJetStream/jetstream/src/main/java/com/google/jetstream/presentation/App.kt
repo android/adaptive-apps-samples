@@ -52,6 +52,8 @@ fun App(
     val navController = rememberNavController()
     val navigationComponentType = rememberNavigationComponentType()
 
+    // TODO: This could be moved into a separate function, and the keyboard shortcuts could be
+    //  associated with each screen directly (maybe through an optional interface)
     val keyboardShortcuts = remember {
         listOf(
             KeyboardShortcut(
@@ -186,7 +188,9 @@ fun App(
                                     }
                                 },
                             )
-                            RequestFullSpaceModeItem(hasXrSpatialFeature = hasXrSpatialFeature)
+                            if (hasXrSpatialFeature){
+                                RequestFullSpaceModeItem()
+                            }
                         },
                         content = { padding ->
                             NavigationTree(

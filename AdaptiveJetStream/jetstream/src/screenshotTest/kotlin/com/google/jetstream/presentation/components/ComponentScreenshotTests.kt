@@ -26,13 +26,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
+import androidx.xr.compose.platform.SpatialConfiguration
 import com.android.tools.screenshot.PreviewTest
-import com.google.jetstream.presentation.app.AppState
 import com.google.jetstream.presentation.app.UserAvatar
+import com.google.jetstream.presentation.app.withNavigationSuiteScaffold.RequestFullSpaceModeItem
 import com.google.jetstream.presentation.app.withNavigationSuiteScaffold.TopAppBar
 import com.google.jetstream.presentation.app.withNavigationSuiteScaffold.TopBar
 import com.google.jetstream.presentation.screens.Screens
@@ -146,3 +145,11 @@ fun TopAppBarPreview(){
         showScreen = {},
     )
 }
+
+@PreviewTest
+@Preview
+@Composable
+fun RequestFullSpaceModeItemPreview(){
+    RequestFullSpaceModeItem(spatialConfiguration = object : SpatialConfiguration {})
+}
+
