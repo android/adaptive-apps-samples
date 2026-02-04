@@ -17,23 +17,30 @@
 package com.google.jetstream.presentation.screens
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.navigation.NavHostController
 import com.android.tools.screenshot.PreviewTest
+import com.google.jetstream.presentation.app.AppState
+import com.google.jetstream.presentation.app.withNavigationSuiteScaffold.AdaptiveAppNavigationItems
+import com.google.jetstream.presentation.app.withNavigationSuiteScaffold.AppWithNavigationSuiteScaffold
 import com.google.jetstream.presentation.components.AdaptivePreview
 import com.google.jetstream.presentation.components.JetStreamPreview
 import com.google.jetstream.presentation.components.mockCategoryScreenState
-import com.google.jetstream.presentation.screens.categories.Catalog as CategoriesCatalog
 import com.google.jetstream.presentation.screens.categories.CategoryDetails
-import com.google.jetstream.presentation.screens.favourites.Catalog as FavouritesCatalog
 import com.google.jetstream.presentation.screens.favourites.FavouriteScreenViewModel
 import com.google.jetstream.presentation.screens.favourites.FilterList
-import com.google.jetstream.presentation.screens.home.Catalog as HomeCatalog
 import com.google.jetstream.presentation.screens.moviedetails.MovieDetailsList
-import com.google.jetstream.presentation.screens.movies.Catalog as MoviesCatalog
 import com.google.jetstream.presentation.screens.search.SearchResult
+import com.google.jetstream.presentation.screens.categories.Catalog as CategoriesCatalog
+import com.google.jetstream.presentation.screens.favourites.Catalog as FavouritesCatalog
+import com.google.jetstream.presentation.screens.home.Catalog as HomeCatalog
+import com.google.jetstream.presentation.screens.movies.Catalog as MoviesCatalog
 import com.google.jetstream.presentation.screens.shows.Catalog as ShowsCatalog
 
 @PreviewTest
@@ -176,4 +183,28 @@ fun SearchScreenScreenshot() {
             )
         }
     }
+}
+
+@PreviewTest
+@AdaptivePreview
+@Composable
+fun AppWithNavigationSuiteScaffoldPreview(){
+    val appState = AppState()
+    val navController = NavHostController(LocalContext.current)
+
+    AppWithNavigationSuiteScaffold(
+        appState = appState,
+        navController = navController,
+        hasXrSpatialFeature = false,
+        navigationItems = {
+            AdaptiveAppNavigationItems(
+                currentScreen = Screens.Home,
+                screens = Screens.entries.filter { it.isMainNavigation },
+                onSelectScreen = {}
+            )
+        },
+        content = { padding ->
+            Text("Preview content", modifier = Modifier.padding(padding))
+        },
+    )
 }
