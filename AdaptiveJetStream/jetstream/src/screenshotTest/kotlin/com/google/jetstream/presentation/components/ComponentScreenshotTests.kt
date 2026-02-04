@@ -33,6 +33,7 @@ import androidx.navigation.NavController
 import com.android.tools.screenshot.PreviewTest
 import com.google.jetstream.presentation.app.AppState
 import com.google.jetstream.presentation.app.UserAvatar
+import com.google.jetstream.presentation.app.withNavigationSuiteScaffold.TopAppBar
 import com.google.jetstream.presentation.app.withNavigationSuiteScaffold.TopBar
 import com.google.jetstream.presentation.screens.Screens
 
@@ -136,3 +137,12 @@ fun TopBarPreview(){
     )
 }
 
+@PreviewTest
+@Preview
+@Composable
+fun TopAppBarPreview(){
+    TopAppBar(
+        selectedScreen = Screens.Home,
+        showScreen = {},
+    )
+}

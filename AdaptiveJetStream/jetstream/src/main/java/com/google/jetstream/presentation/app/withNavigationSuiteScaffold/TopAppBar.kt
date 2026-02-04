@@ -29,6 +29,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.jetstream.presentation.app.JetStreamLogo
 import com.google.jetstream.presentation.app.UserAvatar
@@ -81,3 +82,5 @@ fun TopAppBar(
         )
     }
 }
+
+
