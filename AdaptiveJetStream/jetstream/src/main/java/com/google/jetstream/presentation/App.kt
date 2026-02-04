@@ -23,6 +23,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import com.google.jetstream.presentation.app.AppState
 import com.google.jetstream.presentation.app.NavigationComponentType
@@ -156,9 +157,24 @@ fun App(
                         Screens.entries.filter { it.isMainNavigation }
                     }
 
+                    val topBarPaddingTop = remember(hasXrSpatialFeature) {
+                        if (hasXrSpatialFeature) {
+                            32.dp
+                        } else {
+                            0.dp
+                        }
+                    }
+
                     AppWithNavigationSuiteScaffold(
-                        appState = appState,
-                        navController = navController,
+                        selectedScreen = appState.selectedScreen,
+                        isNavigationVisible = appState.isNavigationVisible,
+                        isTopBarVisible = appState.isTopBarVisible,
+                        topBarPaddingTop = topBarPaddingTop,
+                        onShowScreen = { screen ->
+                            appState.updateSelectedScreen(screen)
+                            navController.navigate(screen)
+                        },
+                        onFocusChanged = { appState.updateTopBarFocusState(it) },
                         modifier = modifier.handleKeyboardShortcuts(keyboardShortcuts),
                         navigationItems = {
                             AdaptiveAppNavigationItems(
@@ -178,8 +194,7 @@ fun App(
                                 modifier = modifier.padding(padding),
                                 onScroll = { updateTopBarVisibility(appState, it) }
                             )
-                        },
-                        hasXrSpatialFeature = hasXrSpatialFeature
+                        }
                     )
                 }
             }

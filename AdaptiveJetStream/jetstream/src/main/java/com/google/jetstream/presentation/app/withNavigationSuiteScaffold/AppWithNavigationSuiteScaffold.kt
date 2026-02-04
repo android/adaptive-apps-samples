@@ -28,36 +28,30 @@ import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffo
 import androidx.compose.material3.adaptive.navigationsuite.rememberNavigationSuiteScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
-import com.google.jetstream.presentation.app.AppState
+import com.google.jetstream.presentation.screens.Screens
 
 @Composable
 fun AppWithNavigationSuiteScaffold(
-    appState: AppState,
-    navController: NavHostController,
-    hasXrSpatialFeature: Boolean,
+    selectedScreen: Screens,
+    isNavigationVisible: Boolean,
+    isTopBarVisible: Boolean,
+    topBarPaddingTop: Dp,
+    onFocusChanged: (Boolean) -> Unit,
+    onShowScreen: (Screens) -> Unit,
     navigationItems: @Composable () -> Unit,
     content: @Composable (PaddingValues) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val navigationSuiteScaffoldState = rememberNavigationSuiteScaffoldState()
 
-    LaunchedEffect(appState.isNavigationVisible) {
-        if (appState.isNavigationVisible) {
+    LaunchedEffect(isNavigationVisible) {
+        if (isNavigationVisible) {
             navigationSuiteScaffoldState.show()
         } else {
             navigationSuiteScaffoldState.hide()
-        }
-    }
-
-    val topBarPaddingTop = remember(hasXrSpatialFeature) {
-        if (hasXrSpatialFeature) {
-            32.dp
-        } else {
-            0.dp
         }
     }
 
@@ -71,18 +65,15 @@ fun AppWithNavigationSuiteScaffold(
             modifier = Modifier.fillMaxSize(),
             topBar = {
                 AnimatedVisibility(
-                    visible = appState.isNavigationVisible,
+                    visible = isNavigationVisible,
                     enter = slideInVertically(),
                     exit = slideOutVertically()
                 ) {
                     TopBar(
-                        selectedScreen = appState.selectedScreen,
-                        isTopBarVisible = appState.isTopBarVisible,
-                        onFocusChanged = { appState.updateTopBarFocusState(it) },
-                        onShowScreen = { screen ->
-                            appState.updateSelectedScreen(screen)
-                            navController.navigate(screen)
-                        },
+                        selectedScreen = selectedScreen,
+                        isTopBarVisible = isTopBarVisible,
+                        onFocusChanged = { onFocusChanged(it) },
+                        onShowScreen = { screen -> onShowScreen(screen) },
                         modifier = Modifier.padding(
                             start = 24.dp,
                             end = 24.dp,

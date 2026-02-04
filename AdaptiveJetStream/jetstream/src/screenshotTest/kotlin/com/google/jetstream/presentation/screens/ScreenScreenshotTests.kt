@@ -22,9 +22,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.navigation.NavHostController
+import androidx.compose.ui.unit.dp
 import com.android.tools.screenshot.PreviewTest
 import com.google.jetstream.presentation.app.AppState
 import com.google.jetstream.presentation.app.withNavigationSuiteScaffold.AdaptiveAppNavigationItems
@@ -190,12 +189,14 @@ fun SearchScreenScreenshot() {
 @Composable
 fun AppWithNavigationSuiteScaffoldPreview(){
     val appState = AppState()
-    val navController = NavHostController(LocalContext.current)
 
     AppWithNavigationSuiteScaffold(
-        appState = appState,
-        navController = navController,
-        hasXrSpatialFeature = false,
+        selectedScreen = appState.selectedScreen,
+        isNavigationVisible = true,
+        isTopBarVisible = true,
+        onShowScreen = {},
+        onFocusChanged = {},
+        topBarPaddingTop = 0.dp,
         navigationItems = {
             AdaptiveAppNavigationItems(
                 currentScreen = Screens.Home,
