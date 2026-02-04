@@ -17,11 +17,16 @@
 package com.google.jetstream.presentation
 
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
@@ -232,11 +237,42 @@ fun App(
 
         NavigationComponentType.Spatial -> {
             EnableProminentMovieListOverride {
+
+                // Workaround to make video player visible.
+                val defaultContainerColor = MaterialTheme.colorScheme.background
+                var containerColor by remember {
+                    mutableStateOf(defaultContainerColor)
+                }
+
+                navController.addOnDestinationChangedListener { _, destination, _ ->
+                    val isVideoPlayer = destination.route?.startsWith(Screens.VideoPlayer.name) ?: false
+                    containerColor = if (isVideoPlayer) {
+                        Color.Transparent
+                    } else {
+                        defaultContainerColor
+                    }
+                }
+
                 AppWithSpatialNavigation(
-                    appState = appState,
-                    navController = navController,
-                    modifier = modifier.handleKeyboardShortcuts(keyboardShortcuts),
-                )
+                    selectedScreen = appState.selectedScreen,
+                    isNavigationVisible = appState.isNavigationVisible,
+                    isTopBarVisible = appState.isTopBarVisible,
+                    onShowScreen = { screen ->
+                        appState.updateSelectedScreen(screen)
+                        navController.navigate(screen())
+                    },
+                    onTopBarFocusChanged = { appState.updateTopBarFocusState(it) },
+                    containerColor = containerColor,
+                ) { paddingValues ->
+                    NavigationTree(
+                        navController = navController,
+                        isTopBarVisible = appState.isTopBarVisible,
+                        modifier = Modifier
+                            .handleKeyboardShortcuts(keyboardShortcuts)
+                            .padding(paddingValues),
+                        onScroll = { updateTopBarVisibility(appState, it) }
+                    )
+                }
             }
         }
     }

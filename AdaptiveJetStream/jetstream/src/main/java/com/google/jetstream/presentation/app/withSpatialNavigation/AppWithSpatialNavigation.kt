@@ -19,6 +19,7 @@ package com.google.jetstream.presentation.app.withSpatialNavigation
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
@@ -27,17 +28,14 @@ import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import androidx.xr.compose.material3.ExperimentalMaterial3XrApi
 import androidx.xr.compose.material3.NavigationRail
 import androidx.xr.compose.platform.LocalSpatialConfiguration
@@ -51,18 +49,19 @@ import androidx.xr.compose.subspace.layout.height
 import androidx.xr.compose.subspace.layout.width
 import androidx.xr.compose.unit.DpVolumeSize
 import com.google.jetstream.R
-import com.google.jetstream.presentation.app.AppState
-import com.google.jetstream.presentation.app.NavigationTree
-import com.google.jetstream.presentation.app.updateTopBarVisibility
 import com.google.jetstream.presentation.app.withNavigationSuiteScaffold.TopBar
 import com.google.jetstream.presentation.screens.Screens
 
 @OptIn(ExperimentalMaterial3XrApi::class)
 @Composable
 fun AppWithSpatialNavigation(
-    appState: AppState,
-    navController: NavHostController,
-    modifier: Modifier = Modifier,
+    selectedScreen: Screens,
+    isNavigationVisible: Boolean,
+    isTopBarVisible: Boolean,
+    onShowScreen: (Screens) -> Unit,
+    onTopBarFocusChanged : (Boolean) -> Unit,
+    containerColor: Color,
+    content: @Composable (PaddingValues) -> Unit
 ) {
     val resizePolicy = remember {
         ResizePolicy(minimumSize = DpVolumeSize(800.dp, 800.dp, 0.dp))
@@ -71,22 +70,9 @@ fun AppWithSpatialNavigation(
         MovePolicy()
     }
 
+    // TODO: This code is repeated in several places
     val screensInGlobalNavigation = remember {
         Screens.entries.filter { it.isMainNavigation }
-    }
-
-    // Workaround to make video player visible.
-    val defaultContainerColor = MaterialTheme.colorScheme.background
-    var containerColor by remember {
-        mutableStateOf(defaultContainerColor)
-    }
-    navController.addOnDestinationChangedListener { _, destination, _ ->
-        val isVideoPlayer = destination.route?.startsWith(Screens.VideoPlayer.name) ?: false
-        containerColor = if (isVideoPlayer) {
-            Color.Transparent
-        } else {
-            defaultContainerColor
-        }
     }
 
     ApplicationSubspace {
@@ -98,18 +84,16 @@ fun AppWithSpatialNavigation(
             Scaffold(
                 topBar = {
                     AnimatedVisibility(
-                        visible = appState.isNavigationVisible,
+                        // TODO: Should this be isTopBarVisible?
+                        visible = isNavigationVisible,
                         enter = slideInVertically(),
                         exit = slideOutVertically()
                     ) {
                         TopBar(
-                            selectedScreen = appState.selectedScreen,
-                            isTopBarVisible = appState.isTopBarVisible,
-                            onFocusChanged = { appState.updateTopBarFocusState(it) },
-                            onShowScreen = { screen ->
-                                appState.updateSelectedScreen(screen)
-                                navController.navigate(screen())
-                            },
+                            selectedScreen = selectedScreen,
+                            isTopBarVisible = isTopBarVisible,
+                            onFocusChanged = { onTopBarFocusChanged(it) },
+                            onShowScreen = { onShowScreen(it) },
                             modifier = Modifier.padding(
                                 start = 24.dp,
                                 end = 24.dp,
@@ -119,20 +103,15 @@ fun AppWithSpatialNavigation(
                     }
                 },
                 containerColor = containerColor,
-            ) { padding ->
-                NavigationTree(
-                    navController = navController,
-                    isTopBarVisible = appState.isTopBarVisible,
-                    modifier = modifier.padding(padding),
-                    onScroll = { updateTopBarVisibility(appState, it) }
-                )
+            ) {
+                padding -> content(padding)
             }
-            AnimatedVisibility(appState.isNavigationVisible) {
+            AnimatedVisibility(isNavigationVisible) {
                 NavigationInObiter(
                     screens = screensInGlobalNavigation,
-                    currentScreen = appState.selectedScreen
+                    currentScreen = selectedScreen
                 ) {
-                    navController.navigate(it())
+                    onShowScreen(it)
                 }
             }
         }
@@ -202,5 +181,21 @@ private fun NavigationRailInObiter(
                 )
             }
         )
+    }
+}
+
+// TODO: Is it possible to preview a composable that uses XR UI components?
+@Preview
+@Composable
+fun AppWithSpatialNavigationPreview() {
+    AppWithSpatialNavigation(
+        selectedScreen = Screens.Home,
+        isNavigationVisible = true,
+        isTopBarVisible = true,
+        onShowScreen = { },
+        onTopBarFocusChanged = {  },
+        containerColor = MaterialTheme.colorScheme.background
+    ) {
+        Text("Preview content")
     }
 }
