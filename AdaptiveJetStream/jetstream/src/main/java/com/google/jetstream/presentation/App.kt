@@ -236,19 +236,10 @@ fun App(
             EnableProminentMovieListOverride {
 
                 // Workaround to make video player visible.
-                val defaultContainerColor = MaterialTheme.colorScheme.background
-                var containerColor by remember {
-                    mutableStateOf(defaultContainerColor)
-                }
-
-                navController.addOnDestinationChangedListener { _, destination, _ ->
-                    val isVideoPlayer =
-                        destination.route?.startsWith(Screens.VideoPlayer.name) ?: false
-                    containerColor = if (isVideoPlayer) {
-                        Color.Transparent
-                    } else {
-                        defaultContainerColor
-                    }
+                val containerColor = if (appState.selectedScreen == Screens.VideoPlayer) {
+                    Color.Transparent
+                } else {
+                    MaterialTheme.colorScheme.background
                 }
 
                 AppWithSpatialNavigation(
