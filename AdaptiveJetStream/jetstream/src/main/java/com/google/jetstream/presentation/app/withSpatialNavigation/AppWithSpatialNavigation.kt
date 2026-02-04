@@ -108,7 +108,7 @@ fun AppWithSpatialNavigation(
                             onFocusChanged = { appState.updateTopBarFocusState(it) },
                             onShowScreen = { screen ->
                                 appState.updateSelectedScreen(screen)
-                                navController.navigate(screen)
+                                navController.navigate(screen())
                             },
                             modifier = Modifier.padding(
                                 start = 24.dp,

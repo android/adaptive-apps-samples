@@ -172,19 +172,20 @@ fun App(
                         topBarPaddingTop = topBarPaddingTop,
                         onShowScreen = { screen ->
                             appState.updateSelectedScreen(screen)
-                            navController.navigate(screen)
+                            navController.navigate(screen())
                         },
                         onFocusChanged = { appState.updateTopBarFocusState(it) },
                         modifier = modifier.handleKeyboardShortcuts(keyboardShortcuts),
                         navigationItems = {
                             AdaptiveAppNavigationItems(
                                 currentScreen = appState.selectedScreen,
-                                screens = screensInGlobalNavigation
-                            ) {
-                                if (it != appState.selectedScreen) {
-                                    navController.navigate(it())
-                                }
-                            }
+                                screens = screensInGlobalNavigation,
+                                onSelectScreen = { screen ->
+                                    if (screen != appState.selectedScreen) {
+                                        navController.navigate(screen())
+                                    }
+                                },
+                            )
                             RequestFullSpaceModeItem(hasXrSpatialFeature = hasXrSpatialFeature)
                         },
                         content = { padding ->
