@@ -20,35 +20,39 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteItem
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.material3.adaptive.navigationsuite.rememberNavigationSuiteScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.google.jetstream.presentation.app.AppState
-import com.google.jetstream.presentation.app.NavigationTree
-import com.google.jetstream.presentation.app.updateTopBarVisibility
-import com.google.jetstream.presentation.components.feature.hasXrSpatialFeature
-import com.google.jetstream.presentation.screens.Screens
 
 @Composable
 fun AppWithNavigationSuiteScaffold(
     appState: AppState,
     navController: NavHostController,
+    hasXrSpatialFeature: Boolean,
+    navigationItems: @Composable () -> Unit,
+    content: @Composable (PaddingValues) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val navigationSuiteScaffoldState = rememberNavigationSuiteScaffoldState()
-    val screensInGlobalNavigation = remember {
-        Screens.entries.filter { it.isMainNavigation }
-    }
-
-    val hasXrSpatialFeature = hasXrSpatialFeature()
 
     LaunchedEffect(appState.isNavigationVisible) {
         if (appState.isNavigationVisible) {
@@ -70,17 +74,7 @@ fun AppWithNavigationSuiteScaffold(
         modifier = modifier,
         state = navigationSuiteScaffoldState,
         navigationItemVerticalArrangement = Arrangement.Center,
-        navigationItems = {
-            AdaptiveAppNavigationItems(
-                currentScreen = appState.selectedScreen,
-                screens = screensInGlobalNavigation
-            ) {
-                if (it != appState.selectedScreen) {
-                    navController.navigate(it())
-                }
-            }
-            RequestFullSpaceModeItem(hasXrSpatialFeature = hasXrSpatialFeature)
-        }
+        navigationItems = navigationItems
     ) {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
@@ -91,8 +85,13 @@ fun AppWithNavigationSuiteScaffold(
                     exit = slideOutVertically()
                 ) {
                     TopBar(
-                        appState = appState,
-                        navController = navController,
+                        selectedScreen = appState.selectedScreen,
+                        isTopBarVisible = appState.isTopBarVisible,
+                        onFocusChanged = { appState.updateTopBarFocusState(it) },
+                        onShowScreen = { screen ->
+                            appState.updateSelectedScreen(screen)
+                            navController.navigate(screen)
+                        },
                         modifier = Modifier.padding(
                             start = 24.dp,
                             end = 24.dp,
@@ -101,13 +100,7 @@ fun AppWithNavigationSuiteScaffold(
                     )
                 }
             }
-        ) { padding ->
-            NavigationTree(
-                navController = navController,
-                isTopBarVisible = appState.isTopBarVisible,
-                modifier = modifier.padding(padding),
-                onScroll = { updateTopBarVisibility(appState, it) }
-            )
-        }
+        ) { paddingValues -> content(paddingValues) }
     }
 }
+

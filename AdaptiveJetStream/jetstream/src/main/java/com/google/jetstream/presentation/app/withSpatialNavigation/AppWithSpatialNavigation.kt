@@ -103,8 +103,13 @@ fun AppWithSpatialNavigation(
                         exit = slideOutVertically()
                     ) {
                         TopBar(
-                            appState = appState,
-                            navController = navController,
+                            selectedScreen = appState.selectedScreen,
+                            isTopBarVisible = appState.isTopBarVisible,
+                            onFocusChanged = { appState.updateTopBarFocusState(it) },
+                            onShowScreen = { screen ->
+                                appState.updateSelectedScreen(screen)
+                                navController.navigate(screen)
+                            },
                             modifier = Modifier.padding(
                                 start = 24.dp,
                                 end = 24.dp,

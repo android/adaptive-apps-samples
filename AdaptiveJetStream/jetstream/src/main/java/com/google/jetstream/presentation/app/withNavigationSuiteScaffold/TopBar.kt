@@ -22,30 +22,26 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.navigation.NavController
 import com.google.jetstream.presentation.app.AppState
+import com.google.jetstream.presentation.screens.Screens
 
 @Composable
 internal fun TopBar(
-    appState: AppState,
-    navController: NavController,
+    selectedScreen: Screens,
+    isTopBarVisible: Boolean,
+    onFocusChanged: (Boolean) -> Unit,
+    onShowScreen: (Screens) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     AnimatedVisibility(
-        appState.isTopBarVisible,
+        isTopBarVisible,
         enter = slideInVertically(),
         exit = slideOutVertically()
     ) {
         TopAppBar(
-            modifier = modifier
-                .onFocusChanged {
-                    appState.updateTopBarFocusState(it.hasFocus)
-                },
-            selectedScreen = appState.selectedScreen,
-            showScreen = {
-                appState.updateSelectedScreen(it)
-                navController.navigate(it())
-            },
+            modifier = modifier.onFocusChanged { onFocusChanged(it.hasFocus) },
+            selectedScreen = selectedScreen,
+            showScreen = { onShowScreen(it) },
         )
     }
 }

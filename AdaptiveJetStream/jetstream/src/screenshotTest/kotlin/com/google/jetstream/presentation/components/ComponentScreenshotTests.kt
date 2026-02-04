@@ -34,6 +34,7 @@ import com.android.tools.screenshot.PreviewTest
 import com.google.jetstream.presentation.app.AppState
 import com.google.jetstream.presentation.app.UserAvatar
 import com.google.jetstream.presentation.app.withNavigationSuiteScaffold.TopBar
+import com.google.jetstream.presentation.screens.Screens
 
 @PreviewTest
 @Preview
@@ -128,8 +129,10 @@ fun UserAvatarScreenshot() {
 @Composable
 fun TopBarPreview(){
     TopBar(
-        appState = AppState(),
-        navController = NavController(LocalContext.current)
+        selectedScreen = Screens.Home,
+        isTopBarVisible = true,
+        onFocusChanged = {},
+        onShowScreen = {},
     )
 }
 
