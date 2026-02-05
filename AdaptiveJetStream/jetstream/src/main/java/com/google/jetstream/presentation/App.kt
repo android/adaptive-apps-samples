@@ -22,13 +22,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import com.google.jetstream.presentation.app.AppState
 import com.google.jetstream.presentation.app.NavigationComponentType
 import com.google.jetstream.presentation.app.NavigationTree
 import com.google.jetstream.presentation.app.rememberAppState
+import com.google.jetstream.presentation.app.rememberKeyboardShortcuts
 import com.google.jetstream.presentation.app.rememberNavigationComponentType
 import com.google.jetstream.presentation.app.updateTopBarVisibility
 import com.google.jetstream.presentation.app.withNavigationSuiteScaffold.AdaptiveAppNavigationItems
@@ -37,8 +37,6 @@ import com.google.jetstream.presentation.app.withNavigationSuiteScaffold.EnableP
 import com.google.jetstream.presentation.app.withNavigationSuiteScaffold.RequestFullSpaceModeItem
 import com.google.jetstream.presentation.app.withSpatialNavigation.AppWithSpatialNavigation
 import com.google.jetstream.presentation.app.withTopBarNavigation.AppWithTopBarNavigation
-import com.google.jetstream.presentation.components.KeyboardShortcut
-import com.google.jetstream.presentation.components.ModifierKey
 import com.google.jetstream.presentation.components.feature.hasXrSpatialFeature
 import com.google.jetstream.presentation.components.handleKeyboardShortcuts
 import com.google.jetstream.presentation.screens.Screens
@@ -50,94 +48,12 @@ fun App(
     appState: AppState = rememberAppState()
 ) {
     val navController = rememberNavController()
+
+    // TODO: Rather than starting our decision making with the navigation component type, we should
+    //  start it with the layout. Then populate that layout with the correct composables.
     val navigationComponentType = rememberNavigationComponentType()
 
-    // TODO: This could be moved into a separate function, and the keyboard shortcuts could be
-    //  associated with each screen directly (maybe through an optional interface)
-    val keyboardShortcuts = remember {
-        listOf(
-            KeyboardShortcut(
-                key = Key.Comma,
-                modifierKeys = setOf(ModifierKey.Ctrl),
-                action = {
-                    if (appState.selectedScreen != Screens.Profile) {
-                        navController.navigate(Screens.Profile())
-                    }
-                }
-            ),
-            KeyboardShortcut(
-                key = Key.P,
-                modifierKeys = setOf(ModifierKey.Ctrl, ModifierKey.Alt),
-                action = {
-                    if (appState.selectedScreen != Screens.Profile) {
-                        navController.navigate(Screens.Profile())
-                    }
-                }
-            ),
-            KeyboardShortcut(
-                key = Key.H,
-                modifierKeys = setOf(ModifierKey.Ctrl, ModifierKey.Alt),
-                action = {
-                    if (appState.selectedScreen != Screens.Home) {
-                        navController.navigate(Screens.Home())
-                    }
-                }
-            ),
-            KeyboardShortcut(
-                key = Key.C,
-                modifierKeys = setOf(ModifierKey.Ctrl, ModifierKey.Alt),
-                action = {
-                    if (appState.selectedScreen != Screens.Categories) {
-                        navController.navigate(Screens.Categories())
-                    }
-                }
-            ),
-            KeyboardShortcut(
-                key = Key.M,
-                modifierKeys = setOf(ModifierKey.Ctrl, ModifierKey.Alt),
-                action = {
-                    if (appState.selectedScreen != Screens.Movies) {
-                        navController.navigate(Screens.Movies())
-                    }
-                }
-            ),
-            KeyboardShortcut(
-                key = Key.T,
-                modifierKeys = setOf(ModifierKey.Ctrl, ModifierKey.Alt),
-                action = {
-                    if (appState.selectedScreen != Screens.Shows) {
-                        navController.navigate(Screens.Shows())
-                    }
-                }
-            ),
-            KeyboardShortcut(
-                key = Key.F,
-                modifierKeys = setOf(ModifierKey.Ctrl, ModifierKey.Alt),
-                action = {
-                    if (appState.selectedScreen != Screens.Favourites) {
-                        navController.navigate(Screens.Favourites())
-                    }
-                }
-            ),
-            KeyboardShortcut(
-                key = Key.Slash,
-                action = {
-                    if (appState.selectedScreen != Screens.Search) {
-                        navController.navigate(Screens.Search())
-                    }
-                }
-            ),
-            KeyboardShortcut(
-                key = Key.S,
-                modifierKeys = setOf(ModifierKey.Ctrl, ModifierKey.Alt),
-                action = {
-                    if (appState.selectedScreen != Screens.Search) {
-                        navController.navigate(Screens.Search())
-                    }
-                }
-            ),
-        )
-    }
+    val keyboardShortcuts = rememberKeyboardShortcuts(navController, appState.selectedScreen)
 
     LaunchedEffect(Unit) {
         navController.addOnDestinationChangedListener { _, destination, _ ->
@@ -159,6 +75,7 @@ fun App(
                         Screens.entries.filter { it.isMainNavigation }
                     }
 
+                    // TODO: This is specific to XR home-space mode
                     val topBarPaddingTop = remember(hasXrSpatialFeature) {
                         if (hasXrSpatialFeature) {
                             32.dp
@@ -254,3 +171,5 @@ fun App(
         }
     }
 }
+
+
