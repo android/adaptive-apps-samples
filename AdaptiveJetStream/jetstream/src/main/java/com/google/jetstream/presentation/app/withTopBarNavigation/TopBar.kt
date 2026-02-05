@@ -159,9 +159,7 @@ private fun TopBarTabRow(
                 TopBarTab(
                     screen = screen,
                     selected = selectedScreen == screen,
-                    onClick = {
-                        onClick(screen)
-                              },
+                    onClick = { onClick(screen) },
                     onSelect = { onTabSelected(screen) },
                     modifier = Modifier.focusRequester(focusRequester)
                 )

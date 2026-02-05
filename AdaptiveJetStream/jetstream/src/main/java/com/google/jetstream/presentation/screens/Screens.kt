@@ -20,6 +20,9 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.IntRange
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.google.jetstream.R
 import com.google.jetstream.data.convert.TryFrom
@@ -40,6 +43,8 @@ import com.google.jetstream.presentation.screens.videoPlayer.VideoPlayerScreen
  * shown for the given `NavigationComponentType`.
  * @param navIcon - The icon to be shown in the navigation area. Only applicable if this is a main
  * navigation item.
+ * // TODO: Remove this XR-specific field if possible
+ * @param xrContainerColor - Overrides the default screen container color on XR layouts
  */
 enum class Screens(
     private val args: List<String>? = null,
@@ -48,8 +53,10 @@ enum class Screens(
     // TODO: Can we remove either tabIcon or navIcon?
     val tabIcon: ImageVector? = null,
     val shouldShowNavigation: (NavigationComponentType) -> Boolean = { true },
-    @DrawableRes val navIcon: Int = 0
+    @DrawableRes val navIcon: Int = 0,
+    val xrContainerColor: Color? = null
 ) {
+
     Profile,
     Home(isTabItem = true, isMainNavigation = true, navIcon = R.drawable.ic_home),
     Categories(isTabItem = true, isMainNavigation = true, navIcon = R.drawable.ic_category),
@@ -65,7 +72,9 @@ enum class Screens(
     ),
     VideoPlayer(
         listOf(VideoPlayerScreen.MOVIE_ID_BUNDLE_KEY),
-        shouldShowNavigation = { false }
+        shouldShowNavigation = { false },
+        // Workaround to make video player visible.
+        xrContainerColor = Color.Transparent
     );
 
     operator fun invoke(): String {
@@ -111,4 +120,8 @@ enum class Screens(
             }
         }
     }
+
+    @Composable
+    fun xrContainerColor() : Color = xrContainerColor ?: MaterialTheme.colorScheme.background
+
 }

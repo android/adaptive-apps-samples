@@ -61,6 +61,7 @@ fun AppWithSpatialNavigation(
     onShowScreen: (Screens) -> Unit,
     onTopBarFocusChanged : (Boolean) -> Unit,
     containerColor: Color,
+    modifier: Modifier = Modifier,
     content: @Composable (PaddingValues) -> Unit
 ) {
     val resizePolicy = remember {
@@ -103,6 +104,7 @@ fun AppWithSpatialNavigation(
                     }
                 },
                 containerColor = containerColor,
+                modifier = modifier,
             ) {
                 padding -> content(padding)
             }
@@ -181,21 +183,5 @@ private fun NavigationRailInObiter(
                 )
             }
         )
-    }
-}
-
-// TODO: Is it possible to preview a composable that uses XR UI components?
-@Preview
-@Composable
-fun AppWithSpatialNavigationPreview() {
-    AppWithSpatialNavigation(
-        selectedScreen = Screens.Home,
-        isNavigationVisible = true,
-        isTopBarVisible = true,
-        onShowScreen = { },
-        onTopBarFocusChanged = {  },
-        containerColor = MaterialTheme.colorScheme.background
-    ) {
-        Text("Preview content")
     }
 }

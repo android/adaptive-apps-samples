@@ -17,16 +17,11 @@
 package com.google.jetstream.presentation
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
@@ -236,14 +231,6 @@ fun App(
 
         NavigationComponentType.Spatial -> {
             EnableProminentMovieListOverride {
-
-                // Workaround to make video player visible.
-                val containerColor = if (appState.selectedScreen == Screens.VideoPlayer) {
-                    Color.Transparent
-                } else {
-                    MaterialTheme.colorScheme.background
-                }
-
                 AppWithSpatialNavigation(
                     selectedScreen = appState.selectedScreen,
                     isNavigationVisible = appState.isNavigationVisible,
@@ -252,7 +239,7 @@ fun App(
                         navController.navigate(screen())
                     },
                     onTopBarFocusChanged = { appState.updateTopBarFocusState(it) },
-                    containerColor = containerColor,
+                    containerColor = appState.selectedScreen.xrContainerColor(),
                 ) { paddingValues ->
                     NavigationTree(
                         navController = navController,
