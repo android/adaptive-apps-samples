@@ -66,11 +66,14 @@ internal fun TopBar(
     val (tabRow, avatar) = remember { FocusRequester.createRefs() }
 
     val isDpadAvailable = isDpadAvailable()
+
+    // TODO: Is this a bug?
+    // If I run the app on the TV emulator, nothing happens when I click on the top navigation items
     val onClickHandler: (Screens) -> Unit = remember(isDpadAvailable) {
         if (isDpadAvailable) {
             { focusManager.moveFocus(FocusDirection.Down) }
         } else {
-            { it -> showScreen(it) }
+            { showScreen(it) }
         }
     }
 
@@ -156,7 +159,9 @@ private fun TopBarTabRow(
                 TopBarTab(
                     screen = screen,
                     selected = selectedScreen == screen,
-                    onClick = { onClick(screen) },
+                    onClick = {
+                        onClick(screen)
+                              },
                     onSelect = { onTabSelected(screen) },
                     modifier = Modifier.focusRequester(focusRequester)
                 )

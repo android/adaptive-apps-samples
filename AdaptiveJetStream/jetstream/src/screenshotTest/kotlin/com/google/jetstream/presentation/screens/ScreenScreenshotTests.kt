@@ -221,7 +221,6 @@ fun AppWithNavigationSuiteScaffoldPreview() {
 @Composable
 fun AppWithTopBarNavigationPreview() {
     val appState = AppState()
-    val navController = rememberNavController()
     AppWithTopBarNavigation(
         selectedScreen = appState.selectedScreen,
         isNavigationVisible = appState.isNavigationVisible,
@@ -232,7 +231,7 @@ fun AppWithTopBarNavigationPreview() {
         },
         onTopBarVisible = { appState.showTopBar() },
         onActivityBackPressed = { },
-        navController = navController,
+        showScreen = {},
     ) {
         Text("Preview content")
     }

@@ -220,7 +220,9 @@ fun App(
                     },
                     onTopBarVisible = { appState.showTopBar() },
                     onActivityBackPressed = onActivityBackPressed,
-                    navController = navController,
+                    showScreen = { screen ->
+                        navController.navigate(screen())
+                    },
                     modifier = modifier.handleKeyboardShortcuts(keyboardShortcuts),
                 ) {
                     NavigationTree(

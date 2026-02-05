@@ -26,7 +26,6 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import com.google.jetstream.presentation.components.onBackButtonPressed
 import com.google.jetstream.presentation.components.shim.tryRequestFocus
 import com.google.jetstream.presentation.screens.Screens
@@ -39,7 +38,7 @@ fun AppWithTopBarNavigation(
     isTopBarFocussed: Boolean,
     onTopBarVisible: () -> Unit,
     onTopBarFocusChanged: (Boolean) -> Unit,
-    navController: NavHostController,
+    showScreen: (Screens) -> Unit,
     onActivityBackPressed: () -> Unit,
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
@@ -74,7 +73,7 @@ fun AppWithTopBarNavigation(
 
                 // It feels strange to be doing conditional navigation here
                 selectedScreen != Screens.Home -> {
-                    navController.navigate(Screens.Home())
+                    showScreen(Screens.Home)
                 }
 
                 else -> {
@@ -89,7 +88,7 @@ fun AppWithTopBarNavigation(
                 selectedScreen,
                 {
                     if (it != selectedScreen) {
-                        navController.navigate(it())
+                        showScreen(it)
                     }
                 },
                 modifier = Modifier
