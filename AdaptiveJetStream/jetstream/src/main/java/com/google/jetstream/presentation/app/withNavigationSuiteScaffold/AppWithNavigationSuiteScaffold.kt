@@ -81,7 +81,7 @@ fun AppWithNavigationSuiteScaffold(
                 }
 
                 AnimatedVisibility(
-                    visible = appState.isTopBarVisible,
+                    visible = appState.isNavigationVisible && appState.isTopBarVisible,
                     enter = slideInVertically(),
                     exit = slideOutVertically()
                 ) {
