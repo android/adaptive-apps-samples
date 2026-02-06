@@ -51,7 +51,7 @@ fun AppWithNavigationSuiteScaffold(
     EnableProminentMovieListOverride {
         NavigationSuiteScaffoldLayout(
             keyboardShortcuts = keyboardShortcuts,
-            modifier = modifier,
+            modifier = modifier.fillMaxSize(),
             isNavigationVisible = appState.isNavigationVisible,
             navigationItems = {
                 AdaptiveAppNavigationItems(

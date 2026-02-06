@@ -70,7 +70,7 @@ fun App(
         NavigationTree(
             navController = navController,
             isTopBarVisible = appState.isTopBarVisible,
-            modifier = modifier.padding(padding),
+            modifier = Modifier.padding(padding),
             onScroll = { updateTopBarVisibility(appState, it) }
         )
     }
@@ -118,7 +118,9 @@ fun App(
                 navController = navController,
                 keyboardShortcuts = keyboardShortcuts,
                 modifier = modifier
-            ) { paddingValues -> mainContent(paddingValues) }
+            ) { paddingValues ->
+                mainContent(paddingValues)
+            }
         }
     }
 }

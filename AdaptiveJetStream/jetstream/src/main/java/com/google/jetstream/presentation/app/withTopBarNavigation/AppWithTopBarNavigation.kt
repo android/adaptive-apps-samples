@@ -19,6 +19,7 @@ package com.google.jetstream.presentation.app.withTopBarNavigation
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -59,7 +60,7 @@ fun AppWithTopBarNavigation(
             onShowScreen = { screen ->
                 navController.navigate(screen())
             },
-            modifier = modifier.handleKeyboardShortcuts(keyboardShortcuts),
+            modifier = modifier.fillMaxSize().handleKeyboardShortcuts(keyboardShortcuts),
         ) {
             // TODO: This is to keep things consistent with the other layouts, however,
             //  we should consider whether it's necessary to always apply padding to the

@@ -20,6 +20,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
@@ -75,7 +76,7 @@ fun AppWithSpatialNavigation(
             },
             onTopBarFocusChanged = { appState.updateTopBarFocusState(it) },
             containerColor = appState.selectedScreen.xrContainerColor(),
-            modifier = modifier.handleKeyboardShortcuts(keyboardShortcuts)
+            modifier = modifier.fillMaxSize().handleKeyboardShortcuts(keyboardShortcuts)
         ) { paddingValues ->
             content(paddingValues)
         }

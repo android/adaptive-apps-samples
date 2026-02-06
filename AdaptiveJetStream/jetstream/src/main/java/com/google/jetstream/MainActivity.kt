@@ -58,11 +58,10 @@ class MainActivity : ComponentActivity() {
                     App(
                         // TODO: Figure out why this is being used instead of a BackHandler
                         onActivityBackPressed = onBackPressedDispatcher::onBackPressed,
-                        // TODO: Is it necessary to tell every child that they need to fill max size and use safe drawing padding?
+                        // TODO: Is it necessary to tell every child that they need to use safe drawing padding?
                         //  This feels like it would be better declared by the main app layouts rather than being mandated here
                         modifier = Modifier
                             .safeDrawingPadding()
-                            .fillMaxSize()
                     )
                 }
             }
