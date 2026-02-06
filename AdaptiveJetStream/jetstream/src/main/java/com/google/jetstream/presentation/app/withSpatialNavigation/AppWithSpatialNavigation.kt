@@ -30,12 +30,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import androidx.xr.compose.material3.ExperimentalMaterial3XrApi
 import androidx.xr.compose.material3.NavigationRail
 import androidx.xr.compose.platform.LocalSpatialConfiguration
@@ -49,17 +50,47 @@ import androidx.xr.compose.subspace.layout.height
 import androidx.xr.compose.subspace.layout.width
 import androidx.xr.compose.unit.DpVolumeSize
 import com.google.jetstream.R
-import com.google.jetstream.presentation.app.withNavigationSuiteScaffold.TopBar
+import com.google.jetstream.presentation.app.AppState
+import com.google.jetstream.presentation.app.withNavigationSuiteScaffold.EnableProminentMovieListOverride
+import com.google.jetstream.presentation.app.withNavigationSuiteScaffold.TopAppBar
+import com.google.jetstream.presentation.components.KeyboardShortcut
+import com.google.jetstream.presentation.components.handleKeyboardShortcuts
 import com.google.jetstream.presentation.screens.Screens
+
+@Composable
+fun AppWithSpatialNavigation(
+    appState: AppState,
+    navController: NavHostController,
+    keyboardShortcuts: List<KeyboardShortcut>,
+    modifier: Modifier,
+    content: @Composable ((padding: PaddingValues) -> Unit)
+) {
+    EnableProminentMovieListOverride {
+        SpatialNavigationLayout(
+            selectedScreen = appState.selectedScreen,
+            isNavigationVisible = appState.isNavigationVisible,
+            isTopBarVisible = appState.isTopBarVisible,
+            onShowScreen = { screen ->
+                navController.navigate(screen())
+            },
+            onTopBarFocusChanged = { appState.updateTopBarFocusState(it) },
+            containerColor = appState.selectedScreen.xrContainerColor(),
+            modifier = modifier.handleKeyboardShortcuts(keyboardShortcuts)
+        ) { paddingValues ->
+            content(paddingValues)
+        }
+    }
+}
+
 
 @OptIn(ExperimentalMaterial3XrApi::class)
 @Composable
-fun AppWithSpatialNavigation(
+fun SpatialNavigationLayout(
     selectedScreen: Screens,
     isNavigationVisible: Boolean,
     isTopBarVisible: Boolean,
     onShowScreen: (Screens) -> Unit,
-    onTopBarFocusChanged : (Boolean) -> Unit,
+    onTopBarFocusChanged: (Boolean) -> Unit,
     containerColor: Color,
     modifier: Modifier = Modifier,
     content: @Composable (PaddingValues) -> Unit
@@ -71,11 +102,6 @@ fun AppWithSpatialNavigation(
         MovePolicy()
     }
 
-    // TODO: This code is repeated in several places
-    val screensInGlobalNavigation = remember {
-        Screens.entries.filter { it.isMainNavigation }
-    }
-
     ApplicationSubspace {
         SpatialPanel(
             resizePolicy = resizePolicy,
@@ -85,33 +111,31 @@ fun AppWithSpatialNavigation(
             Scaffold(
                 topBar = {
                     AnimatedVisibility(
-                        // TODO: Should this be isTopBarVisible?
-                        visible = isNavigationVisible,
+                        visible = isTopBarVisible,
                         enter = slideInVertically(),
                         exit = slideOutVertically()
                     ) {
-                        TopBar(
+                        TopAppBar(
                             selectedScreen = selectedScreen,
-                            isTopBarVisible = isTopBarVisible,
-                            onFocusChanged = { onTopBarFocusChanged(it) },
-                            onShowScreen = { onShowScreen(it) },
-                            modifier = Modifier.padding(
-                                start = 24.dp,
-                                end = 24.dp,
-                                top = 32.dp
-                            )
+                            showScreen = { onShowScreen(it) },
+                            modifier = Modifier
+                                .padding(
+                                    start = 24.dp,
+                                    end = 24.dp,
+                                    top = 32.dp
+                                )
+                                .onFocusChanged { onTopBarFocusChanged(it.hasFocus) },
                         )
                     }
                 },
                 containerColor = containerColor,
                 modifier = modifier,
-            ) {
-                padding -> content(padding)
+            ) { padding ->
+                content(padding)
             }
             AnimatedVisibility(isNavigationVisible) {
                 NavigationInObiter(
-                    screens = screensInGlobalNavigation,
-                    currentScreen = selectedScreen
+                    screens = Screens.mainNavigationScreens, currentScreen = selectedScreen
                 ) {
                     onShowScreen(it)
                 }

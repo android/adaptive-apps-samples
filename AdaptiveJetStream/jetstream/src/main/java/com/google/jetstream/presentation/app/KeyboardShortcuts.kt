@@ -19,7 +19,6 @@ package com.google.jetstream.presentation.app
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.input.key.Key
-import androidx.navigation.NavHostController
 import com.google.jetstream.presentation.components.KeyboardShortcut
 import com.google.jetstream.presentation.components.ModifierKey
 import com.google.jetstream.presentation.screens.Screens
@@ -28,89 +27,52 @@ import com.google.jetstream.presentation.screens.Screens
 //  having this separate list
 @Composable
 fun rememberKeyboardShortcuts(
-    navController: NavHostController,
-    selectedScreen: Screens
+    onSelectScreen: (Screens) -> Unit,
 ): List<KeyboardShortcut> = remember {
     listOf(
         KeyboardShortcut(
             key = Key.Comma,
             modifierKeys = setOf(ModifierKey.Ctrl),
-            action = {
-                if (selectedScreen != Screens.Profile) {
-                    navController.navigate(Screens.Profile())
-                }
-            }
+            action = { onSelectScreen(Screens.Profile) }
         ),
         KeyboardShortcut(
             key = Key.P,
             modifierKeys = setOf(ModifierKey.Ctrl, ModifierKey.Alt),
-            action = {
-                if (selectedScreen != Screens.Profile) {
-                    navController.navigate(Screens.Profile())
-                }
-            }
+            action = { onSelectScreen(Screens.Profile) }
         ),
         KeyboardShortcut(
             key = Key.H,
             modifierKeys = setOf(ModifierKey.Ctrl, ModifierKey.Alt),
-            action = {
-                if (selectedScreen != Screens.Home) {
-                    navController.navigate(Screens.Home())
-                }
-            }
+            action = { onSelectScreen(Screens.Home) }
         ),
         KeyboardShortcut(
             key = Key.C,
             modifierKeys = setOf(ModifierKey.Ctrl, ModifierKey.Alt),
-            action = {
-                if (selectedScreen != Screens.Categories) {
-                    navController.navigate(Screens.Categories())
-                }
-            }
+            action = { onSelectScreen(Screens.Categories) }
         ),
         KeyboardShortcut(
             key = Key.M,
             modifierKeys = setOf(ModifierKey.Ctrl, ModifierKey.Alt),
-            action = {
-                if (selectedScreen != Screens.Movies) {
-                    navController.navigate(Screens.Movies())
-                }
-            }
+            action = { onSelectScreen(Screens.Movies) }
         ),
         KeyboardShortcut(
             key = Key.T,
             modifierKeys = setOf(ModifierKey.Ctrl, ModifierKey.Alt),
-            action = {
-                if (selectedScreen != Screens.Shows) {
-                    navController.navigate(Screens.Shows())
-                }
-            }
+            action = { onSelectScreen(Screens.Shows) }
         ),
         KeyboardShortcut(
             key = Key.F,
             modifierKeys = setOf(ModifierKey.Ctrl, ModifierKey.Alt),
-            action = {
-                if (selectedScreen != Screens.Favourites) {
-                    navController.navigate(Screens.Favourites())
-                }
-            }
+            action = { onSelectScreen(Screens.Favourites) }
         ),
         KeyboardShortcut(
             key = Key.Slash,
-            action = {
-                if (selectedScreen != Screens.Search) {
-                    navController.navigate(Screens.Search())
-                }
-            }
+            action = { onSelectScreen(Screens.Search) }
         ),
         KeyboardShortcut(
             key = Key.S,
             modifierKeys = setOf(ModifierKey.Ctrl, ModifierKey.Alt),
-            action = {
-                if (selectedScreen != Screens.Search) {
-                    navController.navigate(Screens.Search())
-                }
-            }
+            action = { onSelectScreen(Screens.Search) }
         ),
     )
 }

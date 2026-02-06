@@ -40,6 +40,7 @@ internal fun NavController.openCategoryMovieList() = { categoryId: String ->
     )
 }
 
+// TODO: Could this be refactored to be a method on AppState?
 internal fun updateTopBarVisibility(appState: AppState, updatedVisibility: Boolean) {
     if (updatedVisibility) {
         appState.showTopBar()

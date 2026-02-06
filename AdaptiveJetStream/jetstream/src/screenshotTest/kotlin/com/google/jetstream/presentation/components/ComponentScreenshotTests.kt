@@ -33,7 +33,6 @@ import com.android.tools.screenshot.PreviewTest
 import com.google.jetstream.presentation.app.UserAvatar
 import com.google.jetstream.presentation.app.withNavigationSuiteScaffold.RequestFullSpaceModeItem
 import com.google.jetstream.presentation.app.withNavigationSuiteScaffold.TopAppBar
-import com.google.jetstream.presentation.app.withNavigationSuiteScaffold.TopBar
 import com.google.jetstream.presentation.screens.Screens
 
 @PreviewTest
@@ -122,18 +121,6 @@ fun UserAvatarScreenshot() {
             }
         }
     }
-}
-
-@PreviewTest
-@Preview
-@Composable
-fun TopBarPreview(){
-    TopBar(
-        selectedScreen = Screens.Home,
-        isTopBarVisible = true,
-        onFocusChanged = {},
-        onShowScreen = {},
-    )
 }
 
 @PreviewTest

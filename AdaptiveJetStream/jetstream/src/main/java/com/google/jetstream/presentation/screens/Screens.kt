@@ -119,6 +119,9 @@ enum class Screens(
                 else -> null
             }
         }
+
+        val tabScreens: List<Screens> = Screens.entries.filter { it.isTabItem }
+        val mainNavigationScreens: List<Screens> = Screens.entries.filter { it.isMainNavigation }
     }
 
     @Composable

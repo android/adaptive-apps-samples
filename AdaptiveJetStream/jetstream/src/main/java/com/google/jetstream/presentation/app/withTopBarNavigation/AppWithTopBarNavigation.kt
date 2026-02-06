@@ -18,7 +18,9 @@ package com.google.jetstream.presentation.app.withTopBarNavigation
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -26,24 +28,60 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import com.google.jetstream.presentation.app.AppState
+import com.google.jetstream.presentation.components.KeyboardShortcut
+import com.google.jetstream.presentation.components.handleKeyboardShortcuts
 import com.google.jetstream.presentation.components.onBackButtonPressed
 import com.google.jetstream.presentation.components.shim.tryRequestFocus
 import com.google.jetstream.presentation.screens.Screens
 
 @Composable
 fun AppWithTopBarNavigation(
+    appState: AppState,
+    navController: NavHostController,
+    keyboardShortcuts: List<KeyboardShortcut>,
+    onActivityBackPressed: () -> Unit,
+    modifier: Modifier = Modifier,
+    content: @Composable ((padding: PaddingValues) -> Unit)
+) {
+    Surface {
+        TopBarWithNavigationLayout(
+            selectedScreen = appState.selectedScreen,
+            isNavigationVisible = appState.isNavigationVisible,
+            isTopBarVisible = appState.isNavigationVisible && appState.isTopBarVisible,
+            isTopBarFocussed = appState.isTopBarFocused,
+            onTopBarFocusChanged = { hasFocus ->
+                appState.updateTopBarFocusState(hasFocus)
+            },
+            onTopBarVisible = { appState.showTopBar() },
+            onActivityBackPressed = onActivityBackPressed,
+            onShowScreen = { screen ->
+                navController.navigate(screen())
+            },
+            modifier = modifier.handleKeyboardShortcuts(keyboardShortcuts),
+        ) {
+            // TODO: This is to keep things consistent with the other layouts, however,
+            //  we should consider whether it's necessary to always apply padding to the
+            //  main content
+            content(PaddingValues(0.dp))
+        }
+    }
+}
+
+@Composable
+fun TopBarWithNavigationLayout(
     selectedScreen: Screens,
     isNavigationVisible: Boolean,
     isTopBarVisible: Boolean,
     isTopBarFocussed: Boolean,
     onTopBarVisible: () -> Unit,
     onTopBarFocusChanged: (Boolean) -> Unit,
-    showScreen: (Screens) -> Unit,
+    onShowScreen: (Screens) -> Unit,
     onActivityBackPressed: () -> Unit,
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
-    val items = remember { Screens.entries.filter { it.isTabItem } }
     val topBar = remember { FocusRequester() }
 
     Column(
@@ -73,7 +111,7 @@ fun AppWithTopBarNavigation(
 
                 // It feels strange to be doing conditional navigation here
                 selectedScreen != Screens.Home -> {
-                    showScreen(Screens.Home)
+                    onShowScreen(Screens.Home)
                 }
 
                 else -> {
@@ -82,13 +120,14 @@ fun AppWithTopBarNavigation(
             }
         }
     ) {
+        // TODO: Consider refactoring this into a slot
         AnimatedVisibility(isTopBarVisible) {
             TopBar(
-                items,
+                Screens.tabScreens,
                 selectedScreen,
                 {
                     if (it != selectedScreen) {
-                        showScreen(it)
+                        onShowScreen(it)
                     }
                 },
                 modifier = Modifier

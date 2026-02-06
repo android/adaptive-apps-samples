@@ -24,17 +24,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import androidx.navigation.compose.rememberNavController
 import com.android.tools.screenshot.PreviewTest
 import com.google.jetstream.presentation.app.AppState
-import com.google.jetstream.presentation.app.NavigationTree
-import com.google.jetstream.presentation.app.updateTopBarVisibility
 import com.google.jetstream.presentation.app.withNavigationSuiteScaffold.AdaptiveAppNavigationItems
-import com.google.jetstream.presentation.app.withNavigationSuiteScaffold.AppWithNavigationSuiteScaffold
-import com.google.jetstream.presentation.app.withTopBarNavigation.AppWithTopBarNavigation
+import com.google.jetstream.presentation.app.withNavigationSuiteScaffold.NavigationSuiteScaffoldLayout
+import com.google.jetstream.presentation.app.withNavigationSuiteScaffold.TopAppBar
+import com.google.jetstream.presentation.app.withTopBarNavigation.TopBarWithNavigationLayout
 import com.google.jetstream.presentation.components.AdaptivePreview
 import com.google.jetstream.presentation.components.JetStreamPreview
-import com.google.jetstream.presentation.components.handleKeyboardShortcuts
 import com.google.jetstream.presentation.components.mockCategoryScreenState
 import com.google.jetstream.presentation.screens.categories.CategoryDetails
 import com.google.jetstream.presentation.screens.favourites.FavouriteScreenViewModel
@@ -192,16 +189,11 @@ fun SearchScreenScreenshot() {
 @PreviewTest
 @AdaptivePreview
 @Composable
-fun AppWithNavigationSuiteScaffoldPreview() {
+fun NavigationSuiteScaffoldLayoutPreview() {
     val appState = AppState()
 
-    AppWithNavigationSuiteScaffold(
-        selectedScreen = appState.selectedScreen,
+    NavigationSuiteScaffoldLayout(
         isNavigationVisible = true,
-        isTopBarVisible = true,
-        onShowScreen = {},
-        onFocusChanged = {},
-        topBarPaddingTop = 0.dp,
         navigationItems = {
             AdaptiveAppNavigationItems(
                 currentScreen = Screens.Home,
@@ -212,6 +204,18 @@ fun AppWithNavigationSuiteScaffoldPreview() {
         content = { padding ->
             Text("Preview content", modifier = Modifier.padding(padding))
         },
+        topBar = {
+            TopAppBar(
+                modifier = Modifier
+                    .padding(
+                        start = 24.dp,
+                        end = 24.dp,
+                        top = 0.dp
+                    ),
+                selectedScreen = appState.selectedScreen,
+                showScreen = { },
+            )
+        }
     )
 }
 
@@ -219,9 +223,9 @@ fun AppWithNavigationSuiteScaffoldPreview() {
 @PreviewTest
 @AdaptivePreview
 @Composable
-fun AppWithTopBarNavigationPreview() {
+fun TopBarWithNavigationLayoutPreview() {
     val appState = AppState()
-    AppWithTopBarNavigation(
+    TopBarWithNavigationLayout(
         selectedScreen = appState.selectedScreen,
         isNavigationVisible = appState.isNavigationVisible,
         isTopBarVisible = appState.isNavigationVisible && appState.isTopBarVisible,
@@ -231,7 +235,7 @@ fun AppWithTopBarNavigationPreview() {
         },
         onTopBarVisible = { appState.showTopBar() },
         onActivityBackPressed = { },
-        showScreen = {},
+        onShowScreen = {},
     ) {
         Text("Preview content")
     }
