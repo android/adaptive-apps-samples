@@ -34,6 +34,3 @@ fun WindowSizeClass.isWidthAtLeastExpanded(): Boolean {
 fun WindowSizeClass.isWidthAtLeastLarge(): Boolean {
     return isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_LARGE_LOWER_BOUND)
 }
-
-val WindowSizeClass.Companion.WIDTH_DP_LARGE_LOWER_BOUND: Int
-    get() = 1200

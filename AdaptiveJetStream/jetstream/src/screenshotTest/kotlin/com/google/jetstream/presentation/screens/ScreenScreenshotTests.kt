@@ -17,23 +17,31 @@
 package com.google.jetstream.presentation.screens
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.unit.dp
 import com.android.tools.screenshot.PreviewTest
+import com.google.jetstream.presentation.app.AppState
+import com.google.jetstream.presentation.app.withNavigationSuiteScaffold.AdaptiveAppNavigationItems
+import com.google.jetstream.presentation.app.withNavigationSuiteScaffold.NavigationSuiteScaffoldLayout
+import com.google.jetstream.presentation.app.withNavigationSuiteScaffold.TopAppBar
+import com.google.jetstream.presentation.app.withTopBarNavigation.TopBarWithNavigationLayout
 import com.google.jetstream.presentation.components.AdaptivePreview
 import com.google.jetstream.presentation.components.JetStreamPreview
 import com.google.jetstream.presentation.components.mockCategoryScreenState
-import com.google.jetstream.presentation.screens.categories.Catalog as CategoriesCatalog
 import com.google.jetstream.presentation.screens.categories.CategoryDetails
-import com.google.jetstream.presentation.screens.favourites.Catalog as FavouritesCatalog
 import com.google.jetstream.presentation.screens.favourites.FavouriteScreenViewModel
 import com.google.jetstream.presentation.screens.favourites.FilterList
-import com.google.jetstream.presentation.screens.home.Catalog as HomeCatalog
 import com.google.jetstream.presentation.screens.moviedetails.MovieDetailsList
-import com.google.jetstream.presentation.screens.movies.Catalog as MoviesCatalog
 import com.google.jetstream.presentation.screens.search.SearchResult
+import com.google.jetstream.presentation.screens.categories.Catalog as CategoriesCatalog
+import com.google.jetstream.presentation.screens.favourites.Catalog as FavouritesCatalog
+import com.google.jetstream.presentation.screens.home.Catalog as HomeCatalog
+import com.google.jetstream.presentation.screens.movies.Catalog as MoviesCatalog
 import com.google.jetstream.presentation.screens.shows.Catalog as ShowsCatalog
 
 @PreviewTest
@@ -175,5 +183,60 @@ fun SearchScreenScreenshot() {
                 modifier = Modifier.fillMaxSize()
             )
         }
+    }
+}
+
+@PreviewTest
+@AdaptivePreview
+@Composable
+fun NavigationSuiteScaffoldLayoutPreview() {
+    val appState = AppState()
+
+    NavigationSuiteScaffoldLayout(
+        isNavigationVisible = true,
+        navigationItems = {
+            AdaptiveAppNavigationItems(
+                currentScreen = Screens.Home,
+                screens = Screens.entries.filter { it.isMainNavigation },
+                onSelectScreen = {}
+            )
+        },
+        content = { padding ->
+            Text("Preview content", modifier = Modifier.padding(padding))
+        },
+        topBar = {
+            TopAppBar(
+                modifier = Modifier
+                    .padding(
+                        start = 24.dp,
+                        end = 24.dp,
+                        top = 0.dp
+                    ),
+                selectedScreen = appState.selectedScreen,
+                showScreen = { },
+            )
+        }
+    )
+}
+
+
+@PreviewTest
+@AdaptivePreview
+@Composable
+fun TopBarWithNavigationLayoutPreview() {
+    val appState = AppState()
+    TopBarWithNavigationLayout(
+        selectedScreen = appState.selectedScreen,
+        isNavigationVisible = appState.isNavigationVisible,
+        isTopBarVisible = appState.isNavigationVisible && appState.isTopBarVisible,
+        isTopBarFocussed = appState.isTopBarFocused,
+        onTopBarFocusChanged = { hasFocus ->
+            appState.updateTopBarFocusState(hasFocus)
+        },
+        onTopBarVisible = { appState.showTopBar() },
+        onActivityBackPressed = { },
+        onShowScreen = {},
+    ) {
+        Text("Preview content")
     }
 }

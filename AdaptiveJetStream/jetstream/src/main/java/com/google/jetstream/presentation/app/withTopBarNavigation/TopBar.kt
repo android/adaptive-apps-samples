@@ -59,18 +59,21 @@ import com.google.jetstream.presentation.screens.Screens
 internal fun TopBar(
     items: List<Screens>,
     selectedScreen: Screens,
-    showScreen: (Screens) -> Unit,
+    onShowScreen: (Screens) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val focusManager = LocalFocusManager.current
     val (tabRow, avatar) = remember { FocusRequester.createRefs() }
 
     val isDpadAvailable = isDpadAvailable()
+
+    // TODO: Is this a bug?
+    // If I run the app on the TV emulator, nothing happens when I click on the top navigation items
     val onClickHandler: (Screens) -> Unit = remember(isDpadAvailable) {
         if (isDpadAvailable) {
             { focusManager.moveFocus(FocusDirection.Down) }
         } else {
-            { it -> showScreen(it) }
+            { onShowScreen(it) }
         }
     }
 
@@ -98,14 +101,14 @@ internal fun TopBar(
                     }
                     .focusRequester(avatar),
                 selected = selectedScreen == Screens.Profile,
-                onClick = { showScreen(Screens.Profile) }
+                onClick = { onShowScreen(Screens.Profile) }
             )
         }
         TopBarTabRow(
             tabs = items,
             selectedScreen = selectedScreen,
             onClick = onClickHandler,
-            onTabSelected = showScreen,
+            onTabSelected = onShowScreen,
             modifier = Modifier
                 .weight(1f)
                 .focusRequester(tabRow)

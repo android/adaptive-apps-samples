@@ -19,6 +19,8 @@ package com.google.jetstream.presentation.app.withSpatialNavigation
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
@@ -27,11 +29,9 @@ import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
@@ -52,41 +52,55 @@ import androidx.xr.compose.subspace.layout.width
 import androidx.xr.compose.unit.DpVolumeSize
 import com.google.jetstream.R
 import com.google.jetstream.presentation.app.AppState
-import com.google.jetstream.presentation.app.NavigationTree
-import com.google.jetstream.presentation.app.updateTopBarVisibility
-import com.google.jetstream.presentation.app.withNavigationSuiteScaffold.TopBar
+import com.google.jetstream.presentation.app.withNavigationSuiteScaffold.EnableProminentMovieListOverride
+import com.google.jetstream.presentation.app.withNavigationSuiteScaffold.TopAppBar
+import com.google.jetstream.presentation.components.KeyboardShortcut
+import com.google.jetstream.presentation.components.handleKeyboardShortcuts
 import com.google.jetstream.presentation.screens.Screens
 
-@OptIn(ExperimentalMaterial3XrApi::class)
 @Composable
 fun AppWithSpatialNavigation(
     appState: AppState,
     navController: NavHostController,
+    keyboardShortcuts: List<KeyboardShortcut>,
+    modifier: Modifier,
+    content: @Composable ((padding: PaddingValues) -> Unit)
+) {
+    EnableProminentMovieListOverride {
+        SpatialNavigationLayout(
+            selectedScreen = appState.selectedScreen,
+            isNavigationVisible = appState.isNavigationVisible,
+            isTopBarVisible = appState.isTopBarVisible,
+            onShowScreen = { screen ->
+                navController.navigate(screen())
+            },
+            onTopBarFocusChanged = { appState.updateTopBarFocusState(it) },
+            containerColor = appState.selectedScreen.xrContainerColor(),
+            modifier = modifier.fillMaxSize().handleKeyboardShortcuts(keyboardShortcuts)
+        ) { paddingValues ->
+            content(paddingValues)
+        }
+    }
+}
+
+
+@OptIn(ExperimentalMaterial3XrApi::class)
+@Composable
+fun SpatialNavigationLayout(
+    selectedScreen: Screens,
+    isNavigationVisible: Boolean,
+    isTopBarVisible: Boolean,
+    onShowScreen: (Screens) -> Unit,
+    onTopBarFocusChanged: (Boolean) -> Unit,
+    containerColor: Color,
     modifier: Modifier = Modifier,
+    content: @Composable (PaddingValues) -> Unit
 ) {
     val resizePolicy = remember {
         ResizePolicy(minimumSize = DpVolumeSize(800.dp, 800.dp, 0.dp))
     }
     val dragPolicy = remember {
         MovePolicy()
-    }
-
-    val screensInGlobalNavigation = remember {
-        Screens.entries.filter { it.isMainNavigation }
-    }
-
-    // Workaround to make video player visible.
-    val defaultContainerColor = MaterialTheme.colorScheme.background
-    var containerColor by remember {
-        mutableStateOf(defaultContainerColor)
-    }
-    navController.addOnDestinationChangedListener { _, destination, _ ->
-        val isVideoPlayer = destination.route?.startsWith(Screens.VideoPlayer.name) ?: false
-        containerColor = if (isVideoPlayer) {
-            Color.Transparent
-        } else {
-            defaultContainerColor
-        }
     }
 
     ApplicationSubspace {
@@ -98,36 +112,33 @@ fun AppWithSpatialNavigation(
             Scaffold(
                 topBar = {
                     AnimatedVisibility(
-                        visible = appState.isNavigationVisible,
+                        visible = isTopBarVisible,
                         enter = slideInVertically(),
                         exit = slideOutVertically()
                     ) {
-                        TopBar(
-                            appState = appState,
-                            navController = navController,
-                            modifier = Modifier.padding(
-                                start = 24.dp,
-                                end = 24.dp,
-                                top = 32.dp
-                            )
+                        TopAppBar(
+                            selectedScreen = selectedScreen,
+                            showScreen = { onShowScreen(it) },
+                            modifier = Modifier
+                                .padding(
+                                    start = 24.dp,
+                                    end = 24.dp,
+                                    top = 32.dp
+                                )
+                                .onFocusChanged { onTopBarFocusChanged(it.hasFocus) },
                         )
                     }
                 },
                 containerColor = containerColor,
+                modifier = modifier,
             ) { padding ->
-                NavigationTree(
-                    navController = navController,
-                    isTopBarVisible = appState.isTopBarVisible,
-                    modifier = modifier.padding(padding),
-                    onScroll = { updateTopBarVisibility(appState, it) }
-                )
+                content(padding)
             }
-            AnimatedVisibility(appState.isNavigationVisible) {
+            AnimatedVisibility(isNavigationVisible) {
                 NavigationInObiter(
-                    screens = screensInGlobalNavigation,
-                    currentScreen = appState.selectedScreen
+                    screens = Screens.mainNavigationScreens, currentScreen = selectedScreen
                 ) {
-                    navController.navigate(it())
+                    onShowScreen(it)
                 }
             }
         }

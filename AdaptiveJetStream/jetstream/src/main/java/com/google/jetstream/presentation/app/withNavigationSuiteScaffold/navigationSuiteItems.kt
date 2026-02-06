@@ -30,7 +30,6 @@ import androidx.compose.ui.unit.dp
 import androidx.xr.compose.platform.LocalSpatialConfiguration
 import androidx.xr.compose.platform.SpatialConfiguration
 import com.google.jetstream.R
-import com.google.jetstream.presentation.components.feature.hasXrSpatialFeature
 import com.google.jetstream.presentation.screens.Screens
 
 @Composable
@@ -60,28 +59,24 @@ fun AdaptiveAppNavigationItems(
 
 @Composable
 fun RequestFullSpaceModeItem(
-    hasXrSpatialFeature: Boolean = hasXrSpatialFeature(),
     spatialConfiguration: SpatialConfiguration = LocalSpatialConfiguration.current
 ) {
-
-    if (hasXrSpatialFeature) {
-        NavigationSuiteItem(
-            selected = false,
-            onClick = spatialConfiguration::requestFullSpaceMode,
-            icon = {
-                Icon(
-                    imageVector = ImageVector.vectorResource(R.drawable.ic_expand_content),
-                    modifier = Modifier.size(24.dp),
-                    contentDescription = stringResource(R.string.full_space_mode),
-                    tint = MaterialTheme.colorScheme.primary
-                )
-            },
-            label = {
-                Text(
-                    stringResource(R.string.full_space_mode),
-                    color = MaterialTheme.colorScheme.primary
-                )
-            }
-        )
-    }
+    NavigationSuiteItem(
+        selected = false,
+        onClick = spatialConfiguration::requestFullSpaceMode,
+        icon = {
+            Icon(
+                imageVector = ImageVector.vectorResource(R.drawable.ic_expand_content),
+                modifier = Modifier.size(24.dp),
+                contentDescription = stringResource(R.string.full_space_mode),
+                tint = MaterialTheme.colorScheme.primary
+            )
+        },
+        label = {
+            Text(
+                stringResource(R.string.full_space_mode),
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
+    )
 }

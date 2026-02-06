@@ -27,6 +27,7 @@ import com.google.jetstream.presentation.screens.categories.LocalCategoryGridGri
 fun JetStreamTheme(
     content: @Composable () -> Unit
 ) {
+    // TODO: Consider refactoring this
     CompositionLocalProvider(
         LocalFeaturedCarouselHeight provides rememberFeaturedCarouselHeight(),
         LocalVerticalCardAspectRatio provides rememberVerticalCardAspectRatio(),

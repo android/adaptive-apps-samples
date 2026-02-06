@@ -43,6 +43,13 @@ fun TopAppBar(
 ) {
     val (avatar, search) = remember { FocusRequester.createRefs() }
 
+    /**
+     * When the row becomes focussed, automatically focus either the search or profile
+     * composables depending on the current screen.
+     *
+     * TODO: This could be refactored to take a list of
+     *  navigation items rather than a hardcoded list
+     */
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
@@ -72,7 +79,9 @@ fun TopAppBar(
         Spacer(modifier.weight(1f))
         SearchButton(
             modifier = Modifier.focusRequester(search),
-            onClick = { showScreen(Screens.Search) }
+            onClick = {
+                showScreen(Screens.Search)
+            }
         )
         UserAvatar(
             modifier = Modifier.focusRequester(avatar),
@@ -81,3 +90,5 @@ fun TopAppBar(
         )
     }
 }
+
+
