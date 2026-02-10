@@ -44,15 +44,12 @@ annotation class TvPreview
 @Preview(device = Devices.AUTOMOTIVE_1024p, name = "Auto")
 annotation class AutoPreview
 
+@PhonePreview
 @FoldablePreview
 @TabletPreview
 @DesktopPreview
 @TvPreview
 @AutoPreview
-annotation class LargeScreensPreview
-
-@PhonePreview
-@LargeScreensPreview
 annotation class AdaptivePreview
 
 @Composable

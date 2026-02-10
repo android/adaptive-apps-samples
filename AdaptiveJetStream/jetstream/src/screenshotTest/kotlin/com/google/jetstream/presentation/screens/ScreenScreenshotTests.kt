@@ -31,7 +31,13 @@ import com.google.jetstream.presentation.app.withNavigationSuiteScaffold.Navigat
 import com.google.jetstream.presentation.app.withNavigationSuiteScaffold.TopAppBar
 import com.google.jetstream.presentation.app.withTopBarNavigation.TopBarWithNavigationLayout
 import com.google.jetstream.presentation.components.AdaptivePreview
+import com.google.jetstream.presentation.components.AutoPreview
+import com.google.jetstream.presentation.components.DesktopPreview
+import com.google.jetstream.presentation.components.FoldablePreview
 import com.google.jetstream.presentation.components.JetStreamPreview
+import com.google.jetstream.presentation.components.PhonePreview
+import com.google.jetstream.presentation.components.TabletPreview
+import com.google.jetstream.presentation.components.TvPreview
 import com.google.jetstream.presentation.components.mockCategoryScreenState
 import com.google.jetstream.presentation.screens.categories.CategoryDetails
 import com.google.jetstream.presentation.screens.favourites.FavouriteScreenViewModel
@@ -187,7 +193,9 @@ fun SearchScreenScreenshot() {
 }
 
 @PreviewTest
-@AdaptivePreview
+@PhonePreview
+@TabletPreview
+@FoldablePreview
 @Composable
 fun NavigationSuiteScaffoldLayoutPreview() {
     val appState = AppState()
@@ -221,7 +229,9 @@ fun NavigationSuiteScaffoldLayoutPreview() {
 
 
 @PreviewTest
-@AdaptivePreview
+@DesktopPreview
+@TvPreview
+@AutoPreview
 @Composable
 fun TopBarWithNavigationLayoutPreview() {
     val appState = AppState()
