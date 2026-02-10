@@ -16,10 +16,7 @@
 
 package com.google.jetstream.presentation.components
 
-import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import com.google.jetstream.data.entities.MovieCategory
@@ -55,11 +52,7 @@ annotation class AdaptivePreview
 @Composable
 fun JetStreamPreview(content: @Composable () -> Unit) {
     JetStreamTheme {
-        CompositionLocalProvider(
-            LocalContentColor provides MaterialTheme.colorScheme.onSurface
-        ) {
-            content()
-        }
+        content()
     }
 }
 

@@ -38,6 +38,7 @@ fun JetStreamTheme(
         LocalContentPadding provides rememberContentPadding(),
     ) {
         MaterialTheme(
+            // TODO this is redundant because the dark and light color schemes are the same
             colorScheme = if (isSystemInDarkTheme()) {
                 darkColorScheme
             } else {

@@ -27,11 +27,7 @@ import android.view.WindowInsetsController
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.safeDrawingPadding
-import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.xr.compose.material3.ExperimentalMaterial3XrApi
@@ -51,19 +47,14 @@ class MainActivity : ComponentActivity() {
         tryEnableCustomHeader()
         setContent {
             JetStreamTheme {
-                CompositionLocalProvider(
-                    // TODO: Shouldn't this be set by JetStreamTheme?
-                    LocalContentColor provides MaterialTheme.colorScheme.onSurface
-                ) {
-                    App(
-                        // TODO: Figure out why this is being used instead of a BackHandler
-                        onActivityBackPressed = onBackPressedDispatcher::onBackPressed,
-                        // TODO: Is it necessary to tell every child that they need to use safe drawing padding?
-                        //  This feels like it would be better declared by the main app layouts rather than being mandated here
-                        modifier = Modifier
-                            .safeDrawingPadding()
-                    )
-                }
+                App(
+                    // TODO: Figure out why this is being used instead of a BackHandler
+                    onActivityBackPressed = onBackPressedDispatcher::onBackPressed,
+                    // TODO: Is it necessary to tell every child that they need to use safe drawing padding?
+                    //  This feels like it would be better declared by the main app layouts rather than being mandated here
+                    modifier = Modifier
+                        .safeDrawingPadding()
+                )
             }
         }
     }
@@ -99,6 +90,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    // TODO: Could this be combined with the other keyboard shortcuts file?
     private val keyboardShortcuts by lazy {
         listOf(
             KeyboardShortcutGroup(
