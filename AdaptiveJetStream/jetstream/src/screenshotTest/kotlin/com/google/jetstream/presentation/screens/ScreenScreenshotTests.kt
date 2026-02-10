@@ -198,33 +198,46 @@ fun SearchScreenScreenshot() {
 @FoldablePreview
 @Composable
 fun NavigationSuiteScaffoldLayoutPreview() {
-    val appState = AppState()
+    JetStreamPreview {
+        Surface {
+            val appState = AppState()
 
-    NavigationSuiteScaffoldLayout(
-        isNavigationVisible = true,
-        navigationItems = {
-            AdaptiveAppNavigationItems(
-                currentScreen = Screens.Home,
-                screens = Screens.entries.filter { it.isMainNavigation },
-                onSelectScreen = {}
-            )
-        },
-        content = { padding ->
-            Text("Preview content", modifier = Modifier.padding(padding))
-        },
-        topBar = {
-            TopAppBar(
-                modifier = Modifier
-                    .padding(
-                        start = 24.dp,
-                        end = 24.dp,
-                        top = 0.dp
-                    ),
-                selectedScreen = appState.selectedScreen,
-                showScreen = { },
+            NavigationSuiteScaffoldLayout(
+                isNavigationVisible = true,
+                navigationItems = {
+                    AdaptiveAppNavigationItems(
+                        currentScreen = Screens.Home,
+                        screens = Screens.entries.filter { it.isMainNavigation },
+                        onSelectScreen = {}
+                    )
+                },
+                content = { padding ->
+                    HomeCatalog(
+                        featuredMovies = TestMovieList,
+                        trendingMovies = TestMovieList,
+                        top10Movies = TestMovieList,
+                        nowPlayingMovies = TestMovieList,
+                        onMovieClick = { _ -> },
+                        onScroll = { _ -> },
+                        goToVideoPlayer = { _ -> },
+                        modifier = Modifier.padding(padding).fillMaxSize()
+                    )
+                },
+                topBar = {
+                    TopAppBar(
+                        modifier = Modifier
+                            .padding(
+                                start = 24.dp,
+                                end = 24.dp,
+                                top = 0.dp
+                            ),
+                        selectedScreen = appState.selectedScreen,
+                        showScreen = { },
+                    )
+                }
             )
         }
-    )
+    }
 }
 
 
@@ -234,19 +247,23 @@ fun NavigationSuiteScaffoldLayoutPreview() {
 @AutoPreview
 @Composable
 fun TopBarWithNavigationLayoutPreview() {
-    val appState = AppState()
-    TopBarWithNavigationLayout(
-        selectedScreen = appState.selectedScreen,
-        isNavigationVisible = appState.isNavigationVisible,
-        isTopBarVisible = appState.isNavigationVisible && appState.isTopBarVisible,
-        isTopBarFocussed = appState.isTopBarFocused,
-        onTopBarFocusChanged = { hasFocus ->
-            appState.updateTopBarFocusState(hasFocus)
-        },
-        onTopBarVisible = { appState.showTopBar() },
-        onActivityBackPressed = { },
-        onShowScreen = {},
-    ) {
-        Text("Preview content")
+    JetStreamPreview {
+        Surface {
+            val appState = AppState()
+            TopBarWithNavigationLayout(
+                selectedScreen = appState.selectedScreen,
+                isNavigationVisible = appState.isNavigationVisible,
+                isTopBarVisible = appState.isNavigationVisible && appState.isTopBarVisible,
+                isTopBarFocussed = appState.isTopBarFocused,
+                onTopBarFocusChanged = { hasFocus ->
+                    appState.updateTopBarFocusState(hasFocus)
+                },
+                onTopBarVisible = { appState.showTopBar() },
+                onActivityBackPressed = { },
+                onShowScreen = {},
+            ) {
+                Text("Preview content")
+            }
+        }
     }
 }
