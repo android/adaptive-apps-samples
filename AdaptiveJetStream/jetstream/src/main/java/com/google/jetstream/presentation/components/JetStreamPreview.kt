@@ -26,22 +26,22 @@ import com.google.jetstream.data.entities.MovieCategory
 import com.google.jetstream.presentation.screens.categories.CategoriesScreenUiState
 import com.google.jetstream.presentation.theme.JetStreamTheme
 
-@Preview(device = Devices.PHONE, name = "Phone preview")
+@Preview(device = Devices.PHONE, name = "Phone")
 annotation class PhonePreview
 
-@Preview(device = Devices.FOLDABLE, name = "Foldable preview")
+@Preview(device = Devices.FOLDABLE, name = "Foldable")
 annotation class FoldablePreview
 
-@Preview(device = Devices.TABLET, name = "Tablet preview")
+@Preview(device = Devices.TABLET, name = "Tablet")
 annotation class TabletPreview
 
-@Preview(device = Devices.DESKTOP, name = "Desktop preview")
+@Preview(device = Devices.DESKTOP, name = "Desktop")
 annotation class DesktopPreview
 
-@Preview(device = Devices.TV_1080p, name = "TV Preview")
+@Preview(device = Devices.TV_1080p, name = "TV")
 annotation class TvPreview
 
-@Preview(device = Devices.AUTOMOTIVE_1024p, name = "Auto Preview")
+@Preview(device = Devices.AUTOMOTIVE_1024p, name = "Auto")
 annotation class AutoPreview
 
 @FoldablePreview
