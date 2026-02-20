@@ -18,7 +18,10 @@ package com.google.jetstream.presentation.app.withTopBarNavigation
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -28,8 +31,8 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.google.jetstream.presentation.app.AppState
-import com.google.jetstream.presentation.app.NavigationTree
-import com.google.jetstream.presentation.app.updateTopBarVisibility
+import com.google.jetstream.presentation.components.KeyboardShortcut
+import com.google.jetstream.presentation.components.handleKeyboardShortcuts
 import com.google.jetstream.presentation.components.onBackButtonPressed
 import com.google.jetstream.presentation.components.shim.tryRequestFocus
 import com.google.jetstream.presentation.screens.Screens
@@ -38,30 +41,78 @@ import com.google.jetstream.presentation.screens.Screens
 fun AppWithTopBarNavigation(
     appState: AppState,
     navController: NavHostController,
+    keyboardShortcuts: List<KeyboardShortcut>,
     onActivityBackPressed: () -> Unit,
     modifier: Modifier = Modifier,
+    content: @Composable ((padding: PaddingValues) -> Unit)
 ) {
-    val items = remember { Screens.entries.filter { it.isTabItem } }
+    Surface {
+        TopBarWithNavigationLayout(
+            selectedScreen = appState.selectedScreen,
+            isNavigationVisible = appState.isNavigationVisible,
+            isTopBarVisible = appState.isNavigationVisible && appState.isTopBarVisible,
+            isTopBarFocussed = appState.isTopBarFocused,
+            onTopBarFocusChanged = { hasFocus ->
+                appState.updateTopBarFocusState(hasFocus)
+            },
+            onTopBarVisible = { appState.showTopBar() },
+            onActivityBackPressed = onActivityBackPressed,
+            onShowScreen = { screen ->
+                navController.navigate(screen())
+            },
+            modifier = modifier.fillMaxSize().handleKeyboardShortcuts(keyboardShortcuts),
+        ) {
+            // TODO: This is to keep things consistent with the other layouts, however,
+            //  we should consider whether it's necessary to always apply padding to the
+            //  main content
+            content(PaddingValues(0.dp))
+        }
+    }
+}
+
+@Composable
+fun TopBarWithNavigationLayout(
+    selectedScreen: Screens,
+    isNavigationVisible: Boolean,
+    isTopBarVisible: Boolean,
+    isTopBarFocussed: Boolean,
+    onTopBarVisible: () -> Unit,
+    onTopBarFocusChanged: (Boolean) -> Unit,
+    onShowScreen: (Screens) -> Unit,
+    onActivityBackPressed: () -> Unit,
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit,
+) {
     val topBar = remember { FocusRequester() }
 
     Column(
         modifier = modifier.onBackButtonPressed {
             when {
-                !appState.isNavigationVisible -> {
+                // TODO: This logic is difficult to understand and should be refactored
+                // The VideoPlayer screen doesn't have any navigation
+                // The MovieDetails screen doesn't have any navigation when it's displayed in a
+                // TopBar layout.
+                // These are the only two scenarios where appState.isNavigationVisible is false
+                !isNavigationVisible -> {
                     onActivityBackPressed()
                 }
 
-                !appState.isTopBarVisible -> {
-                    appState.showTopBar()
+                // If the top bar isn't visible then show it - my guess is this is to handle
+                // the case where the user has scrolled down and the top menu has disappeared.
+                // When testing this on the TV emulator, the app just quits when I tap back.
+                !isTopBarVisible -> {
+                    onTopBarVisible()
                     topBar.tryRequestFocus()
                 }
 
-                !appState.isTopBarFocused -> {
+                // If the top bar isn't focussed then focus it
+                !isTopBarFocussed -> {
                     topBar.tryRequestFocus()
                 }
 
-                appState.selectedScreen != Screens.Home -> {
-                    navController.navigate(Screens.Home())
+                // It feels strange to be doing conditional navigation here
+                selectedScreen != Screens.Home -> {
+                    onShowScreen(Screens.Home)
                 }
 
                 else -> {
@@ -70,16 +121,14 @@ fun AppWithTopBarNavigation(
             }
         }
     ) {
-        AnimatedVisibility(
-            appState.isNavigationVisible &&
-                appState.isTopBarVisible
-        ) {
+        // TODO: Consider refactoring this into a slot
+        AnimatedVisibility(isTopBarVisible) {
             TopBar(
-                items,
-                appState.selectedScreen,
+                Screens.tabScreens,
+                selectedScreen,
                 {
-                    if (it != appState.selectedScreen) {
-                        navController.navigate(it())
+                    if (it != selectedScreen) {
+                        onShowScreen(it)
                     }
                 },
                 modifier = Modifier
@@ -88,15 +137,9 @@ fun AppWithTopBarNavigation(
                         horizontal = 74.dp,
                     )
                     .focusRequester(topBar)
-                    .onFocusChanged {
-                        appState.updateTopBarFocusState(it.hasFocus)
-                    }
+                    .onFocusChanged { onTopBarFocusChanged(it.hasFocus) }
             )
         }
-        NavigationTree(
-            navController = navController,
-            isTopBarVisible = appState.isTopBarVisible,
-            onScroll = { updateTopBarVisibility(appState, it) }
-        )
+        content()
     }
 }

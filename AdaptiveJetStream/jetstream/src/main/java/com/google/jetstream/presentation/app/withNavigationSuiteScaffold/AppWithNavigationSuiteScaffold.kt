@@ -20,21 +20,24 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.material3.adaptive.navigationsuite.rememberNavigationSuiteScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.google.jetstream.presentation.app.AppState
-import com.google.jetstream.presentation.app.NavigationTree
-import com.google.jetstream.presentation.app.updateTopBarVisibility
+import com.google.jetstream.presentation.components.KeyboardShortcut
 import com.google.jetstream.presentation.components.feature.hasXrSpatialFeature
+import com.google.jetstream.presentation.components.handleKeyboardShortcuts
 import com.google.jetstream.presentation.screens.Screens
 
 @Composable
@@ -42,72 +45,98 @@ fun AppWithNavigationSuiteScaffold(
     appState: AppState,
     navController: NavHostController,
     modifier: Modifier = Modifier,
+    keyboardShortcuts: List<KeyboardShortcut> = emptyList(),
+    content: @Composable (PaddingValues) -> Unit
 ) {
-    val navigationSuiteScaffoldState = rememberNavigationSuiteScaffoldState()
-    val screensInGlobalNavigation = remember {
-        Screens.entries.filter { it.isMainNavigation }
-    }
-
-    val hasXrSpatialFeature = hasXrSpatialFeature()
-
-    LaunchedEffect(appState.isNavigationVisible) {
-        if (appState.isNavigationVisible) {
-            navigationSuiteScaffoldState.show()
-        } else {
-            navigationSuiteScaffoldState.hide()
-        }
-    }
-
-    val topBarPaddingTop = remember(hasXrSpatialFeature) {
-        if (hasXrSpatialFeature) {
-            32.dp
-        } else {
-            0.dp
-        }
-    }
-
-    NavigationSuiteScaffold(
-        modifier = modifier,
-        state = navigationSuiteScaffoldState,
-        navigationItemVerticalArrangement = Arrangement.Center,
-        navigationItems = {
-            AdaptiveAppNavigationItems(
-                currentScreen = appState.selectedScreen,
-                screens = screensInGlobalNavigation
-            ) {
-                if (it != appState.selectedScreen) {
-                    navController.navigate(it())
+    EnableProminentMovieListOverride {
+        NavigationSuiteScaffoldLayout(
+            keyboardShortcuts = keyboardShortcuts,
+            modifier = modifier.fillMaxSize(),
+            isNavigationVisible = appState.isNavigationVisible,
+            navigationItems = {
+                AdaptiveAppNavigationItems(
+                    currentScreen = appState.selectedScreen,
+                    screens = Screens.mainNavigationScreens,
+                    onSelectScreen = { screen ->
+                        if (screen != appState.selectedScreen) {
+                            navController.navigate(screen())
+                        }
+                    },
+                )
+                if (hasXrSpatialFeature()) {
+                    RequestFullSpaceModeItem()
                 }
-            }
-            RequestFullSpaceModeItem(hasXrSpatialFeature = hasXrSpatialFeature)
-        }
-    ) {
-        Scaffold(
-            modifier = Modifier.fillMaxSize(),
+            },
+            content = content,
             topBar = {
+                val hasXrSpatialFeature = hasXrSpatialFeature()
+
+                // TODO: This is specific to XR home-space mode
+                val topBarPaddingTop = remember(hasXrSpatialFeature) {
+                    if (hasXrSpatialFeature) {
+                        32.dp
+                    } else {
+                        0.dp
+                    }
+                }
+
                 AnimatedVisibility(
-                    visible = appState.isNavigationVisible,
+                    visible = appState.isNavigationVisible && appState.isTopBarVisible,
                     enter = slideInVertically(),
                     exit = slideOutVertically()
                 ) {
-                    TopBar(
-                        appState = appState,
-                        navController = navController,
-                        modifier = Modifier.padding(
-                            start = 24.dp,
-                            end = 24.dp,
-                            top = topBarPaddingTop
-                        )
+                    TopAppBar(
+                        modifier = Modifier
+                            .padding(
+                                start = 24.dp,
+                                end = 24.dp,
+                                top = topBarPaddingTop
+                            )
+                            .onFocusChanged { appState.updateTopBarFocusState(it.hasFocus) },
+                        selectedScreen = appState.selectedScreen,
+                        showScreen = { screen ->
+                            if (screen != appState.selectedScreen) {
+                                navController.navigate(screen())
+                            }
+                        },
                     )
                 }
             }
-        ) { padding ->
-            NavigationTree(
-                navController = navController,
-                isTopBarVisible = appState.isTopBarVisible,
-                modifier = modifier.padding(padding),
-                onScroll = { updateTopBarVisibility(appState, it) }
-            )
+        )
+    }
+}
+
+@Composable
+fun NavigationSuiteScaffoldLayout(
+    isNavigationVisible: Boolean,
+    modifier: Modifier = Modifier,
+    keyboardShortcuts: List<KeyboardShortcut> = emptyList(),
+    navigationItems: @Composable () -> Unit,
+    content: @Composable ((padding: PaddingValues) -> Unit),
+    topBar: @Composable () -> Unit,
+) {
+    Surface {
+        val navigationSuiteScaffoldState = rememberNavigationSuiteScaffoldState()
+        LaunchedEffect(key1 = isNavigationVisible) {
+            if (isNavigationVisible) {
+                navigationSuiteScaffoldState.show()
+            } else {
+                navigationSuiteScaffoldState.hide()
+            }
+        }
+        NavigationSuiteScaffold(
+            modifier = modifier.handleKeyboardShortcuts(keyboardShortcuts),
+            state = navigationSuiteScaffoldState,
+            navigationItemVerticalArrangement = Arrangement.Center,
+            navigationItems = navigationItems
+        ) {
+            Scaffold(
+                modifier = Modifier.fillMaxSize(),
+                topBar = topBar
+            ) { paddingValues ->
+                content(paddingValues)
+            }
         }
     }
 }
+

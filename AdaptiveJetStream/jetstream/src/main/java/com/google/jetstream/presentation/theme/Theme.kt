@@ -27,6 +27,7 @@ import com.google.jetstream.presentation.screens.categories.LocalCategoryGridGri
 fun JetStreamTheme(
     content: @Composable () -> Unit
 ) {
+    // TODO: Consider refactoring this
     CompositionLocalProvider(
         LocalFeaturedCarouselHeight provides rememberFeaturedCarouselHeight(),
         LocalVerticalCardAspectRatio provides rememberVerticalCardAspectRatio(),
@@ -37,6 +38,7 @@ fun JetStreamTheme(
         LocalContentPadding provides rememberContentPadding(),
     ) {
         MaterialTheme(
+            // TODO this is redundant because the dark and light color schemes are the same
             colorScheme = if (isSystemInDarkTheme()) {
                 darkColorScheme
             } else {

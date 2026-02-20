@@ -16,6 +16,7 @@
 
 package com.google.jetstream.presentation.app
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -55,7 +56,7 @@ fun NavigationTree(
     NavHost(
         navController = navController,
         startDestination = Home(),
-        modifier = modifier,
+        modifier = modifier.fillMaxSize(),
     ) {
         composable(
             route = CategoryMovieList(),

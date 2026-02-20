@@ -37,7 +37,7 @@ fun rememberNavigationComponentType(): NavigationComponentType {
     val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
     val isLeanbackEnabled = isLeanbackEnabled()
     val isAutomotiveEnabled = isAutomotiveEnabled()
-    
+
     val isPreview = LocalInspectionMode.current
     val isSpatialUiEnabled = if (isPreview) {
         false

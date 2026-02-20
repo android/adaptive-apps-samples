@@ -16,49 +16,43 @@
 
 package com.google.jetstream.presentation.components
 
-import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import com.google.jetstream.data.entities.MovieCategory
 import com.google.jetstream.presentation.screens.categories.CategoriesScreenUiState
 import com.google.jetstream.presentation.theme.JetStreamTheme
 
-@Preview(device = Devices.PHONE, name = "Phone preview")
+@Preview(device = Devices.PHONE, name = "Phone")
 annotation class PhonePreview
 
-@Preview(device = Devices.FOLDABLE, name = "Foldable preview")
+@Preview(device = Devices.FOLDABLE, name = "Foldable")
 annotation class FoldablePreview
 
-@Preview(device = Devices.TABLET, name = "Tablet preview")
+@Preview(device = Devices.TABLET, name = "Tablet")
 annotation class TabletPreview
 
-@Preview(device = Devices.DESKTOP, name = "Desktop preview")
+@Preview(device = Devices.DESKTOP, name = "Desktop")
 annotation class DesktopPreview
 
-@Preview(device = Devices.TV_1080p, name = "TV Preview")
+@Preview(device = Devices.TV_1080p, name = "TV")
 annotation class TvPreview
 
+@Preview(device = Devices.AUTOMOTIVE_1024p, name = "Auto")
+annotation class AutoPreview
+
+@PhonePreview
 @FoldablePreview
 @TabletPreview
 @DesktopPreview
 @TvPreview
-annotation class LargeScreensPreview
-
-@PhonePreview
-@LargeScreensPreview
+@AutoPreview
 annotation class AdaptivePreview
 
 @Composable
 fun JetStreamPreview(content: @Composable () -> Unit) {
     JetStreamTheme {
-        CompositionLocalProvider(
-            LocalContentColor provides MaterialTheme.colorScheme.onSurface
-        ) {
-            content()
-        }
+        content()
     }
 }
 

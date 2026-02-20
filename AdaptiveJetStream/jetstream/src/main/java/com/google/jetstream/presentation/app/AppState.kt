@@ -36,8 +36,10 @@ class AppState internal constructor(
         private set
 
     var isTopBarFocused by mutableStateOf(false)
+        private set
 
     var isNavigationVisible by mutableStateOf(true)
+        private set
 
     private var navigationComponentType
         by mutableStateOf(NavigationComponentType.NavigationSuiteScaffold)
@@ -69,18 +71,11 @@ class AppState internal constructor(
     }
 
     private fun updateNavigationVisibility() {
-        isNavigationVisible = when (navigationComponentType) {
-            NavigationComponentType.TopBar -> {
-                selectedScreen.navigationVisibility.isVisibleInTopBar
-            }
-            else -> {
-                selectedScreen.navigationVisibility.isVisibleInNavigationSuite
-            }
-        }
+        isNavigationVisible = selectedScreen.shouldShowNavigation(navigationComponentType)
     }
 
     private fun updateSelectedScreen(destination: String) {
-        val screen = Screens.tryFrom(destination) ?: Screens.Home
+        val screen = Screens.tryFrom(destination) ?: error("Could not find screen from $destination")
         updateSelectedScreen(screen)
     }
 
