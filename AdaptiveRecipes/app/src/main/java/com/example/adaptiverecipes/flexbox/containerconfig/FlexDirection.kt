@@ -27,7 +27,10 @@ import com.example.adaptiverecipes.content.BlueRoundedBox
 import com.example.adaptiverecipes.content.GreenRoundedBox
 import com.example.adaptiverecipes.content.RedRoundedBox
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, backgroundColor = 0xFF777777)
+annotation class DirectionPreview
+
+@DirectionPreview
 @Composable
 fun DirectionRow() {
     FlexBox(
@@ -41,7 +44,7 @@ fun DirectionRow() {
     }
 }
 
-@Preview(showBackground = true)
+@DirectionPreview
 @Composable
 fun DirectionRowReverse() {
     FlexBox(
@@ -55,7 +58,7 @@ fun DirectionRowReverse() {
     }
 }
 
-@Preview(showBackground = true)
+@DirectionPreview
 @Composable
 fun DirectionColumn() {
     FlexBox(
@@ -69,7 +72,7 @@ fun DirectionColumn() {
     }
 }
 
-@Preview(showBackground = true)
+@DirectionPreview
 @Composable
 fun DirectionColumnReverse() {
     FlexBox(

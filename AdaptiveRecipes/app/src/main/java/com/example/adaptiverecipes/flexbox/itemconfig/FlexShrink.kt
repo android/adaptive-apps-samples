@@ -18,6 +18,7 @@
 
 package com.example.adaptiverecipes.flexbox.itemconfig
 
+import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.ExperimentalFlexBoxApi
 import androidx.compose.foundation.layout.FlexBox
@@ -32,29 +33,28 @@ import com.example.adaptiverecipes.ui.theme.PastelBlue
 import com.example.adaptiverecipes.ui.theme.PastelGreen
 import com.example.adaptiverecipes.ui.theme.PastelRed
 
-@Preview(showBackground = true, widthDp = 500)
-@Preview(showBackground = true, widthDp = 400)
-@Preview(showBackground = true, widthDp = 300)
+@Preview(showBackground = true, widthDp = 700, backgroundColor = 0xFF777777)
+@Preview(showBackground = true, widthDp = 500, backgroundColor = 0xFF777777)
+@Preview(showBackground = true, widthDp = 450, backgroundColor = 0xFF777777)
+annotation class FlexShrinkPreview
+
+@FlexShrinkPreview
 @Composable
 fun FlexShrink() {
     FlexBox {
         Text(
             "The quick brown fox",
-            fontSize = 20.sp,
+            fontSize = 36.sp,
             modifier = Modifier
-                .padding(4.dp)
                 .background(PastelRed)
-                .padding(8.dp)
-                .flex { shrink = 0f }
+                .flex { shrink = 1f }
         )
         Text(
             "The quick brown fox",
-            fontSize = 20.sp,
+            fontSize = 36.sp,
             modifier = Modifier
-                .padding(4.dp)
                 .background(PastelBlue)
-                .padding(8.dp)
-                .flex { shrink = 1f }
+                .flex { shrink = 0f }
         )
     }
 }

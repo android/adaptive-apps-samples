@@ -27,22 +27,45 @@ import com.example.adaptiverecipes.content.BlueRoundedBox
 import com.example.adaptiverecipes.content.GreenRoundedBox
 import com.example.adaptiverecipes.content.RedRoundedBox
 
-@Preview(showBackground = true, widthDp = 600)
+@Preview(showBackground = true, widthDp = 600, backgroundColor = 0xFF777777)
+annotation class FlexGrowPreview
+
+@FlexGrowPreview
 @Composable
-fun FlexGrowSingle() {
+fun FlexGrowSingleBefore() {
     FlexBox {
-        RedRoundedBox(modifier = Modifier.flex { grow = 1f })
-        BlueRoundedBox()
-        GreenRoundedBox()
+        RedRoundedBox(title = "100dp")
+        BlueRoundedBox(title = "100dp")
+        GreenRoundedBox(title = "100dp")
     }
 }
 
-@Preview(showBackground = true, widthDp = 600)
+@FlexGrowPreview
+@Composable
+fun FlexGrowSingle() {
+    FlexBox {
+        RedRoundedBox(title = "400dp", modifier = Modifier.flex { grow = 1f })
+        BlueRoundedBox(title = "100dp")
+        GreenRoundedBox(title = "100dp")
+    }
+}
+
+
+@FlexGrowPreview
 @Composable
 fun FlexGrowMultiple() {
     FlexBox {
-        RedRoundedBox(modifier = Modifier.flex { grow = 1f })
-        BlueRoundedBox(modifier = Modifier.flex { grow = 2f })
-        GreenRoundedBox(modifier = Modifier.flex { grow = 1f })
+        RedRoundedBox(
+            title = "150dp",
+            modifier = Modifier.flex { grow = 1f }
+        )
+        BlueRoundedBox(
+            title = "200dp",
+            modifier = Modifier.flex { grow = 2f }
+        )
+        GreenRoundedBox(
+            title = "250dp",
+            modifier = Modifier.flex { grow = 3f }
+        )
     }
 }

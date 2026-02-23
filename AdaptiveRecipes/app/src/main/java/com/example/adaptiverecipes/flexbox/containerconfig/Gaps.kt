@@ -20,10 +20,9 @@ package com.example.adaptiverecipes.flexbox.containerconfig
 
 import androidx.compose.foundation.layout.ExperimentalFlexBoxApi
 import androidx.compose.foundation.layout.FlexBox
+import androidx.compose.foundation.layout.FlexDirection
 import androidx.compose.foundation.layout.FlexWrap
-import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.adaptiverecipes.content.BlueRoundedBox
@@ -31,7 +30,7 @@ import com.example.adaptiverecipes.content.GreenRoundedBox
 import com.example.adaptiverecipes.content.OrangeRoundedBox
 import com.example.adaptiverecipes.content.RedRoundedBox
 
-@Preview(showBackground = true, widthDp = 300)
+@Preview(showBackground = true, widthDp = 216, backgroundColor = 0xFF777777)
 @Composable
 fun ColumnGap() {
     FlexBox(
@@ -39,29 +38,26 @@ fun ColumnGap() {
             columnGap = 16.dp
         }
     ) {
-        RedRoundedBox(modifier = Modifier.size(80.dp))
-        BlueRoundedBox(modifier = Modifier.size(80.dp))
-        GreenRoundedBox(modifier = Modifier.size(80.dp))
+        RedRoundedBox()
+        BlueRoundedBox()
     }
 }
 
-@Preview(showBackground = true, widthDp = 300)
+@Preview(showBackground = true, widthDp = 100, backgroundColor = 0xFF777777)
 @Composable
 fun RowGap() {
     FlexBox(
         config = {
-            wrap = FlexWrap.Wrap
+            direction = FlexDirection.Column
             rowGap = 16.dp
         }
     ) {
-        RedRoundedBox(modifier = Modifier.size(120.dp))
-        BlueRoundedBox(modifier = Modifier.size(120.dp))
-        GreenRoundedBox(modifier = Modifier.size(120.dp))
-        OrangeRoundedBox(modifier = Modifier.size(120.dp))
+        RedRoundedBox()
+        BlueRoundedBox()
     }
 }
 
-@Preview(showBackground = true, widthDp = 300)
+@Preview(showBackground = true, widthDp = 216, backgroundColor = 0xFF777777)
 @Composable
 fun CombinedGap() {
     FlexBox(
@@ -70,9 +66,9 @@ fun CombinedGap() {
             gap(16.dp)
         }
     ) {
-        RedRoundedBox(modifier = Modifier.size(120.dp))
-        BlueRoundedBox(modifier = Modifier.size(120.dp))
-        GreenRoundedBox(modifier = Modifier.size(120.dp))
-        OrangeRoundedBox(modifier = Modifier.size(120.dp))
+        RedRoundedBox()
+        BlueRoundedBox()
+        GreenRoundedBox()
+        OrangeRoundedBox()
     }
 }

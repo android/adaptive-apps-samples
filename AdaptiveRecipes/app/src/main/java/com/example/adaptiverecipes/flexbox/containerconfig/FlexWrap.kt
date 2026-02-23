@@ -18,18 +18,27 @@
 
 package com.example.adaptiverecipes.flexbox.containerconfig
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.ExperimentalFlexBoxApi
 import androidx.compose.foundation.layout.FlexBox
 import androidx.compose.foundation.layout.FlexWrap
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.example.adaptiverecipes.R
 import com.example.adaptiverecipes.content.BlueRoundedBox
 import com.example.adaptiverecipes.content.GreenRoundedBox
 import com.example.adaptiverecipes.content.OrangeRoundedBox
 import com.example.adaptiverecipes.content.PinkRoundedBox
 import com.example.adaptiverecipes.content.RedRoundedBox
 
-@Preview(showBackground = true, widthDp = 350)
+@Preview(showBackground = true, widthDp = 350, backgroundColor = 0xFF777777)
+annotation class WrapPreview
+
+@WrapPreview
 @Composable
 fun NoWrap() {
     FlexBox(
@@ -37,14 +46,14 @@ fun NoWrap() {
             wrap = FlexWrap.NoWrap
         }
     ) {
-        RedRoundedBox()
-        BlueRoundedBox()
-        GreenRoundedBox()
-        OrangeRoundedBox()
+        RedRoundedBox(title = "1")
+        BlueRoundedBox(title = "2")
+        GreenRoundedBox(title = "3")
+        OrangeRoundedBox(title = "4", modifier = Modifier.flex { shrink = 0f })
     }
 }
 
-@Preview(showBackground = true, widthDp = 350)
+@WrapPreview
 @Composable
 fun Wrap() {
     FlexBox(
@@ -52,15 +61,15 @@ fun Wrap() {
             wrap = FlexWrap.Wrap
         }
     ) {
-        RedRoundedBox()
-        BlueRoundedBox()
-        GreenRoundedBox()
-        OrangeRoundedBox()
-        PinkRoundedBox()
+        RedRoundedBox(title = "1")
+        BlueRoundedBox(title = "2")
+        GreenRoundedBox(title = "3")
+        OrangeRoundedBox(title = "4")
+        PinkRoundedBox(title = "5")
     }
 }
 
-@Preview(showBackground = true, widthDp = 350)
+@WrapPreview
 @Composable
 fun WrapReverse() {
     FlexBox(
@@ -68,10 +77,10 @@ fun WrapReverse() {
             wrap = FlexWrap.WrapReverse
         }
     ) {
-        RedRoundedBox()
-        BlueRoundedBox()
-        GreenRoundedBox()
-        OrangeRoundedBox()
-        PinkRoundedBox()
+        RedRoundedBox(title = "1")
+        BlueRoundedBox(title = "2")
+        GreenRoundedBox(title = "3")
+        OrangeRoundedBox(title = "4")
+        PinkRoundedBox(title = "5")
     }
 }

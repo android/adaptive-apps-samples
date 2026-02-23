@@ -27,7 +27,10 @@ import com.example.adaptiverecipes.content.BlueRoundedBox
 import com.example.adaptiverecipes.content.GreenRoundedBox
 import com.example.adaptiverecipes.content.RedRoundedBox
 
-@Preview(showBackground = true, widthDp = 600)
+@Preview(showBackground = true, widthDp = 600, backgroundColor = 0xFF777777)
+annotation class JustifyContentPreview
+
+@JustifyContentPreview
 @Composable
 fun JustifyContentStart() {
     FlexBox(
@@ -41,7 +44,7 @@ fun JustifyContentStart() {
     }
 }
 
-@Preview(showBackground = true, widthDp = 600)
+@JustifyContentPreview
 @Composable
 fun JustifyContentEnd() {
     FlexBox(
@@ -55,7 +58,7 @@ fun JustifyContentEnd() {
     }
 }
 
-@Preview(showBackground = true, widthDp = 600)
+@JustifyContentPreview
 @Composable
 fun JustifyContentCenter() {
     FlexBox(
@@ -69,7 +72,7 @@ fun JustifyContentCenter() {
     }
 }
 
-@Preview(showBackground = true, widthDp = 600)
+@JustifyContentPreview
 @Composable
 fun JustifyContentSpaceBetween() {
     FlexBox(
@@ -83,7 +86,7 @@ fun JustifyContentSpaceBetween() {
     }
 }
 
-@Preview(showBackground = true, widthDp = 600)
+@JustifyContentPreview
 @Composable
 fun JustifyContentSpaceAround() {
     FlexBox(
@@ -97,7 +100,7 @@ fun JustifyContentSpaceAround() {
     }
 }
 
-@Preview(showBackground = true, widthDp = 600)
+@JustifyContentPreview
 @Composable
 fun JustifyContentSpaceEvenly() {
     FlexBox(

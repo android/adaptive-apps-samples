@@ -26,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -39,55 +40,62 @@ import com.example.adaptiverecipes.ui.theme.PastelYellow
 
 @Preview
 @Composable
-fun GreenRoundedBox(modifier: Modifier = Modifier, width: Dp = 100.dp) {
+fun GreenRoundedBox(modifier: Modifier = Modifier, width: Dp = 100.dp, title: String = "") {
     RoundedBox(modifier = modifier
         .width(width)
-        .background(PastelGreen)
+        .background(PastelGreen),
+        title = title
     )
 }
 
 @Preview
 @Composable
-fun BlueRoundedBox(modifier: Modifier = Modifier, width: Dp = 100.dp) {
+fun BlueRoundedBox(modifier: Modifier = Modifier, width: Dp = 100.dp, title: String = "") {
     RoundedBox(modifier = modifier
         .width(width)
-        .background(PastelBlue)
+        .background(PastelBlue),
+        title = title
     )
 }
 
 @Preview
 @Composable
-fun RedRoundedBox(modifier: Modifier = Modifier, width: Dp = 100.dp) {
+fun RedRoundedBox(modifier: Modifier = Modifier, width: Dp = 100.dp, title: String = "") {
     RoundedBox(modifier = modifier
         .width(width)
-        .background(PastelRed)
+        .background(PastelRed),
+        title = title
     )
 }
 
 @Preview
 @Composable
-fun PinkRoundedBox(modifier: Modifier = Modifier, width: Dp = 100.dp) {
+fun PinkRoundedBox(modifier: Modifier = Modifier, width: Dp = 100.dp, title: String = "") {
     RoundedBox(modifier = modifier
         .width(width)
-        .background(PastelPink)
+        .background(PastelPink),
+        title = title
     )
 }
 
 @Preview
 @Composable
-fun YellowRoundedBox(modifier: Modifier = Modifier, width: Dp = 100.dp) {
+fun YellowRoundedBox(modifier: Modifier = Modifier, width: Dp = 100.dp, title: String = "") {
     RoundedBox(modifier = modifier
         .width(width)
-        .background(PastelYellow)
+        .background(PastelYellow),
+        title = title
     )
 }
 
 @Preview
 @Composable
-fun OrangeRoundedBox(modifier: Modifier = Modifier, width: Dp = 100.dp) {
-    RoundedBox(modifier = modifier
+fun OrangeRoundedBox(modifier: Modifier = Modifier, width: Dp = 100.dp, title: String = "") {
+    RoundedBox(modifier = Modifier
         .width(width)
         .background(PastelOrange)
+        .then(modifier),
+        title = title
     )
 }
 
@@ -102,6 +110,6 @@ fun RoundedBox(modifier: Modifier = Modifier, title: String = "") {
             .height(100.dp),
         contentAlignment = Alignment.Center
     ) {
-        Text(title, fontSize = 36.sp)
+        Text(title, fontSize = 24.sp, color = Color.DarkGray)
     }
 }

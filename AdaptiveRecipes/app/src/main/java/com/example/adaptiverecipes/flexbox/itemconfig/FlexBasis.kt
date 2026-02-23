@@ -28,7 +28,10 @@ import androidx.compose.ui.unit.dp
 import com.example.adaptiverecipes.content.BlueRoundedBox
 import com.example.adaptiverecipes.content.RedRoundedBox
 
-@Preview(showBackground = true, widthDp = 600)
+@Preview(showBackground = true, widthDp = 600, backgroundColor = 0xFF777777)
+annotation class FlexBasisPreview
+
+@FlexBasisPreview
 @Composable
 fun BasisAuto() {
     FlexBox {
@@ -37,7 +40,7 @@ fun BasisAuto() {
     }
 }
 
-@Preview(showBackground = true, widthDp = 600)
+@FlexBasisPreview
 @Composable
 fun BasisDp() {
     FlexBox {
@@ -46,7 +49,7 @@ fun BasisDp() {
     }
 }
 
-@Preview(showBackground = true, widthDp = 600)
+@FlexBasisPreview
 @Composable
 fun BasisPercent() {
     FlexBox {

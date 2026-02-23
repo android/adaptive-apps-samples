@@ -27,9 +27,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.adaptiverecipes.content.BlueRoundedBox
 import com.example.adaptiverecipes.content.GreenRoundedBox
+import com.example.adaptiverecipes.content.OrangeRoundedBox
+import com.example.adaptiverecipes.content.PinkRoundedBox
 import com.example.adaptiverecipes.content.RedRoundedBox
 
-@Preview(showBackground = true, heightDp = 300)
+@Preview(showBackground = true, widthDp = 500, heightDp = 200, backgroundColor = 0xFF777777)
+annotation class AlignSelfPreview
+
+@AlignSelfPreview
 @Composable
 fun AlignSelfOverride() {
     FlexBox(
@@ -40,5 +45,7 @@ fun AlignSelfOverride() {
         RedRoundedBox()
         BlueRoundedBox(modifier = Modifier.flex { alignSelf = FlexAlignSelf.Center })
         GreenRoundedBox(modifier = Modifier.flex { alignSelf = FlexAlignSelf.End })
+        PinkRoundedBox(modifier = Modifier.flex { alignSelf = FlexAlignSelf.Stretch })
+        OrangeRoundedBox(modifier = Modifier.flex { alignSelf = FlexAlignSelf.Baseline })
     }
 }

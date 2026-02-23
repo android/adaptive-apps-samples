@@ -30,7 +30,10 @@ import com.example.adaptiverecipes.content.BlueRoundedBox
 import com.example.adaptiverecipes.content.GreenRoundedBox
 import com.example.adaptiverecipes.content.RedRoundedBox
 
-@Preview(showBackground = true, heightDp = 200)
+@Preview(showBackground = true, heightDp = 200, backgroundColor = 0xFF777777)
+annotation class AlignItemsPreview
+
+@AlignItemsPreview
 @Composable
 fun AlignItemsStart() {
     FlexBox(
@@ -44,7 +47,7 @@ fun AlignItemsStart() {
     }
 }
 
-@Preview(showBackground = true, heightDp = 200)
+@AlignItemsPreview
 @Composable
 fun AlignItemsEnd() {
     FlexBox(
@@ -58,7 +61,7 @@ fun AlignItemsEnd() {
     }
 }
 
-@Preview(showBackground = true, heightDp = 200)
+@AlignItemsPreview
 @Composable
 fun AlignItemsCenter() {
     FlexBox(
@@ -72,7 +75,7 @@ fun AlignItemsCenter() {
     }
 }
 
-@Preview(showBackground = true, heightDp = 200)
+@AlignItemsPreview
 @Composable
 fun AlignItemsStretch() {
     FlexBox(
@@ -86,7 +89,7 @@ fun AlignItemsStretch() {
     }
 }
 
-@Preview(showBackground = true, heightDp = 200)
+@AlignItemsPreview
 @Composable
 fun AlignItemsBaseline() {
     FlexBox(

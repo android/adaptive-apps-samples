@@ -19,8 +19,8 @@
 package com.example.adaptiverecipes.flexbox.containerconfig
 
 import androidx.compose.foundation.layout.ExperimentalFlexBoxApi
-import androidx.compose.foundation.layout.FlexBox
 import androidx.compose.foundation.layout.FlexAlignContent
+import androidx.compose.foundation.layout.FlexBox
 import androidx.compose.foundation.layout.FlexWrap
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
@@ -31,7 +31,10 @@ import com.example.adaptiverecipes.content.PinkRoundedBox
 import com.example.adaptiverecipes.content.RedRoundedBox
 import com.example.adaptiverecipes.content.YellowRoundedBox
 
-@Preview(showBackground = true, widthDp = 300, heightDp = 400)
+@Preview(showBackground = true, widthDp = 300, heightDp = 400, backgroundColor = 0xFF777777)
+annotation class AlignContentPreview
+
+@AlignContentPreview
 @Composable
 fun AlignContentStart() {
     FlexBox(
@@ -49,7 +52,7 @@ fun AlignContentStart() {
     }
 }
 
-@Preview(showBackground = true, widthDp = 300, heightDp = 400)
+@AlignContentPreview
 @Composable
 fun AlignContentEnd() {
     FlexBox(
@@ -67,7 +70,7 @@ fun AlignContentEnd() {
     }
 }
 
-@Preview(showBackground = true, widthDp = 300, heightDp = 400)
+@AlignContentPreview
 @Composable
 fun AlignContentCenter() {
     FlexBox(
@@ -85,7 +88,7 @@ fun AlignContentCenter() {
     }
 }
 
-@Preview(showBackground = true, widthDp = 300, heightDp = 400)
+@AlignContentPreview
 @Composable
 fun AlignContentStretch() {
     FlexBox(
@@ -103,7 +106,7 @@ fun AlignContentStretch() {
     }
 }
 
-@Preview(showBackground = true, widthDp = 300, heightDp = 400)
+@AlignContentPreview
 @Composable
 fun AlignContentSpaceBetween() {
     FlexBox(
@@ -121,7 +124,7 @@ fun AlignContentSpaceBetween() {
     }
 }
 
-@Preview(showBackground = true, widthDp = 300, heightDp = 400)
+@AlignContentPreview
 @Composable
 fun AlignContentSpaceAround() {
     FlexBox(
