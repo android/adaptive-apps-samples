@@ -34,19 +34,34 @@ annotation class FlexOrderPreview
 @FlexOrderPreview
 @Composable
 fun OrderDefault() {
-    FlexBox{
-        // Declared first, but will be placed after visually
-        RedRoundedBox(
-            title = "World"
-        )
-
-        // Declared second, but will be placed first visually
-        BlueRoundedBox(
-            title = "Hello",
-            modifier = Modifier.flex {
-                order = -1
-            }
-        )
+    FlexBox {
+        RedRoundedBox(title = "1")
+        BlueRoundedBox(title = "2")
+        GreenRoundedBox(title = "3")
+        OrangeRoundedBox(title = "4")
     }
+}
 
+@FlexOrderPreview
+@Composable
+fun OrderReversed() {
+    FlexBox {
+        RedRoundedBox(title = "1", modifier = Modifier.flex { order = 4 })
+        BlueRoundedBox(title = "2", modifier = Modifier.flex { order = 3 })
+        GreenRoundedBox(title = "3", modifier = Modifier.flex { order = 2 })
+        OrangeRoundedBox(title = "4", modifier = Modifier.flex { order = 1 })
+    }
+}
+
+@FlexOrderPreview
+@Composable
+fun OrderMixed() {
+    FlexBox {
+        // Default order is 0.
+        // Use negative to move to front, positive to move to back.
+        RedRoundedBox(title = "1 (0)")
+        BlueRoundedBox(title = "2 (10)", modifier = Modifier.flex { order = 10 })
+        GreenRoundedBox(title = "3 (-1)", modifier = Modifier.flex { order = -1 })
+        OrangeRoundedBox(title = "4 (0)")
+    }
 }

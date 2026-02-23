@@ -3,6 +3,8 @@ package com.example.adaptiverecipes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.android.tools.screenshot.PreviewTest
+import com.example.adaptiverecipes.flexbox.basic.HelloWorld
+import com.example.adaptiverecipes.flexbox.basic.WrapWithGrow
 import com.example.adaptiverecipes.flexbox.containerconfig.AlignContentCenter
 import com.example.adaptiverecipes.flexbox.containerconfig.AlignContentEnd
 import com.example.adaptiverecipes.flexbox.containerconfig.AlignContentSpaceAround
@@ -36,14 +38,22 @@ import com.example.adaptiverecipes.flexbox.itemconfig.BasisDp
 import com.example.adaptiverecipes.flexbox.itemconfig.BasisPercent
 import com.example.adaptiverecipes.flexbox.itemconfig.FlexGrowMultiple
 import com.example.adaptiverecipes.flexbox.itemconfig.FlexGrowSingle
+import com.example.adaptiverecipes.flexbox.itemconfig.FlexGrowSingleBefore
 import com.example.adaptiverecipes.flexbox.itemconfig.FlexShrink
-import com.example.adaptiverecipes.flexbox.basic.WrapWithGrow
+import com.example.adaptiverecipes.flexbox.itemconfig.OrderDefault
+import com.example.adaptiverecipes.flexbox.itemconfig.OrderMixed
+import com.example.adaptiverecipes.flexbox.itemconfig.OrderReversed
 
 
 @Preview(showBackground = true, backgroundColor = 0xFF777777)
 annotation class PreviewWithBackground
 
 class FlexBoxScreenshotTest {
+
+    @PreviewTest
+    @Preview(showBackground = true, backgroundColor = 0xFF777777)
+    @Composable
+    fun HelloWorldScreenshot() = HelloWorld()
 
     @PreviewTest
     @Preview(widthDp = 1200, showBackground = true, backgroundColor = 0xFF777777)
@@ -173,19 +183,24 @@ class FlexBoxScreenshotTest {
     fun AlignContentSpaceAroundScreenshot() = AlignContentSpaceAround()
 
     @PreviewTest
-    @Preview(showBackground = true, widthDp = 300, backgroundColor = 0xFF777777)
+    @Preview(showBackground = true, widthDp = 216, backgroundColor = 0xFF777777)
     @Composable
     fun ColumnGapScreenshot() = ColumnGap()
 
     @PreviewTest
-    @Preview(showBackground = true, widthDp = 300, backgroundColor = 0xFF777777)
+    @Preview(showBackground = true, widthDp = 100, backgroundColor = 0xFF777777)
     @Composable
     fun RowGapScreenshot() = RowGap()
 
     @PreviewTest
-    @Preview(showBackground = true, widthDp = 300, backgroundColor = 0xFF777777)
+    @Preview(showBackground = true, widthDp = 216, backgroundColor = 0xFF777777)
     @Composable
     fun CombinedGapScreenshot() = CombinedGap()
+
+    @PreviewTest
+    @Preview(showBackground = true, widthDp = 600, backgroundColor = 0xFF777777)
+    @Composable
+    fun FlexGrowSingleBeforeScreenshot() = FlexGrowSingleBefore()
 
     @PreviewTest
     @Preview(showBackground = true, widthDp = 600, backgroundColor = 0xFF777777)
@@ -198,9 +213,9 @@ class FlexBoxScreenshotTest {
     fun FlexGrowMultipleScreenshot() = FlexGrowMultiple()
 
     @PreviewTest
+    @Preview(showBackground = true, widthDp = 700, backgroundColor = 0xFF777777)
     @Preview(showBackground = true, widthDp = 500, backgroundColor = 0xFF777777)
-    @Preview(showBackground = true, widthDp = 400, backgroundColor = 0xFF777777)
-    @Preview(showBackground = true, widthDp = 300, backgroundColor = 0xFF777777)
+    @Preview(showBackground = true, widthDp = 450, backgroundColor = 0xFF777777)
     @Composable
     fun FlexShrinkScreenshot() = FlexShrink()
 
@@ -223,4 +238,19 @@ class FlexBoxScreenshotTest {
     @Preview(showBackground = true, heightDp = 300, backgroundColor = 0xFF777777)
     @Composable
     fun AlignSelfOverrideScreenshot() = AlignSelfOverride()
+
+    @PreviewTest
+    @Preview(showBackground = true, backgroundColor = 0xFF777777)
+    @Composable
+    fun OrderDefaultScreenshot() = OrderDefault()
+
+    @PreviewTest
+    @Preview(showBackground = true, backgroundColor = 0xFF777777)
+    @Composable
+    fun OrderReversedScreenshot() = OrderReversed()
+
+    @PreviewTest
+    @Preview(showBackground = true, backgroundColor = 0xFF777777)
+    @Composable
+    fun OrderMixedScreenshot() = OrderMixed()
 }
