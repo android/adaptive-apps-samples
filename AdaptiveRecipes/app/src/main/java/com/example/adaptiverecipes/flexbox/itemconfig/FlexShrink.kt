@@ -21,6 +21,7 @@ package com.example.adaptiverecipes.flexbox.itemconfig
 import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.ExperimentalFlexBoxApi
+import androidx.compose.foundation.layout.FlexBasis
 import androidx.compose.foundation.layout.FlexBox
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
@@ -29,6 +30,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.adaptiverecipes.content.BlueRoundedBox
+import com.example.adaptiverecipes.content.GreenRoundedBox
+import com.example.adaptiverecipes.content.RedRoundedBox
 import com.example.adaptiverecipes.ui.theme.PastelBlue
 import com.example.adaptiverecipes.ui.theme.PastelGreen
 import com.example.adaptiverecipes.ui.theme.PastelRed
@@ -58,3 +62,66 @@ fun FlexShrink() {
         )
     }
 }
+
+@Preview(showBackground = true, widthDp = 600, backgroundColor = 0xFF777777)
+@Composable
+fun FlexShrinkExampleNotShrunk(){
+    FlexBox {
+        RedRoundedBox(
+            title = "200dp",
+            modifier = Modifier
+                .flex {
+                    basis = FlexBasis.Dp(200.dp)
+                    shrink = 1f
+                }
+        )
+        BlueRoundedBox(
+            title = "200dp",
+            modifier = Modifier
+                .flex {
+                    basis = FlexBasis.Dp(200.dp)
+                    shrink = 2f
+                }
+        )
+        GreenRoundedBox(
+            title = "200dp",
+            modifier = Modifier
+                .flex {
+                    basis = FlexBasis.Dp(200.dp)
+                    shrink = 3f
+                }
+        )
+    }
+}
+
+@Preview(showBackground = true, widthDp = 360, backgroundColor = 0xFF777777)
+@Composable
+fun FlexShrinkExampleShrunk(){
+    FlexBox {
+        RedRoundedBox(
+            title = "160dp",
+            modifier = Modifier
+                .flex {
+                    basis = FlexBasis.Dp(200.dp)
+                    shrink = 1f
+                }
+        )
+        BlueRoundedBox(
+            title = "120dp",
+            modifier = Modifier
+                .flex {
+                    basis = FlexBasis.Dp(200.dp)
+                    shrink = 2f
+                }
+        )
+        GreenRoundedBox(
+            title = "80dp",
+            modifier = Modifier
+                .flex {
+                    basis = FlexBasis.Dp(200.dp)
+                    shrink = 3f
+                }
+        )
+    }
+}
+

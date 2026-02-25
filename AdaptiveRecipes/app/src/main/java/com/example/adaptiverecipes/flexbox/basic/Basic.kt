@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Devices.AUTOMOTIVE_1024p
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -35,9 +36,6 @@ import com.example.adaptiverecipes.content.GreenRoundedBox
 import com.example.adaptiverecipes.content.OrangeRoundedBox
 import com.example.adaptiverecipes.content.PinkRoundedBox
 import com.example.adaptiverecipes.content.RedRoundedBox
-
-
-
 
 @Preview(showBackground = true)
 @Composable
