@@ -42,13 +42,14 @@ import com.google.jetstream.presentation.theme.JetStreamTheme
 @Composable
 fun AboutSection(isExpanded: Boolean = true) {
     val context = LocalContext.current
-    val versionNumber = if (LocalInspectionMode.current) {
-        "Preview version"
-    } else {
-        remember(context) {
-            context.getVersionNumber()
+    val versionNumber =
+        if (LocalInspectionMode.current) {
+            "Preview version"
+        } else {
+            remember(context) {
+                context.getVersionNumber()
+            }
         }
-    }
 
     val padding = if (isExpanded) 72.dp else 16.dp
     with(StringConstants.Composable.Placeholders) {
@@ -56,35 +57,38 @@ fun AboutSection(isExpanded: Boolean = true) {
             if (isExpanded) {
                 Text(
                     text = AboutSectionTitle,
-                    style = MaterialTheme.typography.headlineSmall
+                    style = MaterialTheme.typography.headlineSmall,
                 )
             }
             Text(
-                modifier = Modifier
-                    .graphicsLayer { alpha = 0.8f }
-                    .padding(top = 16.dp),
+                modifier =
+                    Modifier
+                        .graphicsLayer { alpha = 0.8f }
+                        .padding(top = 16.dp),
                 text = AboutSectionDescription,
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             Box(
-                modifier = Modifier
-                    .padding(top = 16.dp)
-                    .fillMaxWidth()
-                    .height(2.dp)
-                    .background(MaterialTheme.colorScheme.outline.copy(alpha = 0.6f))
+                modifier =
+                    Modifier
+                        .padding(top = 16.dp)
+                        .fillMaxWidth()
+                        .height(2.dp)
+                        .background(MaterialTheme.colorScheme.outline.copy(alpha = 0.6f)),
             )
             Text(
-                modifier = Modifier
-                    .graphicsLayer { alpha = 0.6f }
-                    .padding(top = 16.dp),
+                modifier =
+                    Modifier
+                        .graphicsLayer { alpha = 0.6f }
+                        .padding(top = 16.dp),
                 text = AboutSectionAppVersionTitle,
-                style = MaterialTheme.typography.labelMedium
+                style = MaterialTheme.typography.labelMedium,
             )
             Text(
                 modifier = Modifier.padding(top = 8.dp),
                 text = versionNumber,
-                style = MaterialTheme.typography.labelLarge
+                style = MaterialTheme.typography.labelLarge,
             )
         }
     }
@@ -100,7 +104,6 @@ private fun Context.getVersionNumber(): String {
 @FoldablePreview
 @Composable
 fun AboutSectionCompactPreview() {
-
     JetStreamTheme {
         Box(modifier = Modifier.background(MaterialTheme.colorScheme.surface)) {
             AboutSection(isExpanded = false)

@@ -34,27 +34,29 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun DotSeparatedRow(
     modifier: Modifier = Modifier,
-    texts: List<String>
+    texts: List<String>,
 ) {
     Row(
         modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         texts.forEachIndexed { index, text ->
             Text(
                 modifier = Modifier.weight(1f, fill = false),
                 text = text,
-                style = MaterialTheme.typography.titleSmall.copy(
-                    fontWeight = FontWeight.Normal
-                )
+                style =
+                    MaterialTheme.typography.titleSmall.copy(
+                        fontWeight = FontWeight.Normal,
+                    ),
             )
             if (index != texts.lastIndex) {
                 Box(
-                    modifier = Modifier
-                        .padding(horizontal = 8.dp)
-                        .clip(CircleShape)
-                        .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 1f))
-                        .size(4.dp)
+                    modifier =
+                        Modifier
+                            .padding(horizontal = 8.dp)
+                            .clip(CircleShape)
+                            .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 1f))
+                            .size(4.dp),
                 )
             }
         }

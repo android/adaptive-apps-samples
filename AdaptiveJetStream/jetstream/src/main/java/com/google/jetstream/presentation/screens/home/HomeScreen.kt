@@ -75,8 +75,13 @@ fun HomeScreen(
             )
         }
 
-        is HomeScreenUiState.Loading -> Loading(modifier = Modifier.fillMaxSize())
-        is HomeScreenUiState.Error -> Error(modifier = Modifier.fillMaxSize())
+        is HomeScreenUiState.Loading -> {
+            Loading(modifier = Modifier.fillMaxSize())
+        }
+
+        is HomeScreenUiState.Error -> {
+            Error(modifier = Modifier.fillMaxSize())
+        }
     }
 }
 
@@ -92,7 +97,6 @@ internal fun Catalog(
     modifier: Modifier = Modifier,
     isTopBarVisible: Boolean = true,
 ) {
-
     val lazyListState = rememberLazyListState()
     val contentPadding = LocalContentPadding.current
 
@@ -123,24 +127,25 @@ internal fun Catalog(
                 movies = featuredMovies,
                 padding = contentPadding,
                 goToVideoPlayer = goToVideoPlayer,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(LocalFeaturedCarouselHeight.current)
-                    .focusRequester(carousel)
-                    .focusProperties {
-                        onExit = {
-                            when (requestedFocusDirection) {
-                                FocusDirection.Down -> {
-                                    trending.requestFocus()
-                                }
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(LocalFeaturedCarouselHeight.current)
+                        .focusRequester(carousel)
+                        .focusProperties {
+                            onExit = {
+                                when (requestedFocusDirection) {
+                                    FocusDirection.Down -> {
+                                        trending.requestFocus()
+                                    }
 
-                                FocusDirection.Next -> {
-                                    trending.requestFocus()
+                                    FocusDirection.Next -> {
+                                        trending.requestFocus()
+                                    }
                                 }
                             }
                         }
-                    }
-                    .focusGroup()
+                        .focusGroup(),
             )
         }
         item(contentType = "MoviesRow") {
@@ -148,16 +153,17 @@ internal fun Catalog(
                 movieList = trendingMovies,
                 title = StringConstants.Composable.HomeScreenTrendingTitle,
                 onMovieSelected = onMovieClick,
-                modifier = Modifier
-                    .padding(top = 16.dp)
-                    .focusRequester(trending)
+                modifier =
+                    Modifier
+                        .padding(top = 16.dp)
+                        .focusRequester(trending),
             )
         }
         item(contentType = "Top10MoviesList") {
             Top10MoviesList(
                 movieList = top10Movies,
                 onMovieClick = onMovieClick,
-                modifier = Modifier.focusRequester(top10)
+                modifier = Modifier.focusRequester(top10),
             )
         }
         item(contentType = "MoviesRow") {
@@ -165,17 +171,18 @@ internal fun Catalog(
                 movieList = nowPlayingMovies,
                 title = StringConstants.Composable.HomeScreenNowPlayingMoviesTitle,
                 onMovieSelected = onMovieClick,
-                modifier = Modifier
-                    .padding(top = 16.dp)
-                    .focusRequester(nowPlaying)
-                    .focusProperties {
-                        onExit = {
-                            when (requestedFocusDirection) {
-                                FocusDirection.Up -> top10.requestFocus()
-                                FocusDirection.Previous -> top10.requestFocus()
+                modifier =
+                    Modifier
+                        .padding(top = 16.dp)
+                        .focusRequester(nowPlaying)
+                        .focusProperties {
+                            onExit = {
+                                when (requestedFocusDirection) {
+                                    FocusDirection.Up -> top10.requestFocus()
+                                    FocusDirection.Previous -> top10.requestFocus()
+                                }
                             }
-                        }
-                    }
+                        },
             )
         }
     }

@@ -47,26 +47,28 @@ import com.google.jetstream.presentation.theme.Teal300
 import com.google.jetstream.presentation.theme.Yellow300
 import kotlin.random.Random
 
-val pairs = listOf(
-    Coral to LightYellow,
-    Red300 to BlueGray300,
-    Pink300 to Gray300,
-    Purple300 to Brown300,
-    DeepPurple300 to DeepOrange300,
-    Indigo300 to Orange300,
-    Blue300 to Amber300,
-    LightBlue300 to Yellow300,
-    Cyan300 to Lime300,
-    Teal300 to LightGreen300,
-    Green300 to Coral,
-)
+val pairs =
+    listOf(
+        Coral to LightYellow,
+        Red300 to BlueGray300,
+        Pink300 to Gray300,
+        Purple300 to Brown300,
+        DeepPurple300 to DeepOrange300,
+        Indigo300 to Orange300,
+        Blue300 to Amber300,
+        LightBlue300 to Yellow300,
+        Cyan300 to Lime300,
+        Teal300 to LightGreen300,
+        Green300 to Coral,
+    )
 
 @Composable
 fun GradientBg(seed: Long = 0) {
     Box(
-        modifier = Modifier
-            .background(Brush.radialGradient(pairs.random(Random(seed)).toList()))
-            .fillMaxWidth()
-            .height(200.dp)
+        modifier =
+            Modifier
+                .background(Brush.radialGradient(pairs.random(Random(seed)).toList()))
+                .fillMaxWidth()
+                .height(200.dp),
     )
 }

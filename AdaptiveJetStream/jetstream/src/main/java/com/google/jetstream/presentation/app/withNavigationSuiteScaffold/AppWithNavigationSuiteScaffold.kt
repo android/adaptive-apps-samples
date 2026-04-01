@@ -46,7 +46,7 @@ fun AppWithNavigationSuiteScaffold(
     navController: NavHostController,
     modifier: Modifier = Modifier,
     keyboardShortcuts: List<KeyboardShortcut> = emptyList(),
-    content: @Composable (PaddingValues) -> Unit
+    content: @Composable (PaddingValues) -> Unit,
 ) {
     EnableProminentMovieListOverride {
         NavigationSuiteScaffoldLayout(
@@ -72,27 +72,29 @@ fun AppWithNavigationSuiteScaffold(
                 val hasXrSpatialFeature = hasXrSpatialFeature()
 
                 // TODO: This is specific to XR home-space mode
-                val topBarPaddingTop = remember(hasXrSpatialFeature) {
-                    if (hasXrSpatialFeature) {
-                        32.dp
-                    } else {
-                        0.dp
+                val topBarPaddingTop =
+                    remember(hasXrSpatialFeature) {
+                        if (hasXrSpatialFeature) {
+                            32.dp
+                        } else {
+                            0.dp
+                        }
                     }
-                }
 
                 AnimatedVisibility(
                     visible = appState.isNavigationVisible && appState.isTopBarVisible,
                     enter = slideInVertically(),
-                    exit = slideOutVertically()
+                    exit = slideOutVertically(),
                 ) {
                     TopAppBar(
-                        modifier = Modifier
-                            .padding(
-                                start = 24.dp,
-                                end = 24.dp,
-                                top = topBarPaddingTop
-                            )
-                            .onFocusChanged { appState.updateTopBarFocusState(it.hasFocus) },
+                        modifier =
+                            Modifier
+                                .padding(
+                                    start = 24.dp,
+                                    end = 24.dp,
+                                    top = topBarPaddingTop,
+                                )
+                                .onFocusChanged { appState.updateTopBarFocusState(it.hasFocus) },
                         selectedScreen = appState.selectedScreen,
                         showScreen = { screen ->
                             if (screen != appState.selectedScreen) {
@@ -101,7 +103,7 @@ fun AppWithNavigationSuiteScaffold(
                         },
                     )
                 }
-            }
+            },
         )
     }
 }
@@ -128,15 +130,14 @@ fun NavigationSuiteScaffoldLayout(
             modifier = modifier.handleKeyboardShortcuts(keyboardShortcuts),
             state = navigationSuiteScaffoldState,
             navigationItemVerticalArrangement = Arrangement.Center,
-            navigationItems = navigationItems
+            navigationItems = navigationItems,
         ) {
             Scaffold(
                 modifier = Modifier.fillMaxSize(),
-                topBar = topBar
+                topBar = topBar,
             ) { paddingValues ->
                 content(paddingValues)
             }
         }
     }
 }
-

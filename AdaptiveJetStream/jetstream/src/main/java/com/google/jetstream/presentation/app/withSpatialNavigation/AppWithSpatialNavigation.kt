@@ -64,7 +64,7 @@ fun AppWithSpatialNavigation(
     navController: NavHostController,
     keyboardShortcuts: List<KeyboardShortcut>,
     modifier: Modifier,
-    content: @Composable ((padding: PaddingValues) -> Unit)
+    content: @Composable ((padding: PaddingValues) -> Unit),
 ) {
     EnableProminentMovieListOverride {
         SpatialNavigationLayout(
@@ -76,13 +76,12 @@ fun AppWithSpatialNavigation(
             },
             onTopBarFocusChanged = { appState.updateTopBarFocusState(it) },
             containerColor = appState.selectedScreen.xrContainerColor(),
-            modifier = modifier.fillMaxSize().handleKeyboardShortcuts(keyboardShortcuts)
+            modifier = modifier.fillMaxSize().handleKeyboardShortcuts(keyboardShortcuts),
         ) { paddingValues ->
             content(paddingValues)
         }
     }
 }
-
 
 @OptIn(ExperimentalMaterial3XrApi::class)
 @Composable
@@ -94,38 +93,41 @@ fun SpatialNavigationLayout(
     onTopBarFocusChanged: (Boolean) -> Unit,
     containerColor: Color,
     modifier: Modifier = Modifier,
-    content: @Composable (PaddingValues) -> Unit
+    content: @Composable (PaddingValues) -> Unit,
 ) {
-    val resizePolicy = remember {
-        ResizePolicy(minimumSize = DpVolumeSize(800.dp, 800.dp, 0.dp))
-    }
-    val dragPolicy = remember {
-        MovePolicy()
-    }
+    val resizePolicy =
+        remember {
+            ResizePolicy(minimumSize = DpVolumeSize(800.dp, 800.dp, 0.dp))
+        }
+    val dragPolicy =
+        remember {
+            MovePolicy()
+        }
 
     Subspace {
         SpatialPanel(
             resizePolicy = resizePolicy,
             dragPolicy = dragPolicy,
-            modifier = SubspaceModifier.width(1280.dp).height(900.dp)
+            modifier = SubspaceModifier.width(1280.dp).height(900.dp),
         ) {
             Scaffold(
                 topBar = {
                     AnimatedVisibility(
                         visible = isTopBarVisible,
                         enter = slideInVertically(),
-                        exit = slideOutVertically()
+                        exit = slideOutVertically(),
                     ) {
                         TopAppBar(
                             selectedScreen = selectedScreen,
                             showScreen = { onShowScreen(it) },
-                            modifier = Modifier
-                                .padding(
-                                    start = 24.dp,
-                                    end = 24.dp,
-                                    top = 32.dp
-                                )
-                                .onFocusChanged { onTopBarFocusChanged(it.hasFocus) },
+                            modifier =
+                                Modifier
+                                    .padding(
+                                        start = 24.dp,
+                                        end = 24.dp,
+                                        top = 32.dp,
+                                    )
+                                    .onFocusChanged { onTopBarFocusChanged(it.hasFocus) },
                         )
                     }
                 },
@@ -136,7 +138,8 @@ fun SpatialNavigationLayout(
             }
             AnimatedVisibility(isNavigationVisible) {
                 NavigationInObiter(
-                    screens = Screens.mainNavigationScreens, currentScreen = selectedScreen
+                    screens = Screens.mainNavigationScreens,
+                    currentScreen = selectedScreen,
                 ) {
                     onShowScreen(it)
                 }
@@ -150,13 +153,13 @@ private fun NavigationInObiter(
     screens: List<Screens>,
     currentScreen: Screens,
     spatialConfiguration: SpatialConfiguration = LocalSpatialConfiguration.current,
-    onScreenSelected: (Screens) -> Unit = {}
+    onScreenSelected: (Screens) -> Unit = {},
 ) {
     NavigationRailInObiter(
         screens = screens,
         currentScreen = currentScreen,
         spatialConfiguration = spatialConfiguration,
-        onScreenSelected = onScreenSelected
+        onScreenSelected = onScreenSelected,
     )
 }
 
@@ -166,7 +169,7 @@ private fun NavigationRailInObiter(
     screens: List<Screens>,
     currentScreen: Screens,
     spatialConfiguration: SpatialConfiguration = LocalSpatialConfiguration.current,
-    onScreenSelected: (Screens) -> Unit = {}
+    onScreenSelected: (Screens) -> Unit = {},
 ) {
     NavigationRail {
         screens.forEach { screen ->
@@ -182,12 +185,12 @@ private fun NavigationRailInObiter(
                     Icon(
                         imageVector = ImageVector.vectorResource(screen.navIcon),
                         contentDescription = screen.name,
-                        tint = MaterialTheme.colorScheme.primary
+                        tint = MaterialTheme.colorScheme.primary,
                     )
                 },
                 label = {
                     Text(screen.name, color = MaterialTheme.colorScheme.primary)
-                }
+                },
             )
         }
         NavigationRailItem(
@@ -198,15 +201,15 @@ private fun NavigationRailInObiter(
                     imageVector = ImageVector.vectorResource(R.drawable.ic_collapse_content),
                     modifier = Modifier.size(48.dp),
                     contentDescription = stringResource(R.string.home_space_mode),
-                    tint = MaterialTheme.colorScheme.primary
+                    tint = MaterialTheme.colorScheme.primary,
                 )
             },
             label = {
                 Text(
                     stringResource(R.string.home_space_mode),
-                    color = MaterialTheme.colorScheme.primary
+                    color = MaterialTheme.colorScheme.primary,
                 )
-            }
+            },
         )
     }
 }

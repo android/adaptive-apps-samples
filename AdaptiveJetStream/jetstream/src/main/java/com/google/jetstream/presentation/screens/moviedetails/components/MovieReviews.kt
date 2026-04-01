@@ -59,23 +59,25 @@ fun MovieReviews(
     contentPadding: Padding = LocalContentPadding.current,
 ) {
     Column(
-        modifier = modifier
-            .padding(horizontal = contentPadding.start)
-            .padding(bottom = contentPadding.bottom)
+        modifier =
+            modifier
+                .padding(horizontal = contentPadding.start)
+                .padding(bottom = contentPadding.bottom),
     ) {
         Text(text = stringResource(R.string.reviews), style = MaterialTheme.typography.titleMedium)
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(20.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp),
+            horizontalArrangement = Arrangement.spacedBy(20.dp),
         ) {
             reviewsAndRatings.forEach { reviewAndRating ->
                 Review(
                     reviewAndRating,
                     modifier
                         .weight(1f)
-                        .height(96.dp)
+                        .height(96.dp),
                 )
             }
         }
@@ -91,59 +93,65 @@ private fun Review(
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.surface)
-            .focusable(interactionSource = interactionSource)
-            .indication(
-                interactionSource = interactionSource,
-                indication = borderIndication(
-                    focused = Border(
-                        stroke = JetStreamBorder.stroke.copy(width = ReviewItemOutlineWidth),
-                        shape = JetStreamCardShape
-                    )
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.surface)
+                .focusable(interactionSource = interactionSource)
+                .indication(
+                    interactionSource = interactionSource,
+                    indication =
+                        borderIndication(
+                            focused =
+                                Border(
+                                    stroke = JetStreamBorder.stroke.copy(width = ReviewItemOutlineWidth),
+                                    shape = JetStreamCardShape,
+                                ),
+                        ),
                 )
-            )
-            .then(modifier),
-        horizontalArrangement = Arrangement.SpaceBetween
+                .then(modifier),
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Box(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .fillMaxWidth(0.3f)
-                    .background(
-                        MaterialTheme.colorScheme.surfaceColorAtElevation(4.dp)
-                    ),
+                modifier =
+                    Modifier
+                        .fillMaxHeight()
+                        .fillMaxWidth(0.3f)
+                        .background(
+                            MaterialTheme.colorScheme.surfaceColorAtElevation(4.dp),
+                        ),
             ) {
                 Icon(
                     imageVector = Icons.Default.Star,
                     contentDescription = null,
-                    modifier = Modifier
-                        .fillMaxSize(0.8f)
-                        .align(Alignment.Center),
+                    modifier =
+                        Modifier
+                            .fillMaxSize(0.8f)
+                            .align(Alignment.Center),
                 )
             }
             Column(
-                modifier = Modifier.padding(start = 16.dp)
+                modifier = Modifier.padding(start = 16.dp),
             ) {
                 Text(
                     text = reviewAndRating.reviewerName,
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.titleMedium,
                 )
                 Text(
-                    text = StringConstants
-                        .Composable
-                        .reviewCount(reviewAndRating.reviewCount),
+                    text =
+                        StringConstants
+                            .Composable
+                            .reviewCount(reviewAndRating.reviewCount),
                     style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.alpha(0.75f)
+                    modifier = Modifier.alpha(0.75f),
                 )
             }
         }
         Text(
             text = reviewAndRating.reviewRating,
             style = MaterialTheme.typography.headlineLarge,
-            modifier = Modifier.padding(end = 16.dp)
+            modifier = Modifier.padding(end = 16.dp),
         )
     }
 }

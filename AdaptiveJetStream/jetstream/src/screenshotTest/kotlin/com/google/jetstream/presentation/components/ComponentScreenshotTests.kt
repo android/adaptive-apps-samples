@@ -81,13 +81,13 @@ fun MovieCardScreenshot() {
             Box(Modifier.padding(16.dp)) {
                 MovieCard(
                     onClick = {},
-                    title = { Text("Movie Title") }
+                    title = { Text("Movie Title") },
                 ) {
                     Box(
                         Modifier
                             .size(150.dp, 200.dp)
                             .background(Color.Gray),
-                        contentAlignment = Alignment.Center
+                        contentAlignment = Alignment.Center,
                     ) {
                         Text("Poster")
                     }
@@ -126,7 +126,7 @@ fun UserAvatarScreenshot() {
 @PreviewTest
 @Preview
 @Composable
-fun TopAppBarPreview(){
+fun TopAppBarPreview() {
     TopAppBar(
         selectedScreen = Screens.Home,
         showScreen = {},
@@ -136,7 +136,6 @@ fun TopAppBarPreview(){
 @PreviewTest
 @Preview
 @Composable
-fun RequestFullSpaceModeItemPreview(){
+fun RequestFullSpaceModeItemPreview() {
     RequestFullSpaceModeItem(spatialConfiguration = object : SpatialConfiguration {})
 }
-

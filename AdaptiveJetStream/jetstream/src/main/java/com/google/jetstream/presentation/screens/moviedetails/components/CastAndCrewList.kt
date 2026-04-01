@@ -54,24 +54,26 @@ import com.google.jetstream.presentation.theme.ourColors
 @Composable
 fun CastAndCrewList(
     castAndCrew: List<MovieCast>,
-    contentPadding: Padding = LocalContentPadding.current
+    contentPadding: Padding = LocalContentPadding.current,
 ) {
     Column(
         modifier = Modifier.padding(top = contentPadding.top),
     ) {
         Text(
             text = stringResource(R.string.cast_and_crew),
-            style = MaterialTheme.typography.titleMedium.copy(
-                fontSize = 18.sp
-            ),
-            modifier = Modifier.padding(start = contentPadding.start)
+            style =
+                MaterialTheme.typography.titleMedium.copy(
+                    fontSize = 18.sp,
+                ),
+            modifier = Modifier.padding(start = contentPadding.start),
         )
         // ToDo: specify the pivot offset
         LazyRow(
-            modifier = Modifier
-                .padding(top = 16.dp)
-                .focusRestorer(),
-            contentPadding = PaddingValues(start = contentPadding.start)
+            modifier =
+                Modifier
+                    .padding(top = 16.dp)
+                    .focusRestorer(),
+            contentPadding = PaddingValues(start = contentPadding.start),
         ) {
             items(castAndCrew, key = { it.id }) {
                 CastAndCrewItem(it, modifier = Modifier.width(144.dp))
@@ -88,21 +90,23 @@ private fun CastAndCrewItem(
     val interactionSource = remember { MutableInteractionSource() }
 
     ClassicCard(
-        modifier = modifier
-            .padding(end = 20.dp, bottom = 16.dp)
-            .aspectRatio(1 / 1.8f)
-            .borderIndication(interactionSource, focused = JetStreamBorder),
+        modifier =
+            modifier
+                .padding(end = 20.dp, bottom = 16.dp)
+                .aspectRatio(1 / 1.8f)
+                .borderIndication(interactionSource, focused = JetStreamBorder),
         shape = JetStreamCardShape,
         title = {
             Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 10.dp)
-                    .padding(horizontal = 12.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(top = 10.dp)
+                        .padding(horizontal = 12.dp),
                 text = castMember.realName,
                 maxLines = 1,
                 style = MaterialTheme.typography.labelMedium,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
             )
         },
         subtitle = {
@@ -110,22 +114,24 @@ private fun CastAndCrewItem(
                 text = castMember.characterName,
                 maxLines = 1,
                 style = MaterialTheme.typography.bodySmall,
-                modifier = Modifier
-                    .alpha(0.75f)
-                    .fillMaxWidth()
-                    .padding(horizontal = 12.dp),
-                overflow = TextOverflow.Ellipsis
+                modifier =
+                    Modifier
+                        .alpha(0.75f)
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.dp),
+                overflow = TextOverflow.Ellipsis,
             )
         },
         image = {
             Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(0.725f)
-                    .background(ourColors.random())
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(0.725f)
+                        .background(ourColors.random()),
             )
         },
         onClick = {},
-        interactionSource = interactionSource
+        interactionSource = interactionSource,
     )
 }

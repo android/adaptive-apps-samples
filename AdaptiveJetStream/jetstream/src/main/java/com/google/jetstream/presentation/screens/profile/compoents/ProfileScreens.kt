@@ -34,7 +34,8 @@ enum class ProfileScreens(
     Subtitles(Icons.Default.Subtitles),
     Language(Icons.Default.Translate),
     SearchHistory(title = "Search history", icon = Icons.Default.Search),
-    HelpAndSupport(title = "Help and Support", icon = Icons.Default.Support);
+    HelpAndSupport(title = "Help and Support", icon = Icons.Default.Support),
+    ;
 
     operator fun invoke() = name
 

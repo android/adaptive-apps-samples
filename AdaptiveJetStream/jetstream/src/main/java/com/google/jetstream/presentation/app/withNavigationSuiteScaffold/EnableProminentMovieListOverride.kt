@@ -29,6 +29,6 @@ fun EnableProminentMovieListOverride(content: @Composable () -> Unit) {
         LocalProminentListItemGap provides 8.dp,
         LocalListItemGap provides 8.dp,
         LocalProminentMovieListScope provides ProminentMovieCardWithButton,
-        content = content
+        content = content,
     )
 }

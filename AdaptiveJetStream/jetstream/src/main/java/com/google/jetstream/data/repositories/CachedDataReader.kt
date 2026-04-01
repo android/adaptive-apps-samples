@@ -47,29 +47,32 @@ internal typealias MovieDataReader = CachedDataReader<Movie>
 internal suspend fun readMovieData(
     assetsReader: AssetReader,
     resourceId: String,
-    dispatcher: CoroutineDispatcher = Dispatchers.IO
-): List<MoviesResponseItem> = withContext(dispatcher) {
-    assetsReader.getJsonDataFromAsset(resourceId).map {
-        Json.decodeFromString<List<MoviesResponseItem>>(it)
-    }.getOrDefault(emptyList())
-}
+    dispatcher: CoroutineDispatcher = Dispatchers.IO,
+): List<MoviesResponseItem> =
+    withContext(dispatcher) {
+        assetsReader.getJsonDataFromAsset(resourceId).map {
+            Json.decodeFromString<List<MoviesResponseItem>>(it)
+        }.getOrDefault(emptyList())
+    }
 
 internal suspend fun readMovieCastData(
     assetsReader: AssetReader,
     resourceId: String,
-    dispatcher: CoroutineDispatcher = Dispatchers.IO
-): List<MovieCastResponseItem> = withContext(dispatcher) {
-    assetsReader.getJsonDataFromAsset(resourceId).map {
-        Json.decodeFromString<List<MovieCastResponseItem>>(it)
-    }.getOrDefault(emptyList())
-}
+    dispatcher: CoroutineDispatcher = Dispatchers.IO,
+): List<MovieCastResponseItem> =
+    withContext(dispatcher) {
+        assetsReader.getJsonDataFromAsset(resourceId).map {
+            Json.decodeFromString<List<MovieCastResponseItem>>(it)
+        }.getOrDefault(emptyList())
+    }
 
 internal suspend fun readMovieCategoryData(
     assetsReader: AssetReader,
     resourceId: String,
-    dispatcher: CoroutineDispatcher = Dispatchers.IO
-): List<MovieCategoriesResponseItem> = withContext(dispatcher) {
-    assetsReader.getJsonDataFromAsset(resourceId).map {
-        Json.decodeFromString<List<MovieCategoriesResponseItem>>(it)
-    }.getOrDefault(emptyList())
-}
+    dispatcher: CoroutineDispatcher = Dispatchers.IO,
+): List<MovieCategoriesResponseItem> =
+    withContext(dispatcher) {
+        assetsReader.getJsonDataFromAsset(resourceId).map {
+            Json.decodeFromString<List<MovieCategoriesResponseItem>>(it)
+        }.getOrDefault(emptyList())
+    }

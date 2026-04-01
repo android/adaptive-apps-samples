@@ -83,21 +83,21 @@ private class ScaleIndication(
     val press: Float,
     val hover: Float,
     val drag: Float,
-    val interactionSource: InteractionSource
+    val interactionSource: InteractionSource,
 ) : Modifier.Node(), DrawModifierNode {
-
     var scale = Animatable(1f)
 
     override fun onAttach() {
         coroutineScope.launch {
             interactionSource.interactions.collect {
-                val target = when (it) {
-                    is PressInteraction.Press -> press
-                    is FocusInteraction.Focus -> focus
-                    is HoverInteraction.Enter -> hover
-                    is DragInteraction.Start -> drag
-                    else -> 1f
-                }
+                val target =
+                    when (it) {
+                        is PressInteraction.Press -> press
+                        is FocusInteraction.Focus -> focus
+                        is HoverInteraction.Enter -> hover
+                        is DragInteraction.Start -> drag
+                        else -> 1f
+                    }
                 scale.animateTo(target)
             }
         }

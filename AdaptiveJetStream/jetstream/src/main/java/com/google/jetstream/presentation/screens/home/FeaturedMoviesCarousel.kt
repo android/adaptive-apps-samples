@@ -76,7 +76,7 @@ fun FeaturedMoviesCarousel(
         rememberSaveable(movies, isLeanbackEnabled, saver = FeaturedMoviesCarouselState.Saver) {
             FeaturedMoviesCarouselState(
                 itemCount = movies.size,
-                initialWatchNowButtonVisibility = !isLeanbackEnabled
+                initialWatchNowButtonVisibility = !isLeanbackEnabled,
             )
         }
 
@@ -100,29 +100,32 @@ fun FeaturedMoviesCarousel(
     }
 
     Carousel(
-        modifier = modifier
-            .padding(start = padding.start, end = padding.start, top = padding.top)
-            .semantics {
-                contentDescription =
-                    StringConstants.Composable.ContentDescription.MoviesCarousel
-            }
-            .clickable(interactionSource, jetStreamBorderIndication) {
-                goToVideoPlayer(movies[featuredMoviesCarouselState.activeItemIndex])
-            }
-            .clip(ShapeDefaults.Medium)
-            .dragDetector(featuredMoviesCarouselState),
+        modifier =
+            modifier
+                .padding(start = padding.start, end = padding.start, top = padding.top)
+                .semantics {
+                    contentDescription =
+                        StringConstants.Composable.ContentDescription.MoviesCarousel
+                }
+                .clickable(interactionSource, jetStreamBorderIndication) {
+                    goToVideoPlayer(movies[featuredMoviesCarouselState.activeItemIndex])
+                }
+                .clip(ShapeDefaults.Medium)
+                .dragDetector(featuredMoviesCarouselState),
         itemCount = movies.size,
         carouselState = featuredMoviesCarouselState.carouselState,
         carouselIndicator = {
             CarouselIndicator(
                 itemCount = movies.size,
-                activeItemIndex = featuredMoviesCarouselState.activeItemIndex
+                activeItemIndex = featuredMoviesCarouselState.activeItemIndex,
             )
         },
-        contentTransformStartToEnd = fadeIn(tween(durationMillis = 1000))
-            .togetherWith(fadeOut(tween(durationMillis = 1000))),
-        contentTransformEndToStart = fadeIn(tween(durationMillis = 1000))
-            .togetherWith(fadeOut(tween(durationMillis = 1000))),
+        contentTransformStartToEnd =
+            fadeIn(tween(durationMillis = 1000))
+                .togetherWith(fadeOut(tween(durationMillis = 1000))),
+        contentTransformEndToStart =
+            fadeIn(tween(durationMillis = 1000))
+                .togetherWith(fadeOut(tween(durationMillis = 1000))),
         content = { index ->
             val movie = movies[index]
             // background
@@ -134,9 +137,9 @@ fun FeaturedMoviesCarousel(
                 modifier = Modifier.fillMaxSize(),
                 onClick = {
                     goToVideoPlayer(movies[featuredMoviesCarouselState.activeItemIndex])
-                }
+                },
             )
-        }
+        },
     )
 }
 
@@ -148,21 +151,23 @@ private fun BoxScope.CarouselIndicator(
     modifier: Modifier = Modifier,
 ) {
     Box(
-        modifier = modifier
-            .padding(32.dp)
-            .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f))
-            .graphicsLayer {
-                clip = true
-                shape = ShapeDefaults.ExtraSmall
-            }
-            .align(Alignment.BottomEnd)
+        modifier =
+            modifier
+                .padding(32.dp)
+                .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f))
+                .graphicsLayer {
+                    clip = true
+                    shape = ShapeDefaults.ExtraSmall
+                }
+                .align(Alignment.BottomEnd),
     ) {
         CarouselDefaults.IndicatorRow(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(8.dp),
+            modifier =
+                Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(8.dp),
             itemCount = itemCount,
-            activeItemIndex = activeItemIndex
+            activeItemIndex = activeItemIndex,
         )
     }
 }
@@ -176,47 +181,53 @@ private fun CarouselItemForeground(
 ) {
     Box(
         modifier = modifier,
-        contentAlignment = Alignment.BottomStart
+        contentAlignment = Alignment.BottomStart,
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(32.dp),
-            verticalArrangement = Arrangement.Bottom
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(32.dp),
+            verticalArrangement = Arrangement.Bottom,
         ) {
             Text(
                 text = movie.name,
-                style = MaterialTheme.typography.displayMedium.copy(
-                    shadow = Shadow(
-                        color = Color.Black.copy(alpha = 0.5f),
-                        offset = Offset(x = 2f, y = 4f),
-                        blurRadius = 2f
-                    )
-                ),
-                maxLines = 1
+                style =
+                    MaterialTheme.typography.displayMedium.copy(
+                        shadow =
+                            Shadow(
+                                color = Color.Black.copy(alpha = 0.5f),
+                                offset = Offset(x = 2f, y = 4f),
+                                blurRadius = 2f,
+                            ),
+                    ),
+                maxLines = 1,
             )
             Text(
                 text = movie.description,
-                style = MaterialTheme.typography.titleMedium.copy(
-                    color = MaterialTheme.colorScheme.onSurface.copy(
-                        alpha = 0.65f
+                style =
+                    MaterialTheme.typography.titleMedium.copy(
+                        color =
+                            MaterialTheme.colorScheme.onSurface.copy(
+                                alpha = 0.65f,
+                            ),
+                        shadow =
+                            Shadow(
+                                color = Color.Black.copy(alpha = 0.5f),
+                                offset = Offset(x = 2f, y = 4f),
+                                blurRadius = 2f,
+                            ),
                     ),
-                    shadow = Shadow(
-                        color = Color.Black.copy(alpha = 0.5f),
-                        offset = Offset(x = 2f, y = 4f),
-                        blurRadius = 2f
-                    )
-                ),
                 maxLines = 1,
-                modifier = Modifier.padding(top = 8.dp)
+                modifier = Modifier.padding(top = 8.dp),
             )
             AnimatedVisibility(
                 visible = watchNowButtonVisibility,
                 content = {
                     WatchNowButton(
-                        onClick = onClick
+                        onClick = onClick,
                     )
-                }
+                },
             )
         }
     }
@@ -226,49 +237,56 @@ private fun CarouselItemForeground(
 private fun CarouselItemBackground(movie: Movie, modifier: Modifier = Modifier) {
     if (movie.posterUri.isEmpty()) {
         val seed = movie.id.hashCode()
-        val color1 = remember(seed) {
-            val h = (seed.absoluteValue % 360).toFloat()
-            Color.hsl(h, 0.4f, 0.5f)
-        }
-        val color2 = remember(seed) {
-            val h = ((seed.absoluteValue + 120) % 360).toFloat()
-            Color.hsl(h, 0.6f, 0.3f)
-        }
+        val color1 =
+            remember(seed) {
+                val h = (seed.absoluteValue % 360).toFloat()
+                Color.hsl(h, 0.4f, 0.5f)
+            }
+        val color2 =
+            remember(seed) {
+                val h = ((seed.absoluteValue + 120) % 360).toFloat()
+                Color.hsl(h, 0.6f, 0.3f)
+            }
         Box(
-            modifier = modifier
-                .background(Brush.linearGradient(listOf(color1, color2)))
-                .drawWithContent {
-                    drawContent()
-                    drawRect(
-                        Brush.verticalGradient(
-                            colors = listOf(
-                                Color.Transparent,
-                                Color.Black.copy(alpha = 0.5f)
-                            )
+            modifier =
+                modifier
+                    .background(Brush.linearGradient(listOf(color1, color2)))
+                    .drawWithContent {
+                        drawContent()
+                        drawRect(
+                            Brush.verticalGradient(
+                                colors =
+                                    listOf(
+                                        Color.Transparent,
+                                        Color.Black.copy(alpha = 0.5f),
+                                    ),
+                            ),
                         )
-                    )
-                }
+                    },
         )
     } else {
         AsyncImage(
             model = movie.posterUri,
-            contentDescription = StringConstants
-                .Composable
-                .ContentDescription
-                .moviePoster(movie.name),
-            modifier = modifier
-                .drawWithContent {
-                    drawContent()
-                    drawRect(
-                        Brush.verticalGradient(
-                            colors = listOf(
-                                Color.Transparent,
-                                Color.Black.copy(alpha = 0.5f)
-                            )
+            contentDescription =
+                StringConstants
+                    .Composable
+                    .ContentDescription
+                    .moviePoster(movie.name),
+            modifier =
+                modifier
+                    .drawWithContent {
+                        drawContent()
+                        drawRect(
+                            Brush.verticalGradient(
+                                colors =
+                                    listOf(
+                                        Color.Transparent,
+                                        Color.Black.copy(alpha = 0.5f),
+                                    ),
+                            ),
                         )
-                    )
-                },
-            contentScale = ContentScale.Crop
+                    },
+            contentScale = ContentScale.Crop,
         )
     }
 }

@@ -45,7 +45,7 @@ import com.google.jetstream.presentation.theme.JetStreamTheme
 fun LanguageSection(
     selectedIndex: Int = 0,
     isExpanded: Boolean = true,
-    onSelectedIndexChange: (currentIndex: Int) -> Unit = {}
+    onSelectedIndexChange: (currentIndex: Int) -> Unit = {},
 ) {
     val padding = if (isExpanded) 72.dp else 16.dp
     with(StringConstants.Composable.Placeholders) {
@@ -54,36 +54,38 @@ fun LanguageSection(
                 item {
                     Text(
                         text = LanguageSectionTitle,
-                        style = MaterialTheme.typography.headlineSmall
+                        style = MaterialTheme.typography.headlineSmall,
                     )
                 }
             }
             items(LanguageSectionItems.size) { index ->
                 ListItem(
-                    modifier = Modifier
-                        .padding(top = 16.dp)
-                        .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = ripple()
-                        ) {
-                            onSelectedIndexChange(index)
-                        },
+                    modifier =
+                        Modifier
+                            .padding(top = 16.dp)
+                            .clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = ripple(),
+                            ) {
+                                onSelectedIndexChange(index)
+                            },
                     trailingContent = {
                         if (selectedIndex == index) {
                             Icon(
                                 Icons.Default.Check,
-                                contentDescription = stringResource(
-                                    id =
-                                    R.string.language_section_listItem_icon_content_description,
-                                    LanguageSectionItems[index]
-                                )
+                                contentDescription =
+                                    stringResource(
+                                        id =
+                                            R.string.language_section_listItem_icon_content_description,
+                                        LanguageSectionItems[index],
+                                    ),
                             )
                         }
                     },
                     headlineContent = {
                         Text(
                             text = LanguageSectionItems[index],
-                            style = MaterialTheme.typography.titleMedium
+                            style = MaterialTheme.typography.titleMedium,
                         )
                     },
                 )

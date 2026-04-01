@@ -42,14 +42,13 @@ import com.google.jetstream.presentation.theme.JetStreamTheme
 
 @Composable
 fun HelpAndSupportSection(isExpanded: Boolean = true) {
-
     val padding = if (isExpanded) 72.dp else 16.dp
     with(StringConstants.Composable.Placeholders) {
         Column(modifier = Modifier.padding(horizontal = padding)) {
             if (isExpanded) {
                 Text(
                     text = HelpAndSupportSectionTitle,
-                    style = MaterialTheme.typography.headlineSmall
+                    style = MaterialTheme.typography.headlineSmall,
                 )
             }
             HelpAndSupportSectionItem(title = HelpAndSupportSectionFAQItem)
@@ -57,7 +56,7 @@ fun HelpAndSupportSection(isExpanded: Boolean = true) {
             HelpAndSupportSectionItem(
                 title = HelpAndSupportSectionContactItem,
                 value = HelpAndSupportSectionContactValue,
-                isExpanded = isExpanded
+                isExpanded = isExpanded,
             )
         }
     }
@@ -71,51 +70,57 @@ private fun HelpAndSupportSectionItem(
 ) {
     if (isExpanded || value == null) {
         ListItem(
-            modifier = Modifier
-                .padding(top = 16.dp)
-                .clickable { },
+            modifier =
+                Modifier
+                    .padding(top = 16.dp)
+                    .clickable { },
             trailingContent = {
                 Icon(
                     Icons.AutoMirrored.Filled.ArrowForwardIos,
-                    contentDescription = StringConstants
-                        .Composable
-                        .Placeholders
-                        .HelpAndSupportSectionListItemIconDescription
+                    contentDescription =
+                        StringConstants
+                            .Composable
+                            .Placeholders
+                            .HelpAndSupportSectionListItemIconDescription,
                 )
             },
             headlineContent = {
                 Text(
                     text = title,
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.titleMedium,
                 )
             },
-            colors = ListItemDefaults.colors(
-                containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(4.dp)
-            ),
+            colors =
+                ListItemDefaults.colors(
+                    containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(4.dp),
+                ),
         )
     } else {
         ListItem(
-            modifier = Modifier
-                .padding(top = 16.dp)
-                .clickable { },
+            modifier =
+                Modifier
+                    .padding(top = 16.dp)
+                    .clickable { },
             headlineContent = {
                 Text(
                     text = title,
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.titleMedium,
                 )
             },
             supportingContent = {
                 Text(
                     text = value,
-                    style = MaterialTheme.typography.labelMedium.copy(
-                        fontWeight = FontWeight.Normal
-                    ),
-                    modifier = Modifier.alpha(0.75f).padding(vertical = 4.dp)
+                    style =
+                        MaterialTheme.typography.labelMedium.copy(
+                            fontWeight = FontWeight.Normal,
+                        ),
+                    modifier = Modifier.alpha(0.75f).padding(vertical = 4.dp),
                 )
             },
-            colors = ListItemDefaults.colors(
-                containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(4.dp)
-            ),
+            colors =
+                ListItemDefaults.colors(
+                    containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(4.dp),
+                ),
         )
     }
 }
@@ -124,7 +129,6 @@ private fun HelpAndSupportSectionItem(
 @FoldablePreview
 @Composable
 fun HelpSectionCompactPreview() {
-
     JetStreamTheme {
         Box(modifier = Modifier.background(MaterialTheme.colorScheme.surface)) {
             HelpAndSupportSection(isExpanded = false)

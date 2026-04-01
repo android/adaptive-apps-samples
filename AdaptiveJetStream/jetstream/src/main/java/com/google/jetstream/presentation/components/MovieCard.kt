@@ -41,14 +41,16 @@ fun MovieCard(
         title = title,
         imageCard = {
             Box(
-                modifier = Modifier.clickable(
-                    interactionSource = it,
-                    indication = borderIndication(
-                        focused = JetStreamBorder,
+                modifier =
+                    Modifier.clickable(
+                        interactionSource = it,
+                        indication =
+                            borderIndication(
+                                focused = JetStreamBorder,
+                            ),
+                        onClick = onClick,
                     ),
-                    onClick = onClick
-                ),
-                content = content
+                content = content,
             )
         },
     )

@@ -72,54 +72,57 @@ import kotlin.math.absoluteValue
 fun MovieDetails(
     movieDetails: MovieDetails,
     goToMoviePlayer: (MovieDetails) -> Unit,
-    contentPadding: Padding = LocalContentPadding.current
+    contentPadding: Padding = LocalContentPadding.current,
 ) {
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
     val coroutineScope = rememberCoroutineScope()
 
     Box(
-        modifier = Modifier
-            .wrapContentSize()
-            .bringIntoViewRequester(bringIntoViewRequester),
-        contentAlignment = Alignment.Center
+        modifier =
+            Modifier
+                .wrapContentSize()
+                .bringIntoViewRequester(bringIntoViewRequester),
+        contentAlignment = Alignment.Center,
     ) {
         MovieImageWithGradients(
             movieDetails = movieDetails,
-            modifier = Modifier.matchParentSize()
+            modifier = Modifier.matchParentSize(),
         )
         Column {
             Spacer(modifier = Modifier.height(108.dp))
             Column(
-                modifier = Modifier.padding(start = contentPadding.start)
+                modifier = Modifier.padding(start = contentPadding.start),
             ) {
                 MovieLargeTitle(movieTitle = movieDetails.name)
 
                 Column(
-                    modifier = Modifier.alpha(0.75f)
+                    modifier = Modifier.alpha(0.75f),
                 ) {
                     MovieDescription(description = movieDetails.description)
                     DotSeparatedRow(
                         modifier = Modifier.padding(top = 20.dp),
-                        texts = listOf(
-                            movieDetails.pgRating,
-                            movieDetails.releaseDate,
-                            movieDetails.categories.joinToString(", "),
-                            movieDetails.duration
-                        )
+                        texts =
+                            listOf(
+                                movieDetails.pgRating,
+                                movieDetails.releaseDate,
+                                movieDetails.categories.joinToString(", "),
+                                movieDetails.duration,
+                            ),
                     )
                     DirectorScreenplayMusicRow(
                         director = movieDetails.director,
                         screenplay = movieDetails.screenplay,
-                        music = movieDetails.music
+                        music = movieDetails.music,
                     )
                 }
                 WatchTrailerButton(
-                    modifier = Modifier.onFocusChanged {
-                        if (it.isFocused) {
-                            coroutineScope.launch { bringIntoViewRequester.bringIntoView() }
-                        }
-                    },
-                    goToMoviePlayer = { goToMoviePlayer(movieDetails) }
+                    modifier =
+                        Modifier.onFocusChanged {
+                            if (it.isFocused) {
+                                coroutineScope.launch { bringIntoViewRequester.bringIntoView() }
+                            }
+                        },
+                    goToMoviePlayer = { goToMoviePlayer(movieDetails) },
                 )
             }
         }
@@ -129,29 +132,30 @@ fun MovieDetails(
 @Composable
 private fun WatchTrailerButton(
     modifier: Modifier = Modifier,
-    goToMoviePlayer: () -> Unit
+    goToMoviePlayer: () -> Unit,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     Button(
         onClick = goToMoviePlayer,
-        modifier = modifier
-            .padding(top = 24.dp)
-            .indication(
-                interactionSource = interactionSource,
-                indication = borderIndication(focused = JetStreamBorder)
-            ),
+        modifier =
+            modifier
+                .padding(top = 24.dp)
+                .indication(
+                    interactionSource = interactionSource,
+                    indication = borderIndication(focused = JetStreamBorder),
+                ),
         contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
         interactionSource = interactionSource,
-        shape = JetStreamButtonShape
+        shape = JetStreamButtonShape,
     ) {
         Icon(
             imageVector = Icons.Outlined.PlayArrow,
-            contentDescription = null
+            contentDescription = null,
         )
         Spacer(Modifier.size(8.dp))
         Text(
             text = stringResource(R.string.watch_trailer),
-            style = MaterialTheme.typography.titleSmall
+            style = MaterialTheme.typography.titleSmall,
         )
     }
 }
@@ -160,29 +164,31 @@ private fun WatchTrailerButton(
 private fun DirectorScreenplayMusicRow(
     director: String,
     screenplay: String,
-    music: String
+    music: String,
 ) {
     Row(modifier = Modifier.padding(top = 32.dp)) {
         TitleValueText(
-            modifier = Modifier
-                .padding(end = 32.dp)
-                .weight(1f),
+            modifier =
+                Modifier
+                    .padding(end = 32.dp)
+                    .weight(1f),
             title = stringResource(R.string.director),
-            value = director
+            value = director,
         )
 
         TitleValueText(
-            modifier = Modifier
-                .padding(end = 32.dp)
-                .weight(1f),
+            modifier =
+                Modifier
+                    .padding(end = 32.dp)
+                    .weight(1f),
             title = stringResource(R.string.screenplay),
-            value = screenplay
+            value = screenplay,
         )
 
         TitleValueText(
             modifier = Modifier.weight(1f),
             title = stringResource(R.string.music),
-            value = music
+            value = music,
         )
     }
 }
@@ -191,12 +197,13 @@ private fun DirectorScreenplayMusicRow(
 private fun MovieDescription(description: String) {
     Text(
         text = description,
-        style = MaterialTheme.typography.titleSmall.copy(
-            fontSize = 15.sp,
-            fontWeight = FontWeight.Normal
-        ),
+        style =
+            MaterialTheme.typography.titleSmall.copy(
+                fontSize = 15.sp,
+                fontWeight = FontWeight.Normal,
+            ),
         modifier = Modifier.padding(top = 8.dp),
-        maxLines = 2
+        maxLines = 2,
     )
 }
 
@@ -204,10 +211,11 @@ private fun MovieDescription(description: String) {
 private fun MovieLargeTitle(movieTitle: String) {
     Text(
         text = movieTitle,
-        style = MaterialTheme.typography.displayMedium.copy(
-            fontWeight = FontWeight.Bold
-        ),
-        maxLines = 1
+        style =
+            MaterialTheme.typography.displayMedium.copy(
+                fontWeight = FontWeight.Bold,
+            ),
+        maxLines = 1,
     )
 }
 
@@ -223,51 +231,56 @@ private fun MovieImageWithGradients(
             drawRect(
                 Brush.verticalGradient(
                     colors = listOf(Color.Transparent, gradientColor),
-                    startY = 600f
-                )
+                    startY = 600f,
+                ),
             )
             drawRect(
                 Brush.horizontalGradient(
                     colors = listOf(gradientColor, Color.Transparent),
                     endX = 1000f,
-                    startX = 300f
-                )
+                    startX = 300f,
+                ),
             )
             drawRect(
                 Brush.linearGradient(
                     colors = listOf(gradientColor, Color.Transparent),
                     start = Offset(x = 500f, y = 500f),
-                    end = Offset(x = 1000f, y = 0f)
-                )
+                    end = Offset(x = 1000f, y = 0f),
+                ),
             )
         }
     }
 
     if (movieDetails.posterUri.isEmpty()) {
         val seed = movieDetails.id.hashCode()
-        val color1 = remember(seed) {
-            val h = (seed.absoluteValue % 360).toFloat()
-            Color.hsl(h, 0.4f, 0.5f)
-        }
-        val color2 = remember(seed) {
-            val h = ((seed.absoluteValue + 120) % 360).toFloat()
-            Color.hsl(h, 0.6f, 0.3f)
-        }
+        val color1 =
+            remember(seed) {
+                val h = (seed.absoluteValue % 360).toFloat()
+                Color.hsl(h, 0.4f, 0.5f)
+            }
+        val color2 =
+            remember(seed) {
+                val h = ((seed.absoluteValue + 120) % 360).toFloat()
+                Color.hsl(h, 0.6f, 0.3f)
+            }
         Box(
-            modifier = modifier
-                .background(Brush.linearGradient(listOf(color1, color2)))
-                .then(Modifier.drawGradients())
+            modifier =
+                modifier
+                    .background(Brush.linearGradient(listOf(color1, color2)))
+                    .then(Modifier.drawGradients()),
         )
     } else {
         AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current).data(movieDetails.posterUri)
-                .crossfade(true).build(),
-            contentDescription = StringConstants
-                .Composable
-                .ContentDescription
-                .moviePoster(movieDetails.name),
+            model =
+                ImageRequest.Builder(LocalContext.current).data(movieDetails.posterUri)
+                    .crossfade(true).build(),
+            contentDescription =
+                StringConstants
+                    .Composable
+                    .ContentDescription
+                    .moviePoster(movieDetails.name),
             contentScale = ContentScale.Crop,
-            modifier = modifier.then(Modifier.drawGradients())
+            modifier = modifier.then(Modifier.drawGradients()),
         )
     }
 }

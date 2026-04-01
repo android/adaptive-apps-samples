@@ -51,7 +51,7 @@ fun NavigationTree(
     navController: NavHostController,
     modifier: Modifier = Modifier,
     isTopBarVisible: Boolean = true,
-    onScroll: (Boolean) -> Unit = {}
+    onScroll: (Boolean) -> Unit = {},
 ) {
     NavHost(
         navController = navController,
@@ -60,16 +60,16 @@ fun NavigationTree(
     ) {
         composable(
             route = CategoryMovieList(),
-            arguments = categoryMovieListScreenArguments
+            arguments = categoryMovieListScreenArguments,
         ) {
             CategoryMovieListScreen(
                 onBackPressed = navController::navigateUp,
-                onMovieSelected = { movie -> navController.openMovieDetailScreen(movie) }
+                onMovieSelected = { movie -> navController.openMovieDetailScreen(movie) },
             )
         }
         composable(
             route = MovieDetails(),
-            arguments = movieDetailsScreenArguments
+            arguments = movieDetailsScreenArguments,
         ) {
             MovieDetailsScreen(
                 goToMoviePlayer = { movieDetails ->
@@ -77,7 +77,7 @@ fun NavigationTree(
                 },
                 refreshScreenWithNewMovie = { movie ->
                     navController.navigate(
-                        MovieDetails.withArgs(movie.id)
+                        MovieDetails.withArgs(movie.id),
                     ) {
                         popUpTo(MovieDetails()) {
                             inclusive = true
@@ -100,7 +100,7 @@ fun NavigationTree(
                 onMovieClick = { movie -> navController.openMovieDetailsScreen(movie.id) },
                 goToVideoPlayer = { movie: Movie -> navController.openVideoPlayer(movie.id) },
                 onScroll = onScroll,
-                isTopBarVisible = isTopBarVisible
+                isTopBarVisible = isTopBarVisible,
             )
         }
         composable(Categories()) {
@@ -113,21 +113,21 @@ fun NavigationTree(
             MoviesScreen(
                 onMovieClick = { movie -> navController.openMovieDetailScreen(movie) },
                 onScroll = onScroll,
-                isTopBarVisible = isTopBarVisible
+                isTopBarVisible = isTopBarVisible,
             )
         }
         composable(Shows()) {
             ShowsScreen(
                 onTVShowClick = { movie -> navController.openMovieDetailScreen(movie) },
                 onScroll = onScroll,
-                isTopBarVisible = isTopBarVisible
+                isTopBarVisible = isTopBarVisible,
             )
         }
         composable(Favourites()) {
             FavouritesScreen(
                 onMovieClick = navController::openMovieDetailsScreen,
                 onScroll = onScroll,
-                isTopBarVisible = isTopBarVisible
+                isTopBarVisible = isTopBarVisible,
             )
         }
         composable(Search()) {

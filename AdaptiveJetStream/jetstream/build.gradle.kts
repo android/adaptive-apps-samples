@@ -1,6 +1,3 @@
-import com.android.build.api.dsl.ApplicationExtension
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 /*
  * Copyright 2023 Google LLC
  *
@@ -16,6 +13,10 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import com.android.build.api.dsl.ApplicationExtension
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.serialization)
@@ -25,6 +26,7 @@ plugins {
     alias(libs.plugins.androidx.baselineprofile)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.screenshot)
+    alias(libs.plugins.spotless)
     id("jacoco")
 }
 
@@ -64,7 +66,7 @@ configure<ApplicationExtension> {
             signingConfig = signingConfigs.getByName("debug")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }
@@ -107,18 +109,19 @@ tasks.register<JacocoReport>("jacocoTestReport") {
         html.required.set(true)
     }
 
-    val fileFilter = listOf(
-        "**/R.class",
-        "**/R$*.class",
-        "**/BuildConfig.*",
-        "**/Manifest*.*",
-        "**/*Test*.*",
-        "android/**/*.*",
-        "**/hilt_aggregated_deps/**",
-        "**/*_HiltModules*.*",
-        "**/*_Factory*.*",
-        "**/*_MembersInjector*.*"
-    )
+    val fileFilter =
+        listOf(
+            "**/R.class",
+            "**/R$*.class",
+            "**/BuildConfig.*",
+            "**/Manifest*.*",
+            "**/*Test*.*",
+            "android/**/*.*",
+            "**/hilt_aggregated_deps/**",
+            "**/*_HiltModules*.*",
+            "**/*_Factory*.*",
+            "**/*_MembersInjector*.*",
+        )
 
     val javaClasses =
         fileTree("${project.layout.buildDirectory.get()}/intermediates/javac/debug/classes") {
@@ -133,15 +136,37 @@ tasks.register<JacocoReport>("jacocoTestReport") {
     sourceDirectories.setFrom(
         files(
             android.sourceSets.getByName("main").java.directories,
-            android.sourceSets.getByName("main").kotlin.directories
-        )
+            android.sourceSets.getByName("main").kotlin.directories,
+        ),
     )
 
-    executionData.setFrom(fileTree("${project.layout.buildDirectory.get()}") {
-        include("outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec")
-    })
+    executionData.setFrom(
+        fileTree("${project.layout.buildDirectory.get()}") {
+            include("outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec")
+        },
+    )
 }
 
+spotless {
+    kotlin {
+        target("**/*.kt")
+        targetExclude("${layout.buildDirectory}/**/*.kt")
+        ktlint()
+        licenseHeaderFile(rootProject.file("spotless/copyright.kt"))
+    }
+
+    kotlinGradle {
+        target("*.gradle.kts")
+        targetExclude("${layout.buildDirectory}/**/*.kt")
+        ktlint()
+        // Look for the first line that doesn't have a block comment (assumed to be the license)
+        licenseHeaderFile(rootProject.file("spotless/copyright.kt"), "(^(?![\\/ ]\\*).*$)")
+    }
+}
+
+tasks.named("preBuild") {
+    dependsOn("spotlessApply")
+}
 
 tasks.withType<com.android.compose.screenshot.tasks.PreviewScreenshotValidationTask> {
     maxHeapSize = "2g"

@@ -40,26 +40,28 @@ fun UserAvatar(
     icon: ImageVector = Icons.Default.AccountCircle,
     description: String? =
         StringConstants.Composable.ContentDescription.UserAvatar,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val border = JetStreamBorder.copy(shape = CircleShape)
 
     IconButton(
         onClick = onClick,
-        modifier = modifier.semantics {
-            if (description != null) {
-                contentDescription = description
-            }
-        },
-        interactionSource = interactionSource
+        modifier =
+            modifier.semantics {
+                if (description != null) {
+                    contentDescription = description
+                }
+            },
+        interactionSource = interactionSource,
     ) {
         Icon(
             imageVector = icon,
             contentDescription = null,
-            modifier = modifier
-                .fillMaxSize()
-                .borderIndication(interactionSource = interactionSource, focused = border),
+            modifier =
+                modifier
+                    .fillMaxSize()
+                    .borderIndication(interactionSource = interactionSource, focused = border),
         )
     }
 }

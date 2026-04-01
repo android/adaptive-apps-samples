@@ -1,6 +1,3 @@
-import com.android.build.api.dsl.ManagedVirtualDevice
-import com.android.build.api.dsl.TestExtension
-
 /*
  * Copyright 2023 Google LLC
  *
@@ -16,6 +13,9 @@ import com.android.build.api.dsl.TestExtension
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import com.android.build.api.dsl.ManagedVirtualDevice
+import com.android.build.api.dsl.TestExtension
 
 plugins {
     alias(libs.plugins.android.test)

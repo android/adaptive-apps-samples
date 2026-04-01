@@ -50,7 +50,7 @@ fun AdaptiveAppNavigationItems(
                     imageVector = ImageVector.vectorResource(screen.navIcon),
                     modifier = Modifier.size(24.dp),
                     contentDescription = screen.name,
-                    tint = MaterialTheme.colorScheme.primary
+                    tint = MaterialTheme.colorScheme.primary,
                 )
             },
         )
@@ -59,7 +59,7 @@ fun AdaptiveAppNavigationItems(
 
 @Composable
 fun RequestFullSpaceModeItem(
-    spatialConfiguration: SpatialConfiguration = LocalSpatialConfiguration.current
+    spatialConfiguration: SpatialConfiguration = LocalSpatialConfiguration.current,
 ) {
     NavigationSuiteItem(
         selected = false,
@@ -69,14 +69,14 @@ fun RequestFullSpaceModeItem(
                 imageVector = ImageVector.vectorResource(R.drawable.ic_expand_content),
                 modifier = Modifier.size(24.dp),
                 contentDescription = stringResource(R.string.full_space_mode),
-                tint = MaterialTheme.colorScheme.primary
+                tint = MaterialTheme.colorScheme.primary,
             )
         },
         label = {
             Text(
                 stringResource(R.string.full_space_mode),
-                color = MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.primary,
             )
-        }
+        },
     )
 }

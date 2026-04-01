@@ -56,18 +56,20 @@ import com.google.jetstream.presentation.theme.LocalContentPadding
 import com.google.jetstream.presentation.theme.LocalListItemGap
 import com.google.jetstream.presentation.theme.Padding
 
-val LocalCategoryCardAspectRatio: ProvidableCompositionLocal<Float> = staticCompositionLocalOf {
-    1.7777f // 16:9
-}
-val LocalCategoryGridGridCells: ProvidableCompositionLocal<GridCells> = staticCompositionLocalOf {
-    GridCells.Fixed(4)
-}
+val LocalCategoryCardAspectRatio: ProvidableCompositionLocal<Float> =
+    staticCompositionLocalOf {
+        1.7777f // 16:9
+    }
+val LocalCategoryGridGridCells: ProvidableCompositionLocal<GridCells> =
+    staticCompositionLocalOf {
+        GridCells.Fixed(4)
+    }
 
 @Composable
 fun CategoriesScreen(
     onCategoryClick: (categoryId: String) -> Unit = {},
     onScroll: (isTopBarVisible: Boolean) -> Unit = {},
-    categoriesScreenViewModel: CategoriesScreenViewModel = hiltViewModel()
+    categoriesScreenViewModel: CategoriesScreenViewModel = hiltViewModel(),
 ) {
     val uiState by categoriesScreenViewModel.uiState.collectAsStateWithLifecycle()
     when (val s = uiState) {
@@ -80,7 +82,7 @@ fun CategoriesScreen(
                 movieCategories = s.categoryList,
                 onCategoryClick = onCategoryClick,
                 onScroll = onScroll,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
             )
         }
     }
@@ -118,7 +120,7 @@ internal fun Catalog(
             CategoryCard(
                 movieCategory = movieCategory,
                 onCategoryClick = onCategoryClick,
-                modifier = Modifier.aspectRatio(LocalCategoryCardAspectRatio.current)
+                modifier = Modifier.aspectRatio(LocalCategoryCardAspectRatio.current),
             )
         }
     }
@@ -134,7 +136,7 @@ private fun CategoryCard(
     val isFocused by interactionSource.collectIsFocusedAsState()
     val itemAlpha by animateFloatAsState(
         targetValue = if (isFocused) .6f else 0.2f,
-        label = ""
+        label = "",
     )
 
     MovieCard(
@@ -142,7 +144,7 @@ private fun CategoryCard(
             onCategoryClick(movieCategory.id)
         },
         interactionSource = interactionSource,
-        modifier = modifier
+        modifier = modifier,
     ) {
         Box(contentAlignment = Alignment.Center) {
             Box(modifier = Modifier.alpha(itemAlpha)) {
@@ -150,7 +152,7 @@ private fun CategoryCard(
             }
             Text(
                 text = movieCategory.name,
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.titleMedium,
             )
         }
     }
@@ -168,7 +170,7 @@ private fun CategoriesScreenPhonePreview() {
             Catalog(
                 movieCategories = mockCategoryScreenState.categoryList,
                 onCategoryClick = {},
-                onScroll = {}
+                onScroll = {},
             )
         }
     }
@@ -186,7 +188,7 @@ private fun CategoriesScreenFoldablePreview() {
             Catalog(
                 movieCategories = mockCategoryScreenState.categoryList,
                 onCategoryClick = {},
-                onScroll = {}
+                onScroll = {},
             )
         }
     }
@@ -199,7 +201,7 @@ private fun CategoriesScreenTvPreview() {
         Catalog(
             movieCategories = mockCategoryScreenState.categoryList,
             onCategoryClick = {},
-            onScroll = {}
+            onScroll = {},
         )
     }
 }

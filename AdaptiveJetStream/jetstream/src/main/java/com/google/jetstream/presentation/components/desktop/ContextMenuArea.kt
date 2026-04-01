@@ -44,33 +44,35 @@ import androidx.compose.ui.unit.dp
 fun ContextMenuArea(
     items: List<ContextMenuItem>,
     modifier: Modifier = Modifier,
-    content: @Composable BoxScope.() -> Unit
+    content: @Composable BoxScope.() -> Unit,
 ) {
     var rightClickOffset by remember { mutableStateOf<Offset?>(null) }
 
     val isMenuVisible = items.isNotEmpty() && rightClickOffset != null
 
-    val offset = with(LocalDensity.current) {
-        if (rightClickOffset == null) {
-            DpOffset(0.dp, 0.dp)
-        } else {
-            DpOffset(rightClickOffset!!.x.toDp(), rightClickOffset!!.y.toDp())
+    val offset =
+        with(LocalDensity.current) {
+            if (rightClickOffset == null) {
+                DpOffset(0.dp, 0.dp)
+            } else {
+                DpOffset(rightClickOffset!!.x.toDp(), rightClickOffset!!.y.toDp())
+            }
         }
-    }
 
     Box(
-        modifier = Modifier
-            .rightClickDetector {
-                rightClickOffset = it
-            }
-            .then(modifier)
+        modifier =
+            Modifier
+                .rightClickDetector {
+                    rightClickOffset = it
+                }
+                .then(modifier),
     ) {
         content()
         AnimatedVisibility(isMenuVisible) {
             DropdownMenu(
                 expanded = true,
                 onDismissRequest = { rightClickOffset = null },
-                offset = offset
+                offset = offset,
             ) {
                 items.forEach {
                     DropdownMenuItem(
@@ -78,7 +80,7 @@ fun ContextMenuArea(
                         onClick = {
                             it.action()
                             rightClickOffset = null
-                        }
+                        },
                     )
                 }
             }
@@ -87,7 +89,7 @@ fun ContextMenuArea(
 }
 
 private fun Modifier.rightClickDetector(
-    onRightClick: (Offset) -> Unit
+    onRightClick: (Offset) -> Unit,
 ): Modifier =
     pointerInput(onRightClick) {
         awaitEachGesture {
@@ -98,9 +100,10 @@ private fun Modifier.rightClickDetector(
                 event.buttons.isSecondaryPressed &&
                 !event.buttons.isTertiaryPressed
             ) {
-                val change = event.changes.find {
-                    it.type == PointerType.Mouse && it.pressed
-                }
+                val change =
+                    event.changes.find {
+                        it.type == PointerType.Mouse && it.pressed
+                    }
                 if (change != null) {
                     onRightClick(change.position)
                 }

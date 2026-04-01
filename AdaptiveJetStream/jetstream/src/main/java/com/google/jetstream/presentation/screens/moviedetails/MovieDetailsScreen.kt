@@ -70,18 +70,19 @@ object MovieDetailsScreen {
     const val MOVIE_ID_BUNDLE_KEY = "movieId"
 }
 
-val movieDetailsScreenArguments = listOf(
-    navArgument(MovieDetailsScreen.MOVIE_ID_BUNDLE_KEY) {
-        type = NavType.StringType
-    }
-)
+val movieDetailsScreenArguments =
+    listOf(
+        navArgument(MovieDetailsScreen.MOVIE_ID_BUNDLE_KEY) {
+            type = NavType.StringType
+        },
+    )
 
 @Composable
 fun MovieDetailsScreen(
     goToMoviePlayer: (MovieDetails) -> Unit,
     onBackPressed: () -> Unit,
     refreshScreenWithNewMovie: (Movie) -> Unit,
-    movieDetailsScreenViewModel: MovieDetailsScreenViewModel = hiltViewModel()
+    movieDetailsScreenViewModel: MovieDetailsScreenViewModel = hiltViewModel(),
 ) {
     val uiState by movieDetailsScreenViewModel.uiState.collectAsStateWithLifecycle()
 
@@ -100,9 +101,10 @@ fun MovieDetailsScreen(
                 goToMoviePlayer = goToMoviePlayer,
                 onBackPressed = onBackPressed,
                 refreshScreenWithNewMovie = refreshScreenWithNewMovie,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .animateContentSize()
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .animateContentSize(),
             )
         }
     }
@@ -136,14 +138,14 @@ internal fun Details(
             goToMoviePlayer = goToMoviePlayer,
             refreshScreenWithNewMovie = refreshScreenWithNewMovie,
             modifier = modifier,
-            state = lazyListState
+            state = lazyListState,
         )
         if (isBackButtonRequired) {
             AnimatedVisibility(isBackButtonVisible, enter = fadeIn(), exit = fadeOut()) {
                 BackButton(
                     onClick = onBackPressed,
                     description = stringResource(R.string.back_from_movie_details),
-                    modifier = Modifier.padding(vertical = 32.dp, horizontal = 52.dp)
+                    modifier = Modifier.padding(vertical = 32.dp, horizontal = 52.dp),
                 )
             }
         }
@@ -159,7 +161,6 @@ internal fun MovieDetailsList(
     state: LazyListState = rememberLazyListState(),
     contentPadding: Padding = LocalContentPadding.current,
 ) {
-
     LazyColumn(
         state = state,
         contentPadding = PaddingValues(bottom = 135.dp),
@@ -168,74 +169,77 @@ internal fun MovieDetailsList(
         item {
             MovieDetails(
                 movieDetails = movieDetails,
-                goToMoviePlayer = goToMoviePlayer
+                goToMoviePlayer = goToMoviePlayer,
             )
         }
 
         item {
             CastAndCrewList(
-                castAndCrew = movieDetails.castAndCrew
+                castAndCrew = movieDetails.castAndCrew,
             )
         }
 
         item {
             MoviesRow(
-                title = StringConstants
-                    .Composable
-                    .movieDetailsScreenSimilarTo(movieDetails.name),
+                title =
+                    StringConstants
+                        .Composable
+                        .movieDetailsScreenSimilarTo(movieDetails.name),
                 titleStyle = MaterialTheme.typography.titleMedium,
                 movieList = movieDetails.similarMovies,
-                onMovieSelected = refreshScreenWithNewMovie
+                onMovieSelected = refreshScreenWithNewMovie,
             )
         }
 
         item {
             MovieReviews(
                 modifier = Modifier.padding(top = contentPadding.top),
-                reviewsAndRatings = movieDetails.reviewsAndRatings
+                reviewsAndRatings = movieDetails.reviewsAndRatings,
             )
         }
 
         item {
             Box(
-                modifier = Modifier
-                    .padding(horizontal = contentPadding.start)
-                    .padding(BottomDividerPadding)
-                    .fillMaxWidth()
-                    .height(1.dp)
-                    .alpha(0.15f)
-                    .background(MaterialTheme.colorScheme.onSurface)
+                modifier =
+                    Modifier
+                        .padding(horizontal = contentPadding.start)
+                        .padding(BottomDividerPadding)
+                        .fillMaxWidth()
+                        .height(1.dp)
+                        .alpha(0.15f)
+                        .background(MaterialTheme.colorScheme.onSurface),
             )
         }
 
         item {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = contentPadding.start),
-                horizontalArrangement = Arrangement.SpaceBetween
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = contentPadding.start),
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 val itemModifier = Modifier.width(192.dp)
 
                 TitleValueText(
                     modifier = itemModifier,
                     title = stringResource(R.string.status),
-                    value = movieDetails.status
+                    value = movieDetails.status,
                 )
                 TitleValueText(
                     modifier = itemModifier,
                     title = stringResource(R.string.original_language),
-                    value = movieDetails.originalLanguage
+                    value = movieDetails.originalLanguage,
                 )
                 TitleValueText(
                     modifier = itemModifier,
                     title = stringResource(R.string.budget),
-                    value = movieDetails.budget
+                    value = movieDetails.budget,
                 )
                 TitleValueText(
                     modifier = itemModifier,
                     title = stringResource(R.string.revenue),
-                    value = movieDetails.revenue
+                    value = movieDetails.revenue,
                 )
             }
         }

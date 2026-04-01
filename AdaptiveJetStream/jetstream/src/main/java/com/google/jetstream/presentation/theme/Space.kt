@@ -28,12 +28,14 @@ import androidx.window.core.layout.WindowSizeClass
 import com.google.jetstream.presentation.components.feature.isWidthAtLeastExpanded
 import com.google.jetstream.presentation.components.feature.isWidthAtLeastLarge
 
-val LocalListItemGap: ProvidableCompositionLocal<Dp> = staticCompositionLocalOf {
-    20.dp
-}
-val LocalProminentListItemGap: ProvidableCompositionLocal<Dp> = staticCompositionLocalOf {
-    32.dp
-}
+val LocalListItemGap: ProvidableCompositionLocal<Dp> =
+    staticCompositionLocalOf {
+        20.dp
+    }
+val LocalProminentListItemGap: ProvidableCompositionLocal<Dp> =
+    staticCompositionLocalOf {
+        32.dp
+    }
 
 @Immutable
 data class Padding(
@@ -54,12 +56,12 @@ data class Padding(
 private enum class ContentPadding(val value: Padding) {
     Compact(Padding(horizontal = 16.dp, vertical = 16.dp)),
     Medium(Padding(horizontal = 32.dp, vertical = 16.dp)),
-    Expanded(Padding(horizontal = 64.dp, vertical = 16.dp));
+    Expanded(Padding(horizontal = 64.dp, vertical = 16.dp)),
 }
 
 @Composable
 fun rememberContentPadding(
-    windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
+    windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfo().windowSizeClass,
 ): Padding {
     return when {
         windowSizeClass.isWidthAtLeastLarge() -> {
@@ -76,6 +78,7 @@ fun rememberContentPadding(
     }
 }
 
-val LocalContentPadding: ProvidableCompositionLocal<Padding> = staticCompositionLocalOf {
-    ContentPadding.Expanded.value
-}
+val LocalContentPadding: ProvidableCompositionLocal<Padding> =
+    staticCompositionLocalOf {
+        ContentPadding.Expanded.value
+    }

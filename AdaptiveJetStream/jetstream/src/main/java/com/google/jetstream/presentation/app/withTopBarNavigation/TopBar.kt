@@ -68,39 +68,42 @@ internal fun TopBar(
 
     // TODO: Is this a bug?
     // If I run the app on the TV emulator, nothing happens when I click on the top navigation items
-    val onClickHandler: (Screens) -> Unit = remember(isDpadAvailable) {
-        if (isDpadAvailable) {
-            { focusManager.moveFocus(FocusDirection.Down) }
-        } else {
-            { onShowScreen(it) }
+    val onClickHandler: (Screens) -> Unit =
+        remember(isDpadAvailable) {
+            if (isDpadAvailable) {
+                { focusManager.moveFocus(FocusDirection.Down) }
+            } else {
+                { onShowScreen(it) }
+            }
         }
-    }
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
-            .focusProperties {
-                onEnter = {
-                    when (selectedScreen) {
-                        Screens.Profile -> avatar.requestFocus()
-                        else -> tabRow.requestFocus()
+        modifier =
+            modifier
+                .focusProperties {
+                    onEnter = {
+                        when (selectedScreen) {
+                            Screens.Profile -> avatar.requestFocus()
+                            else -> tabRow.requestFocus()
+                        }
                     }
                 }
-            }
-            .focusGroup(),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                .focusGroup(),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Box(modifier = Modifier.padding(8.dp)) {
             UserAvatar(
-                modifier = Modifier
-                    .size(32.dp)
-                    .semantics {
-                        contentDescription =
-                            StringConstants.Composable.ContentDescription.UserAvatar
-                    }
-                    .focusRequester(avatar),
+                modifier =
+                    Modifier
+                        .size(32.dp)
+                        .semantics {
+                            contentDescription =
+                                StringConstants.Composable.ContentDescription.UserAvatar
+                        }
+                        .focusRequester(avatar),
                 selected = selectedScreen == Screens.Profile,
-                onClick = { onShowScreen(Screens.Profile) }
+                onClick = { onShowScreen(Screens.Profile) },
             )
         }
         TopBarTabRow(
@@ -108,15 +111,17 @@ internal fun TopBar(
             selectedScreen = selectedScreen,
             onClick = onClickHandler,
             onTabSelected = onShowScreen,
-            modifier = Modifier
-                .weight(1f)
-                .focusRequester(tabRow)
+            modifier =
+                Modifier
+                    .weight(1f)
+                    .focusRequester(tabRow),
         )
         Spacer(modifier.weight(0.1f))
         JetStreamLogo(
-            modifier = Modifier
-                .alpha(0.75f)
-                .padding(end = 8.dp),
+            modifier =
+                Modifier
+                    .alpha(0.75f)
+                    .padding(end = 8.dp),
         )
     }
 }
@@ -129,9 +134,10 @@ private fun TopBarTabRow(
     onClick: (Screens) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val items = remember(tabs) {
-        tabs.map { it to FocusRequester() }
-    }
+    val items =
+        remember(tabs) {
+            tabs.map { it to FocusRequester() }
+        }
 
     var selectedScreenIndex by rememberSaveable(tabs) {
         mutableIntStateOf(selectedTabIndex(tabs, selectedScreen, 0))
@@ -141,17 +147,18 @@ private fun TopBarTabRow(
     PrimaryTabRow(
         selectedTabIndex = selectedScreenIndex,
         divider = {},
-        modifier = modifier
-            .focusProperties {
-                onEnter = {
-                    if (selectedScreenIndex < items.size) {
-                        items[selectedScreenIndex].second.requestFocus()
-                    } else {
-                        items[0].second.requestFocus()
+        modifier =
+            modifier
+                .focusProperties {
+                    onEnter = {
+                        if (selectedScreenIndex < items.size) {
+                            items[selectedScreenIndex].second.requestFocus()
+                        } else {
+                            items[0].second.requestFocus()
+                        }
                     }
                 }
-            }
-            .focusGroup()
+                .focusGroup(),
     ) {
         items.forEach { (screen, focusRequester) ->
             key(screen) {
@@ -160,7 +167,7 @@ private fun TopBarTabRow(
                     selected = selectedScreen == screen,
                     onClick = { onClick(screen) },
                     onSelect = { onTabSelected(screen) },
-                    modifier = Modifier.focusRequester(focusRequester)
+                    modifier = Modifier.focusRequester(focusRequester),
                 )
             }
         }
@@ -170,7 +177,7 @@ private fun TopBarTabRow(
 private fun selectedTabIndex(
     tabs: List<Screens>,
     selectedScreen: Screens,
-    previouslySelectedTabIndex: Int
+    previouslySelectedTabIndex: Int,
 ): Int {
     val index = tabs.indexOf(selectedScreen) % tabs.size
     return when {
@@ -185,17 +192,18 @@ private fun TopBarTab(
     onClick: () -> Unit,
     onSelect: () -> Unit,
     modifier: Modifier = Modifier,
-    selected: Boolean = false
+    selected: Boolean = false,
 ) {
     Tab(
         selected = selected,
-        modifier = Modifier
-            .onFocusChanged {
-                if (it.isFocused) {
-                    onSelect()
+        modifier =
+            Modifier
+                .onFocusChanged {
+                    if (it.isFocused) {
+                        onSelect()
+                    }
                 }
-            }
-            .then(modifier),
+                .then(modifier),
         onClick = onClick,
     ) {
         TopBarTabContent(screen)
@@ -205,25 +213,28 @@ private fun TopBarTab(
 @Composable
 private fun TopBarTabContent(
     screen: Screens,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     if (screen.tabIcon != null) {
         Icon(
             screen.tabIcon,
-            modifier = Modifier
-                .padding(4.dp)
-                .then(modifier),
-            contentDescription = StringConstants.Composable
-                .ContentDescription.DashboardSearchButton,
+            modifier =
+                Modifier
+                    .padding(4.dp)
+                    .then(modifier),
+            contentDescription =
+                StringConstants.Composable
+                    .ContentDescription.DashboardSearchButton,
             tint = LocalContentColor.current,
         )
     } else {
         Text(
             modifier = modifier,
             text = screen.name,
-            style = MaterialTheme.typography.titleSmall.copy(
-                color = LocalContentColor.current
-            )
+            style =
+                MaterialTheme.typography.titleSmall.copy(
+                    color = LocalContentColor.current,
+                ),
         )
     }
 }

@@ -34,13 +34,14 @@ import com.google.jetstream.presentation.theme.JetStreamCardShape
 import com.google.jetstream.tvmaterial.StandardDialog
 
 @OptIn(
-    ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class,
+    ExperimentalFoundationApi::class,
+    ExperimentalComposeUiApi::class,
 )
 @Composable
 fun AccountsSectionDeleteDialog(
     showDialog: Boolean,
     onDismissRequest: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val confirmButton = remember { FocusRequester() }
 
@@ -56,14 +57,14 @@ fun AccountsSectionDeleteDialog(
             AccountsSectionDialogButton(
                 modifier = Modifier.padding(start = 8.dp).focusRequester(confirmButton),
                 text = stringResource(R.string.yes_delete_account),
-                onClick = onDismissRequest
+                onClick = onDismissRequest,
             )
         },
         dismissButton = {
             AccountsSectionDialogButton(
                 modifier = Modifier.padding(end = 8.dp),
                 text = stringResource(R.string.no_keep_it),
-                onClick = onDismissRequest
+                onClick = onDismissRequest,
             )
         },
         title = {
@@ -71,7 +72,7 @@ fun AccountsSectionDeleteDialog(
                 modifier = Modifier.padding(start = 8.dp),
                 text = stringResource(R.string.delete_account_dialog_title),
                 color = MaterialTheme.colorScheme.surface,
-                style = MaterialTheme.typography.headlineSmall
+                style = MaterialTheme.typography.headlineSmall,
             )
         },
         text = {
@@ -79,10 +80,10 @@ fun AccountsSectionDeleteDialog(
                 modifier = Modifier.padding(horizontal = 8.dp),
                 text = stringResource(R.string.delete_account_dialog_text),
                 color = MaterialTheme.colorScheme.surface,
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodyMedium,
             )
         },
         containerColor = MaterialTheme.colorScheme.onSurface,
-        shape = JetStreamCardShape
+        shape = JetStreamCardShape,
     )
 }

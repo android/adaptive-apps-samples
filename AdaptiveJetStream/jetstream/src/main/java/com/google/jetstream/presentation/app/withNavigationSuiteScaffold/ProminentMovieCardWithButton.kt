@@ -42,80 +42,85 @@ import com.google.jetstream.presentation.components.shim.scaleIndication
 import com.google.jetstream.presentation.screens.movies.components.ProminentMovieListScope
 import com.google.jetstream.presentation.theme.Padding
 
-val ProminentMovieCardWithButton = object : ProminentMovieListScope {
-    @Composable
-    override fun ProminentMovieCard(
-        movie: Movie,
-        modifier: Modifier,
-        onMovieClick: (movie: Movie) -> Unit
-    ) {
-        val interactionSource = remember { MutableInteractionSource() }
-
-        Box(
-            contentAlignment = Alignment.BottomStart,
-            modifier = Modifier
-                .bringCardIntoView(interactionSource)
-                .then(modifier),
+val ProminentMovieCardWithButton =
+    object : ProminentMovieListScope {
+        @Composable
+        override fun ProminentMovieCard(
+            movie: Movie,
+            modifier: Modifier,
+            onMovieClick: (movie: Movie) -> Unit,
         ) {
-            PosterImage(
-                movie,
-                modifier = Modifier.fillMaxSize()
-            )
-            CinematicScrim(
-                colors = listOf(
-                    Color.Black.copy(alpha = 0.5f),
-                    Color.Black.copy(alpha = 0.9f)
-                ),
-                modifier = Modifier.fillMaxSize()
-            )
-            Column(
-                modifier = Modifier.padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+            val interactionSource = remember { MutableInteractionSource() }
+
+            Box(
+                contentAlignment = Alignment.BottomStart,
+                modifier =
+                    Modifier
+                        .bringCardIntoView(interactionSource)
+                        .then(modifier),
             ) {
-                MovieTitle(movie)
-                WatchNowButton(
-                    onClick = { onMovieClick(movie) },
-                    interactionSource = interactionSource,
-                    modifier = Modifier
-                        .height(48.dp)
-                        .scaleIndication(interactionSource = interactionSource)
+                PosterImage(
+                    movie,
+                    modifier = Modifier.fillMaxSize(),
+                )
+                CinematicScrim(
+                    colors =
+                        listOf(
+                            Color.Black.copy(alpha = 0.5f),
+                            Color.Black.copy(alpha = 0.9f),
+                        ),
+                    modifier = Modifier.fillMaxSize(),
+                )
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                ) {
+                    MovieTitle(movie)
+                    WatchNowButton(
+                        onClick = { onMovieClick(movie) },
+                        interactionSource = interactionSource,
+                        modifier =
+                            Modifier
+                                .height(48.dp)
+                                .scaleIndication(interactionSource = interactionSource),
+                    )
+                }
+            }
+        }
+
+        @Composable
+        fun MovieTitle(
+            movie: Movie,
+            modifier: Modifier = Modifier,
+            verticalArrangement: Arrangement.Vertical = Arrangement.Top,
+        ) {
+            Column(
+                modifier = modifier,
+                verticalArrangement = verticalArrangement,
+            ) {
+                Text(
+                    text = movie.description,
+                    style =
+                        MaterialTheme.typography.labelSmall.copy(
+                            fontWeight = FontWeight.Normal,
+                        ),
+                    modifier = Modifier.graphicsLayer { alpha = 0.6f },
+                )
+                Text(
+                    text = movie.name,
+                    style = MaterialTheme.typography.headlineSmall,
                 )
             }
         }
-    }
 
-    @Composable
-    fun MovieTitle(
-        movie: Movie,
-        modifier: Modifier = Modifier,
-        verticalArrangement: Arrangement.Vertical = Arrangement.Top
-    ) {
-        Column(
-            modifier = modifier,
-            verticalArrangement = verticalArrangement
-        ) {
-            Text(
-                text = movie.description,
-                style = MaterialTheme.typography.labelSmall.copy(
-                    fontWeight = FontWeight.Normal
-                ),
-                modifier = Modifier.graphicsLayer { alpha = 0.6f }
-            )
-            Text(
-                text = movie.name,
-                style = MaterialTheme.typography.headlineSmall,
+        @Composable
+        private fun Modifier.bringCardIntoView(
+            interactionSource: MutableInteractionSource,
+            padding: Padding = Padding(horizontal = 32.dp),
+        ): Modifier {
+            return requestBringIntoViewOnFocus(
+                interactionSource = interactionSource,
+                padding = padding,
             )
         }
     }
-
-    @Composable
-    private fun Modifier.bringCardIntoView(
-        interactionSource: MutableInteractionSource,
-        padding: Padding = Padding(horizontal = 32.dp),
-    ): Modifier {
-        return requestBringIntoViewOnFocus(
-            interactionSource = interactionSource,
-            padding = padding,
-        )
-    }
-}

@@ -28,32 +28,32 @@ import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
 class MovieDetailsScreenTest {
-
     @get:Rule
     val composeTestRule = createComposeRule()
 
-    private val testMovieDetails = MovieDetails(
-        id = "1",
-        sources = emptyMap(),
-        subtitleUri = "",
-        posterUri = "",
-        name = "Test Movie Title",
-        description = "Detailed description",
-        pgRating = "PG-13",
-        releaseDate = "2023",
-        categories = listOf("Action"),
-        duration = "2h",
-        director = "Director",
-        screenplay = "Screenplay",
-        music = "Music",
-        castAndCrew = emptyList(),
-        status = "Released",
-        originalLanguage = "English",
-        budget = "$10M",
-        revenue = "$50M",
-        similarMovies = emptyList(),
-        reviewsAndRatings = emptyList()
-    )
+    private val testMovieDetails =
+        MovieDetails(
+            id = "1",
+            sources = emptyMap(),
+            subtitleUri = "",
+            posterUri = "",
+            name = "Test Movie Title",
+            description = "Detailed description",
+            pgRating = "PG-13",
+            releaseDate = "2023",
+            categories = listOf("Action"),
+            duration = "2h",
+            director = "Director",
+            screenplay = "Screenplay",
+            music = "Music",
+            castAndCrew = emptyList(),
+            status = "Released",
+            originalLanguage = "English",
+            budget = "$10M",
+            revenue = "$50M",
+            similarMovies = emptyList(),
+            reviewsAndRatings = emptyList(),
+        )
 
     @Test
     fun movieDetails_displaysTitleAndDescription() {
@@ -63,7 +63,7 @@ class MovieDetailsScreenTest {
                     movieDetails = testMovieDetails,
                     goToMoviePlayer = {},
                     onBackPressed = {},
-                    refreshScreenWithNewMovie = {}
+                    refreshScreenWithNewMovie = {},
                 )
             }
         }

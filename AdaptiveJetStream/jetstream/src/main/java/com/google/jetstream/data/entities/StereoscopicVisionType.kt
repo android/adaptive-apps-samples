@@ -16,41 +16,44 @@
 
 package com.google.jetstream.data.entities
 
+import androidx.xr.compose.subspace.StereoMode
 import com.google.jetstream.data.convert.From
 import com.google.jetstream.data.convert.Into
-import androidx.xr.compose.subspace.StereoMode
 
-sealed interface StereoscopicVisionType: Into<StereoMode> {
-    data object Mono: StereoscopicVisionType {
+sealed interface StereoscopicVisionType : Into<StereoMode> {
+    data object Mono : StereoscopicVisionType {
         override fun into(): StereoMode {
             return StereoMode.Mono
         }
     }
-    data object MultiViewLeftPrimary: StereoscopicVisionType {
+
+    data object MultiViewLeftPrimary : StereoscopicVisionType {
         override fun into(): StereoMode {
             return StereoMode.MultiviewLeftPrimary
         }
-
     }
-    data object MultiViewRightPrimary: StereoscopicVisionType {
+
+    data object MultiViewRightPrimary : StereoscopicVisionType {
         override fun into(): StereoMode {
             return StereoMode.MultiviewRightPrimary
         }
     }
-    data object SideBySide: StereoscopicVisionType {
+
+    data object SideBySide : StereoscopicVisionType {
         override fun into(): StereoMode {
             return StereoMode.SideBySide
         }
     }
-    data object TopBottom: StereoscopicVisionType {
+
+    data object TopBottom : StereoscopicVisionType {
         override fun into(): StereoMode {
             return StereoMode.TopBottom
         }
     }
 
-    companion object: From<String, StereoscopicVisionType> {
+    companion object : From<String, StereoscopicVisionType> {
         override fun from(value: String): StereoscopicVisionType {
-            return when(value) {
+            return when (value) {
                 "multiview_left_primary" -> MultiViewLeftPrimary
                 "multiview_right_primary" -> MultiViewRightPrimary
                 "side_by_side" -> SideBySide
@@ -58,6 +61,5 @@ sealed interface StereoscopicVisionType: Into<StereoMode> {
                 else -> Mono
             }
         }
-
     }
 }

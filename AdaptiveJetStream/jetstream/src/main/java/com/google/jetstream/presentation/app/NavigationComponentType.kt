@@ -29,7 +29,7 @@ import com.google.jetstream.presentation.components.feature.isWidthAtLeastLarge
 enum class NavigationComponentType {
     NavigationSuiteScaffold,
     TopBar,
-    Spatial
+    Spatial,
 }
 
 @Composable
@@ -39,18 +39,19 @@ fun rememberNavigationComponentType(): NavigationComponentType {
     val isAutomotiveEnabled = isAutomotiveEnabled()
 
     val isPreview = LocalInspectionMode.current
-    val isSpatialUiEnabled = if (isPreview) {
-        false
-    } else {
-        hasXrSpatialFeature() && isSpatialUiEnabled()
-    }
+    val isSpatialUiEnabled =
+        if (isPreview) {
+            false
+        } else {
+            hasXrSpatialFeature() && isSpatialUiEnabled()
+        }
 
     return remember(isLeanbackEnabled, isAutomotiveEnabled, windowSizeClass, isSpatialUiEnabled) {
         selectNavigationComponentType(
             isLeanbackEnabled = isLeanbackEnabled,
             isAutomotiveEnabled = isAutomotiveEnabled,
             isLargeWindow = windowSizeClass.isWidthAtLeastLarge(),
-            isSpatialUiEnabled = isSpatialUiEnabled
+            isSpatialUiEnabled = isSpatialUiEnabled,
         )
     }
 }

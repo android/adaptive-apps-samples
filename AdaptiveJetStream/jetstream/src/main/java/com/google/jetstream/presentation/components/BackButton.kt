@@ -45,7 +45,7 @@ fun BackButton(
     modifier: Modifier = Modifier,
     icon: ImageVector = Icons.AutoMirrored.Filled.ArrowBack,
     description: String? = null,
-    isRequired: Boolean = isBackButtonRequired()
+    isRequired: Boolean = isBackButtonRequired(),
 ) {
     if (isRequired) {
         BackButton(

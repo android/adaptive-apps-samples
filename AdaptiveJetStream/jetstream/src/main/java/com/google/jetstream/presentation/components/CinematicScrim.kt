@@ -26,14 +26,16 @@ import androidx.compose.ui.graphics.Color
 @Composable
 fun CinematicScrim(
     modifier: Modifier = Modifier,
-    colors: List<Color> = listOf(
-        Color.Black.copy(alpha = 0.1f),
-        Color.Black.copy(alpha = 0.8f)
-    )
+    colors: List<Color> =
+        listOf(
+            Color.Black.copy(alpha = 0.1f),
+            Color.Black.copy(alpha = 0.8f),
+        ),
 ) {
     Box(
-        modifier = modifier.background(
-            Brush.verticalGradient(colors)
-        )
+        modifier =
+            modifier.background(
+                Brush.verticalGradient(colors),
+            ),
     )
 }

@@ -44,37 +44,40 @@ fun MovieFilterChipRow(
             !windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_EXPANDED_LOWER_BOUND)
 
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(bottom = 16.dp)
-            .horizontalScroll(rememberScrollState())
-            .then(focusRestorerModifiers.parentModifier),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp)
+                .horizontalScroll(rememberScrollState())
+                .then(focusRestorerModifiers.parentModifier),
     ) {
         filterList.items.forEachIndexed { index, filterCondition ->
             val isChecked = selectedFilterList.items.contains(filterCondition)
-            val chipModifier = if (index == 0) {
-                focusRestorerModifiers.childModifier
-            } else {
-                Modifier
-            }.then(
-                if (isInMediumWidthWindow) {
-                    Modifier.weight(1f)
+            val chipModifier =
+                if (index == 0) {
+                    focusRestorerModifiers.childModifier
                 } else {
                     Modifier
-                }
-            )
+                }.then(
+                    if (isInMediumWidthWindow) {
+                        Modifier.weight(1f)
+                    } else {
+                        Modifier
+                    },
+                )
             MovieFilterChip(
                 label = stringResource(id = filterCondition.labelId),
                 isChecked = isChecked,
                 onCheckedChange = {
-                    val updated = if (it) {
-                        selectedFilterList.items + listOf(filterCondition)
-                    } else {
-                        selectedFilterList.items - setOf(filterCondition)
-                    }
+                    val updated =
+                        if (it) {
+                            selectedFilterList.items + listOf(filterCondition)
+                        } else {
+                            selectedFilterList.items - setOf(filterCondition)
+                        }
                     onSelectedFilterListUpdated(FilterList(updated))
                 },
-                modifier = chipModifier
+                modifier = chipModifier,
             )
         }
     }

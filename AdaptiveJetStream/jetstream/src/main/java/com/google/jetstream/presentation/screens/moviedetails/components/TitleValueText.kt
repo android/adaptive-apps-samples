@@ -28,18 +28,18 @@ import androidx.compose.ui.text.font.FontWeight
 fun TitleValueText(
     modifier: Modifier = Modifier,
     title: String,
-    value: String
+    value: String,
 ) {
     Column(modifier = modifier) {
         Text(
             modifier = Modifier.alpha(0.75f),
             text = title,
-            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Normal)
+            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Normal),
         )
         Text(
             text = value,
             style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Normal),
-            maxLines = 3
+            maxLines = 3,
         )
     }
 }

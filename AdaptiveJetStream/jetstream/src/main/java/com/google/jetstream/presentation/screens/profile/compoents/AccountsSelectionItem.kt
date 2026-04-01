@@ -52,26 +52,29 @@ fun AccountsSelectionItem(
 ) {
     key(key) {
         Surface(
-            modifier = modifier
-                .background(MaterialTheme.colorScheme.surfaceColorAtElevation(4.dp))
-                .clickable(onClick = accountsSectionData.onClick),
+            modifier =
+                modifier
+                    .background(MaterialTheme.colorScheme.surfaceColorAtElevation(4.dp))
+                    .clickable(onClick = accountsSectionData.onClick),
             shape = MaterialTheme.shapes.extraSmall,
         ) {
             if (isExpanded) {
                 Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp),
-                    verticalArrangement = Arrangement.Bottom
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .padding(16.dp),
+                    verticalArrangement = Arrangement.Bottom,
                 ) {
                     AccountData(accountsSectionData)
                 }
             } else {
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp, vertical = 16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 8.dp, vertical = 16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     AccountData(accountsSectionData)
                 }
@@ -84,18 +87,20 @@ fun AccountsSelectionItem(
 private fun AccountData(accountsSectionData: AccountsSectionData) {
     Text(
         text = accountsSectionData.title,
-        style = MaterialTheme.typography.titleSmall.copy(
-            fontSize = 15.sp
-        )
+        style =
+            MaterialTheme.typography.titleSmall.copy(
+                fontSize = 15.sp,
+            ),
     )
     Spacer(modifier = Modifier.padding(vertical = 2.dp))
     accountsSectionData.value?.let { nnValue ->
         Text(
             text = nnValue,
-            style = MaterialTheme.typography.labelMedium.copy(
-                fontWeight = FontWeight.Normal
-            ),
-            modifier = Modifier.alpha(0.75f)
+            style =
+                MaterialTheme.typography.labelMedium.copy(
+                    fontWeight = FontWeight.Normal,
+                ),
+            modifier = Modifier.alpha(0.75f),
         )
     }
 }
@@ -104,10 +109,12 @@ private fun AccountData(accountsSectionData: AccountsSectionData) {
 @FoldablePreview
 @Composable
 fun AccountSelectionItemPreview() {
-    val mockData = AccountsSectionData(
-        title = StringConstants.Composable.Placeholders
-            .AccountsSelectionViewSubscriptionsTitle
-    )
+    val mockData =
+        AccountsSectionData(
+            title =
+                StringConstants.Composable.Placeholders
+                    .AccountsSelectionViewSubscriptionsTitle,
+        )
 
     JetStreamTheme {
         Box(modifier = Modifier.background(MaterialTheme.colorScheme.surface)) {
@@ -119,10 +126,12 @@ fun AccountSelectionItemPreview() {
 @TvPreview
 @Composable
 fun AccountSelectionItemTvPreview() {
-    val mockData = AccountsSectionData(
-        title = StringConstants.Composable.Placeholders
-            .AccountsSelectionViewSubscriptionsTitle
-    )
+    val mockData =
+        AccountsSectionData(
+            title =
+                StringConstants.Composable.Placeholders
+                    .AccountsSelectionViewSubscriptionsTitle,
+        )
 
     JetStreamTheme {
         Box(modifier = Modifier.background(MaterialTheme.colorScheme.surface)) {

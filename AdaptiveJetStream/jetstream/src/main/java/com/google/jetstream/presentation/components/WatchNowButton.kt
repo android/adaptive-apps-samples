@@ -43,20 +43,21 @@ fun WatchNowButton(
         onClick = onClick,
         modifier = modifier,
         shape = JetStreamButtonShape,
-        colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.onSurface,
-            contentColor = MaterialTheme.colorScheme.surface
-        ),
-        interactionSource = interactionSource
+        colors =
+            ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.onSurface,
+                contentColor = MaterialTheme.colorScheme.surface,
+            ),
+        interactionSource = interactionSource,
     ) {
         Icon(
             imageVector = Icons.Outlined.PlayArrow,
-            contentDescription = null
+            contentDescription = null,
         )
         Spacer(Modifier.size(8.dp))
         Text(
             text = stringResource(R.string.watch_now),
-            style = MaterialTheme.typography.titleSmall
+            style = MaterialTheme.typography.titleSmall,
         )
     }
 }

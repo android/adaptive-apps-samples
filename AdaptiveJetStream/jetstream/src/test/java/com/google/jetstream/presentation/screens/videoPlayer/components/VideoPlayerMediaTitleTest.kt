@@ -27,7 +27,6 @@ import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
 class VideoPlayerMediaTitleTest {
-
     @get:Rule
     val composeTestRule = createComposeRule()
 
@@ -43,7 +42,7 @@ class VideoPlayerMediaTitleTest {
                     title = title,
                     secondaryText = secondary,
                     tertiaryText = tertiary,
-                    type = VideoPlayerMediaTitleType.DEFAULT
+                    type = VideoPlayerMediaTitleType.DEFAULT,
                 )
             }
         }
@@ -60,7 +59,7 @@ class VideoPlayerMediaTitleTest {
                     title = "Ad Title",
                     secondaryText = "Secondary",
                     tertiaryText = "Tertiary",
-                    type = VideoPlayerMediaTitleType.AD
+                    type = VideoPlayerMediaTitleType.AD,
                 )
             }
         }
@@ -76,7 +75,7 @@ class VideoPlayerMediaTitleTest {
                     title = "Live Title",
                     secondaryText = "Secondary",
                     tertiaryText = "Tertiary",
-                    type = VideoPlayerMediaTitleType.LIVE
+                    type = VideoPlayerMediaTitleType.LIVE,
                 )
             }
         }

@@ -31,18 +31,18 @@ import org.robolectric.annotation.Config
 @RunWith(RobolectricTestRunner::class)
 @Config(qualifiers = "w1280dp-h800dp")
 class MoviesScreenTest {
-
     @get:Rule
     val composeTestRule = createComposeRule()
 
-    private val testMovie = Movie(
-        id = "1",
-        sources = emptyMap(),
-        subtitleUri = null,
-        posterUri = "",
-        name = "Movie Name",
-        description = "Movie Description"
-    )
+    private val testMovie =
+        Movie(
+            id = "1",
+            sources = emptyMap(),
+            subtitleUri = null,
+            posterUri = "",
+            name = "Movie Name",
+            description = "Movie Description",
+        )
     private val testMovieList = List(5) { testMovie.copy(id = it.toString(), name = "Movie $it") }
 
     @Test
@@ -54,7 +54,7 @@ class MoviesScreenTest {
                     popularFilmsThisWeek = testMovieList,
                     onMovieClick = { _ -> },
                     onScroll = { _ -> },
-                    isTopBarVisible = true
+                    isTopBarVisible = true,
                 )
             }
         }

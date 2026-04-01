@@ -50,16 +50,15 @@ interface ProminentMovieListScope {
     fun ProminentMovieCard(
         movie: Movie,
         modifier: Modifier = Modifier,
-        onMovieClick: (movie: Movie) -> Unit = {}
+        onMovieClick: (movie: Movie) -> Unit = {},
     )
 
     object Default : ProminentMovieListScope {
-
         @Composable
         override fun ProminentMovieCard(
             movie: Movie,
             modifier: Modifier,
-            onMovieClick: (movie: Movie) -> Unit
+            onMovieClick: (movie: Movie) -> Unit,
         ) {
             val interactionSource = remember { MutableInteractionSource() }
             val isFocused by interactionSource.collectIsFocusedAsState()
@@ -71,30 +70,32 @@ interface ProminentMovieListScope {
 
             CompositionLocalProvider(LocalRippleConfiguration provides null) {
                 CompactCard(
-                    modifier = modifier
-                        .indication(
-                            interactionSource = interactionSource,
-                            indication = borderIndication(focused = JetStreamBorder)
-                        )
-                        .graphicsLayer { alpha = contentAlpha },
-                    colors = CardDefaults.cardColors(
-                        containerColor = Color.Transparent,
-                        contentColor = MaterialTheme.colorScheme.onSurface,
-                    ),
+                    modifier =
+                        modifier
+                            .indication(
+                                interactionSource = interactionSource,
+                                indication = borderIndication(focused = JetStreamBorder),
+                            )
+                            .graphicsLayer { alpha = contentAlpha },
+                    colors =
+                        CardDefaults.cardColors(
+                            containerColor = Color.Transparent,
+                            contentColor = MaterialTheme.colorScheme.onSurface,
+                        ),
                     interactionSource = interactionSource,
                     onClick = { onMovieClick(movie) },
                     image = {
                         PosterImage(
                             movie = movie,
-                            modifier = Modifier.fillMaxSize()
+                            modifier = Modifier.fillMaxSize(),
                         )
                     },
                     title = {
                         MovieTitle(
                             movie = movie,
-                            modifier = Modifier.padding(24.dp)
+                            modifier = Modifier.padding(24.dp),
                         )
-                    }
+                    },
                 )
             }
         }
@@ -103,18 +104,19 @@ interface ProminentMovieListScope {
         fun MovieTitle(
             movie: Movie,
             modifier: Modifier = Modifier,
-            verticalArrangement: Arrangement.Vertical = Arrangement.Top
+            verticalArrangement: Arrangement.Vertical = Arrangement.Top,
         ) {
             Column(
                 modifier = modifier,
-                verticalArrangement = verticalArrangement
+                verticalArrangement = verticalArrangement,
             ) {
                 Text(
                     text = movie.description,
-                    style = MaterialTheme.typography.labelSmall.copy(
-                        fontWeight = FontWeight.Normal
-                    ),
-                    modifier = Modifier.graphicsLayer { alpha = 0.6f }
+                    style =
+                        MaterialTheme.typography.labelSmall.copy(
+                            fontWeight = FontWeight.Normal,
+                        ),
+                    modifier = Modifier.graphicsLayer { alpha = 0.6f },
                 )
                 Text(
                     text = movie.name,

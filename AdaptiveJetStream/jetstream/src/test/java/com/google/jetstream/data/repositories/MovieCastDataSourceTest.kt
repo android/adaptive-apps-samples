@@ -23,26 +23,27 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class MovieCastDataSourceTest {
-
     private val fakeAssetReader = FakeAssetReader()
     private val dataSource = MovieCastDataSource(fakeAssetReader)
 
     @Test
-    fun getMovieCastList_returnsItems() = runTest {
-        val json = """
-            [
-              {
-                "id": "1",
-                "realName": "Actor 1",
-                "characterName": "Hero",
-                "avatarUrl": ""
-              }
-            ]
-        """.trimIndent()
-        fakeAssetReader.setResponse(StringConstants.Assets.MovieCast, json)
+    fun getMovieCastList_returnsItems() =
+        runTest {
+            val json =
+                """
+                [
+                  {
+                    "id": "1",
+                    "realName": "Actor 1",
+                    "characterName": "Hero",
+                    "avatarUrl": ""
+                  }
+                ]
+                """.trimIndent()
+            fakeAssetReader.setResponse(StringConstants.Assets.MovieCast, json)
 
-        val cast = dataSource.getMovieCastList()
-        assertEquals(1, cast.size)
-        assertEquals("Actor 1", cast[0].realName)
-    }
+            val cast = dataSource.getMovieCastList()
+            assertEquals(1, cast.size)
+            assertEquals("Actor 1", cast[0].realName)
+        }
 }

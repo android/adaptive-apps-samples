@@ -93,20 +93,20 @@ private class BorderIndicationNode(
     private val dragged: Border = pressed,
 ) : Modifier.Node(),
     DrawModifierNode {
-
     private var state: Border = Border.None
 
     // Snip onAttach method and attribute declarations
     override fun onAttach() {
         coroutineScope.launch {
             interactionSource.interactions.collect { interaction ->
-                state = when (interaction) {
-                    is PressInteraction.Press -> pressed
-                    is FocusInteraction.Focus -> focused
-                    is HoverInteraction.Enter -> hover
-                    is DragInteraction.Start -> dragged
-                    else -> Border.None
-                }
+                state =
+                    when (interaction) {
+                        is PressInteraction.Press -> pressed
+                        is FocusInteraction.Focus -> focused
+                        is HoverInteraction.Enter -> hover
+                        is DragInteraction.Start -> dragged
+                        else -> Border.None
+                    }
                 invalidateDraw()
             }
         }
@@ -122,7 +122,7 @@ private class BorderIndicationNode(
                 drawOutline(
                     outline = outline,
                     brush = border.stroke.brush,
-                    style = Stroke(width = border.stroke.width.toPx(), cap = StrokeCap.Round)
+                    style = Stroke(width = border.stroke.width.toPx(), cap = StrokeCap.Round),
                 )
             }
         }
@@ -133,7 +133,7 @@ private class BorderIndicationNode(
 class Border(
     val stroke: BorderStroke,
     val inset: Dp = 0.dp,
-    val shape: Shape = ShapeTokens.BorderDefaultShape
+    val shape: Shape = ShapeTokens.BorderDefaultShape,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -163,7 +163,7 @@ class Border(
         Border(
             stroke = border ?: this.stroke,
             inset = inset ?: this.inset,
-            shape = shape ?: this.shape
+            shape = shape ?: this.shape,
         )
 
     companion object {
@@ -175,7 +175,7 @@ class Border(
             Border(
                 stroke = BorderStroke(width = 0.dp, color = Color.Transparent),
                 inset = 0.dp,
-                shape = RectangleShape
+                shape = RectangleShape,
             )
     }
 }

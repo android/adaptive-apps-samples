@@ -84,13 +84,14 @@ class AppState internal constructor(
     }
 
     companion object {
-        val Saver = Saver<AppState, Pair<Boolean, Int>>(
-            save = { it.snapshot() },
-            restore = {
-                val screen = Screens.fromIndex(it.second) ?: Screens.Home
-                AppState(it.first, screen)
-            }
-        )
+        val Saver =
+            Saver<AppState, Pair<Boolean, Int>>(
+                save = { it.snapshot() },
+                restore = {
+                    val screen = Screens.fromIndex(it.second) ?: Screens.Home
+                    AppState(it.first, screen)
+                },
+            )
     }
 }
 

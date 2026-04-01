@@ -42,7 +42,7 @@ fun ClassicCard(
     shape: Shape = CardDefaults.shape,
     colors: CardColors = CardDefaults.cardColors(),
     contentPadding: PaddingValues = PaddingValues(),
-    interactionSource: MutableInteractionSource? = null
+    interactionSource: MutableInteractionSource? = null,
 ) {
     Card(
         onClick = onClick,

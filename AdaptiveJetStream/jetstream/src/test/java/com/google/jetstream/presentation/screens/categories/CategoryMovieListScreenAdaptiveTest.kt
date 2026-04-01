@@ -36,37 +36,38 @@ import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
 class CategoryMovieListScreenAdaptiveTest {
-
     @get:Rule
     val composeTestRule = createComposeRule()
 
-    private val testMovie = Movie(
-        id = "1",
-        sources = emptyMap(),
-        subtitleUri = null,
-        posterUri = "",
-        name = "Movie Name",
-        description = "Movie Description"
-    )
+    private val testMovie =
+        Movie(
+            id = "1",
+            sources = emptyMap(),
+            subtitleUri = null,
+            posterUri = "",
+            name = "Movie Name",
+            description = "Movie Description",
+        )
     private val testMovieList = List(5) { testMovie.copy(id = it.toString(), name = "Movie $it") }
 
-    private val testCategoryDetails = MovieCategoryDetails(
-        id = "1",
-        name = "Action Movies",
-        movies = testMovieList
-    )
+    private val testCategoryDetails =
+        MovieCategoryDetails(
+            id = "1",
+            name = "Action Movies",
+            movies = testMovieList,
+        )
 
     @Test
     fun categoryMovieList_displaysCategoryName_inLargeScreen() {
         composeTestRule.setContent {
             DeviceConfigurationOverride(
-                DeviceConfigurationOverride.ForcedSize(DpSize(1280.dp, 800.dp))
+                DeviceConfigurationOverride.ForcedSize(DpSize(1280.dp, 800.dp)),
             ) {
                 JetStreamTheme {
                     CategoryDetails(
                         categoryDetails = testCategoryDetails,
                         onBackPressed = {},
-                        onMovieSelected = {}
+                        onMovieSelected = {},
                     )
                 }
             }
@@ -82,7 +83,7 @@ class CategoryMovieListScreenAdaptiveTest {
                 CategoryDetails(
                     categoryDetails = testCategoryDetails,
                     onBackPressed = {},
-                    onMovieSelected = {}
+                    onMovieSelected = {},
                 )
             }
         }
@@ -100,7 +101,7 @@ class CategoryMovieListScreenAdaptiveTest {
                 CategoryDetails(
                     categoryDetails = testCategoryDetails,
                     onBackPressed = {},
-                    onMovieSelected = {}
+                    onMovieSelected = {},
                 )
             }
         }

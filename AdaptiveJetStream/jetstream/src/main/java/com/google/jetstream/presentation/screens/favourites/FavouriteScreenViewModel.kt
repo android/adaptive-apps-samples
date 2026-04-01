@@ -24,53 +24,58 @@ import com.google.jetstream.R
 import com.google.jetstream.data.entities.MovieList
 import com.google.jetstream.data.repositories.MovieRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import javax.inject.Inject
 
 @HiltViewModel
-class FavouriteScreenViewModel @Inject constructor(
-    movieRepository: MovieRepository
-) : ViewModel() {
+class FavouriteScreenViewModel
+    @Inject
+    constructor(
+        movieRepository: MovieRepository,
+    ) : ViewModel() {
+        private val selectedFilterList = MutableStateFlow(FilterList())
 
-    private val selectedFilterList = MutableStateFlow(FilterList())
-
-    val uiState: StateFlow<FavouriteScreenUiState> = combine(
-        selectedFilterList,
-        movieRepository.getFavouriteMovies()
-    ) { filterList, movieList ->
-        val idList = filterList.toIdList()
-        val filtered = movieList.filterIndexed { index, _ ->
-            idList.contains(index)
-        }
-        FavouriteScreenUiState.Ready(filtered, filterList)
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = FavouriteScreenUiState.Loading
-    )
-
-    fun updateSelectedFilterList(filterList: FilterList) {
-        selectedFilterList.value = filterList
-    }
-
-    companion object {
-        val filterList = FilterList(
-            listOf(
-                FilterCondition.Movies,
-                FilterCondition.TvShows,
-                FilterCondition.AddedLastWeek,
-                FilterCondition.AvailableIn4K
+        val uiState: StateFlow<FavouriteScreenUiState> =
+            combine(
+                selectedFilterList,
+                movieRepository.getFavouriteMovies(),
+            ) { filterList, movieList ->
+                val idList = filterList.toIdList()
+                val filtered =
+                    movieList.filterIndexed { index, _ ->
+                        idList.contains(index)
+                    }
+                FavouriteScreenUiState.Ready(filtered, filterList)
+            }.stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000),
+                initialValue = FavouriteScreenUiState.Loading,
             )
-        )
+
+        fun updateSelectedFilterList(filterList: FilterList) {
+            selectedFilterList.value = filterList
+        }
+
+        companion object {
+            val filterList =
+                FilterList(
+                    listOf(
+                        FilterCondition.Movies,
+                        FilterCondition.TvShows,
+                        FilterCondition.AddedLastWeek,
+                        FilterCondition.AvailableIn4K,
+                    ),
+                )
+        }
     }
-}
 
 sealed interface FavouriteScreenUiState {
     data object Loading : FavouriteScreenUiState
+
     data class Ready(val favouriteMovieList: MovieList, val selectedFilterList: FilterList) :
         FavouriteScreenUiState
 }
@@ -90,7 +95,10 @@ data class FilterList(val items: List<FilterCondition> = emptyList()) {
 }
 
 @Immutable
-enum class FilterCondition(val idList: List<Int>, @StringRes val labelId: Int) {
+enum class FilterCondition(
+    val idList: List<Int>,
+    @StringRes val labelId: Int,
+) {
     None((0..28).toList(), R.string.favorites_unknown),
     Movies((0..9).toList(), R.string.favorites_movies),
     TvShows((10..17).toList(), R.string.favorites_tv_shows),

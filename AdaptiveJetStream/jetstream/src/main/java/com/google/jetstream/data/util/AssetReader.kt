@@ -25,15 +25,17 @@ interface AssetReader {
     fun getJsonDataFromAsset(fileName: String): Result<String>
 }
 
-class AssetsReader @Inject constructor(
-    @ApplicationContext private val context: Context,
-) : AssetReader {
-    override fun getJsonDataFromAsset(fileName: String): Result<String> {
-        return try {
-            val jsonString = context.assets.open(fileName).bufferedReader().use { it.readText() }
-            Result.success(jsonString)
-        } catch (e: IOException) {
-            Result.failure(e)
+class AssetsReader
+    @Inject
+    constructor(
+        @ApplicationContext private val context: Context,
+    ) : AssetReader {
+        override fun getJsonDataFromAsset(fileName: String): Result<String> {
+            return try {
+                val jsonString = context.assets.open(fileName).bufferedReader().use { it.readText() }
+                Result.success(jsonString)
+            } catch (e: IOException) {
+                Result.failure(e)
+            }
         }
     }
-}

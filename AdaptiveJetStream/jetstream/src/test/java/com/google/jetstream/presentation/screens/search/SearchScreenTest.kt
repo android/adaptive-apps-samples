@@ -33,21 +33,21 @@ import org.robolectric.annotation.Config
 @RunWith(RobolectricTestRunner::class)
 @Config(qualifiers = "w1280dp-h800dp")
 class SearchScreenTest {
-
     @get:Rule
     val composeTestRule = createComposeRule()
 
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 
-    private val testMovie = Movie(
-        id = "1",
-        sources = emptyMap(),
-        subtitleUri = null,
-        posterUri = "",
-        name = "Movie Name",
-        description = "Movie Description"
-    )
+    private val testMovie =
+        Movie(
+            id = "1",
+            sources = emptyMap(),
+            subtitleUri = null,
+            posterUri = "",
+            name = "Movie Name",
+            description = "Movie Description",
+        )
 
     @Test
     fun searchResult_displaysPlaceholder() {
@@ -58,7 +58,7 @@ class SearchScreenTest {
                     movieList = emptyList(),
                     searchMovies = {},
                     updateSearchText = {},
-                    onMovieClick = {}
+                    onMovieClick = {},
                 )
             }
         }
@@ -78,7 +78,7 @@ class SearchScreenTest {
                     movieList = movies,
                     searchMovies = {},
                     updateSearchText = {},
-                    onMovieClick = {}
+                    onMovieClick = {},
                 )
             }
         }
@@ -98,7 +98,7 @@ class SearchScreenTest {
                 SearchScreen(
                     onMovieClick = {},
                     onScroll = {},
-                    searchScreenViewModel = viewModel
+                    searchScreenViewModel = viewModel,
                 )
             }
         }

@@ -29,12 +29,12 @@ import com.google.jetstream.R
 @Composable
 fun Loading(
     modifier: Modifier = Modifier,
-    style: TextStyle = MaterialTheme.typography.displayMedium
+    style: TextStyle = MaterialTheme.typography.displayMedium,
 ) {
     Box(modifier = modifier, contentAlignment = Alignment.Center) {
         Text(
             text = stringResource(id = R.string.message_loading),
-            style = style
+            style = style,
         )
     }
 }

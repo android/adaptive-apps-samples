@@ -54,9 +54,8 @@ enum class Screens(
     val tabIcon: ImageVector? = null,
     val shouldShowNavigation: (NavigationComponentType) -> Boolean = { true },
     @DrawableRes val navIcon: Int = 0,
-    val xrContainerColor: Color? = null
+    val xrContainerColor: Color? = null,
 ) {
-
     Profile,
     Home(isTabItem = true, isMainNavigation = true, navIcon = R.drawable.ic_home),
     Categories(isTabItem = true, isMainNavigation = true, navIcon = R.drawable.ic_category),
@@ -64,18 +63,19 @@ enum class Screens(
     Shows(isTabItem = true, isMainNavigation = true, navIcon = R.drawable.ic_shows),
     Favourites(isTabItem = true, isMainNavigation = true, navIcon = R.drawable.ic_favorites),
     Search(isTabItem = true, tabIcon = Icons.Default.Search, navIcon = R.drawable.ic_search),
-    CategoryMovieList(listOf(CategoryMovieListScreen.CategoryIdBundleKey)),
+    CategoryMovieList(listOf(CategoryMovieListScreen.CATEGORY_ID_BUNDLE_KEY)),
     MovieDetails(
         args = listOf(MovieDetailsScreen.MOVIE_ID_BUNDLE_KEY),
         // Don't show the navigation in the top bar
-        shouldShowNavigation = { it != NavigationComponentType.TopBar }
+        shouldShowNavigation = { it != NavigationComponentType.TopBar },
     ),
     VideoPlayer(
         listOf(VideoPlayerScreen.MOVIE_ID_BUNDLE_KEY),
         shouldShowNavigation = { false },
         // Workaround to make video player visible.
-        xrContainerColor = Color.Transparent
-    );
+        xrContainerColor = Color.Transparent,
+    ),
+    ;
 
     operator fun invoke(): String {
         val argList = StringBuilder()
@@ -96,7 +96,9 @@ enum class Screens(
     }
 
     companion object : TryFrom<String, Screens?> {
-        fun fromIndex(@IntRange(from = 0) index: Int): Screens? {
+        fun fromIndex(
+            @IntRange(from = 0) index: Int,
+        ): Screens? {
             return when {
                 index < 0 -> null
                 index >= entries.size -> null
@@ -125,6 +127,5 @@ enum class Screens(
     }
 
     @Composable
-    fun xrContainerColor() : Color = xrContainerColor ?: MaterialTheme.colorScheme.background
-
+    fun xrContainerColor(): Color = xrContainerColor ?: MaterialTheme.colorScheme.background
 }

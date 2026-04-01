@@ -28,15 +28,15 @@ import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
 class CategoryMovieListScreenTest {
-
     @get:Rule
     val composeTestRule = createComposeRule()
 
-    private val testCategoryDetails = MovieCategoryDetails(
-        id = "1",
-        name = "Action Movies",
-        movies = emptyList()
-    )
+    private val testCategoryDetails =
+        MovieCategoryDetails(
+            id = "1",
+            name = "Action Movies",
+            movies = emptyList(),
+        )
 
     @Test
     fun categoryMovieList_displaysCategoryName() {
@@ -45,7 +45,7 @@ class CategoryMovieListScreenTest {
                 CategoryDetails(
                     categoryDetails = testCategoryDetails,
                     onBackPressed = {},
-                    onMovieSelected = {}
+                    onMovieSelected = {},
                 )
             }
         }

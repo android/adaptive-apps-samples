@@ -29,28 +29,29 @@ import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class MovieDetailsScreenViewModelTest {
-
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 
     private val movieRepository = FakeMovieRepository()
 
     @Test
-    fun uiState_whenMovieIdMissing_isError() = runTest {
-        val savedStateHandle = SavedStateHandle()
-        val viewModel = MovieDetailsScreenViewModel(savedStateHandle, movieRepository)
-        
-        val state = viewModel.uiState.first { it !is MovieDetailsScreenUiState.Loading }
-        assertEquals(MovieDetailsScreenUiState.Error, state)
-    }
+    fun uiState_whenMovieIdMissing_isError() =
+        runTest {
+            val savedStateHandle = SavedStateHandle()
+            val viewModel = MovieDetailsScreenViewModel(savedStateHandle, movieRepository)
+
+            val state = viewModel.uiState.first { it !is MovieDetailsScreenUiState.Loading }
+            assertEquals(MovieDetailsScreenUiState.Error, state)
+        }
 
     @Test
-    fun uiState_whenMovieIdPresent_isDone() = runTest {
-        val savedStateHandle = SavedStateHandle(mapOf(MovieDetailsScreen.MOVIE_ID_BUNDLE_KEY to "123"))
-        val viewModel = MovieDetailsScreenViewModel(savedStateHandle, movieRepository)
-        
-        val state = viewModel.uiState.first { it is MovieDetailsScreenUiState.Done }
-        assertTrue(state is MovieDetailsScreenUiState.Done)
-        assertEquals("123", (state as MovieDetailsScreenUiState.Done).movieDetails.id)
-    }
+    fun uiState_whenMovieIdPresent_isDone() =
+        runTest {
+            val savedStateHandle = SavedStateHandle(mapOf(MovieDetailsScreen.MOVIE_ID_BUNDLE_KEY to "123"))
+            val viewModel = MovieDetailsScreenViewModel(savedStateHandle, movieRepository)
+
+            val state = viewModel.uiState.first { it is MovieDetailsScreenUiState.Done }
+            assertTrue(state is MovieDetailsScreenUiState.Done)
+            assertEquals("123", (state as MovieDetailsScreenUiState.Done).movieDetails.id)
+        }
 }

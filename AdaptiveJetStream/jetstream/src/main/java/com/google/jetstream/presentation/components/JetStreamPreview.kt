@@ -56,17 +56,18 @@ fun JetStreamPreview(content: @Composable () -> Unit) {
     }
 }
 
-val mockCategoryScreenState = CategoriesScreenUiState.Ready(
-    listOf(
-        MovieCategory("Action", "Action"),
-        MovieCategory("Action", "Action"),
-        MovieCategory("Action", "Action"),
-        MovieCategory("Action", "Action"),
-        MovieCategory("Action", "Action"),
-        MovieCategory("Action", "Action"),
-        MovieCategory("Action", "Action"),
-        MovieCategory("Action", "Action"),
-        MovieCategory("Action", "Action"),
-        MovieCategory("Action", "Action"),
+val mockCategoryScreenState =
+    CategoriesScreenUiState.Ready(
+        listOf(
+            MovieCategory("Action", "Action"),
+            MovieCategory("Action", "Action"),
+            MovieCategory("Action", "Action"),
+            MovieCategory("Action", "Action"),
+            MovieCategory("Action", "Action"),
+            MovieCategory("Action", "Action"),
+            MovieCategory("Action", "Action"),
+            MovieCategory("Action", "Action"),
+            MovieCategory("Action", "Action"),
+            MovieCategory("Action", "Action"),
+        ),
     )
-)

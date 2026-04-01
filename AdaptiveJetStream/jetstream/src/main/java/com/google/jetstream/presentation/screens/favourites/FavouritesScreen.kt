@@ -44,7 +44,7 @@ fun FavouritesScreen(
     onMovieClick: (movieId: String) -> Unit,
     onScroll: (isTopBarVisible: Boolean) -> Unit,
     isTopBarVisible: Boolean,
-    favouriteScreenViewModel: FavouriteScreenViewModel = hiltViewModel()
+    favouriteScreenViewModel: FavouriteScreenViewModel = hiltViewModel(),
 ) {
     val uiState by favouriteScreenViewModel.uiState.collectAsStateWithLifecycle()
     when (val s = uiState) {
@@ -61,7 +61,7 @@ fun FavouritesScreen(
                 modifier = Modifier.fillMaxSize(),
                 filterList = FavouriteScreenViewModel.filterList,
                 selectedFilterList = s.selectedFilterList,
-                onSelectedFilterListUpdated = favouriteScreenViewModel::updateSelectedFilterList
+                onSelectedFilterListUpdated = favouriteScreenViewModel::updateSelectedFilterList,
             )
         }
     }
@@ -77,7 +77,7 @@ internal fun Catalog(
     onSelectedFilterListUpdated: (FilterList) -> Unit,
     isTopBarVisible: Boolean,
     modifier: Modifier = Modifier,
-    contentPadding: Padding = LocalContentPadding.current
+    contentPadding: Padding = LocalContentPadding.current,
 ) {
     val filteredMoviesGridState = rememberLazyGridState()
 
@@ -100,18 +100,19 @@ internal fun Catalog(
     }
 
     val chipRowTopPadding by animateDpAsState(
-        targetValue = if (shouldShowTopBar) 0.dp else contentPadding.top, label = ""
+        targetValue = if (shouldShowTopBar) 0.dp else contentPadding.top,
+        label = "",
     )
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier.padding(horizontal = contentPadding.start)
+        modifier = modifier.padding(horizontal = contentPadding.start),
     ) {
         MovieFilterChipRow(
             filterList = filterList,
             selectedFilterList = selectedFilterList,
             onSelectedFilterListUpdated = onSelectedFilterListUpdated,
-            modifier = Modifier.padding(top = chipRowTopPadding)
+            modifier = Modifier.padding(top = chipRowTopPadding),
         )
         FilteredMoviesGrid(
             state = filteredMoviesGridState,

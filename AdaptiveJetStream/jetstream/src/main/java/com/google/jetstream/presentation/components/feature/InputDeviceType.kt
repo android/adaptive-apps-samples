@@ -36,7 +36,8 @@ enum class InputDeviceType {
     Mouse,
     TouchPad,
     Dpad,
-    RotaryController;
+    RotaryController,
+    ;
 
     internal fun inputSources(): List<Int> {
         return when (this) {
@@ -52,39 +53,40 @@ enum class InputDeviceType {
 
 class InputDeviceMonitor(
     private var inputManager: InputManager,
-    private val onInputDeviceUpdated: (List<InputDeviceType>) -> Unit
+    private val onInputDeviceUpdated: (List<InputDeviceType>) -> Unit,
 ) : HandlerThread("InputDeviceMonitor") {
-
     private lateinit var handler: Handler
-    private val listener = object : InputManager.InputDeviceListener {
-        override fun onInputDeviceAdded(deviceId: Int) {
-            updateDeviceList()
-        }
+    private val listener =
+        object : InputManager.InputDeviceListener {
+            override fun onInputDeviceAdded(deviceId: Int) {
+                updateDeviceList()
+            }
 
-        override fun onInputDeviceRemoved(deviceId: Int) {
-            updateDeviceList()
-        }
+            override fun onInputDeviceRemoved(deviceId: Int) {
+                updateDeviceList()
+            }
 
-        override fun onInputDeviceChanged(deviceId: Int) {
-            updateDeviceList()
+            override fun onInputDeviceChanged(deviceId: Int) {
+                updateDeviceList()
+            }
         }
-    }
 
     private fun updateDeviceList() {
-        val updatedList = inputManager.inputDeviceIds
-            .map { deviceId ->
-                inputManager.getInputDevice(deviceId)
-            }
-            .filterNotNull()
-            .filter { device ->
-                device.isEnabled && !device.isVirtual
-            }
-            .map { device ->
-                device.deviceType()
-            }
-            .flatten()
-            .toSet()
-            .toList()
+        val updatedList =
+            inputManager.inputDeviceIds
+                .map { deviceId ->
+                    inputManager.getInputDevice(deviceId)
+                }
+                .filterNotNull()
+                .filter { device ->
+                    device.isEnabled && !device.isVirtual
+                }
+                .map { device ->
+                    device.deviceType()
+                }
+                .flatten()
+                .toSet()
+                .toList()
         onInputDeviceUpdated(updatedList)
     }
 
@@ -106,14 +108,15 @@ internal fun rememberInputDeviceMonitor(
     context: Context = LocalContext.current,
     onInputDeviceUpdated: (List<InputDeviceType>) -> Unit,
 ): InputDeviceMonitor {
-    val inputManager = remember {
-        context.getSystemService(Context.INPUT_SERVICE) as InputManager
-    }
+    val inputManager =
+        remember {
+            context.getSystemService(Context.INPUT_SERVICE) as InputManager
+        }
 
     return remember {
         InputDeviceMonitor(
             inputManager = inputManager,
-            onInputDeviceUpdated = onInputDeviceUpdated
+            onInputDeviceUpdated = onInputDeviceUpdated,
         )
     }.also { monitor ->
         DisposableEffect(monitor) {
@@ -127,12 +130,12 @@ internal fun rememberInputDeviceMonitor(
 }
 
 private fun InputDevice.deviceType(): List<InputDeviceType> {
-
-    val list = InputDeviceType.entries.filter { type ->
-        type.inputSources().any { expected ->
-            sources and expected == expected
+    val list =
+        InputDeviceType.entries.filter { type ->
+            type.inputSources().any { expected ->
+                sources and expected == expected
+            }
         }
-    }
     return list
 }
 
@@ -140,14 +143,15 @@ private fun InputDevice.deviceType(): List<InputDeviceType> {
 internal fun rememberAvailableInputDevices(
     context: Context = LocalContext.current,
 ): State<List<InputDeviceType>> {
-    val availableDeviceTypes = remember {
-        MutableStateFlow<List<InputDeviceType>>(emptyList())
-    }
+    val availableDeviceTypes =
+        remember {
+            MutableStateFlow<List<InputDeviceType>>(emptyList())
+        }
     rememberInputDeviceMonitor(
         context = context,
         onInputDeviceUpdated = {
             availableDeviceTypes.value = it
-        }
+        },
     )
     return availableDeviceTypes.collectAsStateWithLifecycle()
 }

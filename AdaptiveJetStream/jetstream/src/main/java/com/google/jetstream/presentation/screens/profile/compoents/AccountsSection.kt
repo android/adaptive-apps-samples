@@ -48,77 +48,83 @@ import com.google.jetstream.presentation.theme.Padding
 data class AccountsSectionData(
     val title: String,
     val value: String? = null,
-    val onClick: () -> Unit = {}
+    val onClick: () -> Unit = {},
 )
 
 @TvPreview
 @Composable
 fun AccountsSection(
     numberOfColumns: Int = 2,
-    contentPadding: Padding = LocalContentPadding.current
+    contentPadding: Padding = LocalContentPadding.current,
 ) {
     var showDeleteDialog by remember { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
-    val accountsSectionListItems = remember {
-        listOf(
-            AccountsSectionData(
-                title = StringConstants.Composable.Placeholders
-                    .AccountsSelectionSwitchAccountsTitle,
-                value = StringConstants.Composable.Placeholders.AccountsSelectionSwitchAccountsEmail
-            ),
-            AccountsSectionData(
-                title = StringConstants.Composable.Placeholders.AccountsSelectionLogOut,
-                value = StringConstants.Composable.Placeholders.AccountsSelectionSwitchAccountsEmail
-            ),
-            AccountsSectionData(
-                title = StringConstants.Composable.Placeholders
-                    .AccountsSelectionChangePasswordTitle,
-                value = StringConstants.Composable.Placeholders.AccountsSelectionChangePasswordValue
-            ),
-            AccountsSectionData(
-                title = StringConstants.Composable.Placeholders.AccountsSelectionAddNewAccountTitle,
-            ),
-            AccountsSectionData(
-                title = StringConstants.Composable.Placeholders
-                    .AccountsSelectionViewSubscriptionsTitle
-            ),
-            AccountsSectionData(
-                title = StringConstants.Composable.Placeholders.AccountsSelectionDeleteAccountTitle,
-                onClick = { showDeleteDialog = true }
+    val accountsSectionListItems =
+        remember {
+            listOf(
+                AccountsSectionData(
+                    title =
+                        StringConstants.Composable.Placeholders
+                            .AccountsSelectionSwitchAccountsTitle,
+                    value = StringConstants.Composable.Placeholders.AccountsSelectionSwitchAccountsEmail,
+                ),
+                AccountsSectionData(
+                    title = StringConstants.Composable.Placeholders.AccountsSelectionLogOut,
+                    value = StringConstants.Composable.Placeholders.AccountsSelectionSwitchAccountsEmail,
+                ),
+                AccountsSectionData(
+                    title =
+                        StringConstants.Composable.Placeholders
+                            .AccountsSelectionChangePasswordTitle,
+                    value = StringConstants.Composable.Placeholders.AccountsSelectionChangePasswordValue,
+                ),
+                AccountsSectionData(
+                    title = StringConstants.Composable.Placeholders.AccountsSelectionAddNewAccountTitle,
+                ),
+                AccountsSectionData(
+                    title =
+                        StringConstants.Composable.Placeholders
+                            .AccountsSelectionViewSubscriptionsTitle,
+                ),
+                AccountsSectionData(
+                    title = StringConstants.Composable.Placeholders.AccountsSelectionDeleteAccountTitle,
+                    onClick = { showDeleteDialog = true },
+                ),
             )
-        )
-    }
+        }
 
     LazyVerticalGrid(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = contentPadding.start),
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .padding(horizontal = contentPadding.start),
         columns = GridCells.Fixed(numberOfColumns),
         content = {
-            val itemModifier = if (numberOfColumns == 2) {
-                Modifier
-                    .focusRequester(focusRequester)
-                    .padding(8.dp)
-                    .fillMaxWidth()
-                    .aspectRatio(2f)
-            } else {
-                Modifier
-            }
+            val itemModifier =
+                if (numberOfColumns == 2) {
+                    Modifier
+                        .focusRequester(focusRequester)
+                        .padding(8.dp)
+                        .fillMaxWidth()
+                        .aspectRatio(2f)
+                } else {
+                    Modifier
+                }
             items(accountsSectionListItems.size) { index ->
                 AccountsSelectionItem(
                     modifier = itemModifier,
                     key = index,
                     accountsSectionData = accountsSectionListItems[index],
-                    isExpanded = numberOfColumns == 2
+                    isExpanded = numberOfColumns == 2,
                 )
             }
-        }
+        },
     )
 
     AccountsSectionDeleteDialog(
         showDialog = showDeleteDialog,
         onDismissRequest = { showDeleteDialog = false },
-        modifier = Modifier.width(428.dp)
+        modifier = Modifier.width(428.dp),
     )
 }
 

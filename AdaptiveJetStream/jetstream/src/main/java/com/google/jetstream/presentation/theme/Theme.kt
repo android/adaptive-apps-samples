@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-package com.google.jetstream.presentation.theme // ktlint-disable filename
+@file:Suppress("ktlint:standard:filename")
+
+package com.google.jetstream.presentation.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -25,7 +27,7 @@ import com.google.jetstream.presentation.screens.categories.LocalCategoryGridGri
 
 @Composable
 fun JetStreamTheme(
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     // TODO: Consider refactoring this
     CompositionLocalProvider(
@@ -39,14 +41,15 @@ fun JetStreamTheme(
     ) {
         MaterialTheme(
             // TODO this is redundant because the dark and light color schemes are the same
-            colorScheme = if (isSystemInDarkTheme()) {
-                darkColorScheme
-            } else {
-                lightColorScheme
-            },
+            colorScheme =
+                if (isSystemInDarkTheme()) {
+                    darkColorScheme
+                } else {
+                    lightColorScheme
+                },
             shapes = MaterialTheme.shapes,
             typography = Typography,
-            content = content
+            content = content,
         )
     }
 }

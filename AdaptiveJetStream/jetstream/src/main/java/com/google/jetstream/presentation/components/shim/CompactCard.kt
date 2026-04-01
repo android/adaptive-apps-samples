@@ -46,25 +46,27 @@ fun CompactCard(
     colors: CardColors = CardDefaults.cardColors(),
     shape: Shape = CardDefaults.shape,
     scrimBrush: Brush = CardDefaults.scrimBrush,
-    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
+    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
 ) {
     Card(
-        modifier = Modifier
-            .clickable(interactionSource, indication = ripple(), onClick = onClick)
-            .then(modifier),
+        modifier =
+            Modifier
+                .clickable(interactionSource, indication = ripple(), onClick = onClick)
+                .then(modifier),
         shape = shape,
         colors = colors,
     ) {
         Box(contentAlignment = Alignment.BottomStart) {
             Box(
-                modifier = Modifier.drawWithCache {
-                    onDrawWithContent {
-                        drawContent()
-                        drawRect(brush = scrimBrush)
-                    }
-                },
+                modifier =
+                    Modifier.drawWithCache {
+                        onDrawWithContent {
+                            drawContent()
+                            drawRect(brush = scrimBrush)
+                        }
+                    },
                 contentAlignment = Alignment.Center,
-                content = image
+                content = image,
             )
             Column { CardContent(title = title, subtitle = subtitle, description = description) }
         }
@@ -72,9 +74,11 @@ fun CompactCard(
 }
 
 val CardDefaults.scrimBrush: Brush
-    get() = Brush.verticalGradient(
-        colors = listOf(
-            Color(red = 28, green = 27, blue = 31, alpha = 0),
-            Color(red = 28, green = 27, blue = 31, alpha = 204)
+    get() =
+        Brush.verticalGradient(
+            colors =
+                listOf(
+                    Color(red = 28, green = 27, blue = 31, alpha = 0),
+                    Color(red = 28, green = 27, blue = 31, alpha = 204),
+                ),
         )
-    )

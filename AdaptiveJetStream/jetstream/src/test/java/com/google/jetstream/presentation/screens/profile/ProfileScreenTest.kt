@@ -32,7 +32,6 @@ import org.robolectric.annotation.Config
 @RunWith(RobolectricTestRunner::class)
 @Config(qualifiers = "w1280dp-h800dp")
 class ProfileScreenTest {
-
     @get:Rule
     val composeTestRule = createComposeRule()
 

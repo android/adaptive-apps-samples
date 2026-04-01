@@ -26,10 +26,10 @@ data class Movie(
     val subtitleUri: String?,
     val posterUri: String,
     val name: String,
-    val description: String
+    val description: String,
 ) {
     fun videoUriFor(
-        stereoscopicVisionType: StereoscopicVisionType = StereoscopicVisionType.Mono
+        stereoscopicVisionType: StereoscopicVisionType = StereoscopicVisionType.Mono,
     ): Uri? {
         return sources[stereoscopicVisionType]
     }
@@ -51,21 +51,23 @@ data class Movie(
                 subtitleUri = movieDetails.subtitleUri,
                 posterUri = movieDetails.posterUri,
                 name = movieDetails.name,
-                description = movieDetails.description
+                description = movieDetails.description,
             )
         }
     }
 }
 
 fun MoviesResponseItem.toMovie(thumbnailType: ThumbnailType = ThumbnailType.Standard): Movie {
-    val thumbnail = when (thumbnailType) {
-        ThumbnailType.Standard -> image_2_3
-        ThumbnailType.Long -> image_16_9
-    }
+    val thumbnail =
+        when (thumbnailType) {
+            ThumbnailType.Standard -> image_2_3
+            ThumbnailType.Long -> image_16_9
+        }
 
-    val sourceMap = sources.associate {
-        StereoscopicVisionType.from(it.stereoMode) to it.uri.toUri()
-    }
+    val sourceMap =
+        sources.associate {
+            StereoscopicVisionType.from(it.stereoMode) to it.uri.toUri()
+        }
 
     return Movie(
         id = id,
@@ -73,11 +75,11 @@ fun MoviesResponseItem.toMovie(thumbnailType: ThumbnailType = ThumbnailType.Stan
         subtitleUri = subtitleUri,
         posterUri = thumbnail,
         name = title,
-        description = plot
+        description = plot,
     )
 }
 
 enum class ThumbnailType {
     Standard,
-    Long
+    Long,
 }

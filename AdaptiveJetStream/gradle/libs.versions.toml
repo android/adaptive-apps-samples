@@ -33,6 +33,7 @@ xr-material3 = "1.0.0-alpha16"
 screenshot = "0.0.1-alpha13"
 robolectric = "4.16.1"
 jacoco = "0.8.12"
+spotless = "8.4.0"
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity-compose" }
@@ -93,3 +94,4 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 kotlin-parcelize = { id = "kotlin-parcelize" }
 screenshot = { id = "com.android.compose.screenshot", version.ref = "screenshot" }
 jacoco = { id = "org.jacoco", version.ref = "jacoco" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }

@@ -57,17 +57,18 @@ fun VideoPlayerOverlay(
     Box {
         AnimatedVisibility(isControlsVisible, Modifier, fadeIn(), fadeOut()) {
             Box(
-                modifier = Modifier.padding(
-                    top = contentPadding.top,
-                    start = contentPadding.start
-                )
+                modifier =
+                    Modifier.padding(
+                        top = contentPadding.top,
+                        start = contentPadding.start,
+                    ),
             ) {
                 backButton()
             }
         }
         Box(
             modifier = modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
         ) {
             AnimatedVisibility(isControlsVisible, Modifier, fadeIn(), fadeOut()) {
                 CinematicScrim(Modifier.fillMaxSize())
@@ -76,7 +77,7 @@ fun VideoPlayerOverlay(
             Column {
                 Box(
                     Modifier.weight(1f),
-                    contentAlignment = Alignment.BottomCenter
+                    contentAlignment = Alignment.BottomCenter,
                 ) {
                     subtitles()
                 }
@@ -85,15 +86,16 @@ fun VideoPlayerOverlay(
                     isControlsVisible,
                     Modifier,
                     slideInVertically { it },
-                    slideOutVertically { it }
+                    slideOutVertically { it },
                 ) {
                     Box(
-                        modifier = Modifier
-                            .padding(
-                                start = contentPadding.start,
-                                end = contentPadding.end,
-                                bottom = 32.dp
-                            )
+                        modifier =
+                            Modifier
+                                .padding(
+                                    start = contentPadding.start,
+                                    end = contentPadding.end,
+                                    bottom = 32.dp,
+                                ),
                     ) {
                         controls()
                     }
@@ -116,7 +118,7 @@ private fun VideoPlayerOverlayPreview() {
                         Modifier
                             .fillMaxWidth()
                             .height(100.dp)
-                            .background(Color.Red)
+                            .background(Color.Red),
                     )
                 },
                 controls = {
@@ -124,23 +126,23 @@ private fun VideoPlayerOverlayPreview() {
                         Modifier
                             .fillMaxWidth()
                             .height(100.dp)
-                            .background(Color.Blue)
+                            .background(Color.Blue),
                     )
                 },
                 centerButton = {
                     Box(
                         Modifier
                             .size(88.dp)
-                            .background(Color.Green)
+                            .background(Color.Green),
                     )
                 },
                 backButton = {
                     Box(
                         Modifier
                             .size(32.dp)
-                            .background(Color.Cyan)
+                            .background(Color.Cyan),
                     )
-                }
+                },
             )
         }
     }
@@ -158,7 +160,7 @@ private fun VideoPlayerOverlayPreviewForPhone() {
                         Modifier
                             .fillMaxWidth()
                             .height(100.dp)
-                            .background(Color.Red)
+                            .background(Color.Red),
                     )
                 },
                 controls = {
@@ -166,23 +168,23 @@ private fun VideoPlayerOverlayPreviewForPhone() {
                         Modifier
                             .fillMaxWidth()
                             .height(100.dp)
-                            .background(Color.Blue)
+                            .background(Color.Blue),
                     )
                 },
                 centerButton = {
                     Box(
                         Modifier
                             .size(88.dp)
-                            .background(Color.Green)
+                            .background(Color.Green),
                     )
                 },
                 backButton = {
                     Box(
                         Modifier
                             .size(32.dp)
-                            .background(Color.Cyan)
+                            .background(Color.Cyan),
                     )
-                }
+                },
             )
         }
     }

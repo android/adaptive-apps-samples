@@ -42,13 +42,13 @@ fun ProminentMovieList(
     LazyRow(
         modifier = modifier.focusRestorer(),
         contentPadding = contentPadding.copy(top = 0.dp, bottom = 0.dp).intoPaddingValues(),
-        horizontalArrangement = Arrangement.spacedBy(LocalProminentListItemGap.current)
+        horizontalArrangement = Arrangement.spacedBy(LocalProminentListItemGap.current),
     ) {
         items(movieList) {
             prominentMovieListScope.ProminentMovieCard(
                 onMovieClick = onMovieClick,
                 movie = it,
-                modifier = Modifier.size(LocalProminentCardSize.current)
+                modifier = Modifier.size(LocalProminentCardSize.current),
             )
         }
     }

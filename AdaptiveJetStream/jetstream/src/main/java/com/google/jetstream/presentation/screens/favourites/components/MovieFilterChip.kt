@@ -47,12 +47,13 @@ fun MovieFilterChip(
     isChecked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
-    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
+    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
 ) {
     FilterChip(
-        modifier = modifier
-            .padding(end = 16.dp)
-            .indication(interactionSource, borderIndication(focused = ChipFocusedBorder)),
+        modifier =
+            modifier
+                .padding(end = 16.dp)
+                .indication(interactionSource, borderIndication(focused = ChipFocusedBorder)),
         onClick = { onCheckedChange(!isChecked) },
         selected = isChecked,
         leadingIcon = {
@@ -60,15 +61,15 @@ fun MovieFilterChip(
                 Icon(
                     Icons.Default.Check,
                     contentDescription =
-                    StringConstants.Composable.ContentDescription.FilterSelected,
-                    modifier = Modifier.size(16.dp)
+                        StringConstants.Composable.ContentDescription.FilterSelected,
+                    modifier = Modifier.size(16.dp),
                 )
             }
         },
         label = {
             Box(
                 contentAlignment = Alignment.Center,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             ) {
                 Text(
                     text = label,
@@ -77,15 +78,17 @@ fun MovieFilterChip(
                     overflow = TextOverflow.Visible,
                 )
             }
-        }
+        },
     )
 }
 
 private val ChipFocusedBorder
-    @Composable get() = Border(
-        stroke = BorderStroke(
-            width = 1.5.dp,
-            color = MaterialTheme.colorScheme.onSurface,
-        ),
-        shape = JetStreamCardShape
-    )
+    @Composable get() =
+        Border(
+            stroke =
+                BorderStroke(
+                    width = 1.5.dp,
+                    color = MaterialTheme.colorScheme.onSurface,
+                ),
+            shape = JetStreamCardShape,
+        )

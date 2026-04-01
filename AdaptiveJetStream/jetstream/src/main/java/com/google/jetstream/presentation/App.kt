@@ -43,17 +43,18 @@ import com.google.jetstream.presentation.components.feature.isWidthAtLeastLarge
 fun App(
     onActivityBackPressed: () -> Unit,
     modifier: Modifier = Modifier,
-    appState: AppState = rememberAppState()
+    appState: AppState = rememberAppState(),
 ) {
     val navController = rememberNavController()
 
     val navigationComponentType = rememberNavigationComponentType()
 
-    val keyboardShortcuts = rememberKeyboardShortcuts(onSelectScreen = { screen ->
-        if (appState.selectedScreen != screen) {
-            navController.navigate(screen())
-        }
-    })
+    val keyboardShortcuts =
+        rememberKeyboardShortcuts(onSelectScreen = { screen ->
+            if (appState.selectedScreen != screen) {
+                navController.navigate(screen())
+            }
+        })
 
     LaunchedEffect(Unit) {
         navController.addOnDestinationChangedListener { _, destination, _ ->
@@ -71,7 +72,7 @@ fun App(
             navController = navController,
             isTopBarVisible = appState.isTopBarVisible,
             modifier = Modifier.padding(padding),
-            onScroll = { updateTopBarVisibility(appState, it) }
+            onScroll = { updateTopBarVisibility(appState, it) },
         )
     }
 
@@ -81,24 +82,25 @@ fun App(
 
     // TODO: Since there no App previews, this seems redundant
     val isPreview = LocalInspectionMode.current
-    val isSpatialUiEnabled = if (isPreview) {
-        false
-    } else {
-        hasXrSpatialFeature() && isSpatialUiEnabled()
-    }
+    val isSpatialUiEnabled =
+        if (isPreview) {
+            false
+        } else {
+            hasXrSpatialFeature() && isSpatialUiEnabled()
+        }
     when {
-
         isSpatialUiEnabled -> {
             // Android XR 3D environment, also known as Full Space mode.
             AppWithSpatialNavigation(
                 appState = appState,
                 navController = navController,
                 keyboardShortcuts = keyboardShortcuts,
-                modifier = modifier
+                modifier = modifier,
             ) { paddingValues ->
                 mainContent(paddingValues)
             }
         }
+
         isLeanbackEnabled || isAutomotiveEnabled || windowSizeClass.isWidthAtLeastLarge() -> {
             // TV, Automotive, Large windows on desktop and XR 2D environment (Home space mode).
             AppWithTopBarNavigation(
@@ -106,24 +108,22 @@ fun App(
                 navController = navController,
                 keyboardShortcuts = keyboardShortcuts,
                 onActivityBackPressed = onActivityBackPressed,
-                modifier = modifier
+                modifier = modifier,
             ) { paddingValues ->
                 mainContent(paddingValues)
             }
         }
+
         else -> {
             // All other form factors (phone, tablet, foldable etc).
             AppWithNavigationSuiteScaffold(
                 appState = appState,
                 navController = navController,
                 keyboardShortcuts = keyboardShortcuts,
-                modifier = modifier
+                modifier = modifier,
             ) { paddingValues ->
                 mainContent(paddingValues)
             }
         }
     }
 }
-
-
-
