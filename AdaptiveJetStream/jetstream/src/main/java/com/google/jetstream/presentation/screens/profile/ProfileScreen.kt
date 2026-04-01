@@ -77,7 +77,6 @@ import com.google.jetstream.R
 import com.google.jetstream.presentation.components.FoldablePreview
 import com.google.jetstream.presentation.components.PhonePreview
 import com.google.jetstream.presentation.components.TvPreview
-import com.google.jetstream.presentation.components.shim.tryRequestFocus
 import com.google.jetstream.presentation.screens.profile.compoents.AboutSection
 import com.google.jetstream.presentation.screens.profile.compoents.AccountsSection
 import com.google.jetstream.presentation.screens.profile.compoents.HelpAndSupportSection
@@ -124,7 +123,7 @@ private fun LargeProfileScreen(
     var selectedLanguageIndex by rememberSaveable { mutableIntStateOf(0) }
     var isSubtitlesChecked by rememberSaveable { mutableStateOf(true) }
 
-    LaunchedEffect(Unit) { focusRequester.tryRequestFocus() }
+    LaunchedEffect(Unit) { focusRequester.requestFocus() }
 
     Row(
         modifier = Modifier

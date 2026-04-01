@@ -30,7 +30,6 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.google.jetstream.R
-import com.google.jetstream.presentation.components.shim.tryRequestFocus
 import com.google.jetstream.presentation.theme.JetStreamCardShape
 import com.google.jetstream.tvmaterial.StandardDialog
 
@@ -46,7 +45,7 @@ fun AccountsSectionDeleteDialog(
     val confirmButton = remember { FocusRequester() }
 
     LaunchedEffect(Unit) {
-        confirmButton.tryRequestFocus()
+        confirmButton.requestFocus()
     }
 
     StandardDialog(

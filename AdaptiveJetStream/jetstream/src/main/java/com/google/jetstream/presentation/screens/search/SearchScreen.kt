@@ -54,7 +54,6 @@ import com.google.jetstream.R
 import com.google.jetstream.data.entities.Movie
 import com.google.jetstream.data.entities.MovieList
 import com.google.jetstream.presentation.components.MoviesRow
-import com.google.jetstream.presentation.components.shim.tryRequestFocus
 import com.google.jetstream.presentation.theme.LocalContentPadding
 import com.google.jetstream.presentation.theme.Padding
 
@@ -176,7 +175,7 @@ internal fun SearchResult(
                     .focusRequester(searchResult)
                     .onPlaced {
                         if (movieList.isNotEmpty()) {
-                            searchResult.tryRequestFocus()
+                            searchResult.requestFocus()
                         }
                     },
                 movieList = movieList

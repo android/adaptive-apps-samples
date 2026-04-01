@@ -18,6 +18,7 @@ package com.google.jetstream.presentation.screens.videoPlayer
 
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalActivity
+import androidx.annotation.OptIn
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -82,7 +83,6 @@ import com.google.jetstream.presentation.components.feature.isSpatialUiEnabled
 import com.google.jetstream.presentation.components.feature.rememberImmersiveModeAvailability
 import com.google.jetstream.presentation.components.handleKeyboardShortcuts
 import com.google.jetstream.presentation.components.shim.onSpaceBarPressed
-import com.google.jetstream.presentation.components.shim.tryRequestFocus
 import com.google.jetstream.presentation.screens.videoPlayer.components.VideoPlayerControls
 import com.google.jetstream.presentation.screens.videoPlayer.components.VideoPlayerOverlay
 import com.google.jetstream.presentation.screens.videoPlayer.components.VideoPlayerPulse
@@ -184,7 +184,7 @@ private fun VideoPlayerScreenContent(
 
 }
 
-@androidx.annotation.OptIn(UnstableApi::class)
+@OptIn(UnstableApi::class)
 @Composable
 private fun VideoPlayer(
     nowPlayingInfo: NowPlayingInfo,
@@ -271,7 +271,7 @@ private fun VideoPlayer(
 
     LaunchedEffect(videoPlayerState.isControlsVisible) {
         if (!videoPlayerState.isControlsVisible) {
-            focusRequester.tryRequestFocus()
+            focusRequester.requestFocus()
         }
     }
 
@@ -430,6 +430,7 @@ private fun VideoPlayer2D(
     }
 }
 
+@OptIn(UnstableApi::class)
 @Composable
 private fun TabletopVideoPlayer(
     modifier: Modifier = Modifier,
@@ -474,7 +475,7 @@ private fun TabletopVideoPlayer(
         }
     }
 }
-
+@OptIn(UnstableApi::class)
 @Composable
 private fun DefaultVideoPlayer(
     modifier: Modifier = Modifier,

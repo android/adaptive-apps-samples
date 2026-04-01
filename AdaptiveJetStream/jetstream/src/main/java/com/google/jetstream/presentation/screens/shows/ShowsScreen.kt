@@ -38,7 +38,6 @@ import com.google.jetstream.data.entities.MovieList
 import com.google.jetstream.data.util.StringConstants
 import com.google.jetstream.presentation.components.Loading
 import com.google.jetstream.presentation.components.MoviesRow
-import com.google.jetstream.presentation.components.shim.tryRequestFocus
 import com.google.jetstream.presentation.screens.movies.components.ProminentMovieList
 import com.google.jetstream.presentation.theme.LocalContentPadding
 import com.google.jetstream.presentation.theme.Padding
@@ -102,7 +101,7 @@ internal fun Catalog(
         modifier = modifier
             .focusProperties {
                 onEnter = {
-                    featured.tryRequestFocus()
+                    featured.requestFocus()
                 }
             }
     ) {

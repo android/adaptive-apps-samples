@@ -47,7 +47,6 @@ import com.google.jetstream.data.util.StringConstants
 import com.google.jetstream.presentation.components.Error
 import com.google.jetstream.presentation.components.Loading
 import com.google.jetstream.presentation.components.MoviesRow
-import com.google.jetstream.presentation.components.shim.tryRequestFocus
 import com.google.jetstream.presentation.theme.LocalContentPadding
 import com.google.jetstream.presentation.theme.LocalFeaturedCarouselHeight
 
@@ -132,11 +131,11 @@ internal fun Catalog(
                         onExit = {
                             when (requestedFocusDirection) {
                                 FocusDirection.Down -> {
-                                    trending.tryRequestFocus()
+                                    trending.requestFocus()
                                 }
 
                                 FocusDirection.Next -> {
-                                    trending.tryRequestFocus()
+                                    trending.requestFocus()
                                 }
                             }
                         }
@@ -172,8 +171,8 @@ internal fun Catalog(
                     .focusProperties {
                         onExit = {
                             when (requestedFocusDirection) {
-                                FocusDirection.Up -> top10.tryRequestFocus()
-                                FocusDirection.Previous -> top10.tryRequestFocus()
+                                FocusDirection.Up -> top10.requestFocus()
+                                FocusDirection.Previous -> top10.requestFocus()
                             }
                         }
                     }

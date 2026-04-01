@@ -65,7 +65,6 @@ import com.google.jetstream.data.entities.MovieList
 import com.google.jetstream.presentation.components.ImmersiveListMoviesRow
 import com.google.jetstream.presentation.components.ItemDirection
 import com.google.jetstream.presentation.components.PosterImage
-import com.google.jetstream.presentation.components.shim.tryRequestFocus
 import com.google.jetstream.presentation.theme.LocalContentPadding
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -221,7 +220,7 @@ private fun ImmersiveList(
         modifier = modifier
             .focusProperties {
                 onEnter = {
-                    moviesRow.tryRequestFocus()
+                    moviesRow.requestFocus()
                 }
             }
             .focusGroup()

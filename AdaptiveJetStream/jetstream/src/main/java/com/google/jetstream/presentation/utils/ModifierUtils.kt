@@ -27,7 +27,6 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.layout.onPlaced
-import com.google.jetstream.presentation.components.shim.tryRequestFocus
 
 /**
  * Handles horizontal (Left & Right) D-Pad Keys and consumes the event(s) so that the focus doesn't
@@ -158,11 +157,11 @@ fun createInitialFocusRestorerModifiers(): FocusRequesterModifiers {
         .focusProperties {
             onExit = {
                 focusRequester.saveFocusedChild()
-                FocusRequester.Default.tryRequestFocus()
+                FocusRequester.Default.requestFocus()
             }
             onEnter = {
                 if (!focusRequester.restoreFocusedChild()) {
-                    childFocusRequester.tryRequestFocus()
+                    childFocusRequester.requestFocus()
                 }
             }
         }

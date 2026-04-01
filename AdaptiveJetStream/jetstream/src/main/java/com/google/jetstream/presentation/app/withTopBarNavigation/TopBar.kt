@@ -52,7 +52,6 @@ import com.google.jetstream.data.util.StringConstants
 import com.google.jetstream.presentation.app.JetStreamLogo
 import com.google.jetstream.presentation.app.UserAvatar
 import com.google.jetstream.presentation.components.feature.isDpadAvailable
-import com.google.jetstream.presentation.components.shim.tryRequestFocus
 import com.google.jetstream.presentation.screens.Screens
 
 @Composable
@@ -83,8 +82,8 @@ internal fun TopBar(
             .focusProperties {
                 onEnter = {
                     when (selectedScreen) {
-                        Screens.Profile -> avatar.tryRequestFocus()
-                        else -> tabRow.tryRequestFocus()
+                        Screens.Profile -> avatar.requestFocus()
+                        else -> tabRow.requestFocus()
                     }
                 }
             }
@@ -146,9 +145,9 @@ private fun TopBarTabRow(
             .focusProperties {
                 onEnter = {
                     if (selectedScreenIndex < items.size) {
-                        items[selectedScreenIndex].second.tryRequestFocus()
+                        items[selectedScreenIndex].second.requestFocus()
                     } else {
-                        items[0].second.tryRequestFocus()
+                        items[0].second.requestFocus()
                     }
                 }
             }

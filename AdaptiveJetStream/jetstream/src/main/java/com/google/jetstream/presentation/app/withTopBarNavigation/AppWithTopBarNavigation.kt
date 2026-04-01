@@ -34,7 +34,6 @@ import com.google.jetstream.presentation.app.AppState
 import com.google.jetstream.presentation.components.KeyboardShortcut
 import com.google.jetstream.presentation.components.handleKeyboardShortcuts
 import com.google.jetstream.presentation.components.onBackButtonPressed
-import com.google.jetstream.presentation.components.shim.tryRequestFocus
 import com.google.jetstream.presentation.screens.Screens
 
 @Composable
@@ -102,12 +101,12 @@ fun TopBarWithNavigationLayout(
                 // When testing this on the TV emulator, the app just quits when I tap back.
                 !isTopBarVisible -> {
                     onTopBarVisible()
-                    topBar.tryRequestFocus()
+                    topBar.requestFocus()
                 }
 
                 // If the top bar isn't focussed then focus it
                 !isTopBarFocussed -> {
-                    topBar.tryRequestFocus()
+                    topBar.requestFocus()
                 }
 
                 // It feels strange to be doing conditional navigation here

@@ -29,7 +29,6 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.focusRequester
 import androidx.media3.common.Player
-import com.google.jetstream.presentation.components.shim.tryRequestFocus
 import com.google.jetstream.presentation.screens.videoPlayer.components.button.PlayPauseButton
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
@@ -81,7 +80,7 @@ fun VideoPlayerSeeker(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier.focusProperties {
             onEnter = {
-                playPauseButton.tryRequestFocus()
+                playPauseButton.requestFocus()
             }
         }
     ) {
