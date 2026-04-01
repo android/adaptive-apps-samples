@@ -52,6 +52,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.jetstream.R
 import com.google.jetstream.data.entities.Movie
+import com.google.jetstream.data.entities.MovieList
 import com.google.jetstream.presentation.components.MoviesRow
 import com.google.jetstream.presentation.theme.LocalContentPadding
 import com.google.jetstream.presentation.theme.Padding
@@ -88,7 +89,7 @@ fun SearchScreen(
                 movieList = movieList,
                 searchMovies = searchScreenViewModel::query,
                 updateSearchText = searchScreenViewModel::updateSearchText,
-                onMovieClick = onMovieClick,
+                onMovieClick = onMovieClick
             )
         }
     }
@@ -98,20 +99,20 @@ fun SearchScreen(
 @Composable
 internal fun SearchResult(
     searchText: TextFieldValue,
-    movieList: List<Movie>,
+    movieList: MovieList,
     searchMovies: () -> Unit,
     updateSearchText: (TextFieldValue) -> Unit,
     onMovieClick: (movie: Movie) -> Unit,
     modifier: Modifier = Modifier,
     lazyColumnState: LazyListState = rememberLazyListState(),
-    contentPadding: Padding = LocalContentPadding.current,
+    contentPadding: Padding = LocalContentPadding.current
 ) {
     val focusManager = LocalFocusManager.current
     val searchResult = remember { FocusRequester() }
 
     LazyColumn(
         modifier = modifier,
-        state = lazyColumnState,
+        state = lazyColumnState
     ) {
         item {
             TextField(
@@ -120,71 +121,64 @@ internal fun SearchResult(
                 placeholder = {
                     Text(text = stringResource(R.string.search_screen_et_placeholder))
                 },
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(
-                            start = contentPadding.start,
-                            end = contentPadding.end,
-                            top = 12.dp,
-                        )
-                        .onPreviewKeyEvent {
-                            if (it.type == KeyEventType.KeyUp) {
-                                when (it.key) {
-                                    Key.DirectionUp -> {
-                                        focusManager.moveFocus(FocusDirection.Up)
-                                        true
-                                    }
-
-                                    Key.DirectionDown -> {
-                                        focusManager.moveFocus(FocusDirection.Down)
-                                        true
-                                    }
-
-                                    Key.Back -> {
-                                        focusManager.moveFocus(FocusDirection.Exit)
-                                    }
-
-                                    else -> {
-                                        false
-                                    }
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        start = contentPadding.start,
+                        end = contentPadding.end,
+                        top = 12.dp
+                    )
+                    .onPreviewKeyEvent {
+                        if (it.type == KeyEventType.KeyUp) {
+                            when (it.key) {
+                                Key.DirectionUp -> {
+                                    focusManager.moveFocus(FocusDirection.Up)
+                                    true
                                 }
-                            } else {
-                                false
+
+                                Key.DirectionDown -> {
+                                    focusManager.moveFocus(FocusDirection.Down)
+                                    true
+                                }
+
+                                Key.Back -> {
+                                    focusManager.moveFocus(FocusDirection.Exit)
+                                }
+
+                                else -> false
                             }
-                        },
-                keyboardOptions =
-                    KeyboardOptions(
-                        autoCorrectEnabled = false,
-                        imeAction = ImeAction.Search,
-                    ),
-                keyboardActions =
-                    KeyboardActions(
-                        onSearch = {
-                            searchMovies()
-                            focusManager.moveFocus(FocusDirection.Down)
-                        },
-                    ),
+                        } else {
+                            false
+                        }
+                    },
+                keyboardOptions = KeyboardOptions(
+                    autoCorrectEnabled = false,
+                    imeAction = ImeAction.Search
+                ),
+                keyboardActions = KeyboardActions(
+                    onSearch = {
+                        searchMovies()
+                        focusManager.moveFocus(FocusDirection.Down)
+                    }
+                ),
                 maxLines = 1,
-                textStyle =
-                    MaterialTheme.typography.titleSmall.copy(
-                        color = MaterialTheme.colorScheme.onSurface,
-                    ),
+                textStyle = MaterialTheme.typography.titleSmall.copy(
+                    color = MaterialTheme.colorScheme.onSurface
+                )
             )
         }
         item {
             MoviesRow(
-                modifier =
-                    Modifier
-                        .fillMaxSize()
-                        .padding(top = contentPadding.top * 2)
-                        .focusRequester(searchResult)
-                        .onPlaced {
-                            if (movieList.isNotEmpty()) {
-                                searchResult.requestFocus()
-                            }
-                        },
-                movieList = movieList,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top = contentPadding.top * 2)
+                    .focusRequester(searchResult)
+                    .onPlaced {
+                        if (movieList.isNotEmpty()) {
+                            searchResult.requestFocus()
+                        }
+                    },
+                movieList = movieList
             ) { selectedMovie -> onMovieClick(selectedMovie) }
         }
     }

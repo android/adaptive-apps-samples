@@ -35,7 +35,7 @@ import androidx.compose.ui.layout.onPlaced
 fun Modifier.handleDPadKeyEvents(
     onLeft: (() -> Unit)? = null,
     onRight: (() -> Unit)? = null,
-    onEnter: (() -> Unit)? = null,
+    onEnter: (() -> Unit)? = null
 ) = onPreviewKeyEvent {
     fun onActionUp(block: () -> Unit) {
         if (it.nativeKeyEvent.action == KeyEvent.ACTION_UP) block()
@@ -75,8 +75,9 @@ fun Modifier.handleDPadKeyEvents(
     onRight: (() -> Unit)? = null,
     onUp: (() -> Unit)? = null,
     onDown: (() -> Unit)? = null,
-    onEnter: (() -> Unit)? = null,
+    onEnter: (() -> Unit)? = null
 ) = onKeyEvent {
+
     if (it.nativeKeyEvent.action == KeyEvent.ACTION_UP) {
         when (it.nativeKeyEvent.keyCode) {
             KeyEvent.KEYCODE_DPAD_LEFT, KeyEvent.KEYCODE_SYSTEM_NAVIGATION_LEFT -> {
@@ -139,7 +140,7 @@ fun Modifier.focusOnInitialVisibility(isVisible: MutableState<Boolean>): Modifie
  */
 data class FocusRequesterModifiers(
     val parentModifier: Modifier,
-    val childModifier: Modifier,
+    val childModifier: Modifier
 )
 
 /**
@@ -151,20 +152,19 @@ fun createInitialFocusRestorerModifiers(): FocusRequesterModifiers {
     val focusRequester = remember { FocusRequester() }
     val childFocusRequester = remember { FocusRequester() }
 
-    val parentModifier =
-        Modifier
-            .focusRequester(focusRequester)
-            .focusProperties {
-                onExit = {
-                    focusRequester.saveFocusedChild()
-                    FocusRequester.Default.requestFocus()
-                }
-                onEnter = {
-                    if (!focusRequester.restoreFocusedChild()) {
-                        childFocusRequester.requestFocus()
-                    }
+    val parentModifier = Modifier
+        .focusRequester(focusRequester)
+        .focusProperties {
+            onExit = {
+                focusRequester.saveFocusedChild()
+                FocusRequester.Default.requestFocus()
+            }
+            onEnter = {
+                if (!focusRequester.restoreFocusedChild()) {
+                    childFocusRequester.requestFocus()
                 }
             }
+        }
 
     val childModifier = Modifier.focusRequester(childFocusRequester)
 
@@ -177,7 +177,7 @@ fun createInitialFocusRestorerModifiers(): FocusRequesterModifiers {
 fun Modifier.ifElse(
     condition: () -> Boolean,
     ifTrueModifier: Modifier,
-    ifFalseModifier: Modifier = Modifier,
+    ifFalseModifier: Modifier = Modifier
 ): Modifier = then(if (condition()) ifTrueModifier else ifFalseModifier)
 
 /**
@@ -186,5 +186,5 @@ fun Modifier.ifElse(
 fun Modifier.ifElse(
     condition: Boolean,
     ifTrueModifier: Modifier,
-    ifFalseModifier: Modifier = Modifier,
+    ifFalseModifier: Modifier = Modifier
 ): Modifier = ifElse({ condition }, ifTrueModifier, ifFalseModifier)

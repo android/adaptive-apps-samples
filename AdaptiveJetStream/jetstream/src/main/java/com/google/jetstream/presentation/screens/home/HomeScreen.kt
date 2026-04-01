@@ -24,7 +24,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -43,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.jetstream.data.entities.Movie
+import com.google.jetstream.data.entities.MovieList
 import com.google.jetstream.data.util.StringConstants
 import com.google.jetstream.presentation.components.Error
 import com.google.jetstream.presentation.components.Loading
@@ -50,7 +50,6 @@ import com.google.jetstream.presentation.components.MoviesRow
 import com.google.jetstream.presentation.theme.LocalContentPadding
 import com.google.jetstream.presentation.theme.LocalFeaturedCarouselHeight
 
-@OptIn(ExperimentalFoundationStyleApi::class)
 @Composable
 fun HomeScreen(
     onMovieClick: (movie: Movie) -> Unit,
@@ -76,28 +75,24 @@ fun HomeScreen(
             )
         }
 
-        is HomeScreenUiState.Loading -> {
-            Loading()
-        }
-
-        is HomeScreenUiState.Error -> {
-            Error(modifier = Modifier.fillMaxSize())
-        }
+        is HomeScreenUiState.Loading -> Loading(modifier = Modifier.fillMaxSize())
+        is HomeScreenUiState.Error -> Error(modifier = Modifier.fillMaxSize())
     }
 }
 
 @Composable
 internal fun Catalog(
-    featuredMovies: List<Movie>,
-    trendingMovies: List<Movie>,
-    top10Movies: List<Movie>,
-    nowPlayingMovies: List<Movie>,
+    featuredMovies: MovieList,
+    trendingMovies: MovieList,
+    top10Movies: MovieList,
+    nowPlayingMovies: MovieList,
     onMovieClick: (movie: Movie) -> Unit,
     onScroll: (isTopBarVisible: Boolean) -> Unit,
     goToVideoPlayer: (movie: Movie) -> Unit,
     modifier: Modifier = Modifier,
     isTopBarVisible: Boolean = true,
 ) {
+
     val lazyListState = rememberLazyListState()
     val contentPadding = LocalContentPadding.current
 
@@ -128,25 +123,24 @@ internal fun Catalog(
                 movies = featuredMovies,
                 padding = contentPadding,
                 goToVideoPlayer = goToVideoPlayer,
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .height(LocalFeaturedCarouselHeight.current)
-                        .focusRequester(carousel)
-                        .focusProperties {
-                            onExit = {
-                                when (requestedFocusDirection) {
-                                    FocusDirection.Down -> {
-                                        trending.requestFocus()
-                                    }
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(LocalFeaturedCarouselHeight.current)
+                    .focusRequester(carousel)
+                    .focusProperties {
+                        onExit = {
+                            when (requestedFocusDirection) {
+                                FocusDirection.Down -> {
+                                    trending.requestFocus()
+                                }
 
-                                    FocusDirection.Next -> {
-                                        trending.requestFocus()
-                                    }
+                                FocusDirection.Next -> {
+                                    trending.requestFocus()
                                 }
                             }
                         }
-                        .focusGroup(),
+                    }
+                    .focusGroup()
             )
         }
         item(contentType = "MoviesRow") {
@@ -154,17 +148,16 @@ internal fun Catalog(
                 movieList = trendingMovies,
                 title = StringConstants.Composable.HomeScreenTrendingTitle,
                 onMovieSelected = onMovieClick,
-                modifier =
-                    Modifier
-                        .padding(top = 16.dp)
-                        .focusRequester(trending),
+                modifier = Modifier
+                    .padding(top = 16.dp)
+                    .focusRequester(trending)
             )
         }
         item(contentType = "Top10MoviesList") {
             Top10MoviesList(
                 movieList = top10Movies,
                 onMovieClick = onMovieClick,
-                modifier = Modifier.focusRequester(top10),
+                modifier = Modifier.focusRequester(top10)
             )
         }
         item(contentType = "MoviesRow") {
@@ -172,18 +165,17 @@ internal fun Catalog(
                 movieList = nowPlayingMovies,
                 title = StringConstants.Composable.HomeScreenNowPlayingMoviesTitle,
                 onMovieSelected = onMovieClick,
-                modifier =
-                    Modifier
-                        .padding(top = 16.dp)
-                        .focusRequester(nowPlaying)
-                        .focusProperties {
-                            onExit = {
-                                when (requestedFocusDirection) {
-                                    FocusDirection.Up -> top10.requestFocus()
-                                    FocusDirection.Previous -> top10.requestFocus()
-                                }
+                modifier = Modifier
+                    .padding(top = 16.dp)
+                    .focusRequester(nowPlaying)
+                    .focusProperties {
+                        onExit = {
+                            when (requestedFocusDirection) {
+                                FocusDirection.Up -> top10.requestFocus()
+                                FocusDirection.Previous -> top10.requestFocus()
                             }
-                        },
+                        }
+                    }
             )
         }
     }

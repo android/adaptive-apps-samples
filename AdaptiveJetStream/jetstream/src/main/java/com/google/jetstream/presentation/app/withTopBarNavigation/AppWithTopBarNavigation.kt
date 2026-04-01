@@ -43,7 +43,7 @@ fun AppWithTopBarNavigation(
     keyboardShortcuts: List<KeyboardShortcut>,
     onActivityBackPressed: () -> Unit,
     modifier: Modifier = Modifier,
-    content: @Composable ((padding: PaddingValues) -> Unit),
+    content: @Composable ((padding: PaddingValues) -> Unit)
 ) {
     Surface {
         TopBarWithNavigationLayout(
@@ -85,41 +85,40 @@ fun TopBarWithNavigationLayout(
     val topBar = remember { FocusRequester() }
 
     Column(
-        modifier =
-            modifier.onBackButtonPressed {
-                when {
-                    // TODO: This logic is difficult to understand and should be refactored
-                    // The VideoPlayer screen doesn't have any navigation
-                    // The MovieDetails screen doesn't have any navigation when it's displayed in a
-                    // TopBar layout.
-                    // These are the only two scenarios where appState.isNavigationVisible is false
-                    !isNavigationVisible -> {
-                        onActivityBackPressed()
-                    }
-
-                    // If the top bar isn't visible then show it - my guess is this is to handle
-                    // the case where the user has scrolled down and the top menu has disappeared.
-                    // When testing this on the TV emulator, the app just quits when I tap back.
-                    !isTopBarVisible -> {
-                        onTopBarVisible()
-                        topBar.requestFocus()
-                    }
-
-                    // If the top bar isn't focussed then focus it
-                    !isTopBarFocussed -> {
-                        topBar.requestFocus()
-                    }
-
-                    // It feels strange to be doing conditional navigation here
-                    selectedScreen != Screens.Home -> {
-                        onShowScreen(Screens.Home)
-                    }
-
-                    else -> {
-                        onActivityBackPressed()
-                    }
+        modifier = modifier.onBackButtonPressed {
+            when {
+                // TODO: This logic is difficult to understand and should be refactored
+                // The VideoPlayer screen doesn't have any navigation
+                // The MovieDetails screen doesn't have any navigation when it's displayed in a
+                // TopBar layout.
+                // These are the only two scenarios where appState.isNavigationVisible is false
+                !isNavigationVisible -> {
+                    onActivityBackPressed()
                 }
-            },
+
+                // If the top bar isn't visible then show it - my guess is this is to handle
+                // the case where the user has scrolled down and the top menu has disappeared.
+                // When testing this on the TV emulator, the app just quits when I tap back.
+                !isTopBarVisible -> {
+                    onTopBarVisible()
+                    topBar.requestFocus()
+                }
+
+                // If the top bar isn't focussed then focus it
+                !isTopBarFocussed -> {
+                    topBar.requestFocus()
+                }
+
+                // It feels strange to be doing conditional navigation here
+                selectedScreen != Screens.Home -> {
+                    onShowScreen(Screens.Home)
+                }
+
+                else -> {
+                    onActivityBackPressed()
+                }
+            }
+        }
     ) {
         // TODO: Consider refactoring this into a slot
         AnimatedVisibility(isTopBarVisible) {
@@ -131,14 +130,13 @@ fun TopBarWithNavigationLayout(
                         onShowScreen(it)
                     }
                 },
-                modifier =
-                    Modifier
-                        .padding(
-                            vertical = 16.dp,
-                            horizontal = 74.dp,
-                        )
-                        .focusRequester(topBar)
-                        .onFocusChanged { onTopBarFocusChanged(it.hasFocus) },
+                modifier = Modifier
+                    .padding(
+                        vertical = 16.dp,
+                        horizontal = 74.dp,
+                    )
+                    .focusRequester(topBar)
+                    .onFocusChanged { onTopBarFocusChanged(it.hasFocus) }
             )
         }
         content()

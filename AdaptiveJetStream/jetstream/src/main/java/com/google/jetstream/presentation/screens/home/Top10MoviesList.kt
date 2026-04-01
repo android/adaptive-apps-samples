@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-@file:OptIn(ExperimentalFoundationStyleApi::class)
-
 package com.google.jetstream.presentation.screens.home
 
 import androidx.compose.animation.AnimatedVisibility
@@ -34,7 +32,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
-import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -64,6 +61,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.google.jetstream.R
 import com.google.jetstream.data.entities.Movie
+import com.google.jetstream.data.entities.MovieList
 import com.google.jetstream.presentation.components.ImmersiveListMoviesRow
 import com.google.jetstream.presentation.components.ItemDirection
 import com.google.jetstream.presentation.components.PosterImage
@@ -72,7 +70,7 @@ import com.google.jetstream.presentation.theme.LocalContentPadding
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Top10MoviesList(
-    movieList: List<Movie>,
+    movieList: MovieList,
     modifier: Modifier = Modifier,
     scrimColor: Color = MaterialTheme.colorScheme.surface.copy(alpha = 0.7f),
     inputMode: InputMode = LocalInputModeManager.current.inputMode,
@@ -83,8 +81,8 @@ fun Top10MoviesList(
         mutableStateOf(
             shouldShowDescription(
                 false,
-                inputMode,
-            ),
+                inputMode
+            )
         )
     }
     var selectedMovie by remember(movieList) { mutableStateOf(movieList.first()) }
@@ -101,14 +99,13 @@ fun Top10MoviesList(
         onMovieFocused = {
             selectedMovie = it
         },
-        modifier =
-            modifier
-                .onFocusChanged {
-                    shouldExpand = shouldExpand(it.hasFocus, inputMode)
-                    shouldShowDescription = shouldShowDescription(it.hasFocus, inputMode)
-                }
-                .bringIntoViewRequester(bringIntoViewRequester)
-                .immersiveListBringIntoView(bringIntoViewRequester),
+        modifier = modifier
+            .onFocusChanged {
+                shouldExpand = shouldExpand(it.hasFocus, inputMode)
+                shouldShowDescription = shouldShowDescription(it.hasFocus, inputMode)
+            }
+            .bringIntoViewRequester(bringIntoViewRequester)
+            .immersiveListBringIntoView(bringIntoViewRequester)
     )
 }
 
@@ -131,7 +128,7 @@ class ImmersiveListBringIntoViewModifierNode(
 ) : Modifier.Node(), BringIntoViewModifierNode {
     override suspend fun bringIntoView(
         childCoordinates: LayoutCoordinates,
-        boundsProvider: () -> Rect?,
+        boundsProvider: () -> Rect?
     ) {
         bringIntoViewRequester.bringIntoView()
     }
@@ -167,15 +164,14 @@ private class ImmersiveListBringIntoViewModifierElement(
 private fun Modifier.immersiveListBringIntoView(
     bringIntoViewRequester: BringIntoViewRequester,
 ): Modifier =
-    this then
-        ImmersiveListBringIntoViewModifierElement(
-            bringIntoViewRequester = bringIntoViewRequester,
-        )
+    this then ImmersiveListBringIntoViewModifierElement(
+        bringIntoViewRequester = bringIntoViewRequester,
+    )
 
 @Composable
 private fun ImmersiveList(
     selectedMovie: Movie,
-    movieList: List<Movie>,
+    movieList: MovieList,
     modifier: Modifier = Modifier,
     title: String? = null,
     shouldExpand: Boolean = false,
@@ -185,12 +181,11 @@ private fun ImmersiveList(
     onMovieClick: (Movie) -> Unit = {},
 ) {
     val moviesRow = remember { FocusRequester() }
-    val paddingBottom =
-        if (shouldExpand) {
-            LocalContentPadding.current.bottom
-        } else {
-            0.dp
-        }
+    val paddingBottom = if (shouldExpand) {
+        LocalContentPadding.current.bottom
+    } else {
+        0.dp
+    }
 
     ImmersiveListFrame(
         poster = {
@@ -201,10 +196,9 @@ private fun ImmersiveList(
             ) {
                 Background(
                     movie = selectedMovie,
-                    modifier =
-                        Modifier
-                            .fillMaxSize()
-                            .gradientOverlay(scrimColor),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .gradientOverlay(scrimColor)
                 )
             }
         },
@@ -216,40 +210,36 @@ private fun ImmersiveList(
             ) {
                 MovieDescription(
                     movie = selectedMovie,
-                    modifier =
-                        Modifier.padding(
-                            start = LocalContentPadding.current.start,
-                            bottom = 40.dp,
-                        ),
+                    modifier = Modifier.padding(
+                        start = LocalContentPadding.current.start,
+                        bottom = 40.dp
+                    )
                 )
             }
         },
-        modifier =
-            modifier
-                .focusProperties {
-                    onEnter = {
-                        moviesRow.requestFocus()
-                    }
+        modifier = modifier
+            .focusProperties {
+                onEnter = {
+                    moviesRow.requestFocus()
                 }
-                .focusGroup(),
+            }
+            .focusGroup()
     ) {
         ImmersiveListMoviesRow(
             movieList = movieList,
             itemDirection = ItemDirection.Horizontal,
-            title =
-                if (shouldShowDescription) {
-                    null
-                } else {
-                    title
-                },
+            title = if (shouldShowDescription) {
+                null
+            } else {
+                title
+            },
             showItemTitle = !shouldExpand,
             showIndexOverImage = true,
             onMovieSelected = onMovieClick,
             onMovieFocused = onMovieFocused,
-            modifier =
-                Modifier
-                    .focusRequester(moviesRow)
-                    .padding(bottom = paddingBottom),
+            modifier = Modifier
+                .focusRequester(moviesRow)
+                .padding(bottom = paddingBottom)
         )
     }
 }
@@ -293,11 +283,11 @@ private fun MovieDescription(
     modifier: Modifier = Modifier,
 ) {
     Crossfade(
-        movie,
+        movie
     ) {
         Column(
             modifier = modifier,
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Text(text = it.name, style = MaterialTheme.typography.displaySmall)
             Text(
@@ -305,7 +295,7 @@ private fun MovieDescription(
                 text = it.description,
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.75f),
-                fontWeight = FontWeight.Light,
+                fontWeight = FontWeight.Light
             )
         }
     }
@@ -313,43 +303,35 @@ private fun MovieDescription(
 
 private fun Modifier.gradientOverlay(gradientColor: Color): Modifier =
     drawWithCache {
-        val horizontalGradient =
-            Brush.horizontalGradient(
-                colors =
-                    listOf(
-                        gradientColor,
-                        Color.Transparent,
-                    ),
-                startX = size.width.times(0.2f),
-                endX = size.width.times(0.7f),
+        val horizontalGradient = Brush.horizontalGradient(
+            colors = listOf(
+                gradientColor,
+                Color.Transparent
+            ),
+            startX = size.width.times(0.2f),
+            endX = size.width.times(0.7f)
+        )
+        val verticalGradient = Brush.verticalGradient(
+            colors = listOf(
+                Color.Transparent,
+                gradientColor
+            ),
+            endY = size.width.times(0.3f)
+        )
+        val linearGradient = Brush.linearGradient(
+            colors = listOf(
+                gradientColor,
+                Color.Transparent
+            ),
+            start = Offset(
+                size.width.times(0.2f),
+                size.height.times(0.5f)
+            ),
+            end = Offset(
+                size.width.times(0.9f),
+                0f
             )
-        val verticalGradient =
-            Brush.verticalGradient(
-                colors =
-                    listOf(
-                        Color.Transparent,
-                        gradientColor,
-                    ),
-                endY = size.width.times(0.3f),
-            )
-        val linearGradient =
-            Brush.linearGradient(
-                colors =
-                    listOf(
-                        gradientColor,
-                        Color.Transparent,
-                    ),
-                start =
-                    Offset(
-                        size.width.times(0.2f),
-                        size.height.times(0.5f),
-                    ),
-                end =
-                    Offset(
-                        size.width.times(0.9f),
-                        0f,
-                    ),
-            )
+        )
 
         onDrawWithContent {
             drawContent()
