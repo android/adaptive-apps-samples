@@ -16,8 +16,6 @@
 
 package com.google.jetstream.presentation.theme
 
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
@@ -128,12 +126,3 @@ internal val darkColorScheme
             onErrorContainer = colorResource(R.color.onErrorContainer),
             outline = colorResource(R.color.outline),
         )
-
-@Composable
-fun colorScheme(): ColorScheme {
-    return if (isSystemInDarkTheme()) {
-        darkColorScheme
-    } else {
-        lightColorScheme
-    }
-}

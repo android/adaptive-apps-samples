@@ -62,7 +62,7 @@ fun ShowsScreen(
                 onTVShowClick = onTVShowClick,
                 onScroll = onScroll,
                 isTopBarVisible = isTopBarVisible,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
             )
         }
     }
@@ -76,7 +76,7 @@ internal fun Catalog(
     onScroll: (isTopBarVisible: Boolean) -> Unit,
     isTopBarVisible: Boolean,
     modifier: Modifier = Modifier,
-    contentPadding: Padding = LocalContentPadding.current
+    contentPadding: Padding = LocalContentPadding.current,
 ) {
     val lazyListState = rememberLazyListState()
     val shouldShowTopBar by remember {
@@ -98,18 +98,19 @@ internal fun Catalog(
     LazyColumn(
         state = lazyListState,
         contentPadding = PaddingValues(top = contentPadding.top, bottom = 104.dp),
-        modifier = modifier
-            .focusProperties {
-                onEnter = {
-                    featured.requestFocus()
-                }
-            }
+        modifier =
+            modifier
+                .focusProperties {
+                    onEnter = {
+                        featured.requestFocus()
+                    }
+                },
     ) {
         item {
             ProminentMovieList(
                 movieList = tvShowList,
                 onMovieClick = onTVShowClick,
-                modifier = Modifier.focusRequester(featured)
+                modifier = Modifier.focusRequester(featured),
             )
         }
         item {
@@ -117,7 +118,7 @@ internal fun Catalog(
                 modifier = Modifier.padding(top = contentPadding.top),
                 title = StringConstants.Composable.BingeWatchDramasTitle,
                 movieList = bingeWatchDramaList,
-                onMovieSelected = onTVShowClick
+                onMovieSelected = onTVShowClick,
             )
         }
     }

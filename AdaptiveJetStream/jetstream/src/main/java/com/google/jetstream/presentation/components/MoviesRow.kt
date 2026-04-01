@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-@file:OptIn(ExperimentalFoundationStyleApi::class)
-
 package com.google.jetstream.presentation.components
 
 import androidx.compose.animation.AnimatedContent
@@ -30,7 +28,8 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -56,6 +55,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.jetstream.data.entities.Movie
+import com.google.jetstream.data.entities.MovieList
 import com.google.jetstream.presentation.theme.LocalCardWidth
 import com.google.jetstream.presentation.theme.LocalContentPadding
 import com.google.jetstream.presentation.theme.LocalHorizontalCardAspectRatio
@@ -80,7 +80,7 @@ sealed interface ItemDirection {
 
 @Composable
 fun MoviesRow(
-    movieList: List<Movie>,
+    movieList: MovieList,
     modifier: Modifier = Modifier,
     itemDirection: ItemDirection = ItemDirection.Vertical,
     contentPadding: Padding = LocalContentPadding.current,
@@ -117,35 +117,35 @@ fun MoviesRow(
             targetState = movieList,
             label = "",
         ) { movieState ->
-            MovieList(
-                movieList = movieState,
+            LazyRow(
                 contentPadding =
-                    contentPadding.copy(top = 0.dp, bottom = 16.dp)
-                        .intoPaddingValues(),
+                    contentPadding.copy(top = 0.dp, bottom = 16.dp).intoPaddingValues(),
                 horizontalArrangement = Arrangement.spacedBy(LocalListItemGap.current),
                 modifier =
                     Modifier
                         .focusRequester(lazyRow)
                         .focusRestorer(fallback = firstItem),
-            ) { index, movie ->
-                val itemModifier =
-                    if (index == 0) {
-                        Modifier.focusRequester(firstItem)
-                    } else {
-                        Modifier
-                    }
-                ImmersiveListItem(
-                    modifier = itemModifier.weight(1f),
-                    index = index,
-                    itemDirection = itemDirection,
-                    onMovieSelected = {
-                        lazyRow.saveFocusedChild()
-                        onMovieSelected(it)
-                    },
-                    movie = movie,
-                    showItemTitle = showItemTitle,
-                    showIndexOverImage = showIndexOverImage,
-                )
+            ) {
+                itemsIndexed(movieState, key = { _, movie -> movie.id }) { index, movie ->
+                    val itemModifier =
+                        if (index == 0) {
+                            Modifier.focusRequester(firstItem)
+                        } else {
+                            Modifier
+                        }
+                    MoviesRowItem(
+                        modifier = itemModifier.weight(1f),
+                        index = index,
+                        itemDirection = itemDirection,
+                        onMovieSelected = {
+                            lazyRow.saveFocusedChild()
+                            onMovieSelected(it)
+                        },
+                        movie = movie,
+                        showItemTitle = showItemTitle,
+                        showIndexOverImage = showIndexOverImage,
+                    )
+                }
             }
         }
     }
@@ -153,7 +153,7 @@ fun MoviesRow(
 
 @Composable
 fun ImmersiveListMoviesRow(
-    movieList: List<Movie>,
+    movieList: MovieList,
     modifier: Modifier = Modifier,
     itemDirection: ItemDirection = ItemDirection.Vertical,
     contentPadding: Padding = LocalContentPadding.current,
@@ -193,41 +193,47 @@ fun ImmersiveListMoviesRow(
             targetState = movieList,
             label = "",
         ) { movieState ->
-            MovieList(
-                movieList = movieState,
+            LazyRow(
                 contentPadding = contentPadding.copy(top = 0.dp, bottom = 0.dp).intoPaddingValues(),
                 horizontalArrangement = Arrangement.spacedBy(20.dp),
                 modifier =
                     Modifier
                         .focusRequester(lazyRow)
                         .focusRestorer(fallback = firstItem),
-            ) { index, movie ->
-                val itemModifier =
-                    if (index == 0) {
-                        Modifier.focusRequester(firstItem)
-                    } else {
-                        Modifier
-                    }
-                ImmersiveListItem(
-                    modifier = itemModifier.weight(1f),
-                    index = index,
-                    itemDirection = itemDirection,
-                    onMovieSelected = {
-                        lazyRow.saveFocusedChild()
-                        onMovieSelected(it)
+            ) {
+                itemsIndexed(
+                    movieState,
+                    key = { _, movie ->
+                        movie.id
                     },
-                    onMovieFocused = onMovieFocused,
-                    movie = movie,
-                    showItemTitle = showItemTitle,
-                    showIndexOverImage = showIndexOverImage,
-                )
+                ) { index, movie ->
+                    val itemModifier =
+                        if (index == 0) {
+                            Modifier.focusRequester(firstItem)
+                        } else {
+                            Modifier
+                        }
+                    MoviesRowItem(
+                        modifier = itemModifier.weight(1f),
+                        index = index,
+                        itemDirection = itemDirection,
+                        onMovieSelected = {
+                            lazyRow.saveFocusedChild()
+                            onMovieSelected(it)
+                        },
+                        onMovieFocused = onMovieFocused,
+                        movie = movie,
+                        showItemTitle = showItemTitle,
+                        showIndexOverImage = showIndexOverImage,
+                    )
+                }
             }
         }
     }
 }
 
 @Composable
-private fun ImmersiveListItem(
+private fun MoviesRowItem(
     index: Int,
     movie: Movie,
     onMovieSelected: (Movie) -> Unit,

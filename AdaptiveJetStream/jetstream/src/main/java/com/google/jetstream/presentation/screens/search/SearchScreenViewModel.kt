@@ -19,7 +19,7 @@ package com.google.jetstream.presentation.screens.search
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.jetstream.data.entities.Movie
+import com.google.jetstream.data.entities.MovieList
 import com.google.jetstream.data.repositories.MovieRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -83,7 +83,7 @@ class SearchScreenViewModel
 sealed interface SearchState {
     data object Searching : SearchState
 
-    data class Ready(val textFieldValue: TextFieldValue, val movieList: List<Movie>) : SearchState
+    data class Ready(val textFieldValue: TextFieldValue, val movieList: MovieList) : SearchState
 }
 
 sealed interface SearchCommand {
@@ -91,5 +91,5 @@ sealed interface SearchCommand {
 
     data class UpdateSearchText(val textFieldValue: TextFieldValue) : SearchCommand
 
-    data class SearchDone(val movieList: List<Movie>) : SearchCommand
+    data class SearchDone(val movieList: MovieList) : SearchCommand
 }

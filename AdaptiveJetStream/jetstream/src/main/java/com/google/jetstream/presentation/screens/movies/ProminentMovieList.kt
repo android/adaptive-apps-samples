@@ -14,55 +14,42 @@
  * limitations under the License.
  */
 
-@file:OptIn(ExperimentalFoundationStyleApi::class)
-
-package com.google.jetstream.presentation.screens.movies
+package com.google.jetstream.presentation.screens.movies.components
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.focusRestorer
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.google.jetstream.data.entities.Movie
-import com.google.jetstream.presentation.components.MovieList
-import com.google.jetstream.presentation.components.ProminentMovieCard
-import com.google.jetstream.presentation.components.feature.LocalEngagementMode
 import com.google.jetstream.presentation.theme.LocalContentPadding
+import com.google.jetstream.presentation.theme.LocalProminentCardSize
+import com.google.jetstream.presentation.theme.LocalProminentListItemGap
 import com.google.jetstream.presentation.theme.Padding
-import com.google.jetstream.presentation.theme.styles.isFocusOptimized
 
 @Composable
 fun ProminentMovieList(
     movieList: List<Movie>,
     modifier: Modifier = Modifier,
+    prominentMovieListScope: ProminentMovieListScope = LocalProminentMovieListScope.current,
     contentPadding: Padding = LocalContentPadding.current,
     onMovieClick: (movie: Movie) -> Unit = {},
 ) {
-    MovieList(
-        movieList = movieList,
+    // ToDo: specify the pivot offset to 0.07f
+    LazyRow(
         modifier = modifier.focusRestorer(),
         contentPadding = contentPadding.copy(top = 0.dp, bottom = 0.dp).intoPaddingValues(),
-        horizontalArrangement = Arrangement.spacedBy(itemGap()),
-        itemContent = { _, movie ->
-            ProminentMovieCard(
+        horizontalArrangement = Arrangement.spacedBy(LocalProminentListItemGap.current),
+    ) {
+        items(movieList) {
+            prominentMovieListScope.ProminentMovieCard(
                 onMovieClick = onMovieClick,
-                movie = movie,
+                movie = it,
+                modifier = Modifier.size(LocalProminentCardSize.current),
             )
-        },
-    )
-}
-
-@Composable
-private fun itemGap(): Dp {
-    val isFocusOptimized = LocalEngagementMode.current.isFocusOptimized()
-    return remember(isFocusOptimized) {
-        if (isFocusOptimized) {
-            32.dp
-        } else {
-            8.dp
         }
     }
 }

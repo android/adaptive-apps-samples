@@ -17,9 +17,6 @@
 package com.google.jetstream.presentation.screens.moviedetails.components
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
-import androidx.compose.foundation.style.Style
-import androidx.compose.foundation.style.styleable
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,15 +24,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.font.FontWeight
 
-@OptIn(ExperimentalFoundationStyleApi::class)
 @Composable
 fun TitleValueText(
+    modifier: Modifier = Modifier,
     title: String,
     value: String,
-    modifier: Modifier = Modifier,
-    style: Style = Style,
 ) {
-    Column(modifier = modifier.styleable(style = style)) {
+    Column(modifier = modifier) {
         Text(
             modifier = Modifier.alpha(0.75f),
             text = title,

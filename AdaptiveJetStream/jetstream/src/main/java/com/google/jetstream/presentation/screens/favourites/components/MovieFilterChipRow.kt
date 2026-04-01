@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-@file:OptIn(ExperimentalFlexBoxApi::class)
-
 package com.google.jetstream.presentation.screens.favourites.components
 
-import androidx.compose.foundation.layout.ExperimentalFlexBoxApi
-import androidx.compose.foundation.layout.FlexBox
-import androidx.compose.foundation.layout.FlexWrap
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.window.core.layout.WindowSizeClass
 import com.google.jetstream.presentation.screens.favourites.FilterList
 import com.google.jetstream.presentation.utils.createInitialFocusRestorerModifiers
 
@@ -36,21 +36,35 @@ fun MovieFilterChipRow(
     selectedFilterList: FilterList,
     onSelectedFilterListUpdated: (FilterList) -> Unit,
     modifier: Modifier = Modifier,
+    windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfo().windowSizeClass,
 ) {
     val focusRestorerModifiers = createInitialFocusRestorerModifiers()
+    val isInMediumWidthWindow =
+        windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND) &&
+            !windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_EXPANDED_LOWER_BOUND)
 
-    FlexBox(
-        config = {
-            wrap(FlexWrap.Wrap)
-        },
+    Row(
         modifier =
             modifier
                 .fillMaxWidth()
                 .padding(bottom = 16.dp)
+                .horizontalScroll(rememberScrollState())
                 .then(focusRestorerModifiers.parentModifier),
     ) {
         filterList.items.forEachIndexed { index, filterCondition ->
             val isChecked = selectedFilterList.items.contains(filterCondition)
+            val chipModifier =
+                if (index == 0) {
+                    focusRestorerModifiers.childModifier
+                } else {
+                    Modifier
+                }.then(
+                    if (isInMediumWidthWindow) {
+                        Modifier.weight(1f)
+                    } else {
+                        Modifier
+                    },
+                )
             MovieFilterChip(
                 label = stringResource(id = filterCondition.labelId),
                 isChecked = isChecked,
@@ -63,12 +77,7 @@ fun MovieFilterChipRow(
                         }
                     onSelectedFilterListUpdated(FilterList(updated))
                 },
-                modifier =
-                    if (index == 0) {
-                        focusRestorerModifiers.childModifier
-                    } else {
-                        Modifier
-                    },
+                modifier = chipModifier,
             )
         }
     }

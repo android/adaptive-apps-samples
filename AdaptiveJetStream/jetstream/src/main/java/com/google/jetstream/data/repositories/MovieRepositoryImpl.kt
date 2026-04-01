@@ -16,9 +16,9 @@
 
 package com.google.jetstream.data.repositories
 
-import com.google.jetstream.data.entities.Movie
 import com.google.jetstream.data.entities.MovieCategoryDetails
 import com.google.jetstream.data.entities.MovieDetails
+import com.google.jetstream.data.entities.MovieList
 import com.google.jetstream.data.entities.MovieReviewsAndRatings
 import com.google.jetstream.data.entities.ThumbnailType
 import com.google.jetstream.data.util.StringConstants
@@ -46,19 +46,19 @@ class MovieRepositoryImpl
                 emit(list)
             }
 
-        override fun getTrendingMovies(): Flow<List<Movie>> =
+        override fun getTrendingMovies(): Flow<MovieList> =
             flow {
                 val list = movieDataSource.getTrendingMovieList()
                 emit(list)
             }
 
-        override fun getTop10Movies(): Flow<List<Movie>> =
+        override fun getTop10Movies(): Flow<MovieList> =
             flow {
                 val list = movieDataSource.getTop10MovieList()
                 emit(list)
             }
 
-        override fun getNowPlayingMovies(): Flow<List<Movie>> =
+        override fun getNowPlayingMovies(): Flow<MovieList> =
             flow {
                 val list = movieDataSource.getNowPlayingMovieList()
                 emit(list)
@@ -127,7 +127,7 @@ class MovieRepositoryImpl
             )
         }
 
-        override suspend fun searchMovies(query: String): List<Movie> {
+        override suspend fun searchMovies(query: String): MovieList {
             return movieDataSource.getMovieList().filter {
                 it.name.contains(other = query, ignoreCase = true)
             }
@@ -139,31 +139,31 @@ class MovieRepositoryImpl
                 emit(list)
             }
 
-        override fun getMovies(): Flow<List<Movie>> =
+        override fun getMovies(): Flow<MovieList> =
             flow {
                 val list = movieDataSource.getMovieList()
                 emit(list)
             }
 
-        override fun getPopularFilmsThisWeek(): Flow<List<Movie>> =
+        override fun getPopularFilmsThisWeek(): Flow<MovieList> =
             flow {
                 val list = movieDataSource.getPopularFilmThisWeek()
                 emit(list)
             }
 
-        override fun getTVShows(): Flow<List<Movie>> =
+        override fun getTVShows(): Flow<MovieList> =
             flow {
                 val list = tvDataSource.getTvShowList()
                 emit(list)
             }
 
-        override fun getBingeWatchDramas(): Flow<List<Movie>> =
+        override fun getBingeWatchDramas(): Flow<MovieList> =
             flow {
                 val list = tvDataSource.getBingeWatchDramaList()
                 emit(list)
             }
 
-        override fun getFavouriteMovies(): Flow<List<Movie>> =
+        override fun getFavouriteMovies(): Flow<MovieList> =
             flow {
                 val list = movieDataSource.getFavoriteMovieList()
                 emit(list)

@@ -18,7 +18,7 @@ package com.google.jetstream.presentation.screens.movies
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.jetstream.data.entities.Movie
+import com.google.jetstream.data.entities.MovieList
 import com.google.jetstream.data.repositories.MovieRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
@@ -52,7 +52,7 @@ sealed interface MoviesScreenUiState {
     data object Loading : MoviesScreenUiState
 
     data class Ready(
-        val movieList: List<Movie>,
-        val popularFilmsThisWeek: List<Movie>,
+        val movieList: MovieList,
+        val popularFilmsThisWeek: MovieList,
     ) : MoviesScreenUiState
 }

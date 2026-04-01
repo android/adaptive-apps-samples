@@ -18,20 +18,22 @@ package com.google.jetstream.presentation.screens.moviedetails.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.ExperimentalGridApi
-import androidx.compose.foundation.layout.GridTrackSize
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
-import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
-import androidx.compose.foundation.style.MutableStyleState
-import androidx.compose.foundation.style.Style
-import androidx.compose.foundation.style.styleable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -40,6 +42,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.geometry.Offset
@@ -56,29 +59,23 @@ import coil.request.ImageRequest
 import com.google.jetstream.R
 import com.google.jetstream.data.entities.MovieDetails
 import com.google.jetstream.data.util.StringConstants
-import com.google.jetstream.presentation.components.shim.borderIndicationStyle
-import com.google.jetstream.presentation.components.shim.scaleIndicationStyle
-import com.google.jetstream.presentation.components.shim.stylable.StylableGrid
-import com.google.jetstream.presentation.screens.moviedetails.Descriptor
-import com.google.jetstream.presentation.theme.JetStreamBorderWidth
+import com.google.jetstream.presentation.components.shim.borderIndication
+import com.google.jetstream.presentation.theme.JetStreamBorder
 import com.google.jetstream.presentation.theme.JetStreamButtonShape
 import com.google.jetstream.presentation.theme.LocalContentPadding
+import com.google.jetstream.presentation.theme.Padding
 import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
 
-@OptIn(
-    ExperimentalFoundationApi::class,
-    ExperimentalFoundationStyleApi::class,
-    ExperimentalGridApi::class,
-)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-internal fun MovieDetails(
+fun MovieDetails(
     movieDetails: MovieDetails,
     goToMoviePlayer: (MovieDetails) -> Unit,
+    contentPadding: Padding = LocalContentPadding.current,
 ) {
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
     val coroutineScope = rememberCoroutineScope()
-    val contentPadding = LocalContentPadding.current
 
     Box(
         modifier =
@@ -91,146 +88,113 @@ internal fun MovieDetails(
             movieDetails = movieDetails,
             modifier = Modifier.matchParentSize(),
         )
-        StylableGrid(
-            config = {
-                column(0.33f)
-                column(0.33f)
-                column(0.34f)
+        Column {
+            Spacer(modifier = Modifier.height(108.dp))
+            Column(
+                modifier = Modifier.padding(start = contentPadding.start),
+            ) {
+                MovieLargeTitle(movieTitle = movieDetails.name)
 
-                row(GridTrackSize.Auto)
-                row(GridTrackSize.Auto)
-                row(GridTrackSize.Auto)
-                row(GridTrackSize.Auto)
-                row(GridTrackSize.Auto)
-                row(GridTrackSize.Auto)
-
-                gap(8.dp)
-            },
-            style = {
-                externalPaddingTop(108.dp)
-                contentPaddingStart(contentPadding.start)
-                contentPaddingEnd(contentPadding.end)
-            },
-        ) {
-            MovieLargeTitle(
-                movieTitle = movieDetails.name,
-                modifier = Modifier.gridItem(columnSpan = 3),
-            )
-            MovieDescription(
-                description = movieDetails.description,
-                modifier = Modifier.gridItem(columnSpan = 3),
-                style = {
-                    alpha(0.75f)
-                    externalPaddingBottom(16.dp)
-                },
-            )
-            Descriptor(
-                text = movieDetails.pgRating,
-            )
-            Descriptor(
-                text = movieDetails.releaseDate,
-            )
-            Descriptor(
-                text = movieDetails.duration,
-            )
-            Descriptor(
-                text = movieDetails.categories.joinToString(", "),
-                modifier = Modifier.gridItem(columnSpan = 3),
-                style = {
-                    externalPaddingBottom(8.dp)
-                },
-            )
-            TitleValueText(
-                title = stringResource(R.string.director),
-                value = movieDetails.director,
-            )
-            TitleValueText(
-                title = stringResource(R.string.screenplay),
-                value = movieDetails.screenplay,
-            )
-            TitleValueText(
-                title = stringResource(R.string.music),
-                value = movieDetails.music,
-            )
-            WatchTrailerButton(
-                modifier =
-                    Modifier
-                        .gridItem(columnSpan = 3)
-                        .onFocusChanged {
+                Column(
+                    modifier = Modifier.alpha(0.75f),
+                ) {
+                    MovieDescription(description = movieDetails.description)
+                    DotSeparatedRow(
+                        modifier = Modifier.padding(top = 20.dp),
+                        texts =
+                            listOf(
+                                movieDetails.pgRating,
+                                movieDetails.releaseDate,
+                                movieDetails.categories.joinToString(", "),
+                                movieDetails.duration,
+                            ),
+                    )
+                    DirectorScreenplayMusicRow(
+                        director = movieDetails.director,
+                        screenplay = movieDetails.screenplay,
+                        music = movieDetails.music,
+                    )
+                }
+                WatchTrailerButton(
+                    modifier =
+                        Modifier.onFocusChanged {
                             if (it.isFocused) {
                                 coroutineScope.launch { bringIntoViewRequester.bringIntoView() }
                             }
                         },
-                style = {
-                    externalPaddingTop(16.dp)
-                },
-                goToMoviePlayer = { goToMoviePlayer(movieDetails) },
-            )
+                    goToMoviePlayer = { goToMoviePlayer(movieDetails) },
+                )
+            }
         }
     }
 }
 
-@OptIn(ExperimentalFoundationStyleApi::class)
 @Composable
 private fun WatchTrailerButton(
     modifier: Modifier = Modifier,
-    style: Style = Style,
     goToMoviePlayer: () -> Unit,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
-
-    val styleState =
-        remember(interactionSource) {
-            MutableStyleState(interactionSource = interactionSource)
-        }
-    val textStyle = MaterialTheme.typography.titleSmall
-
-    val defaultStyle =
-        Style {
-            shape(JetStreamButtonShape)
-            clip(true)
-            textStyle(textStyle)
-        }
-
     Button(
         onClick = goToMoviePlayer,
         modifier =
-            modifier.styleable(
-                styleState = styleState,
-                defaultStyle,
-                borderIndicationStyle(
-                    focused = JetStreamBorderWidth,
+            modifier
+                .padding(top = 24.dp)
+                .indication(
+                    interactionSource = interactionSource,
+                    indication = borderIndication(focused = JetStreamBorder),
                 ),
-                scaleIndicationStyle(),
-                style,
-            ),
-        // Workaround
-        shape = JetStreamButtonShape,
+        contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
         interactionSource = interactionSource,
+        shape = JetStreamButtonShape,
     ) {
         Icon(
             imageVector = Icons.Outlined.PlayArrow,
             contentDescription = null,
-            modifier =
-                Modifier.styleable {
-                    externalPaddingEnd(8.dp)
-                },
         )
+        Spacer(Modifier.size(8.dp))
         Text(
             text = stringResource(R.string.watch_trailer),
-            style = textStyle,
-            softWrap = false,
+            style = MaterialTheme.typography.titleSmall,
         )
     }
 }
 
-@OptIn(ExperimentalFoundationStyleApi::class)
 @Composable
-private fun MovieDescription(
-    description: String,
-    modifier: Modifier = Modifier,
-    style: Style = Style,
+private fun DirectorScreenplayMusicRow(
+    director: String,
+    screenplay: String,
+    music: String,
 ) {
+    Row(modifier = Modifier.padding(top = 32.dp)) {
+        TitleValueText(
+            modifier =
+                Modifier
+                    .padding(end = 32.dp)
+                    .weight(1f),
+            title = stringResource(R.string.director),
+            value = director,
+        )
+
+        TitleValueText(
+            modifier =
+                Modifier
+                    .padding(end = 32.dp)
+                    .weight(1f),
+            title = stringResource(R.string.screenplay),
+            value = screenplay,
+        )
+
+        TitleValueText(
+            modifier = Modifier.weight(1f),
+            title = stringResource(R.string.music),
+            value = music,
+        )
+    }
+}
+
+@Composable
+private fun MovieDescription(description: String) {
     Text(
         text = description,
         style =
@@ -238,21 +202,15 @@ private fun MovieDescription(
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Normal,
             ),
-        modifier = modifier.styleable(style = style),
+        modifier = Modifier.padding(top = 8.dp),
         maxLines = 2,
     )
 }
 
-@OptIn(ExperimentalFoundationStyleApi::class)
 @Composable
-private fun MovieLargeTitle(
-    movieTitle: String,
-    modifier: Modifier = Modifier,
-    style: Style = Style,
-) {
+private fun MovieLargeTitle(movieTitle: String) {
     Text(
         text = movieTitle,
-        modifier = modifier.styleable(style = style),
         style =
             MaterialTheme.typography.displayMedium.copy(
                 fontWeight = FontWeight.Bold,

@@ -30,9 +30,9 @@ import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.focusRequester
 import androidx.media3.common.Player
 import com.google.jetstream.presentation.screens.videoPlayer.components.button.PlayPauseButton
+import kotlinx.coroutines.delay
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
-import kotlinx.coroutines.delay
 
 @Composable
 fun VideoPlayerSeeker(
@@ -42,7 +42,7 @@ fun VideoPlayerSeeker(
     onSeek: (Float) -> Unit = {
         player.seekTo(player.duration.times(it).toLong())
     },
-    shouldShowPlayPauseButton: Boolean
+    shouldShowPlayPauseButton: Boolean,
 ) {
     var contentCurrentPosition by remember(contentDuration) {
         mutableLongStateOf(player.currentPosition)
@@ -78,11 +78,12 @@ fun VideoPlayerSeeker(
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier.focusProperties {
-            onEnter = {
-                playPauseButton.requestFocus()
-            }
-        }
+        modifier =
+            modifier.focusProperties {
+                onEnter = {
+                    playPauseButton.requestFocus()
+                }
+            },
     ) {
         if (shouldShowPlayPauseButton) {
             PlayPauseButton(

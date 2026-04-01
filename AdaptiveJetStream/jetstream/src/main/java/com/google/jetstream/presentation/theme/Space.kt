@@ -21,32 +21,21 @@ import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.ProvidableCompositionLocal
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.window.core.layout.WindowSizeClass
-import com.google.jetstream.presentation.components.feature.LocalEngagementMode
 import com.google.jetstream.presentation.components.feature.isWidthAtLeastExpanded
 import com.google.jetstream.presentation.components.feature.isWidthAtLeastLarge
-import com.google.jetstream.presentation.theme.styles.isFocusOptimized
 
 val LocalListItemGap: ProvidableCompositionLocal<Dp> =
     staticCompositionLocalOf {
-        8.dp
+        20.dp
     }
-
-@Composable
-fun rememberListItemGap(): Dp {
-    val isFocusOptimized = LocalEngagementMode.current.isFocusOptimized()
-    return remember(isFocusOptimized) {
-        if (isFocusOptimized) {
-            20.dp
-        } else {
-            8.dp
-        }
+val LocalProminentListItemGap: ProvidableCompositionLocal<Dp> =
+    staticCompositionLocalOf {
+        32.dp
     }
-}
 
 @Immutable
 data class Padding(

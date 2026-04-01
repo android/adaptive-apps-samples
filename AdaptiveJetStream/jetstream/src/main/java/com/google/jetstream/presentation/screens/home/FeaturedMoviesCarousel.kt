@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-@file:OptIn(ExperimentalFoundationStyleApi::class)
-
 package com.google.jetstream.presentation.screens.home
 
 import androidx.compose.animation.AnimatedVisibility
@@ -33,7 +31,6 @@ import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Text
@@ -61,8 +58,7 @@ import coil.compose.AsyncImage
 import com.google.jetstream.data.entities.Movie
 import com.google.jetstream.data.util.StringConstants
 import com.google.jetstream.presentation.components.WatchNowButton
-import com.google.jetstream.presentation.components.feature.EngagementMode
-import com.google.jetstream.presentation.components.feature.LocalEngagementMode
+import com.google.jetstream.presentation.components.feature.isLeanbackEnabled
 import com.google.jetstream.presentation.theme.Padding
 import com.google.jetstream.presentation.theme.jetStreamBorderIndication
 import kotlin.math.absoluteValue
@@ -75,17 +71,17 @@ fun FeaturedMoviesCarousel(
     goToVideoPlayer: (movie: Movie) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val isLeanback = LocalEngagementMode.current == EngagementMode.Leanback
+    val isLeanbackEnabled = isLeanbackEnabled()
     val featuredMoviesCarouselState =
-        rememberSaveable(movies, isLeanback, saver = FeaturedMoviesCarouselState.Saver) {
+        rememberSaveable(movies, isLeanbackEnabled, saver = FeaturedMoviesCarouselState.Saver) {
             FeaturedMoviesCarouselState(
                 itemCount = movies.size,
-                initialWatchNowButtonVisibility = !isLeanback,
+                initialWatchNowButtonVisibility = !isLeanbackEnabled,
             )
         }
 
     val interactionSource = remember { MutableInteractionSource() }
-    if (isLeanback) {
+    if (isLeanbackEnabled) {
         LaunchedEffect(Unit) {
             interactionSource.interactions.collect {
                 when (it) {

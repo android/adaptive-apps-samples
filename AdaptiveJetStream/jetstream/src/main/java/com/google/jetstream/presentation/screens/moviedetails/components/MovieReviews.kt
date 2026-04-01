@@ -16,21 +16,19 @@
 
 package com.google.jetstream.presentation.screens.moviedetails.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.focusable
+import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalFlexBoxApi
-import androidx.compose.foundation.layout.ExperimentalGridApi
-import androidx.compose.foundation.layout.FlexBox
-import androidx.compose.foundation.layout.FlexWrap
-import androidx.compose.foundation.layout.Grid
-import androidx.compose.foundation.layout.GridFlow
-import androidx.compose.foundation.layout.GridTrackSize
-import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
-import androidx.compose.foundation.style.MutableStyleState
-import androidx.compose.foundation.style.Style
-import androidx.compose.foundation.style.fillSize
-import androidx.compose.foundation.style.styleable
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Icon
@@ -41,129 +39,121 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.google.jetstream.R
 import com.google.jetstream.data.entities.MovieReviewsAndRatings
 import com.google.jetstream.data.util.StringConstants
-import com.google.jetstream.presentation.components.shim.scaleIndicationStyle
-import com.google.jetstream.presentation.components.shim.stylable.StylableBox
+import com.google.jetstream.presentation.components.shim.Border
+import com.google.jetstream.presentation.components.shim.borderIndication
+import com.google.jetstream.presentation.theme.JetStreamBorder
+import com.google.jetstream.presentation.theme.JetStreamCardShape
 import com.google.jetstream.presentation.theme.LocalContentPadding
 import com.google.jetstream.presentation.theme.Padding
 
-@OptIn(
-    ExperimentalFoundationStyleApi::class,
-    ExperimentalFlexBoxApi::class,
-)
 @Composable
 fun MovieReviews(
     reviewsAndRatings: List<MovieReviewsAndRatings>,
     modifier: Modifier = Modifier,
     contentPadding: Padding = LocalContentPadding.current,
 ) {
-    val interactionSource = remember { MutableInteractionSource() }
-    val styleState =
-        remember(interactionSource) {
-            MutableStyleState(interactionSource = interactionSource)
-        }
     Column(
         modifier =
             modifier
-                .styleable(
-                    styleState = styleState,
-                    scaleIndicationStyle(),
-                    {
-                        contentPaddingStart(contentPadding.start)
-                    },
-                )
-                .focusable(interactionSource = interactionSource),
+                .padding(horizontal = contentPadding.start)
+                .padding(bottom = contentPadding.bottom),
     ) {
-        Text(
-            text = stringResource(R.string.reviews),
-            style = MaterialTheme.typography.titleMedium,
+        Text(text = stringResource(R.string.reviews), style = MaterialTheme.typography.titleMedium)
+        Row(
             modifier =
-                Modifier.styleable {
-                    externalPaddingBottom(8.dp)
-                },
-        )
-        FlexBox(
-            config = {
-                wrap(FlexWrap.Wrap)
-                gap(16.dp)
-            },
+                Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp),
+            horizontalArrangement = Arrangement.spacedBy(20.dp),
         ) {
             reviewsAndRatings.forEach { reviewAndRating ->
                 Review(
-                    reviewAndRating = reviewAndRating,
-                    style = {
-                        externalPadding(0.dp)
-                    },
+                    reviewAndRating,
+                    modifier
+                        .weight(1f)
+                        .height(96.dp),
                 )
             }
         }
     }
 }
 
-@OptIn(ExperimentalGridApi::class, ExperimentalFoundationStyleApi::class)
 @Composable
 private fun Review(
     reviewAndRating: MovieReviewsAndRatings,
     modifier: Modifier = Modifier,
-    style: Style = Style,
 ) {
-    val background = MaterialTheme.colorScheme.surfaceColorAtElevation(4.dp)
+    val interactionSource = remember { MutableInteractionSource() }
 
-    Grid(
-        config = {
-            repeat(2) {
-                row(GridTrackSize.Auto)
-            }
-            repeat(3) {
-                column(GridTrackSize.Auto)
-            }
-            columnGap(16.dp)
-            flow = GridFlow.Column
-        },
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
         modifier =
-            modifier
-                .styleable(style = style),
+            Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.surface)
+                .focusable(interactionSource = interactionSource)
+                .indication(
+                    interactionSource = interactionSource,
+                    indication =
+                        borderIndication(
+                            focused =
+                                Border(
+                                    stroke = JetStreamBorder.stroke.copy(width = ReviewItemOutlineWidth),
+                                    shape = JetStreamCardShape,
+                                ),
+                        ),
+                )
+                .then(modifier),
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        StylableBox(
-            contentAlignment = Alignment.Center,
-            style = {
-                fillSize()
-                background(background)
-            },
-            modifier = Modifier.gridItem(rowSpan = 2),
-        ) {
-            Icon(
-                imageVector = Icons.Default.Star,
-                contentDescription = null,
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Box(
                 modifier =
-                    Modifier.styleable {
-                        externalPadding(8.dp)
-                    },
-            )
+                    Modifier
+                        .fillMaxHeight()
+                        .fillMaxWidth(0.3f)
+                        .background(
+                            MaterialTheme.colorScheme.surfaceColorAtElevation(4.dp),
+                        ),
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Star,
+                    contentDescription = null,
+                    modifier =
+                        Modifier
+                            .fillMaxSize(0.8f)
+                            .align(Alignment.Center),
+                )
+            }
+            Column(
+                modifier = Modifier.padding(start = 16.dp),
+            ) {
+                Text(
+                    text = reviewAndRating.reviewerName,
+                    style = MaterialTheme.typography.titleMedium,
+                )
+                Text(
+                    text =
+                        StringConstants
+                            .Composable
+                            .reviewCount(reviewAndRating.reviewCount),
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.alpha(0.75f),
+                )
+            }
         }
-        Text(
-            text = reviewAndRating.reviewerName,
-            style = MaterialTheme.typography.titleMedium,
-        )
-        Text(
-            text =
-                StringConstants
-                    .Composable
-                    .reviewCount(reviewAndRating.reviewCount),
-            style = MaterialTheme.typography.titleMedium,
-            modifier =
-                Modifier.styleable {
-                    alpha(0.75f)
-                },
-        )
         Text(
             text = reviewAndRating.reviewRating,
             style = MaterialTheme.typography.headlineLarge,
-            modifier = Modifier.gridItem(rowSpan = 2, alignment = Alignment.Center),
+            modifier = Modifier.padding(end = 16.dp),
         )
     }
 }
+
+private val ReviewItemOutlineWidth = 2.dp

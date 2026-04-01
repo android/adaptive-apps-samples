@@ -21,34 +21,27 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.focusable
-import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.ExperimentalFlexBoxApi
-import androidx.compose.foundation.layout.FlexBox
-import androidx.compose.foundation.layout.FlexWrap
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
-import androidx.compose.foundation.style.MutableStyleState
-import androidx.compose.foundation.style.Style
-import androidx.compose.foundation.style.fillWidth
-import androidx.compose.foundation.style.styleable
-import androidx.compose.foundation.style.then
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -58,14 +51,14 @@ import com.google.jetstream.R
 import com.google.jetstream.data.entities.Movie
 import com.google.jetstream.data.entities.MovieDetails
 import com.google.jetstream.data.util.StringConstants
+import com.google.jetstream.presentation.app.NavigationComponentType
+import com.google.jetstream.presentation.app.rememberNavigationComponentType
 import com.google.jetstream.presentation.components.BackButton
 import com.google.jetstream.presentation.components.Error
 import com.google.jetstream.presentation.components.Loading
 import com.google.jetstream.presentation.components.MoviesRow
 import com.google.jetstream.presentation.components.desktop.BackNavigationContextMenu
-import com.google.jetstream.presentation.components.feature.LocalEngagementMode
-import com.google.jetstream.presentation.components.shim.scaleIndicationStyle
-import com.google.jetstream.presentation.components.shim.stylable.StylableBox
+import com.google.jetstream.presentation.components.feature.isBackButtonRequired
 import com.google.jetstream.presentation.screens.moviedetails.components.CastAndCrewList
 import com.google.jetstream.presentation.screens.moviedetails.components.MovieDetails
 import com.google.jetstream.presentation.screens.moviedetails.components.MovieReviews
@@ -84,7 +77,6 @@ val movieDetailsScreenArguments =
         },
     )
 
-@OptIn(ExperimentalFoundationStyleApi::class)
 @Composable
 fun MovieDetailsScreen(
     goToMoviePlayer: (MovieDetails) -> Unit,
@@ -96,7 +88,7 @@ fun MovieDetailsScreen(
 
     when (val s = uiState) {
         is MovieDetailsScreenUiState.Loading -> {
-            Loading()
+            Loading(modifier = Modifier.fillMaxSize())
         }
 
         is MovieDetailsScreenUiState.Error -> {
@@ -126,7 +118,10 @@ internal fun Details(
     refreshScreenWithNewMovie: (Movie) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val isBackButtonRequired = LocalEngagementMode.current.isBackButtonRequired
+    val navigationComponentType = rememberNavigationComponentType()
+    val isBackButtonRequired =
+        isBackButtonRequired() && navigationComponentType == NavigationComponentType.TopBar
+
     val lazyListState = rememberLazyListState()
     val isBackButtonVisible by remember {
         derivedStateOf {
@@ -157,7 +152,6 @@ internal fun Details(
     }
 }
 
-@OptIn(ExperimentalFoundationStyleApi::class, ExperimentalFlexBoxApi::class)
 @Composable
 internal fun MovieDetailsList(
     movieDetails: MovieDetails,
@@ -170,7 +164,6 @@ internal fun MovieDetailsList(
     LazyColumn(
         state = state,
         contentPadding = PaddingValues(bottom = 135.dp),
-        verticalArrangement = Arrangement.spacedBy(48.dp),
         modifier = modifier,
     ) {
         item {
@@ -200,50 +193,51 @@ internal fun MovieDetailsList(
 
         item {
             MovieReviews(
+                modifier = Modifier.padding(top = contentPadding.top),
                 reviewsAndRatings = movieDetails.reviewsAndRatings,
             )
         }
 
         item {
-            BottomDivider()
+            Box(
+                modifier =
+                    Modifier
+                        .padding(horizontal = contentPadding.start)
+                        .padding(BottomDividerPadding)
+                        .fillMaxWidth()
+                        .height(1.dp)
+                        .alpha(0.15f)
+                        .background(MaterialTheme.colorScheme.onSurface),
+            )
         }
 
         item {
-            val interactionSource = remember { MutableInteractionSource() }
-            val styleState =
-                remember(interactionSource) {
-                    MutableStyleState(interactionSource = interactionSource)
-                }
-            FlexBox(
+            Row(
                 modifier =
                     Modifier
-                        .styleable(
-                            styleState = styleState,
-                            scaleIndicationStyle(),
-                            {
-                                fillWidth()
-                                contentPaddingStart(contentPadding.start)
-                            },
-                        )
-                        .focusable(interactionSource = interactionSource),
-                config = {
-                    wrap(FlexWrap.Wrap)
-                    gap(row = 8.dp, column = 32.dp)
-                },
+                        .fillMaxWidth()
+                        .padding(horizontal = contentPadding.start),
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
+                val itemModifier = Modifier.width(192.dp)
+
                 TitleValueText(
+                    modifier = itemModifier,
                     title = stringResource(R.string.status),
                     value = movieDetails.status,
                 )
                 TitleValueText(
+                    modifier = itemModifier,
                     title = stringResource(R.string.original_language),
                     value = movieDetails.originalLanguage,
                 )
                 TitleValueText(
+                    modifier = itemModifier,
                     title = stringResource(R.string.budget),
                     value = movieDetails.budget,
                 )
                 TitleValueText(
+                    modifier = itemModifier,
                     title = stringResource(R.string.revenue),
                     value = movieDetails.revenue,
                 )
@@ -252,35 +246,4 @@ internal fun MovieDetailsList(
     }
 }
 
-@OptIn(ExperimentalFoundationStyleApi::class)
-@Composable
-internal fun Descriptor(
-    text: String,
-    modifier: Modifier = Modifier,
-    style: Style = Style,
-    textStyle: TextStyle = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Normal),
-    maxLines: Int = 1,
-) {
-    Text(
-        text = text,
-        style = textStyle,
-        maxLines = maxLines,
-        modifier = modifier.styleable(style = style then Style { textStyle(textStyle) }),
-    )
-}
-
-@OptIn(ExperimentalFoundationStyleApi::class)
-@Composable
-private fun BottomDivider(modifier: Modifier = Modifier, style: Style = Style) {
-    val color = MaterialTheme.colorScheme.onSurface
-    StylableBox(
-        style =
-            Style {
-                fillWidth()
-                height(1.dp)
-                alpha(0.15f)
-                background(color)
-            } then style,
-        modifier = modifier,
-    )
-}
+private val BottomDividerPadding = PaddingValues(vertical = 48.dp)

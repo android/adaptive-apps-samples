@@ -54,7 +54,10 @@ fun MoviesScreen(
 ) {
     val uiState by moviesScreenViewModel.uiState.collectAsStateWithLifecycle()
     when (val s = uiState) {
-        is MoviesScreenUiState.Loading -> Loading()
+        is MoviesScreenUiState.Loading -> {
+            Loading()
+        }
+
         is MoviesScreenUiState.Ready -> {
             Catalog(
                 movieList = s.movieList,
@@ -98,43 +101,46 @@ internal fun Catalog(
     LazyColumn(
         state = lazyListState,
         contentPadding = PaddingValues(top = contentPadding.top, bottom = 104.dp),
-        modifier = modifier
-            .focusProperties {
-                onEnter = {
-                    prominent.requestFocus()
-                }
-            }
+        modifier =
+            modifier
+                .focusProperties {
+                    onEnter = {
+                        prominent.requestFocus()
+                    }
+                },
     ) {
         item {
             ProminentMovieList(
                 movieList = movieList,
                 onMovieClick = onMovieClick,
-                modifier = Modifier
-                    .focusRequester(prominent)
-                    .focusProperties {
-                        onExit = {
-                            if (requestedFocusDirection == FocusDirection.Down) {
-                                moviesRow.requestFocus()
+                modifier =
+                    Modifier
+                        .focusRequester(prominent)
+                        .focusProperties {
+                            onExit = {
+                                if (requestedFocusDirection == FocusDirection.Down) {
+                                    moviesRow.requestFocus()
+                                }
                             }
-                        }
-                    }
+                        },
             )
         }
         item {
             MoviesRow(
-                modifier = Modifier
-                    .padding(top = contentPadding.top)
-                    .focusRequester(moviesRow)
-                    .focusProperties {
-                        onExit = {
-                            if (requestedFocusDirection == FocusDirection.Up) {
-                                prominent.requestFocus()
+                modifier =
+                    Modifier
+                        .padding(top = contentPadding.top)
+                        .focusRequester(moviesRow)
+                        .focusProperties {
+                            onExit = {
+                                if (requestedFocusDirection == FocusDirection.Up) {
+                                    prominent.requestFocus()
+                                }
                             }
-                        }
-                    },
+                        },
                 title = StringConstants.Composable.PopularFilmsThisWeekTitle,
                 movieList = popularFilmsThisWeek,
-                onMovieSelected = onMovieClick
+                onMovieSelected = onMovieClick,
             )
         }
     }

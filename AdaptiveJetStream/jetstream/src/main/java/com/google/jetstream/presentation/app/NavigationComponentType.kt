@@ -16,10 +16,15 @@
 
 package com.google.jetstream.presentation.app
 
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import com.google.jetstream.presentation.components.feature.EngagementMode
-import com.google.jetstream.presentation.components.feature.LocalEngagementMode
+import androidx.compose.ui.platform.LocalInspectionMode
+import com.google.jetstream.presentation.components.feature.hasXrSpatialFeature
+import com.google.jetstream.presentation.components.feature.isAutomotiveEnabled
+import com.google.jetstream.presentation.components.feature.isLeanbackEnabled
+import com.google.jetstream.presentation.components.feature.isSpatialUiEnabled
+import com.google.jetstream.presentation.components.feature.isWidthAtLeastLarge
 
 enum class NavigationComponentType {
     NavigationSuiteScaffold,
@@ -29,13 +34,40 @@ enum class NavigationComponentType {
 
 @Composable
 fun rememberNavigationComponentType(): NavigationComponentType {
-    val engagementMode = LocalEngagementMode.current
+    val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
+    val isLeanbackEnabled = isLeanbackEnabled()
+    val isAutomotiveEnabled = isAutomotiveEnabled()
 
-    return remember(LocalEngagementMode) {
-        when (engagementMode) {
-            EngagementMode.Spatial -> NavigationComponentType.Spatial
-            EngagementMode.Leanback, EngagementMode.Cabin, is EngagementMode.Workstation -> NavigationComponentType.TopBar
-            else -> NavigationComponentType.NavigationSuiteScaffold
+    val isPreview = LocalInspectionMode.current
+    val isSpatialUiEnabled =
+        if (isPreview) {
+            false
+        } else {
+            hasXrSpatialFeature() && isSpatialUiEnabled()
         }
+
+    return remember(isLeanbackEnabled, isAutomotiveEnabled, windowSizeClass, isSpatialUiEnabled) {
+        selectNavigationComponentType(
+            isLeanbackEnabled = isLeanbackEnabled,
+            isAutomotiveEnabled = isAutomotiveEnabled,
+            isLargeWindow = windowSizeClass.isWidthAtLeastLarge(),
+            isSpatialUiEnabled = isSpatialUiEnabled,
+        )
+    }
+}
+
+// Select the navigation component type based on the available input devices.
+private fun selectNavigationComponentType(
+    isLeanbackEnabled: Boolean,
+    isAutomotiveEnabled: Boolean,
+    isLargeWindow: Boolean,
+    isSpatialUiEnabled: Boolean,
+): NavigationComponentType {
+    return when {
+        isSpatialUiEnabled -> NavigationComponentType.Spatial
+        isLeanbackEnabled -> NavigationComponentType.TopBar
+        isAutomotiveEnabled -> NavigationComponentType.TopBar
+        isLargeWindow -> NavigationComponentType.TopBar
+        else -> NavigationComponentType.NavigationSuiteScaffold
     }
 }

@@ -108,7 +108,7 @@ object VideoPlayerScreen {
 @Composable
 fun VideoPlayerScreen(
     onBackPressed: () -> Unit,
-    videoPlayerScreenViewModel: VideoPlayerScreenViewModel = hiltViewModel()
+    videoPlayerScreenViewModel: VideoPlayerScreenViewModel = hiltViewModel(),
 ) {
     val uiState by videoPlayerScreenViewModel.uiState.collectAsStateWithLifecycle()
     val isSpatialUiEnabled = isSpatialUiEnabled()
@@ -119,19 +119,21 @@ fun VideoPlayerScreen(
     when (val s = uiState) {
         is VideoPlayerScreenUiState.Loading -> {
             Loading(
-                modifier = Modifier
-                    .fillMaxSize()
-                    // Workaround to make video player visible when spatial UI is enabled.
-                    .background(MaterialTheme.colorScheme.background)
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        // Workaround to make video player visible when spatial UI is enabled.
+                        .background(MaterialTheme.colorScheme.background),
             )
         }
 
         is VideoPlayerScreenUiState.Error -> {
             Error(
-                modifier = Modifier
-                    .fillMaxSize()
-                    // Workaround to make video player visible when spatial UI is enabled.
-                    .background(MaterialTheme.colorScheme.background)
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        // Workaround to make video player visible when spatial UI is enabled.
+                        .background(MaterialTheme.colorScheme.background),
             )
         }
 
@@ -153,20 +155,21 @@ private fun VideoPlayerScreenContent(
     isReadyToPlay: Boolean,
     onBackPressed: () -> Unit,
 ) {
-    val keyboardShortcuts = remember {
-        listOf(KeyboardShortcut(Key.Escape, action = onBackPressed))
-    }
+    val keyboardShortcuts =
+        remember {
+            listOf(KeyboardShortcut(Key.Escape, action = onBackPressed))
+        }
 
     BackHandler(onBack = onBackPressed)
     BackNavigationContextMenu(
         onBackPressed,
-        modifier = Modifier.handleKeyboardShortcuts(keyboardShortcuts)
+        modifier = Modifier.handleKeyboardShortcuts(keyboardShortcuts),
     ) {
         VideoPlayer(
             nowPlayingInfo = nowPlayingInfo,
             player = player,
             isReadyToPlay = isReadyToPlay,
-            onBackPressed = onBackPressed
+            onBackPressed = onBackPressed,
         )
     }
 
@@ -181,7 +184,6 @@ private fun VideoPlayerScreenContent(
             }
         }
     }
-
 }
 
 @OptIn(UnstableApi::class)
@@ -190,18 +192,19 @@ private fun VideoPlayer(
     nowPlayingInfo: NowPlayingInfo,
     player: Player,
     isReadyToPlay: Boolean,
-    onBackPressed: () -> Unit = {}
+    onBackPressed: () -> Unit = {},
 ) {
     val activity = LocalActivity.current
 
     // TODO: Move to ViewModel for better reuse
     val pulseState = rememberVideoPlayerPulseState()
     val isTabletopMode = currentWindowAdaptiveInfo().windowPosture.isTabletop
-    val videoPlayerState = rememberVideoPlayerState(
-        player = player,
-        isTabletopMode = isTabletopMode,
-        hideSeconds = 4
-    )
+    val videoPlayerState =
+        rememberVideoPlayerState(
+            player = player,
+            isTabletopMode = isTabletopMode,
+            hideSeconds = 4,
+        )
     val videoSize by videoPlayerState
         .videoSize
         .collectAsStateWithLifecycle(Size(1980f, 1080f))
@@ -212,55 +215,56 @@ private fun VideoPlayer(
 
     val focusRequester = remember { FocusRequester() }
 
-    val keyboardShortcuts = remember {
-        listOf(
-            KeyboardShortcut(
-                key = Key.F,
-                action = {
-                    when {
-                        !hasXrSpatialFeature -> {
-                            activity?.toggleImmersiveMode()
-                        }
+    val keyboardShortcuts =
+        remember {
+            listOf(
+                KeyboardShortcut(
+                    key = Key.F,
+                    action = {
+                        when {
+                            !hasXrSpatialFeature -> {
+                                activity?.toggleImmersiveMode()
+                            }
 
-                        isSpatialUiEnabled -> {
-                            spatialConfiguration.requestHomeSpaceMode()
-                        }
+                            isSpatialUiEnabled -> {
+                                spatialConfiguration.requestHomeSpaceMode()
+                            }
 
-                        else -> {
-                            spatialConfiguration.requestFullSpaceMode()
+                            else -> {
+                                spatialConfiguration.requestFullSpaceMode()
+                            }
                         }
-                    }
-                }
-            ),
-            KeyboardShortcut(
-                key = Key.K,
-                action = {
-                    videoPlayerState.showControls()
-                    if (player.isPlaying) {
-                        player.pause()
-                    } else {
-                        player.play()
-                    }
-                }
-            ),
-            KeyboardShortcut(
-                key = Key.J,
-                action = {
-                    player.seekBack()
-                    pulseState.setType(BACK)
-                    videoPlayerState.showControls()
-                }
-            ),
-            KeyboardShortcut(
-                key = Key.L,
-                action = {
-                    player.seekForward()
-                    pulseState.setType(FORWARD)
-                    videoPlayerState.showControls()
-                }
+                    },
+                ),
+                KeyboardShortcut(
+                    key = Key.K,
+                    action = {
+                        videoPlayerState.showControls()
+                        if (player.isPlaying) {
+                            player.pause()
+                        } else {
+                            player.play()
+                        }
+                    },
+                ),
+                KeyboardShortcut(
+                    key = Key.J,
+                    action = {
+                        player.seekBack()
+                        pulseState.setType(BACK)
+                        videoPlayerState.showControls()
+                    },
+                ),
+                KeyboardShortcut(
+                    key = Key.L,
+                    action = {
+                        player.seekForward()
+                        pulseState.setType(FORWARD)
+                        videoPlayerState.showControls()
+                    },
+                ),
             )
-        )
-    }
+        }
 
     LaunchedEffect(isReadyToPlay) {
         if (isReadyToPlay) {
@@ -283,11 +287,12 @@ private fun VideoPlayer(
             pulseState = pulseState,
             videoSize = videoSize,
             onBackPressed = onBackPressed,
-            modifier = Modifier
-                .focusRequester(focusRequester)
-                .dPadEvents(player, videoPlayerState, pulseState)
-                .handleKeyboardShortcuts(keyboardShortcuts)
-                .onClick(player, videoPlayerState)
+            modifier =
+                Modifier
+                    .focusRequester(focusRequester)
+                    .dPadEvents(player, videoPlayerState, pulseState)
+                    .handleKeyboardShortcuts(keyboardShortcuts)
+                    .onClick(player, videoPlayerState),
         )
     } else {
         VideoPlayer2D(
@@ -297,11 +302,12 @@ private fun VideoPlayer(
             pulseState = pulseState,
             videoSize = videoSize,
             onBackPressed = onBackPressed,
-            modifier = Modifier
-                .focusRequester(focusRequester)
-                .dPadEvents(player, videoPlayerState, pulseState)
-                .handleKeyboardShortcuts(keyboardShortcuts)
-                .onClick(player, videoPlayerState)
+            modifier =
+                Modifier
+                    .focusRequester(focusRequester)
+                    .dPadEvents(player, videoPlayerState, pulseState)
+                    .handleKeyboardShortcuts(keyboardShortcuts)
+                    .onClick(player, videoPlayerState),
         )
     }
 }
@@ -315,76 +321,88 @@ private fun SpatialVideoPlayer(
     videoSize: Size,
     modifier: Modifier = Modifier,
     zOffset: Dp = 8.dp,
-    onBackPressed: () -> Unit = {}
+    onBackPressed: () -> Unit = {},
 ) {
     val density = LocalDensity.current
     var subspaceSize by remember { mutableStateOf(Size.Zero) }
 
     // Calculate the size of the surface from the video resolution and given subspace size
-    val dpSize = remember(density, videoSize, subspaceSize, nowPlayingInfo.stereoscopicVisionType) {
-        val size = when (nowPlayingInfo.stereoscopicVisionType) {
-            StereoscopicVisionType.SideBySide -> {
-                Size(width = videoSize.width / 2, height = videoSize.height)
-            }
+    val dpSize =
+        remember(density, videoSize, subspaceSize, nowPlayingInfo.stereoscopicVisionType) {
+            val size =
+                when (nowPlayingInfo.stereoscopicVisionType) {
+                    StereoscopicVisionType.SideBySide -> {
+                        Size(width = videoSize.width / 2, height = videoSize.height)
+                    }
 
-            StereoscopicVisionType.TopBottom -> {
-                Size(width = videoSize.width, height = videoSize.height / 2)
-            }
+                    StereoscopicVisionType.TopBottom -> {
+                        Size(width = videoSize.width, height = videoSize.height / 2)
+                    }
 
-            else -> videoSize
+                    else -> {
+                        videoSize
+                    }
+                }
+
+            val scale =
+                when {
+                    subspaceSize == Size.Zero -> {
+                        1.0f
+                    }
+
+                    size.height > size.width -> {
+                        subspaceSize.height / size.height
+                    }
+
+                    else -> {
+                        subspaceSize.width / size.width
+                    }
+                }
+            with(density) {
+                (size * scale).toDpSize()
+            }
         }
-
-        val scale = when {
-            subspaceSize == Size.Zero -> 1.0f
-            size.height > size.width -> {
-                subspaceSize.height / size.height
-            }
-
-            else -> {
-                subspaceSize.width / size.width
-            }
-        }
-        with(density) {
-            (size * scale).toDpSize()
-        }
-    }
 
     Subspace {
         SpatialExternalSurface(
             stereoMode = nowPlayingInfo.stereoscopicVisionType.into(),
-            modifier = SubspaceModifier
-                .offset(z = zOffset)
-                .height(dpSize.height)
-                .width(dpSize.width)
+            modifier =
+                SubspaceModifier
+                    .offset(z = zOffset)
+                    .height(dpSize.height)
+                    .width(dpSize.width),
         ) {
             onSurfaceCreated { surface ->
                 player.setVideoSurface(surface)
             }
         }
         SpatialPanel(
-            modifier = SubspaceModifier.fillMaxSize().offset(z = zOffset)
+            modifier = SubspaceModifier.fillMaxSize().offset(z = zOffset),
         ) {
             Box(
-                modifier = modifier.onPlaced { layoutCoordinates ->
-                    // Measure the size of the subspace
-                    subspaceSize = Size(
-                        width = layoutCoordinates.size.width.toFloat(),
-                        height = layoutCoordinates.size.height.toFloat()
-                    )
-                }
+                modifier =
+                    modifier.onPlaced { layoutCoordinates ->
+                        // Measure the size of the subspace
+                        subspaceSize =
+                            Size(
+                                width = layoutCoordinates.size.width.toFloat(),
+                                height = layoutCoordinates.size.height.toFloat(),
+                            )
+                    },
             ) {
                 VideoPlayerOverlay(
                     isControlsVisible = videoPlayerState.isControlsVisible,
                     backButton = {
                         BackButton(onClick = onBackPressed)
-                    }
+                    },
                 )
                 SpatialVideoPlayerControls(
                     movieDetails = nowPlayingInfo.movieDetails,
                     player = player,
                     videoPlayerState = videoPlayerState,
-                    modifier = Modifier
-                        .focusGroup(),
+                    modifier =
+                        Modifier
+                            .focusGroup(),
                 )
             }
         }
@@ -399,13 +417,14 @@ private fun VideoPlayer2D(
     pulseState: VideoPlayerPulseState,
     videoSize: Size,
     modifier: Modifier = Modifier,
-    onBackPressed: () -> Unit = {}
+    onBackPressed: () -> Unit = {},
 ) {
-    val size = if (videoSize == Size.Zero) {
-        null
-    } else {
-        videoSize
-    }
+    val size =
+        if (videoSize == Size.Zero) {
+            null
+        } else {
+            videoSize
+        }
 
     if (videoPlayerState.isTabletopMode) {
         TabletopVideoPlayer(
@@ -415,7 +434,7 @@ private fun VideoPlayer2D(
             nowPlayingInfo = nowPlayingInfo,
             videoPlayerState = videoPlayerState,
             pulseState = pulseState,
-            onBackPressed = onBackPressed
+            onBackPressed = onBackPressed,
         )
     } else {
         DefaultVideoPlayer(
@@ -425,7 +444,7 @@ private fun VideoPlayer2D(
             nowPlayingInfo = nowPlayingInfo,
             videoPlayerState = videoPlayerState,
             pulseState = pulseState,
-            onBackPressed = onBackPressed
+            onBackPressed = onBackPressed,
         )
     }
 }
@@ -439,30 +458,33 @@ private fun TabletopVideoPlayer(
     nowPlayingInfo: NowPlayingInfo,
     videoPlayerState: VideoPlayerState,
     pulseState: VideoPlayerPulseState,
-    onBackPressed: () -> Unit
+    onBackPressed: () -> Unit,
 ) {
     Column(modifier = modifier.fillMaxSize()) {
         Box(
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth(),
-            contentAlignment = Alignment.Center
+            modifier =
+                Modifier
+                    .weight(1f)
+                    .fillMaxWidth(),
+            contentAlignment = Alignment.Center,
         ) {
             PlayerSurface(
                 player = player,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .resizeWithContentScale(
-                        contentScale = ContentScale.Fit,
-                        sourceSizeDp = size
-                    )
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .resizeWithContentScale(
+                            contentScale = ContentScale.Fit,
+                            sourceSizeDp = size,
+                        ),
             )
         }
         Box(
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth(),
-            contentAlignment = Alignment.Center
+            modifier =
+                Modifier
+                    .weight(1f)
+                    .fillMaxWidth(),
+            contentAlignment = Alignment.Center,
         ) {
             VideoPlayerControlsInOverlay(
                 movieDetails = nowPlayingInfo.movieDetails,
@@ -470,11 +492,12 @@ private fun TabletopVideoPlayer(
                 videoPlayerState = videoPlayerState,
                 videoPlayerPulseState = pulseState,
                 onBackPressed = onBackPressed,
-                modifier = Modifier
+                modifier = Modifier,
             )
         }
     }
 }
+
 @OptIn(UnstableApi::class)
 @Composable
 private fun DefaultVideoPlayer(
@@ -484,20 +507,21 @@ private fun DefaultVideoPlayer(
     nowPlayingInfo: NowPlayingInfo,
     videoPlayerState: VideoPlayerState,
     pulseState: VideoPlayerPulseState,
-    onBackPressed: () -> Unit
+    onBackPressed: () -> Unit,
 ) {
     val focusRequester = remember { FocusRequester() }
     Box(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize(),
     ) {
         PlayerSurface(
             player = player,
-            modifier = Modifier
-                .fillMaxSize()
-                .resizeWithContentScale(
-                    contentScale = ContentScale.Fit,
-                    sourceSizeDp = size
-                )
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .resizeWithContentScale(
+                        contentScale = ContentScale.Fit,
+                        sourceSizeDp = size,
+                    ),
         )
         VideoPlayerControlsInOverlay(
             movieDetails = nowPlayingInfo.movieDetails,
@@ -505,16 +529,17 @@ private fun DefaultVideoPlayer(
             videoPlayerState = videoPlayerState,
             videoPlayerPulseState = pulseState,
             onBackPressed = onBackPressed,
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .focusRequester(focusRequester)
-                .onPreviewKeyEvent {
-                    if (videoPlayerState.isControlsVisible) {
-                        videoPlayerState.showControls()
+            modifier =
+                Modifier
+                    .align(Alignment.BottomCenter)
+                    .focusRequester(focusRequester)
+                    .onPreviewKeyEvent {
+                        if (videoPlayerState.isControlsVisible) {
+                            videoPlayerState.showControls()
+                        }
+                        false
                     }
-                    false
-                }
-                .focusGroup()
+                    .focusGroup(),
         )
     }
 }
@@ -527,24 +552,25 @@ private fun SpatialVideoPlayerControls(
     modifier: Modifier = Modifier,
 ) {
     AnimatedVisibility(
-        videoPlayerState.isControlsVisible
+        videoPlayerState.isControlsVisible,
     ) {
         Orbiter(
             position = ContentEdge.Bottom,
-            offset = 200.dp
+            offset = 200.dp,
         ) {
             Box(
-                modifier = Modifier
-                    .clip(
-                        RoundedCornerShape(32.dp)
-                    )
-                    .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.8f))
-                    .padding(32.dp)
+                modifier =
+                    Modifier
+                        .clip(
+                            RoundedCornerShape(32.dp),
+                        )
+                        .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.8f))
+                        .padding(32.dp),
             ) {
                 VideoPlayerControls(
                     movieDetails = movieDetails,
                     player = player,
-                    modifier = modifier
+                    modifier = modifier,
                 )
             }
         }
@@ -559,7 +585,7 @@ fun VideoPlayerControlsInOverlay(
     videoPlayerPulseState: VideoPlayerPulseState,
     modifier: Modifier = Modifier,
     isImmersiveModeAvailable: Boolean = rememberImmersiveModeAvailability(),
-    onBackPressed: () -> Unit = {}
+    onBackPressed: () -> Unit = {},
 ) {
     VideoPlayerOverlay(
         modifier = modifier,
@@ -577,9 +603,9 @@ fun VideoPlayerControlsInOverlay(
             BackButton(
                 onBackPressed,
                 description = stringResource(R.string.back_from_video_player),
-                isRequired = isBackButtonRequired()
+                isRequired = isBackButtonRequired(),
             )
-        }
+        },
     )
 }
 
@@ -610,24 +636,25 @@ private fun Modifier.onClick(
 private fun Modifier.dPadEvents(
     player: Player,
     videoPlayerState: VideoPlayerState,
-    pulseState: VideoPlayerPulseState
-): Modifier = this.handleDPadKeyEvents(
-    onLeft = {
-        if (!videoPlayerState.isControlsVisible) {
-            player.seekBack()
-            pulseState.setType(BACK)
-        }
-    },
-    onRight = {
-        if (!videoPlayerState.isControlsVisible) {
-            player.seekForward()
-            pulseState.setType(FORWARD)
-        }
-    },
-    onUp = { videoPlayerState.showControls() },
-    onDown = { videoPlayerState.showControls() },
-    onEnter = {
-        player.pause()
-        videoPlayerState.showControls()
-    }
-)
+    pulseState: VideoPlayerPulseState,
+): Modifier =
+    this.handleDPadKeyEvents(
+        onLeft = {
+            if (!videoPlayerState.isControlsVisible) {
+                player.seekBack()
+                pulseState.setType(BACK)
+            }
+        },
+        onRight = {
+            if (!videoPlayerState.isControlsVisible) {
+                player.seekForward()
+                pulseState.setType(FORWARD)
+            }
+        },
+        onUp = { videoPlayerState.showControls() },
+        onDown = { videoPlayerState.showControls() },
+        onEnter = {
+            player.pause()
+            videoPlayerState.showControls()
+        },
+    )

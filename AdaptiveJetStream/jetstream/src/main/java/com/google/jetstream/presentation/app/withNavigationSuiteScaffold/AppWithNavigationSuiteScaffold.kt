@@ -36,8 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.google.jetstream.presentation.app.AppState
 import com.google.jetstream.presentation.components.KeyboardShortcut
-import com.google.jetstream.presentation.components.feature.EngagementMode
-import com.google.jetstream.presentation.components.feature.LocalEngagementMode
+import com.google.jetstream.presentation.components.feature.hasXrSpatialFeature
 import com.google.jetstream.presentation.components.handleKeyboardShortcuts
 import com.google.jetstream.presentation.screens.Screens
 
@@ -49,62 +48,64 @@ fun AppWithNavigationSuiteScaffold(
     keyboardShortcuts: List<KeyboardShortcut> = emptyList(),
     content: @Composable (PaddingValues) -> Unit,
 ) {
-    val isEnclosed = LocalEngagementMode.current == EngagementMode.Enclosed
-
-    NavigationSuiteScaffoldLayout(
-        keyboardShortcuts = keyboardShortcuts,
-        modifier = modifier.fillMaxSize(),
-        isNavigationVisible = appState.isNavigationVisible,
-        navigationItems = {
-            AdaptiveAppNavigationItems(
-                currentScreen = appState.selectedScreen,
-                screens = Screens.mainNavigationScreens,
-                onSelectScreen = { screen ->
-                    if (screen != appState.selectedScreen) {
-                        navController.navigate(screen())
-                    }
-                },
-            )
-            if (isEnclosed) {
-                RequestFullSpaceModeItem()
-            }
-        },
-        content = content,
-        topBar = {
-            // TODO: This is specific to XR home-space mode
-            val topBarPaddingTop =
-                remember(isEnclosed) {
-                    if (isEnclosed) {
-                        32.dp
-                    } else {
-                        0.dp
-                    }
-                }
-
-            AnimatedVisibility(
-                visible = appState.isNavigationVisible && appState.isTopBarVisible,
-                enter = slideInVertically(),
-                exit = slideOutVertically(),
-            ) {
-                TopAppBar(
-                    modifier =
-                        Modifier
-                            .padding(
-                                start = 24.dp,
-                                end = 24.dp,
-                                top = topBarPaddingTop,
-                            )
-                            .onFocusChanged { appState.updateTopBarFocusState(it.hasFocus) },
-                    selectedScreen = appState.selectedScreen,
-                    showScreen = { screen ->
+    EnableProminentMovieListOverride {
+        NavigationSuiteScaffoldLayout(
+            keyboardShortcuts = keyboardShortcuts,
+            modifier = modifier.fillMaxSize(),
+            isNavigationVisible = appState.isNavigationVisible,
+            navigationItems = {
+                AdaptiveAppNavigationItems(
+                    currentScreen = appState.selectedScreen,
+                    screens = Screens.mainNavigationScreens,
+                    onSelectScreen = { screen ->
                         if (screen != appState.selectedScreen) {
                             navController.navigate(screen())
                         }
                     },
                 )
-            }
-        },
-    )
+                if (hasXrSpatialFeature()) {
+                    RequestFullSpaceModeItem()
+                }
+            },
+            content = content,
+            topBar = {
+                val hasXrSpatialFeature = hasXrSpatialFeature()
+
+                // TODO: This is specific to XR home-space mode
+                val topBarPaddingTop =
+                    remember(hasXrSpatialFeature) {
+                        if (hasXrSpatialFeature) {
+                            32.dp
+                        } else {
+                            0.dp
+                        }
+                    }
+
+                AnimatedVisibility(
+                    visible = appState.isNavigationVisible && appState.isTopBarVisible,
+                    enter = slideInVertically(),
+                    exit = slideOutVertically(),
+                ) {
+                    TopAppBar(
+                        modifier =
+                            Modifier
+                                .padding(
+                                    start = 24.dp,
+                                    end = 24.dp,
+                                    top = topBarPaddingTop,
+                                )
+                                .onFocusChanged { appState.updateTopBarFocusState(it.hasFocus) },
+                        selectedScreen = appState.selectedScreen,
+                        showScreen = { screen ->
+                            if (screen != appState.selectedScreen) {
+                                navController.navigate(screen())
+                            }
+                        },
+                    )
+                }
+            },
+        )
+    }
 }
 
 @Composable

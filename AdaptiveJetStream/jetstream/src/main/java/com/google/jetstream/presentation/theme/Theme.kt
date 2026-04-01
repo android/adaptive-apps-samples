@@ -24,8 +24,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import com.google.jetstream.presentation.screens.categories.LocalCategoryCardAspectRatio
 import com.google.jetstream.presentation.screens.categories.LocalCategoryGridGridCells
-import com.google.jetstream.presentation.theme.styles.LocalProminentCardStyle
-import com.google.jetstream.presentation.theme.styles.rememberProminentCardStyle
 
 @Composable
 fun JetStreamTheme(
@@ -36,15 +34,19 @@ fun JetStreamTheme(
         LocalFeaturedCarouselHeight provides rememberFeaturedCarouselHeight(),
         LocalVerticalCardAspectRatio provides rememberVerticalCardAspectRatio(),
         LocalCardWidth provides rememberCardWidth(),
-        LocalListItemGap provides rememberListItemGap(),
-        LocalProminentCardStyle provides rememberProminentCardStyle(),
+        LocalProminentCardSize provides rememberProminentCardSize(),
         LocalCategoryGridGridCells provides rememberCategoryGridColumns(),
         LocalCategoryCardAspectRatio provides rememberCategoryCardAspectRatio(),
         LocalContentPadding provides rememberContentPadding(),
     ) {
         MaterialTheme(
             // TODO this is redundant because the dark and light color schemes are the same
-            colorScheme = colorScheme(),
+            colorScheme =
+                if (isSystemInDarkTheme()) {
+                    darkColorScheme
+                } else {
+                    lightColorScheme
+                },
             shapes = MaterialTheme.shapes,
             typography = Typography,
             content = content,
