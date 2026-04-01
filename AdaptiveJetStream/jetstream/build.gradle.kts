@@ -1,3 +1,4 @@
+import com.android.build.api.dsl.ApplicationExtension
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 /*
@@ -17,7 +18,6 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
  */
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.hilt)
@@ -32,11 +32,12 @@ kotlin {
     jvmToolchain(21)
 
     compilerOptions {
+        languageVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_3
         jvmTarget = JvmTarget.JVM_21
     }
 }
 
-android {
+configure<ApplicationExtension> {
     namespace = "com.google.jetstream"
     // Needed for latest androidx snapshot build
     compileSdk = 36
@@ -119,19 +120,28 @@ tasks.register<JacocoReport>("jacocoTestReport") {
         "**/*_MembersInjector*.*"
     )
 
-    val javaClasses = fileTree("${project.layout.buildDirectory.get()}/intermediates/javac/debug/classes") {
-        exclude(fileFilter)
-    }
-    val kotlinClasses = fileTree("${project.layout.buildDirectory.get()}/tmp/kotlin-classes/debug") {
-        exclude(fileFilter)
-    }
+    val javaClasses =
+        fileTree("${project.layout.buildDirectory.get()}/intermediates/javac/debug/classes") {
+            exclude(fileFilter)
+        }
+    val kotlinClasses =
+        fileTree("${project.layout.buildDirectory.get()}/tmp/kotlin-classes/debug") {
+            exclude(fileFilter)
+        }
 
     classDirectories.setFrom(files(javaClasses, kotlinClasses))
-    sourceDirectories.setFrom(files("${project.projectDir}/src/main/java", "${project.projectDir}/src/main/kotlin"))
+    sourceDirectories.setFrom(
+        files(
+            android.sourceSets.getByName("main").java.directories,
+            android.sourceSets.getByName("main").kotlin.directories
+        )
+    )
+
     executionData.setFrom(fileTree("${project.layout.buildDirectory.get()}") {
         include("outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec")
     })
 }
+
 
 tasks.withType<com.android.compose.screenshot.tasks.PreviewScreenshotValidationTask> {
     maxHeapSize = "2g"
@@ -186,8 +196,15 @@ dependencies {
     // Hilt
     implementation(libs.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)
-    implementation(libs.androidx.ui.tooling.preview)
-    debugImplementation(libs.androidx.ui.tooling)
+
+    // Experimental features
+    implementation(libs.androidx.compose.foundation)
+    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.ui.graphics)
+    implementation(libs.androidx.compose.ui.tooling)
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    debugImplementation(libs.androidx.compose.ui.tooling)
+
     ksp(libs.hilt.compiler)
 
     // Baseline profile installer
