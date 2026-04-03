@@ -36,7 +36,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.google.jetstream.presentation.app.AppState
 import com.google.jetstream.presentation.components.KeyboardShortcut
-import com.google.jetstream.presentation.components.feature.hasXrSpatialFeature
+import com.google.jetstream.presentation.components.feature.EngagementMode
+import com.google.jetstream.presentation.components.feature.LocalEngagementMode
 import com.google.jetstream.presentation.components.handleKeyboardShortcuts
 import com.google.jetstream.presentation.screens.Screens
 
@@ -48,6 +49,8 @@ fun AppWithNavigationSuiteScaffold(
     keyboardShortcuts: List<KeyboardShortcut> = emptyList(),
     content: @Composable (PaddingValues) -> Unit,
 ) {
+    val isEnclosed = LocalEngagementMode.current == EngagementMode.Enclosed
+
     EnableProminentMovieListOverride {
         NavigationSuiteScaffoldLayout(
             keyboardShortcuts = keyboardShortcuts,
@@ -63,18 +66,16 @@ fun AppWithNavigationSuiteScaffold(
                         }
                     },
                 )
-                if (hasXrSpatialFeature()) {
+                if (isEnclosed) {
                     RequestFullSpaceModeItem()
                 }
             },
             content = content,
             topBar = {
-                val hasXrSpatialFeature = hasXrSpatialFeature()
-
                 // TODO: This is specific to XR home-space mode
                 val topBarPaddingTop =
-                    remember(hasXrSpatialFeature) {
-                        if (hasXrSpatialFeature) {
+                    remember(isEnclosed) {
+                        if (isEnclosed) {
                             32.dp
                         } else {
                             0.dp

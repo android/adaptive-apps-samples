@@ -28,17 +28,22 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.ui.ComposeUiFlags
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.xr.compose.material3.ExperimentalMaterial3XrApi
 import com.google.jetstream.presentation.App
+import com.google.jetstream.presentation.components.feature.ProvideJetStreamUiMediaContext
+import com.google.jetstream.presentation.components.feature.ProvideLocalEngagementMode
 import com.google.jetstream.presentation.theme.JetStreamTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    @OptIn(ExperimentalMaterial3XrApi::class)
+    @OptIn(ExperimentalMaterial3XrApi::class, ExperimentalComposeUiApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
+        ComposeUiFlags.isMediaQueryIntegrationEnabled = true
         installSplashScreen()
         super.onCreate(savedInstanceState)
 
@@ -46,15 +51,17 @@ class MainActivity : ComponentActivity() {
         tryEnableCustomHeader()
         setContent {
             JetStreamTheme {
-                App(
-                    // TODO: Figure out why this is being used instead of a BackHandler
-                    onActivityBackPressed = onBackPressedDispatcher::onBackPressed,
-                    // TODO: Is it necessary to tell every child that they need to use safe drawing padding?
-                    //  This feels like it would be better declared by the main app layouts rather than being mandated here
-                    modifier =
-                        Modifier
-                            .safeDrawingPadding(),
-                )
+                ProvideLocalEngagementMode {
+                    App(
+                        // TODO: Figure out why this is being used instead of a BackHandler
+                        onActivityBackPressed = onBackPressedDispatcher::onBackPressed,
+                        // TODO: Is it necessary to tell every child that they need to use safe drawing padding?
+                        //  This feels like it would be better declared by the main app layouts rather than being mandated here
+                        modifier =
+                            Modifier
+                                .safeDrawingPadding(),
+                    )
+                }
             }
         }
     }
