@@ -58,7 +58,8 @@ import coil.compose.AsyncImage
 import com.google.jetstream.data.entities.Movie
 import com.google.jetstream.data.util.StringConstants
 import com.google.jetstream.presentation.components.WatchNowButton
-import com.google.jetstream.presentation.components.feature.isLeanbackEnabled
+import com.google.jetstream.presentation.components.feature.EngagementMode
+import com.google.jetstream.presentation.components.feature.LocalEngagementMode
 import com.google.jetstream.presentation.theme.Padding
 import com.google.jetstream.presentation.theme.jetStreamBorderIndication
 import kotlin.math.absoluteValue
@@ -71,17 +72,17 @@ fun FeaturedMoviesCarousel(
     goToVideoPlayer: (movie: Movie) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val isLeanbackEnabled = isLeanbackEnabled()
+    val isLeanback = LocalEngagementMode.current == EngagementMode.Leanback
     val featuredMoviesCarouselState =
-        rememberSaveable(movies, isLeanbackEnabled, saver = FeaturedMoviesCarouselState.Saver) {
+        rememberSaveable(movies, isLeanback, saver = FeaturedMoviesCarouselState.Saver) {
             FeaturedMoviesCarouselState(
                 itemCount = movies.size,
-                initialWatchNowButtonVisibility = !isLeanbackEnabled,
+                initialWatchNowButtonVisibility = !isLeanback,
             )
         }
 
     val interactionSource = remember { MutableInteractionSource() }
-    if (isLeanbackEnabled) {
+    if (isLeanback) {
         LaunchedEffect(Unit) {
             interactionSource.interactions.collect {
                 when (it) {

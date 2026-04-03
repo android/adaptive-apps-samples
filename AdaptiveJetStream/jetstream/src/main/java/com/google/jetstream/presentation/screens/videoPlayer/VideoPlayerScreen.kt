@@ -77,10 +77,8 @@ import com.google.jetstream.presentation.components.Error
 import com.google.jetstream.presentation.components.KeyboardShortcut
 import com.google.jetstream.presentation.components.Loading
 import com.google.jetstream.presentation.components.desktop.BackNavigationContextMenu
-import com.google.jetstream.presentation.components.feature.hasXrSpatialFeature
-import com.google.jetstream.presentation.components.feature.isBackButtonRequired
-import com.google.jetstream.presentation.components.feature.isSpatialUiEnabled
-import com.google.jetstream.presentation.components.feature.rememberImmersiveModeAvailability
+import com.google.jetstream.presentation.components.feature.EngagementMode
+import com.google.jetstream.presentation.components.feature.LocalEngagementMode
 import com.google.jetstream.presentation.components.handleKeyboardShortcuts
 import com.google.jetstream.presentation.components.shim.onSpaceBarPressed
 import com.google.jetstream.presentation.screens.videoPlayer.components.VideoPlayerControls
@@ -111,7 +109,7 @@ fun VideoPlayerScreen(
     videoPlayerScreenViewModel: VideoPlayerScreenViewModel = hiltViewModel(),
 ) {
     val uiState by videoPlayerScreenViewModel.uiState.collectAsStateWithLifecycle()
-    val isSpatialUiEnabled = isSpatialUiEnabled()
+    val isSpatialUiEnabled = LocalEngagementMode.current == EngagementMode.Spatial
     LaunchedEffect(isSpatialUiEnabled) {
         videoPlayerScreenViewModel.updateSpatialUiEnabled(isSpatialUiEnabled)
     }
@@ -209,8 +207,7 @@ private fun VideoPlayer(
         .videoSize
         .collectAsStateWithLifecycle(Size(1980f, 1080f))
 
-    val hasXrSpatialFeature = hasXrSpatialFeature()
-    val isSpatialUiEnabled = isSpatialUiEnabled()
+    val engagementMode = LocalEngagementMode.current
     val spatialConfiguration = LocalSpatialConfiguration.current
 
     val focusRequester = remember { FocusRequester() }
@@ -221,17 +218,17 @@ private fun VideoPlayer(
                 KeyboardShortcut(
                     key = Key.F,
                     action = {
-                        when {
-                            !hasXrSpatialFeature -> {
-                                activity?.toggleImmersiveMode()
-                            }
-
-                            isSpatialUiEnabled -> {
+                        when (engagementMode) {
+                            EngagementMode.Spatial -> {
                                 spatialConfiguration.requestHomeSpaceMode()
                             }
 
-                            else -> {
+                            EngagementMode.Enclosed -> {
                                 spatialConfiguration.requestFullSpaceMode()
+                            }
+
+                            else -> {
+                                activity?.toggleImmersiveMode()
                             }
                         }
                     },
@@ -279,7 +276,7 @@ private fun VideoPlayer(
         }
     }
 
-    if (isSpatialUiEnabled()) {
+    if (engagementMode == EngagementMode.Spatial) {
         SpatialVideoPlayer(
             nowPlayingInfo = nowPlayingInfo,
             player = player,
@@ -584,9 +581,9 @@ fun VideoPlayerControlsInOverlay(
     videoPlayerState: VideoPlayerState,
     videoPlayerPulseState: VideoPlayerPulseState,
     modifier: Modifier = Modifier,
-    isImmersiveModeAvailable: Boolean = rememberImmersiveModeAvailability(),
     onBackPressed: () -> Unit = {},
 ) {
+    val engagementMode = LocalEngagementMode.current
     VideoPlayerOverlay(
         modifier = modifier,
         isControlsVisible = videoPlayerState.isControlsVisible,
@@ -596,14 +593,14 @@ fun VideoPlayerControlsInOverlay(
             VideoPlayerControls(
                 movieDetails = movieDetails,
                 player = player,
-                isImmersiveModeAvailable = isImmersiveModeAvailable,
+                isImmersiveModeAvailable = engagementMode.hasImmersiveMode,
             )
         },
         backButton = {
             BackButton(
                 onBackPressed,
                 description = stringResource(R.string.back_from_video_player),
-                isRequired = isBackButtonRequired(),
+                isRequired = engagementMode.isBackButtonRequired,
             )
         },
     )

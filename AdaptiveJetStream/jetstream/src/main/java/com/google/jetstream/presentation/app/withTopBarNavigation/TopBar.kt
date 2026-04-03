@@ -37,10 +37,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalMediaQueryApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.FocusRequester.Companion.FocusRequesterFactory.component1
+import androidx.compose.ui.focus.FocusRequester.Companion.FocusRequesterFactory.component2
 import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
@@ -51,9 +54,13 @@ import androidx.compose.ui.unit.dp
 import com.google.jetstream.data.util.StringConstants
 import com.google.jetstream.presentation.app.JetStreamLogo
 import com.google.jetstream.presentation.app.UserAvatar
-import com.google.jetstream.presentation.components.feature.isDpadAvailable
+import com.google.jetstream.presentation.components.feature.EngagementMode
+import com.google.jetstream.presentation.components.feature.InputModality
+import com.google.jetstream.presentation.components.feature.JetStreamUiMedia
+import com.google.jetstream.presentation.components.feature.LocalEngagementMode
 import com.google.jetstream.presentation.screens.Screens
 
+@OptIn(ExperimentalMediaQueryApi::class)
 @Composable
 internal fun TopBar(
     items: List<Screens>,
@@ -64,7 +71,7 @@ internal fun TopBar(
     val focusManager = LocalFocusManager.current
     val (tabRow, avatar) = remember { FocusRequester.createRefs() }
 
-    val isDpadAvailable = isDpadAvailable()
+    val isDpadAvailable = LocalEngagementMode.current == EngagementMode.Leanback
 
     // TODO: Is this a bug?
     // If I run the app on the TV emulator, nothing happens when I click on the top navigation items

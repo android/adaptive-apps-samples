@@ -51,14 +51,12 @@ import com.google.jetstream.R
 import com.google.jetstream.data.entities.Movie
 import com.google.jetstream.data.entities.MovieDetails
 import com.google.jetstream.data.util.StringConstants
-import com.google.jetstream.presentation.app.NavigationComponentType
-import com.google.jetstream.presentation.app.rememberNavigationComponentType
 import com.google.jetstream.presentation.components.BackButton
 import com.google.jetstream.presentation.components.Error
 import com.google.jetstream.presentation.components.Loading
 import com.google.jetstream.presentation.components.MoviesRow
 import com.google.jetstream.presentation.components.desktop.BackNavigationContextMenu
-import com.google.jetstream.presentation.components.feature.isBackButtonRequired
+import com.google.jetstream.presentation.components.feature.LocalEngagementMode
 import com.google.jetstream.presentation.screens.moviedetails.components.CastAndCrewList
 import com.google.jetstream.presentation.screens.moviedetails.components.MovieDetails
 import com.google.jetstream.presentation.screens.moviedetails.components.MovieReviews
@@ -118,10 +116,7 @@ internal fun Details(
     refreshScreenWithNewMovie: (Movie) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val navigationComponentType = rememberNavigationComponentType()
-    val isBackButtonRequired =
-        isBackButtonRequired() && navigationComponentType == NavigationComponentType.TopBar
-
+    val isBackButtonRequired = LocalEngagementMode.current.isBackButtonRequired
     val lazyListState = rememberLazyListState()
     val isBackButtonVisible by remember {
         derivedStateOf {
