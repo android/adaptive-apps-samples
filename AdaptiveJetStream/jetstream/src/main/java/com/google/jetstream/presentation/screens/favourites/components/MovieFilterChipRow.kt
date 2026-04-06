@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
+@file:OptIn(ExperimentalFlexBoxApi::class)
+
 package com.google.jetstream.presentation.screens.favourites.components
 
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.ExperimentalFlexBoxApi
 import androidx.compose.foundation.layout.FlexBox
 import androidx.compose.foundation.layout.FlexWrap
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -30,7 +30,6 @@ import androidx.compose.ui.unit.dp
 import com.google.jetstream.presentation.screens.favourites.FilterList
 import com.google.jetstream.presentation.utils.createInitialFocusRestorerModifiers
 
-@OptIn(ExperimentalFlexBoxApi::class)
 @Composable
 fun MovieFilterChipRow(
     filterList: FilterList,
@@ -48,7 +47,6 @@ fun MovieFilterChipRow(
             modifier
                 .fillMaxWidth()
                 .padding(bottom = 16.dp)
-                .horizontalScroll(rememberScrollState())
                 .then(focusRestorerModifiers.parentModifier),
     ) {
         filterList.items.forEachIndexed { index, filterCondition ->
