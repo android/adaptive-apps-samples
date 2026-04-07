@@ -61,7 +61,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.google.jetstream.R
 import com.google.jetstream.data.entities.Movie
-import com.google.jetstream.data.entities.MovieList
 import com.google.jetstream.presentation.components.ImmersiveListMoviesRow
 import com.google.jetstream.presentation.components.ItemDirection
 import com.google.jetstream.presentation.components.PosterImage
@@ -70,7 +69,7 @@ import com.google.jetstream.presentation.theme.LocalContentPadding
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Top10MoviesList(
-    movieList: MovieList,
+    movieList: List<Movie>,
     modifier: Modifier = Modifier,
     scrimColor: Color = MaterialTheme.colorScheme.surface.copy(alpha = 0.7f),
     inputMode: InputMode = LocalInputModeManager.current.inputMode,
@@ -173,7 +172,7 @@ private fun Modifier.immersiveListBringIntoView(
 @Composable
 private fun ImmersiveList(
     selectedMovie: Movie,
-    movieList: MovieList,
+    movieList: List<Movie>,
     modifier: Modifier = Modifier,
     title: String? = null,
     shouldExpand: Boolean = false,

@@ -21,7 +21,7 @@ import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.jetstream.R
-import com.google.jetstream.data.entities.MovieList
+import com.google.jetstream.data.entities.Movie
 import com.google.jetstream.data.repositories.MovieRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -76,7 +76,7 @@ class FavouriteScreenViewModel
 sealed interface FavouriteScreenUiState {
     data object Loading : FavouriteScreenUiState
 
-    data class Ready(val favouriteMovieList: MovieList, val selectedFilterList: FilterList) :
+    data class Ready(val favouriteMovieList: List<Movie>, val selectedFilterList: FilterList) :
         FavouriteScreenUiState
 }
 

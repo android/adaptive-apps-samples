@@ -42,7 +42,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.jetstream.data.entities.Movie
-import com.google.jetstream.data.entities.MovieList
 import com.google.jetstream.data.util.StringConstants
 import com.google.jetstream.presentation.components.Error
 import com.google.jetstream.presentation.components.Loading
@@ -87,10 +86,10 @@ fun HomeScreen(
 
 @Composable
 internal fun Catalog(
-    featuredMovies: MovieList,
-    trendingMovies: MovieList,
-    top10Movies: MovieList,
-    nowPlayingMovies: MovieList,
+    featuredMovies: List<Movie>,
+    trendingMovies: List<Movie>,
+    top10Movies: List<Movie>,
+    nowPlayingMovies: List<Movie>,
     onMovieClick: (movie: Movie) -> Unit,
     onScroll: (isTopBarVisible: Boolean) -> Unit,
     goToVideoPlayer: (movie: Movie) -> Unit,

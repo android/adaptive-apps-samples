@@ -18,7 +18,7 @@ package com.google.jetstream.presentation.screens.categories
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.jetstream.data.entities.MovieCategoryList
+import com.google.jetstream.data.entities.MovieCategory
 import com.google.jetstream.data.repositories.MovieRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
@@ -45,5 +45,5 @@ class CategoriesScreenViewModel
 sealed interface CategoriesScreenUiState {
     data object Loading : CategoriesScreenUiState
 
-    data class Ready(val categoryList: MovieCategoryList) : CategoriesScreenUiState
+    data class Ready(val categoryList: List<MovieCategory>) : CategoriesScreenUiState
 }

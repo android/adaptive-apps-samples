@@ -52,7 +52,6 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.jetstream.R
 import com.google.jetstream.data.entities.Movie
-import com.google.jetstream.data.entities.MovieList
 import com.google.jetstream.presentation.components.MoviesRow
 import com.google.jetstream.presentation.theme.LocalContentPadding
 import com.google.jetstream.presentation.theme.Padding
@@ -99,7 +98,7 @@ fun SearchScreen(
 @Composable
 internal fun SearchResult(
     searchText: TextFieldValue,
-    movieList: MovieList,
+    movieList: List<Movie>,
     searchMovies: () -> Unit,
     updateSearchText: (TextFieldValue) -> Unit,
     onMovieClick: (movie: Movie) -> Unit,
