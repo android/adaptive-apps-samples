@@ -18,13 +18,12 @@ package com.google.jetstream.presentation.screens.movies.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.focusRestorer
 import androidx.compose.ui.unit.dp
 import com.google.jetstream.data.entities.Movie
+import com.google.jetstream.presentation.components.MovieList
 import com.google.jetstream.presentation.theme.LocalContentPadding
 import com.google.jetstream.presentation.theme.LocalProminentCardSize
 import com.google.jetstream.presentation.theme.LocalProminentListItemGap
@@ -38,18 +37,17 @@ fun ProminentMovieList(
     contentPadding: Padding = LocalContentPadding.current,
     onMovieClick: (movie: Movie) -> Unit = {},
 ) {
-    // ToDo: specify the pivot offset to 0.07f
-    LazyRow(
+    MovieList(
+        movieList = movieList,
         modifier = modifier.focusRestorer(),
         contentPadding = contentPadding.copy(top = 0.dp, bottom = 0.dp).intoPaddingValues(),
         horizontalArrangement = Arrangement.spacedBy(LocalProminentListItemGap.current),
-    ) {
-        items(movieList) {
+        itemContent = { _, movie ->
             prominentMovieListScope.ProminentMovieCard(
                 onMovieClick = onMovieClick,
-                movie = it,
+                movie = movie,
                 modifier = Modifier.size(LocalProminentCardSize.current),
             )
-        }
-    }
+        },
+    )
 }
