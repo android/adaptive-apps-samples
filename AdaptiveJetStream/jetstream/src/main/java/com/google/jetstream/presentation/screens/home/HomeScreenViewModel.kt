@@ -18,7 +18,7 @@ package com.google.jetstream.presentation.screens.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.jetstream.data.entities.MovieList
+import com.google.jetstream.data.entities.Movie
 import com.google.jetstream.data.repositories.MovieRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
@@ -57,9 +57,9 @@ sealed interface HomeScreenUiState {
     data object Error : HomeScreenUiState
 
     data class Ready(
-        val featuredMovieList: MovieList,
-        val trendingMovieList: MovieList,
-        val top10MovieList: MovieList,
-        val nowPlayingMovieList: MovieList,
+        val featuredMovieList: List<Movie>,
+        val trendingMovieList: List<Movie>,
+        val top10MovieList: List<Movie>,
+        val nowPlayingMovieList: List<Movie>,
     ) : HomeScreenUiState
 }

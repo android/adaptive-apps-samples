@@ -31,7 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.google.jetstream.data.entities.MovieList
+import com.google.jetstream.data.entities.Movie
 import com.google.jetstream.presentation.components.Loading
 import com.google.jetstream.presentation.screens.favourites.components.FilteredMoviesGrid
 import com.google.jetstream.presentation.screens.favourites.components.MovieFilterChipRow
@@ -69,7 +69,7 @@ fun FavouritesScreen(
 
 @Composable
 internal fun Catalog(
-    favouriteMovieList: MovieList,
+    favouriteMovieList: List<Movie>,
     filterList: FilterList,
     selectedFilterList: FilterList,
     onMovieClick: (movieId: String) -> Unit,

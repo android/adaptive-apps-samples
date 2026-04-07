@@ -44,7 +44,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.jetstream.data.entities.MovieCategory
-import com.google.jetstream.data.entities.MovieCategoryList
 import com.google.jetstream.presentation.components.FoldablePreview
 import com.google.jetstream.presentation.components.JetStreamPreview
 import com.google.jetstream.presentation.components.Loading
@@ -90,7 +89,7 @@ fun CategoriesScreen(
 
 @Composable
 internal fun Catalog(
-    movieCategories: MovieCategoryList,
+    movieCategories: List<MovieCategory>,
     modifier: Modifier = Modifier,
     gridCells: GridCells = LocalCategoryGridGridCells.current,
     contentPadding: Padding = LocalContentPadding.current,

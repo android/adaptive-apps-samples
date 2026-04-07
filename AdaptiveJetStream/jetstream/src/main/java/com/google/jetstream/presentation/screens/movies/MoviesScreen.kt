@@ -37,7 +37,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.jetstream.data.entities.Movie
-import com.google.jetstream.data.entities.MovieList
 import com.google.jetstream.data.util.StringConstants
 import com.google.jetstream.presentation.components.Loading
 import com.google.jetstream.presentation.components.MoviesRow
@@ -73,8 +72,8 @@ fun MoviesScreen(
 
 @Composable
 internal fun Catalog(
-    movieList: MovieList,
-    popularFilmsThisWeek: MovieList,
+    movieList: List<Movie>,
+    popularFilmsThisWeek: List<Movie>,
     onMovieClick: (movie: Movie) -> Unit,
     onScroll: (isTopBarVisible: Boolean) -> Unit,
     isTopBarVisible: Boolean,

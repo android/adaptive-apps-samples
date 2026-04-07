@@ -26,7 +26,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.google.jetstream.data.entities.MovieList
+import com.google.jetstream.data.entities.Movie
 import com.google.jetstream.presentation.components.MovieCard
 import com.google.jetstream.presentation.components.PosterImage
 import com.google.jetstream.presentation.theme.JetStreamBottomListPadding
@@ -35,7 +35,7 @@ import com.google.jetstream.presentation.theme.LocalListItemGap
 @Composable
 fun FilteredMoviesGrid(
     state: LazyGridState,
-    movieList: MovieList,
+    movieList: List<Movie>,
     onMovieClick: (movieId: String) -> Unit,
     modifier: Modifier = Modifier,
     columns: GridCells = GridCells.Fixed(6),
