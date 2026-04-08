@@ -34,7 +34,6 @@ import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.xr.compose.material3.ExperimentalMaterial3XrApi
 import com.google.jetstream.presentation.App
-import com.google.jetstream.presentation.components.feature.ProvideJetStreamUiMediaContext
 import com.google.jetstream.presentation.components.feature.ProvideLocalEngagementMode
 import com.google.jetstream.presentation.theme.JetStreamTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -50,8 +49,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         tryEnableCustomHeader()
         setContent {
-            JetStreamTheme {
-                ProvideLocalEngagementMode {
+            ProvideLocalEngagementMode {
+                JetStreamTheme {
                     App(
                         // TODO: Figure out why this is being used instead of a BackHandler
                         onActivityBackPressed = onBackPressedDispatcher::onBackPressed,

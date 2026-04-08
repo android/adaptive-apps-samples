@@ -104,31 +104,6 @@ private fun WindowSizeClass.cardWidth(): Dp {
 }
 
 @Composable
-fun rememberProminentCardSize(
-    windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfo().windowSizeClass,
-): DpSize {
-    return remember(windowSizeClass) {
-        when {
-            !windowSizeClass.isWidthAtLeastBreakpoint(
-                WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND,
-            ) -> {
-                DpSize(360.dp, 360.dp)
-            }
-
-            !windowSizeClass.isWidthAtLeastBreakpoint(
-                WindowSizeClass.WIDTH_DP_EXPANDED_LOWER_BOUND,
-            ) -> {
-                DpSize(540.dp, 304.dp)
-            }
-
-            else -> {
-                DpSize(432.dp, 216.dp)
-            }
-        }
-    }
-}
-
-@Composable
 fun rememberCategoryGridColumns(
     navigationComponentType: NavigationComponentType = rememberNavigationComponentType(),
 ): GridCells {

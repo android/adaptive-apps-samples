@@ -51,62 +51,60 @@ fun AppWithNavigationSuiteScaffold(
 ) {
     val isEnclosed = LocalEngagementMode.current == EngagementMode.Enclosed
 
-    EnableProminentMovieListOverride {
-        NavigationSuiteScaffoldLayout(
-            keyboardShortcuts = keyboardShortcuts,
-            modifier = modifier.fillMaxSize(),
-            isNavigationVisible = appState.isNavigationVisible,
-            navigationItems = {
-                AdaptiveAppNavigationItems(
-                    currentScreen = appState.selectedScreen,
-                    screens = Screens.mainNavigationScreens,
-                    onSelectScreen = { screen ->
+    NavigationSuiteScaffoldLayout(
+        keyboardShortcuts = keyboardShortcuts,
+        modifier = modifier.fillMaxSize(),
+        isNavigationVisible = appState.isNavigationVisible,
+        navigationItems = {
+            AdaptiveAppNavigationItems(
+                currentScreen = appState.selectedScreen,
+                screens = Screens.mainNavigationScreens,
+                onSelectScreen = { screen ->
+                    if (screen != appState.selectedScreen) {
+                        navController.navigate(screen())
+                    }
+                },
+            )
+            if (isEnclosed) {
+                RequestFullSpaceModeItem()
+            }
+        },
+        content = content,
+        topBar = {
+            // TODO: This is specific to XR home-space mode
+            val topBarPaddingTop =
+                remember(isEnclosed) {
+                    if (isEnclosed) {
+                        32.dp
+                    } else {
+                        0.dp
+                    }
+                }
+
+            AnimatedVisibility(
+                visible = appState.isNavigationVisible && appState.isTopBarVisible,
+                enter = slideInVertically(),
+                exit = slideOutVertically(),
+            ) {
+                TopAppBar(
+                    modifier =
+                        Modifier
+                            .padding(
+                                start = 24.dp,
+                                end = 24.dp,
+                                top = topBarPaddingTop,
+                            )
+                            .onFocusChanged { appState.updateTopBarFocusState(it.hasFocus) },
+                    selectedScreen = appState.selectedScreen,
+                    showScreen = { screen ->
                         if (screen != appState.selectedScreen) {
                             navController.navigate(screen())
                         }
                     },
                 )
-                if (isEnclosed) {
-                    RequestFullSpaceModeItem()
-                }
-            },
-            content = content,
-            topBar = {
-                // TODO: This is specific to XR home-space mode
-                val topBarPaddingTop =
-                    remember(isEnclosed) {
-                        if (isEnclosed) {
-                            32.dp
-                        } else {
-                            0.dp
-                        }
-                    }
-
-                AnimatedVisibility(
-                    visible = appState.isNavigationVisible && appState.isTopBarVisible,
-                    enter = slideInVertically(),
-                    exit = slideOutVertically(),
-                ) {
-                    TopAppBar(
-                        modifier =
-                            Modifier
-                                .padding(
-                                    start = 24.dp,
-                                    end = 24.dp,
-                                    top = topBarPaddingTop,
-                                )
-                                .onFocusChanged { appState.updateTopBarFocusState(it.hasFocus) },
-                        selectedScreen = appState.selectedScreen,
-                        showScreen = { screen ->
-                            if (screen != appState.selectedScreen) {
-                                navController.navigate(screen())
-                            }
-                        },
-                    )
-                }
-            },
-        )
-    }
+            }
+        },
+    )
 }
 
 @Composable
