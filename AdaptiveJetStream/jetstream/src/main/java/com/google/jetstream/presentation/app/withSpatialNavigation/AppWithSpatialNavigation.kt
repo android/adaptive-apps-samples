@@ -52,7 +52,6 @@ import androidx.xr.compose.subspace.layout.width
 import androidx.xr.compose.unit.DpVolumeSize
 import com.google.jetstream.R
 import com.google.jetstream.presentation.app.AppState
-import com.google.jetstream.presentation.app.withNavigationSuiteScaffold.EnableProminentMovieListOverride
 import com.google.jetstream.presentation.app.withNavigationSuiteScaffold.TopAppBar
 import com.google.jetstream.presentation.components.KeyboardShortcut
 import com.google.jetstream.presentation.components.handleKeyboardShortcuts
@@ -66,20 +65,21 @@ fun AppWithSpatialNavigation(
     modifier: Modifier,
     content: @Composable ((padding: PaddingValues) -> Unit),
 ) {
-    EnableProminentMovieListOverride {
-        SpatialNavigationLayout(
-            selectedScreen = appState.selectedScreen,
-            isNavigationVisible = appState.isNavigationVisible,
-            isTopBarVisible = appState.isTopBarVisible,
-            onShowScreen = { screen ->
-                navController.navigate(screen())
-            },
-            onTopBarFocusChanged = { appState.updateTopBarFocusState(it) },
-            containerColor = appState.selectedScreen.xrContainerColor(),
-            modifier = modifier.fillMaxSize().handleKeyboardShortcuts(keyboardShortcuts),
-        ) { paddingValues ->
-            content(paddingValues)
-        }
+    SpatialNavigationLayout(
+        selectedScreen = appState.selectedScreen,
+        isNavigationVisible = appState.isNavigationVisible,
+        isTopBarVisible = appState.isTopBarVisible,
+        onShowScreen = { screen ->
+            navController.navigate(screen())
+        },
+        onTopBarFocusChanged = { appState.updateTopBarFocusState(it) },
+        containerColor = appState.selectedScreen.xrContainerColor(),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .handleKeyboardShortcuts(keyboardShortcuts),
+    ) { paddingValues ->
+        content(paddingValues)
     }
 }
 

@@ -14,56 +14,46 @@
  * limitations under the License.
  */
 
+@file:OptIn(ExperimentalFoundationStyleApi::class)
+
 package com.google.jetstream.presentation.components
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
+import androidx.compose.foundation.style.Style
+import androidx.compose.foundation.style.styleable
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.graphics.drawable.toDrawable
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.google.jetstream.data.entities.Movie
 import com.google.jetstream.data.util.StringConstants
-import kotlin.math.absoluteValue
 
 @Composable
 fun PosterImage(
     movie: Movie,
     modifier: Modifier = Modifier,
+    style: Style = Style,
 ) {
-    if (movie.posterUri.isEmpty()) {
-        val seed = movie.id.hashCode()
-        val color1 =
-            remember(seed) {
-                val h = (seed.absoluteValue % 360).toFloat()
-                Color.hsl(h, 0.4f, 0.5f)
-            }
-        val color2 =
-            remember(seed) {
-                val h = ((seed.absoluteValue + 120) % 360).toFloat()
-                Color.hsl(h, 0.6f, 0.3f)
-            }
-        Box(
-            modifier =
-                modifier.background(
-                    Brush.linearGradient(listOf(color1, color2)),
-                ),
-        )
-    } else {
-        AsyncImage(
-            modifier = modifier,
-            model =
-                ImageRequest.Builder(LocalContext.current)
-                    .crossfade(true)
-                    .data(movie.posterUri)
-                    .build(),
-            contentDescription = StringConstants.Composable.ContentDescription.moviePoster(movie.name),
-            contentScale = ContentScale.Crop,
-        )
-    }
+    AsyncImage(
+        modifier = modifier.styleable(style = style),
+        model =
+            ImageRequest.Builder(LocalContext.current)
+                .crossfade(true)
+                .placeholder(PosterImageDefaults.placeHolderColor.toArgb().toDrawable())
+                .error(PosterImageDefaults.errorColor.toArgb().toDrawable())
+                .data(movie.posterUri)
+                .build(),
+        contentDescription = StringConstants.Composable.ContentDescription.moviePoster(movie.name),
+        contentScale = ContentScale.Crop,
+    )
+}
+
+private object PosterImageDefaults {
+    val placeHolderColor = Color.LightGray
+    val errorColor = Color.DarkGray
 }
