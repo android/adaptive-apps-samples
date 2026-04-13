@@ -29,6 +29,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
@@ -103,6 +104,7 @@ object VideoPlayerScreen {
  * @param onBackPressed The callback to invoke when the user presses the back button.
  * @param videoPlayerScreenViewModel The view model for the video player screen.
  */
+@kotlin.OptIn(ExperimentalFoundationStyleApi::class)
 @Composable
 fun VideoPlayerScreen(
     onBackPressed: () -> Unit,
@@ -116,12 +118,12 @@ fun VideoPlayerScreen(
 
     when (val s = uiState) {
         is VideoPlayerScreenUiState.Loading -> {
+            val backgroundColor = MaterialTheme.colorScheme.background
             Loading(
-                modifier =
-                    Modifier
-                        .fillMaxSize()
-                        // Workaround to make video player visible when spatial UI is enabled.
-                        .background(MaterialTheme.colorScheme.background),
+                style = {
+                    // Workaround to make video player visible when spatial UI is enabled.
+                    background(backgroundColor)
+                },
             )
         }
 

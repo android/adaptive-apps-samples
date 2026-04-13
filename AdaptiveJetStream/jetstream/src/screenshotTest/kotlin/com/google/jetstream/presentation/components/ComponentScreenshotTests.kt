@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
+@file:OptIn(ExperimentalFoundationStyleApi::class)
+
 package com.google.jetstream.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -46,13 +49,18 @@ fun WatchNowButtonScreenshot() {
     }
 }
 
+@OptIn(ExperimentalFoundationStyleApi::class)
 @PreviewTest
 @Preview
 @Composable
 fun LoadingScreenshot() {
     JetStreamPreview {
         Surface {
-            Loading(modifier = Modifier.size(300.dp))
+            Loading(
+                style = {
+                    size(300.dp)
+                },
+            )
         }
     }
 }

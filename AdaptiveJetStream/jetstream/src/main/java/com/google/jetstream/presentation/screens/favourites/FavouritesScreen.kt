@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -39,6 +40,7 @@ import com.google.jetstream.presentation.screens.favourites.components.rememberF
 import com.google.jetstream.presentation.theme.LocalContentPadding
 import com.google.jetstream.presentation.theme.Padding
 
+@OptIn(ExperimentalFoundationStyleApi::class)
 @Composable
 fun FavouritesScreen(
     onMovieClick: (movieId: String) -> Unit,
@@ -49,7 +51,7 @@ fun FavouritesScreen(
     val uiState by favouriteScreenViewModel.uiState.collectAsStateWithLifecycle()
     when (val s = uiState) {
         is FavouriteScreenUiState.Loading -> {
-            Loading(modifier = Modifier.fillMaxSize())
+            Loading()
         }
 
         is FavouriteScreenUiState.Ready -> {

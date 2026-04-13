@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Google LLC
+ * Copyright 2026 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,37 +14,30 @@
  * limitations under the License.
  */
 
-package com.google.jetstream.presentation.screens.moviedetails.components
+@file:OptIn(ExperimentalFoundationStyleApi::class, ExperimentalGridApi::class)
 
-import androidx.compose.foundation.layout.Column
+package com.google.jetstream.presentation.components.shim.stylable
+
+import androidx.compose.foundation.layout.ExperimentalGridApi
+import androidx.compose.foundation.layout.Grid
+import androidx.compose.foundation.layout.GridConfigurationScope
+import androidx.compose.foundation.layout.GridScope
 import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
 import androidx.compose.foundation.style.Style
 import androidx.compose.foundation.style.styleable
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.text.font.FontWeight
 
-@OptIn(ExperimentalFoundationStyleApi::class)
 @Composable
-fun TitleValueText(
-    title: String,
-    value: String,
+fun StylableGrid(
+    config: GridConfigurationScope.() -> Unit,
     modifier: Modifier = Modifier,
     style: Style = Style,
+    content: @Composable GridScope.() -> Unit,
 ) {
-    Column(modifier = modifier.styleable(style = style)) {
-        Text(
-            modifier = Modifier.alpha(0.75f),
-            text = title,
-            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Normal),
-        )
-        Text(
-            text = value,
-            style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Normal),
-            maxLines = 3,
-        )
-    }
+    Grid(
+        config = config,
+        modifier = modifier.styleable(style = style),
+        content = content,
+    )
 }

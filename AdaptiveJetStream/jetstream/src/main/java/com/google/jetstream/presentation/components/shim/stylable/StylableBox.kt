@@ -14,40 +14,22 @@
  * limitations under the License.
  */
 
-@file:OptIn(ExperimentalFoundationStyleApi::class, ExperimentalGridApi::class)
-
-package com.google.jetstream.presentation.components.shim
+package com.google.jetstream.presentation.components.shim.stylable
 
 import androidx.compose.foundation.interaction.InteractionSource
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
-import androidx.compose.foundation.layout.ExperimentalGridApi
-import androidx.compose.foundation.layout.Grid
-import androidx.compose.foundation.layout.GridConfigurationScope
-import androidx.compose.foundation.layout.GridScope
 import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
 import androidx.compose.foundation.style.MutableStyleState
 import androidx.compose.foundation.style.Style
 import androidx.compose.foundation.style.styleable
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
-@Composable
-fun StylableText(
-    text: String,
-    modifier: Modifier = Modifier,
-    style: Style = Style,
-) {
-    Text(
-        text = text,
-        modifier = modifier.styleable(style = style),
-    )
-}
-
+@OptIn(ExperimentalFoundationStyleApi::class)
 @Composable
 fun StylableBox(
     modifier: Modifier = Modifier,
@@ -55,39 +37,29 @@ fun StylableBox(
     contentAlignment: Alignment = Alignment.TopStart,
     content: @Composable BoxScope.() -> Unit = {},
 ) {
-    Box(
-        modifier = modifier.styleable(style = style),
+    StylableBox(
+        modifier = modifier,
+        style = style,
         contentAlignment = contentAlignment,
+        interactionSource = null,
         content = content,
     )
 }
 
+@OptIn(ExperimentalFoundationStyleApi::class)
 @Composable
 fun StylableBox(
     modifier: Modifier = Modifier,
     style: Style = Style,
     contentAlignment: Alignment = Alignment.TopStart,
-    interactionSource: InteractionSource = remember { MutableInteractionSource() },
+    interactionSource: InteractionSource? = remember { MutableInteractionSource() },
     content: @Composable BoxScope.() -> Unit = {},
 ) {
-    val styleState = remember(interactionSource) { MutableStyleState(interactionSource = interactionSource) }
+    val styleState =
+        remember(interactionSource) { MutableStyleState(interactionSource = interactionSource) }
     Box(
         modifier = modifier.styleable(styleState = styleState, style = style),
         contentAlignment = contentAlignment,
-        content = content,
-    )
-}
-
-@Composable
-fun StylableGrid(
-    config: GridConfigurationScope.() -> Unit,
-    modifier: Modifier = Modifier,
-    style: Style = Style,
-    content: @Composable GridScope.() -> Unit,
-) {
-    Grid(
-        config = config,
-        modifier = modifier.styleable(style = style),
         content = content,
     )
 }
