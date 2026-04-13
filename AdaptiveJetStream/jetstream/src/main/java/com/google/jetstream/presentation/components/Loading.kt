@@ -16,25 +16,35 @@
 
 package com.google.jetstream.presentation.components
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
+import androidx.compose.foundation.style.Style
+import androidx.compose.foundation.style.fillSize
+import androidx.compose.foundation.style.then
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import com.google.jetstream.R
+import com.google.jetstream.presentation.components.shim.stylable.StylableBox
 
+@OptIn(ExperimentalFoundationStyleApi::class)
 @Composable
 fun Loading(
     modifier: Modifier = Modifier,
-    style: TextStyle = MaterialTheme.typography.displayMedium,
+    style: Style = Style(),
 ) {
-    Box(modifier = modifier, contentAlignment = Alignment.Center) {
-        Text(
-            text = stringResource(id = R.string.message_loading),
-            style = style,
-        )
+    val textStyle = MaterialTheme.typography.displayMedium
+    StylableBox(
+        modifier = modifier,
+        contentAlignment = Alignment.Center,
+        style =
+            Style {
+                textStyle(textStyle)
+                fillSize()
+            } then style,
+    ) {
+        Text(text = stringResource(id = R.string.message_loading))
     }
 }

@@ -25,7 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import com.google.jetstream.presentation.components.shim.StylableBox
+import com.google.jetstream.presentation.components.shim.stylable.StylableBox
 
 @Composable
 fun CinematicScrim(

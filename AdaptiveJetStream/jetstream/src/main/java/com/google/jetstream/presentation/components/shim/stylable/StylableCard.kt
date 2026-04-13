@@ -28,7 +28,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
-import com.google.jetstream.presentation.components.shim.StylableBox
 import com.google.jetstream.presentation.components.shim.borderIndicationStyle
 import com.google.jetstream.presentation.components.shim.scaleIndicationStyle
 import com.google.jetstream.presentation.theme.JetStreamBorderWidth

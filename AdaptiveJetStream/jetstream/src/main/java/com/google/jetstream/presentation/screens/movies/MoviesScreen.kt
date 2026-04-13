@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -43,6 +44,7 @@ import com.google.jetstream.presentation.components.MoviesRow
 import com.google.jetstream.presentation.theme.LocalContentPadding
 import com.google.jetstream.presentation.theme.Padding
 
+@OptIn(ExperimentalFoundationStyleApi::class)
 @Composable
 fun MoviesScreen(
     onMovieClick: (movie: Movie) -> Unit,

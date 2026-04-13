@@ -18,10 +18,7 @@
 
 package com.google.jetstream.presentation.screens.categories
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -29,10 +26,8 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
-import androidx.compose.foundation.style.MutableStyleState
 import androidx.compose.foundation.style.focused
 import androidx.compose.foundation.style.hovered
-import androidx.compose.foundation.style.styleable
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -45,9 +40,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.semantics.role
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -61,9 +53,6 @@ import com.google.jetstream.presentation.components.TvPreview
 import com.google.jetstream.presentation.components.feature.LocalEngagementMode
 import com.google.jetstream.presentation.components.mockCategoryScreenState
 import com.google.jetstream.presentation.components.shim.stylable.StylableCard
-import com.google.jetstream.presentation.theme.JetStreamBorder
-import com.google.jetstream.presentation.theme.JetStreamBorderWidth
-import com.google.jetstream.presentation.theme.JetStreamCardShape
 import com.google.jetstream.presentation.theme.LocalContentPadding
 import com.google.jetstream.presentation.theme.LocalListItemGap
 import com.google.jetstream.presentation.theme.Padding
@@ -87,7 +76,7 @@ fun CategoriesScreen(
     val uiState by categoriesScreenViewModel.uiState.collectAsStateWithLifecycle()
     when (val s = uiState) {
         CategoriesScreenUiState.Loading -> {
-            Loading(modifier = Modifier.fillMaxSize())
+            Loading()
         }
 
         is CategoriesScreenUiState.Ready -> {
@@ -114,7 +103,7 @@ internal fun Catalog(
     val shouldShowTopBar by remember {
         derivedStateOf {
             lazyGridState.firstVisibleItemIndex == 0 &&
-                lazyGridState.firstVisibleItemScrollOffset < 100
+                    lazyGridState.firstVisibleItemScrollOffset < 100
         }
     }
     LaunchedEffect(shouldShowTopBar) {

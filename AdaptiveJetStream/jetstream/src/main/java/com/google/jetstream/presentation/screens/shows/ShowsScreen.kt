@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -41,6 +42,7 @@ import com.google.jetstream.presentation.screens.movies.ProminentMovieList
 import com.google.jetstream.presentation.theme.LocalContentPadding
 import com.google.jetstream.presentation.theme.Padding
 
+@OptIn(ExperimentalFoundationStyleApi::class)
 @Composable
 fun ShowsScreen(
     onTVShowClick: (movie: Movie) -> Unit,
@@ -51,7 +53,7 @@ fun ShowsScreen(
     val uiState = showScreenViewModel.uiState.collectAsStateWithLifecycle()
     when (val currentState = uiState.value) {
         is ShowScreenUiState.Loading -> {
-            Loading(modifier = Modifier.fillMaxSize())
+            Loading()
         }
 
         is ShowScreenUiState.Ready -> {

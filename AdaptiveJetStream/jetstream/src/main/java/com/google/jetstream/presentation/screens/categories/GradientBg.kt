@@ -16,14 +16,9 @@
 
 package com.google.jetstream.presentation.screens.categories
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.unit.dp
 import com.google.jetstream.presentation.theme.Amber300
 import com.google.jetstream.presentation.theme.Blue300
 import com.google.jetstream.presentation.theme.BlueGray300
@@ -63,12 +58,8 @@ val pairs =
     )
 
 @Composable
-fun GradientBg(seed: Long = 0) {
-    Box(
-        modifier =
-            Modifier
-                .background(Brush.radialGradient(pairs.random(Random(seed)).toList()))
-                .fillMaxWidth()
-                .height(200.dp),
-    )
+fun gradientBrush(seed: Long = 0): Brush {
+    return remember(seed) {
+        Brush.radialGradient(pairs.random(Random(seed)).toList())
+    }
 }

@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -49,6 +50,7 @@ import com.google.jetstream.presentation.components.MoviesRow
 import com.google.jetstream.presentation.theme.LocalContentPadding
 import com.google.jetstream.presentation.theme.LocalFeaturedCarouselHeight
 
+@OptIn(ExperimentalFoundationStyleApi::class)
 @Composable
 fun HomeScreen(
     onMovieClick: (movie: Movie) -> Unit,
@@ -75,7 +77,7 @@ fun HomeScreen(
         }
 
         is HomeScreenUiState.Loading -> {
-            Loading(modifier = Modifier.fillMaxSize())
+            Loading()
         }
 
         is HomeScreenUiState.Error -> {
