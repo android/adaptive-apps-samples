@@ -14,19 +14,20 @@
  * limitations under the License.
  */
 
+@file:OptIn(ExperimentalFoundationStyleApi::class)
+
 package com.google.jetstream.presentation.screens.categories
 
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
+import androidx.compose.foundation.style.focused
+import androidx.compose.foundation.style.hovered
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,40 +40,43 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.jetstream.data.entities.MovieCategory
-import com.google.jetstream.data.entities.MovieCategoryList
 import com.google.jetstream.presentation.components.FoldablePreview
 import com.google.jetstream.presentation.components.JetStreamPreview
 import com.google.jetstream.presentation.components.Loading
-import com.google.jetstream.presentation.components.MovieCard
 import com.google.jetstream.presentation.components.PhonePreview
 import com.google.jetstream.presentation.components.TvPreview
+import com.google.jetstream.presentation.components.feature.LocalEngagementMode
 import com.google.jetstream.presentation.components.mockCategoryScreenState
+import com.google.jetstream.presentation.components.shim.stylable.StylableCard
 import com.google.jetstream.presentation.theme.LocalContentPadding
 import com.google.jetstream.presentation.theme.LocalListItemGap
 import com.google.jetstream.presentation.theme.Padding
+import com.google.jetstream.presentation.theme.styles.isFocusOptimized
 
-val LocalCategoryCardAspectRatio: ProvidableCompositionLocal<Float> = staticCompositionLocalOf {
-    1.7777f // 16:9
-}
-val LocalCategoryGridGridCells: ProvidableCompositionLocal<GridCells> = staticCompositionLocalOf {
-    GridCells.Fixed(4)
-}
+val LocalCategoryCardAspectRatio: ProvidableCompositionLocal<Float> =
+    staticCompositionLocalOf {
+        1.7777f // 16:9
+    }
+val LocalCategoryGridGridCells: ProvidableCompositionLocal<GridCells> =
+    staticCompositionLocalOf {
+        GridCells.Fixed(4)
+    }
 
 @Composable
 fun CategoriesScreen(
     onCategoryClick: (categoryId: String) -> Unit = {},
     onScroll: (isTopBarVisible: Boolean) -> Unit = {},
-    categoriesScreenViewModel: CategoriesScreenViewModel = hiltViewModel()
+    categoriesScreenViewModel: CategoriesScreenViewModel = hiltViewModel(),
 ) {
     val uiState by categoriesScreenViewModel.uiState.collectAsStateWithLifecycle()
     when (val s = uiState) {
         CategoriesScreenUiState.Loading -> {
-            Loading(modifier = Modifier.fillMaxSize())
+            Loading()
         }
 
         is CategoriesScreenUiState.Ready -> {
@@ -80,7 +84,7 @@ fun CategoriesScreen(
                 movieCategories = s.categoryList,
                 onCategoryClick = onCategoryClick,
                 onScroll = onScroll,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
             )
         }
     }
@@ -88,7 +92,7 @@ fun CategoriesScreen(
 
 @Composable
 internal fun Catalog(
-    movieCategories: MovieCategoryList,
+    movieCategories: List<MovieCategory>,
     modifier: Modifier = Modifier,
     gridCells: GridCells = LocalCategoryGridGridCells.current,
     contentPadding: Padding = LocalContentPadding.current,
@@ -99,7 +103,7 @@ internal fun Catalog(
     val shouldShowTopBar by remember {
         derivedStateOf {
             lazyGridState.firstVisibleItemIndex == 0 &&
-                lazyGridState.firstVisibleItemScrollOffset < 100
+                    lazyGridState.firstVisibleItemScrollOffset < 100
         }
     }
     LaunchedEffect(shouldShowTopBar) {
@@ -118,7 +122,7 @@ internal fun Catalog(
             CategoryCard(
                 movieCategory = movieCategory,
                 onCategoryClick = onCategoryClick,
-                modifier = Modifier.aspectRatio(LocalCategoryCardAspectRatio.current)
+                modifier = Modifier.aspectRatio(LocalCategoryCardAspectRatio.current),
             )
         }
     }
@@ -130,29 +134,38 @@ private fun CategoryCard(
     onCategoryClick: (categoryId: String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val interactionSource = remember { MutableInteractionSource() }
-    val isFocused by interactionSource.collectIsFocusedAsState()
-    val itemAlpha by animateFloatAsState(
-        targetValue = if (isFocused) .6f else 0.2f,
-        label = ""
-    )
-
-    MovieCard(
-        onClick = {
-            onCategoryClick(movieCategory.id)
-        },
-        interactionSource = interactionSource,
-        modifier = modifier
-    ) {
-        Box(contentAlignment = Alignment.Center) {
-            Box(modifier = Modifier.alpha(itemAlpha)) {
-                GradientBg(seed = movieCategory.id.hashCode().toLong())
-            }
-            Text(
-                text = movieCategory.name,
-                style = MaterialTheme.typography.titleMedium
-            )
+    val backgroundBrush = gradientBrush(seed = movieCategory.id.hashCode().toLong())
+    val textStyle = MaterialTheme.typography.titleMedium
+    val defaultAlpha =
+        if (LocalEngagementMode.current.isFocusOptimized()) {
+            0.2f
+        } else {
+            0.8f
         }
+
+    StylableCard(
+        contentAlignment = Alignment.Center,
+        modifier = modifier,
+        style = {
+            background(backgroundBrush)
+            alpha(defaultAlpha)
+            textStyle(textStyle)
+            textAlign(TextAlign.Center)
+
+            focused {
+                animate {
+                    alpha(1f)
+                }
+            }
+            hovered {
+                animate {
+                    alpha(1f)
+                }
+            }
+        },
+        onClick = { onCategoryClick(movieCategory.id) },
+    ) {
+        Text(text = movieCategory.name)
     }
 }
 
@@ -168,7 +181,7 @@ private fun CategoriesScreenPhonePreview() {
             Catalog(
                 movieCategories = mockCategoryScreenState.categoryList,
                 onCategoryClick = {},
-                onScroll = {}
+                onScroll = {},
             )
         }
     }
@@ -186,7 +199,7 @@ private fun CategoriesScreenFoldablePreview() {
             Catalog(
                 movieCategories = mockCategoryScreenState.categoryList,
                 onCategoryClick = {},
-                onScroll = {}
+                onScroll = {},
             )
         }
     }
@@ -199,7 +212,7 @@ private fun CategoriesScreenTvPreview() {
         Catalog(
             movieCategories = mockCategoryScreenState.categoryList,
             onCategoryClick = {},
-            onScroll = {}
+            onScroll = {},
         )
     }
 }

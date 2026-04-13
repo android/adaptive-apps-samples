@@ -38,7 +38,7 @@ fun ImmersiveModeButton(
     if (activity != null) {
         ActualImmersiveButton(
             activity = activity,
-            modifier = modifier
+            modifier = modifier,
         )
     }
 }
@@ -51,20 +51,22 @@ private fun ActualImmersiveButton(
     var isImmersive by remember(activity) { mutableStateOf(activity.isImmersive) }
 
     VideoPlayerControlsIcon(
-        icon = if (activity.isImmersive) {
-            Icons.Default.FullscreenExit
-        } else {
-            Icons.Default.Fullscreen
-        },
-        contentDescription = if (isImmersive) {
-            StringConstants.Composable.VideoPlayerExitImmersiveMode
-        } else {
-            StringConstants.Composable.VideoPlayerEnterImmersiveMode
-        },
+        icon =
+            if (activity.isImmersive) {
+                Icons.Default.FullscreenExit
+            } else {
+                Icons.Default.Fullscreen
+            },
+        contentDescription =
+            if (isImmersive) {
+                StringConstants.Composable.VideoPlayerExitImmersiveMode
+            } else {
+                StringConstants.Composable.VideoPlayerEnterImmersiveMode
+            },
         onClick = {
             activity.toggleImmersiveMode()
             isImmersive = activity.isImmersive
         },
-        modifier = modifier
+        modifier = modifier,
     )
 }

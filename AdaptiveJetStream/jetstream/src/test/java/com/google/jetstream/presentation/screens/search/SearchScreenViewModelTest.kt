@@ -32,34 +32,36 @@ import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class SearchScreenViewModelTest {
-
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 
     private val movieRepository = FakeMovieRepository()
 
     @Test
-    fun searchState_initiallyReady() = runTest {
-        val viewModel = SearchScreenViewModel(movieRepository)
-        assertTrue(viewModel.searchState.value is SearchState.Ready)
-        assertEquals("", (viewModel.searchState.value as SearchState.Ready).textFieldValue.text)
-    }
-
-    @Test
-    fun updateSearchText_updatesState() = runTest {
-        val viewModel = SearchScreenViewModel(movieRepository)
-        val newText = TextFieldValue("Action")
-        
-        // Start collecting to trigger WhileSubscribed
-        val collectJob = launch(UnconfinedTestDispatcher(testScheduler)) {
-            viewModel.searchState.collect()
+    fun searchState_initiallyReady() =
+        runTest {
+            val viewModel = SearchScreenViewModel(movieRepository)
+            assertTrue(viewModel.searchState.value is SearchState.Ready)
+            assertEquals("", (viewModel.searchState.value as SearchState.Ready).textFieldValue.text)
         }
 
-        viewModel.updateSearchText(newText)
-        
-        val state = viewModel.searchState.first { it is SearchState.Ready && it.textFieldValue.text == "Action" }
-        assertEquals("Action", (state as SearchState.Ready).textFieldValue.text)
-        
-        collectJob.cancel()
-    }
+    @Test
+    fun updateSearchText_updatesState() =
+        runTest {
+            val viewModel = SearchScreenViewModel(movieRepository)
+            val newText = TextFieldValue("Action")
+
+            // Start collecting to trigger WhileSubscribed
+            val collectJob =
+                launch(UnconfinedTestDispatcher(testScheduler)) {
+                    viewModel.searchState.collect()
+                }
+
+            viewModel.updateSearchText(newText)
+
+            val state = viewModel.searchState.first { it is SearchState.Ready && it.textFieldValue.text == "Action" }
+            assertEquals("Action", (state as SearchState.Ready).textFieldValue.text)
+
+            collectJob.cancel()
+        }
 }

@@ -27,7 +27,7 @@ import com.google.jetstream.presentation.theme.JetStreamButtonShape
 fun AccountsSectionDialogButton(
     modifier: Modifier = Modifier,
     text: String,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Button(
         onClick = onClick,

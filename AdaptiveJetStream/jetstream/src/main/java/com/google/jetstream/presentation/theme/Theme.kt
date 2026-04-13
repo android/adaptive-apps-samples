@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-package com.google.jetstream.presentation.theme // ktlint-disable filename
+@file:Suppress("ktlint:standard:filename")
+
+package com.google.jetstream.presentation.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -22,31 +24,30 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import com.google.jetstream.presentation.screens.categories.LocalCategoryCardAspectRatio
 import com.google.jetstream.presentation.screens.categories.LocalCategoryGridGridCells
+import com.google.jetstream.presentation.theme.styles.LocalProminentCardStyle
+import com.google.jetstream.presentation.theme.styles.rememberProminentCardStyle
 
 @Composable
 fun JetStreamTheme(
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     // TODO: Consider refactoring this
     CompositionLocalProvider(
         LocalFeaturedCarouselHeight provides rememberFeaturedCarouselHeight(),
         LocalVerticalCardAspectRatio provides rememberVerticalCardAspectRatio(),
         LocalCardWidth provides rememberCardWidth(),
-        LocalProminentCardSize provides rememberProminentCardSize(),
+        LocalListItemGap provides rememberListItemGap(),
+        LocalProminentCardStyle provides rememberProminentCardStyle(),
         LocalCategoryGridGridCells provides rememberCategoryGridColumns(),
         LocalCategoryCardAspectRatio provides rememberCategoryCardAspectRatio(),
         LocalContentPadding provides rememberContentPadding(),
     ) {
         MaterialTheme(
             // TODO this is redundant because the dark and light color schemes are the same
-            colorScheme = if (isSystemInDarkTheme()) {
-                darkColorScheme
-            } else {
-                lightColorScheme
-            },
+            colorScheme = colorScheme(),
             shapes = MaterialTheme.shapes,
             typography = Typography,
-            content = content
+            content = content,
         )
     }
 }

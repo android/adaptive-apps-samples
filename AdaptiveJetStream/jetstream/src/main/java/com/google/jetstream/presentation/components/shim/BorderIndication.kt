@@ -24,11 +24,19 @@ import androidx.compose.foundation.interaction.FocusInteraction
 import androidx.compose.foundation.interaction.HoverInteraction
 import androidx.compose.foundation.interaction.InteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
+import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
+import androidx.compose.foundation.style.Style
+import androidx.compose.foundation.style.focused
+import androidx.compose.foundation.style.hovered
+import androidx.compose.foundation.style.pressed
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawOutline
 import androidx.compose.ui.graphics.drawscope.ContentDrawScope
@@ -39,7 +47,9 @@ import androidx.compose.ui.node.DrawModifierNode
 import androidx.compose.ui.node.invalidateDraw
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.tv.material3.MaterialTheme
 import com.google.jetstream.presentation.components.ShapeTokens
+import com.google.jetstream.presentation.theme.colorScheme
 import kotlinx.coroutines.launch
 
 fun Modifier.borderIndication(
@@ -93,20 +103,20 @@ private class BorderIndicationNode(
     private val dragged: Border = pressed,
 ) : Modifier.Node(),
     DrawModifierNode {
-
     private var state: Border = Border.None
 
     // Snip onAttach method and attribute declarations
     override fun onAttach() {
         coroutineScope.launch {
             interactionSource.interactions.collect { interaction ->
-                state = when (interaction) {
-                    is PressInteraction.Press -> pressed
-                    is FocusInteraction.Focus -> focused
-                    is HoverInteraction.Enter -> hover
-                    is DragInteraction.Start -> dragged
-                    else -> Border.None
-                }
+                state =
+                    when (interaction) {
+                        is PressInteraction.Press -> pressed
+                        is FocusInteraction.Focus -> focused
+                        is HoverInteraction.Enter -> hover
+                        is DragInteraction.Start -> dragged
+                        else -> Border.None
+                    }
                 invalidateDraw()
             }
         }
@@ -122,7 +132,7 @@ private class BorderIndicationNode(
                 drawOutline(
                     outline = outline,
                     brush = border.stroke.brush,
-                    style = Stroke(width = border.stroke.width.toPx(), cap = StrokeCap.Round)
+                    style = Stroke(width = border.stroke.width.toPx(), cap = StrokeCap.Round),
                 )
             }
         }
@@ -133,7 +143,7 @@ private class BorderIndicationNode(
 class Border(
     val stroke: BorderStroke,
     val inset: Dp = 0.dp,
-    val shape: Shape = ShapeTokens.BorderDefaultShape
+    val shape: Shape = ShapeTokens.BorderDefaultShape,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -163,7 +173,7 @@ class Border(
         Border(
             stroke = border ?: this.stroke,
             inset = inset ?: this.inset,
-            shape = shape ?: this.shape
+            shape = shape ?: this.shape,
         )
 
     companion object {
@@ -175,7 +185,41 @@ class Border(
             Border(
                 stroke = BorderStroke(width = 0.dp, color = Color.Transparent),
                 inset = 0.dp,
-                shape = RectangleShape
+                shape = RectangleShape,
             )
+    }
+}
+
+@OptIn(ExperimentalFoundationStyleApi::class)
+@Composable
+fun borderIndicationStyle(
+    focused: Dp = 0.dp,
+    pressed: Dp = focused,
+    hovered: Dp = focused,
+): Style {
+    val color = colorScheme().outline
+
+    return Style {
+        if (focused.value > 0) {
+            focused {
+                animate {
+                    border(focused, color)
+                }
+            }
+        }
+        if (pressed.value > 0) {
+            pressed {
+                animate {
+                    border(pressed, color)
+                }
+            }
+        }
+        if (hovered.value > 0) {
+            hovered {
+                animate {
+                    border(hovered, color)
+                }
+            }
+        }
     }
 }

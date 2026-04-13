@@ -28,25 +28,26 @@ import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class MoviesScreenViewModelTest {
-
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 
     private val movieRepository = FakeMovieRepository()
 
     @Test
-    fun uiState_initiallyLoading() = runTest {
-        val viewModel = MoviesScreenViewModel(movieRepository)
-        assertEquals(MoviesScreenUiState.Loading, viewModel.uiState.value)
-    }
+    fun uiState_initiallyLoading() =
+        runTest {
+            val viewModel = MoviesScreenViewModel(movieRepository)
+            assertEquals(MoviesScreenUiState.Loading, viewModel.uiState.value)
+        }
 
     @Test
-    fun uiState_whenDataLoaded_isReady() = runTest {
-        val viewModel = MoviesScreenViewModel(movieRepository)
-        
-        movieRepository.setMovies(emptyList())
-        
-        val state = viewModel.uiState.first { it is MoviesScreenUiState.Ready }
-        assertTrue(state is MoviesScreenUiState.Ready)
-    }
+    fun uiState_whenDataLoaded_isReady() =
+        runTest {
+            val viewModel = MoviesScreenViewModel(movieRepository)
+
+            movieRepository.setMovies(emptyList())
+
+            val state = viewModel.uiState.first { it is MoviesScreenUiState.Ready }
+            assertTrue(state is MoviesScreenUiState.Ready)
+        }
 }

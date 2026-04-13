@@ -43,7 +43,7 @@ fun StandardCardContainer(
     subtitle: @Composable () -> Unit = {},
     description: @Composable () -> Unit = {},
     contentColor: CardContainerColors = CardContainerDefaults.contentColor(),
-    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
+    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
 ) {
     val focused by interactionSource.collectIsFocusedAsState()
     val pressed by interactionSource.collectIsPressedAsState()
@@ -54,13 +54,13 @@ fun StandardCardContainer(
         }
         Column(
             modifier = Modifier.align(Alignment.CenterHorizontally),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             CardContainerContent(
                 title = title,
                 subtitle = subtitle,
                 description = description,
-                contentColor = contentColor.color(focused = focused, pressed = pressed)
+                contentColor = contentColor.color(focused = focused, pressed = pressed),
             )
         }
     }
@@ -80,84 +80,84 @@ object CardContainerDefaults {
     fun contentColor(
         contentColor: Color = MaterialTheme.colorScheme.onSurface,
         focusedContentColor: Color = contentColor,
-        pressedContentColor: Color = focusedContentColor
+        pressedContentColor: Color = focusedContentColor,
     ) =
         CardContainerColors(
             contentColor = contentColor,
             focusedContentColor = focusedContentColor,
-            pressedContentColor = pressedContentColor
+            pressedContentColor = pressedContentColor,
         )
 }
 
 @Immutable
 class CardContainerColors
-internal constructor(
-    internal val contentColor: Color,
-    internal val focusedContentColor: Color,
-    internal val pressedContentColor: Color,
-) {
-    /** Returns the content color [Color] for different interaction states. */
-    internal fun color(focused: Boolean, pressed: Boolean): Color {
-        return when {
-            focused -> focusedContentColor
-            pressed -> pressedContentColor
-            else -> contentColor
+    internal constructor(
+        internal val contentColor: Color,
+        internal val focusedContentColor: Color,
+        internal val pressedContentColor: Color,
+    ) {
+        /** Returns the content color [Color] for different interaction states. */
+        internal fun color(focused: Boolean, pressed: Boolean): Color {
+            return when {
+                focused -> focusedContentColor
+                pressed -> pressedContentColor
+                else -> contentColor
+            }
+        }
+
+        override fun equals(other: Any?): Boolean {
+            if (other !is CardContainerColors) return false
+
+            if (this === other) return true
+
+            if (contentColor != other.contentColor) return false
+            if (focusedContentColor != other.focusedContentColor) return false
+            if (pressedContentColor != other.pressedContentColor) return false
+
+            return true
+        }
+
+        override fun hashCode(): Int {
+            var result = contentColor.hashCode()
+            result = 31 * result + focusedContentColor.hashCode()
+            result = 31 * result + pressedContentColor.hashCode()
+            return result
+        }
+
+        override fun toString(): String {
+            return "CardContainerContentColor(" +
+                "contentColor=$contentColor, " +
+                "focusedContentColor=$focusedContentColor, " +
+                "pressedContentColor=$pressedContentColor)"
         }
     }
-
-    override fun equals(other: Any?): Boolean {
-        if (other !is CardContainerColors) return false
-
-        if (this === other) return true
-
-        if (contentColor != other.contentColor) return false
-        if (focusedContentColor != other.focusedContentColor) return false
-        if (pressedContentColor != other.pressedContentColor) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = contentColor.hashCode()
-        result = 31 * result + focusedContentColor.hashCode()
-        result = 31 * result + pressedContentColor.hashCode()
-        return result
-    }
-
-    override fun toString(): String {
-        return "CardContainerContentColor(" +
-            "contentColor=$contentColor, " +
-            "focusedContentColor=$focusedContentColor, " +
-            "pressedContentColor=$pressedContentColor)"
-    }
-}
 
 @Composable
 internal fun CardContainerContent(
     title: @Composable () -> Unit,
     subtitle: @Composable () -> Unit = {},
     description: @Composable () -> Unit = {},
-    contentColor: Color
+    contentColor: Color,
 ) {
     CompositionLocalProvider(LocalContentColor provides contentColor) {
         CardContent(title, subtitle, description)
     }
 }
 
-private const val SubtitleAlpha = 0.6f
-private const val DescriptionAlpha = 0.8f
+private const val SUBTITLE_ALPHA = 0.6f
+private const val DESCRIPTION_ALPHA = 0.8f
 
 @Composable
 internal fun CardContent(
     title: @Composable () -> Unit,
     subtitle: @Composable () -> Unit = {},
-    description: @Composable () -> Unit = {}
+    description: @Composable () -> Unit = {},
 ) {
     ProvideTextStyle(MaterialTheme.typography.titleMedium) { title.invoke() }
     ProvideTextStyle(MaterialTheme.typography.bodySmall) {
-        Box(Modifier.graphicsLayer { alpha = SubtitleAlpha }) { subtitle.invoke() }
+        Box(Modifier.graphicsLayer { alpha = SUBTITLE_ALPHA }) { subtitle.invoke() }
     }
     ProvideTextStyle(MaterialTheme.typography.bodySmall) {
-        Box(Modifier.graphicsLayer { alpha = DescriptionAlpha }) { description.invoke() }
+        Box(Modifier.graphicsLayer { alpha = DESCRIPTION_ALPHA }) { description.invoke() }
     }
 }

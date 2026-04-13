@@ -77,7 +77,6 @@ import com.google.jetstream.R
 import com.google.jetstream.presentation.components.FoldablePreview
 import com.google.jetstream.presentation.components.PhonePreview
 import com.google.jetstream.presentation.components.TvPreview
-import com.google.jetstream.presentation.components.shim.tryRequestFocus
 import com.google.jetstream.presentation.screens.profile.compoents.AboutSection
 import com.google.jetstream.presentation.screens.profile.compoents.AccountsSection
 import com.google.jetstream.presentation.screens.profile.compoents.HelpAndSupportSection
@@ -95,7 +94,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun ProfileScreen(
     @FloatRange(from = 0.0, to = 1.0) sidebarWidthFraction: Float = 0.32f,
-    profileScreenLayoutType: ProfileScreenLayoutType = rememberProfileScreenLayoutType()
+    profileScreenLayoutType: ProfileScreenLayoutType = rememberProfileScreenLayoutType(),
 ) {
     when (profileScreenLayoutType) {
         ProfileScreenLayoutType.FullyExpanded -> {
@@ -124,12 +123,13 @@ private fun LargeProfileScreen(
     var selectedLanguageIndex by rememberSaveable { mutableIntStateOf(0) }
     var isSubtitlesChecked by rememberSaveable { mutableStateOf(true) }
 
-    LaunchedEffect(Unit) { focusRequester.tryRequestFocus() }
+    LaunchedEffect(Unit) { focusRequester.requestFocus() }
 
     Row(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = contentPadding.start, vertical = contentPadding.top)
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .padding(horizontal = contentPadding.start, vertical = contentPadding.top),
     ) {
         ListPane(
             currentDestination = backStack?.destination?.route ?: ProfileScreens.Accounts(),
@@ -141,34 +141,38 @@ private fun LargeProfileScreen(
                     launchSingleTop = true
                 }
             },
-            modifier = Modifier
-                .fillMaxWidth(fraction = sidebarWidthFraction)
-                .verticalScroll(rememberScrollState())
-                .fillMaxHeight()
-                .onFocusChanged {
-                    isLeftColumnFocused = it.hasFocus
-                }
-                .focusRestorer()
-                .focusGroup(),
+            modifier =
+                Modifier
+                    .fillMaxWidth(fraction = sidebarWidthFraction)
+                    .verticalScroll(rememberScrollState())
+                    .fillMaxHeight()
+                    .onFocusChanged {
+                        isLeftColumnFocused = it.hasFocus
+                    }
+                    .focusRestorer()
+                    .focusGroup(),
             verticalArrangement = Arrangement.spacedBy(12.dp),
-            focusRequester = focusRequester
+            focusRequester = focusRequester,
         )
         NavHost(
-            modifier = Modifier
-                .fillMaxSize()
-                .onPreviewKeyEvent {
-                    when {
-                        it.key == Key.Back && it.type == KeyEventType.KeyUp -> {
-                            while (!isLeftColumnFocused) {
-                                focusManager.moveFocus(FocusDirection.Left)
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .onPreviewKeyEvent {
+                        when {
+                            it.key == Key.Back && it.type == KeyEventType.KeyUp -> {
+                                while (!isLeftColumnFocused) {
+                                    focusManager.moveFocus(FocusDirection.Left)
+                                }
+                                true
                             }
-                            true
-                        }
 
-                        else -> false
+                            else -> {
+                                false
+                            }
+                        }
                     }
-                }
-                .focusGroup(),
+                    .focusGroup(),
             navController = profileNavController,
             startDestination = ProfileScreens.Accounts(),
             builder = {
@@ -181,13 +185,13 @@ private fun LargeProfileScreen(
                 composable(ProfileScreens.Subtitles()) {
                     SubtitlesSection(
                         isSubtitlesChecked = isSubtitlesChecked,
-                        onSubtitleCheckChange = { isSubtitlesChecked = it }
+                        onSubtitleCheckChange = { isSubtitlesChecked = it },
                     )
                 }
                 composable(ProfileScreens.Language()) {
                     LanguageSection(
                         selectedIndex = selectedLanguageIndex,
-                        onSelectedIndexChange = { selectedLanguageIndex = it }
+                        onSelectedIndexChange = { selectedLanguageIndex = it },
                     )
                 }
                 composable(ProfileScreens.SearchHistory()) {
@@ -196,7 +200,7 @@ private fun LargeProfileScreen(
                 composable(ProfileScreens.HelpAndSupport()) {
                     HelpAndSupportSection()
                 }
-            }
+            },
         )
     }
 }
@@ -207,10 +211,11 @@ private fun ListPane(
     onSelected: (String) -> Unit,
     modifier: Modifier = Modifier,
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(12.dp),
-    focusRequester: FocusRequester = remember { FocusRequester() }
+    focusRequester: FocusRequester = remember { FocusRequester() },
 ) {
     Column(
-        modifier = modifier, verticalArrangement = verticalArrangement
+        modifier = modifier,
+        verticalArrangement = verticalArrangement,
     ) {
         ProfileScreens.entries.forEachIndexed { index, profileScreen ->
             key(index) {
@@ -218,37 +223,44 @@ private fun ListPane(
                     trailingContent = {
                         Icon(
                             profileScreen.icon,
-                            modifier = Modifier
-                                .padding(vertical = 2.dp)
-                                .padding(start = 4.dp)
-                                .size(20.dp),
-                            contentDescription = stringResource(
-                                id = R.string.profile_screen_listItem_icon_content_description,
-                                profileScreen.tabTitle
-                            )
+                            modifier =
+                                Modifier
+                                    .padding(vertical = 2.dp)
+                                    .padding(start = 4.dp)
+                                    .size(20.dp),
+                            contentDescription =
+                                stringResource(
+                                    id = R.string.profile_screen_listItem_icon_content_description,
+                                    profileScreen.tabTitle,
+                                ),
                         )
                     },
                     headlineContent = {
                         Text(
                             text = profileScreen.tabTitle,
-                            style = MaterialTheme.typography.bodyMedium.copy(
-                                fontWeight = FontWeight.Medium
-                            ),
-                            modifier = Modifier.fillMaxWidth()
+                            style =
+                                MaterialTheme.typography.bodyMedium.copy(
+                                    fontWeight = FontWeight.Medium,
+                                ),
+                            modifier = Modifier.fillMaxWidth(),
                         )
                     },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .then(
-                            if (index == 0) Modifier.focusRequester(focusRequester)
-                            else Modifier
-                        )
-                        .onFocusChanged {
-                            if (it.isFocused && currentDestination != profileScreen.name) {
-                                onSelected(profileScreen())
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .then(
+                                if (index == 0) {
+                                    Modifier.focusRequester(focusRequester)
+                                } else {
+                                    Modifier
+                                },
+                            )
+                            .onFocusChanged {
+                                if (it.isFocused && currentDestination != profileScreen.name) {
+                                    onSelected(profileScreen())
+                                }
                             }
-                        }
-                        .clickable { onSelected(profileScreen()) },
+                            .clickable { onSelected(profileScreen()) },
                 )
             }
         }
@@ -274,12 +286,12 @@ private fun CompactProfileScreen() {
                         key(index) {
                             CompactListItem(
                                 profileScreen = profileScreen,
-                                isSelected = lastSelected == profileScreen
+                                isSelected = lastSelected == profileScreen,
                             ) {
                                 scope.launch {
                                     scaffoldNavigator.navigateTo(
                                         ListDetailPaneScaffoldRole.Detail,
-                                        profileScreen
+                                        profileScreen,
                                     )
                                 }
                                 lastSelected = profileScreen
@@ -302,26 +314,39 @@ private fun CompactProfileScreen() {
                                     scope.launch {
                                         scaffoldNavigator.navigateBack()
                                     }
-                                }
+                                },
                             )
                         }
                         when (profileScreen) {
-                            ProfileScreens.Accounts -> AccountsSection(numberOfColumns = 1)
-                            ProfileScreens.About -> AboutSection()
-                            ProfileScreens.Subtitles ->
+                            ProfileScreens.Accounts -> {
+                                AccountsSection(numberOfColumns = 1)
+                            }
+
+                            ProfileScreens.About -> {
+                                AboutSection()
+                            }
+
+                            ProfileScreens.Subtitles -> {
                                 SubtitlesSection(
                                     isSubtitlesChecked = isSubtitlesChecked,
-                                    onSubtitleCheckChange = { isSubtitlesChecked = it }
+                                    onSubtitleCheckChange = { isSubtitlesChecked = it },
                                 )
+                            }
 
-                            ProfileScreens.Language ->
+                            ProfileScreens.Language -> {
                                 LanguageSection(
                                     selectedIndex = selectedLanguageIndex,
-                                    onSelectedIndexChange = { selectedLanguageIndex = it }
+                                    onSelectedIndexChange = { selectedLanguageIndex = it },
                                 )
+                            }
 
-                            ProfileScreens.SearchHistory -> SearchHistorySection()
-                            ProfileScreens.HelpAndSupport -> HelpAndSupportSection()
+                            ProfileScreens.SearchHistory -> {
+                                SearchHistorySection()
+                            }
+
+                            ProfileScreens.HelpAndSupport -> {
+                                HelpAndSupportSection()
+                            }
                         }
                     }
                 }
@@ -335,46 +360,52 @@ private fun CompactListItem(
     profileScreen: ProfileScreens,
     isSelected: Boolean = false,
     showBackButton: Boolean = false,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
 ) {
     Row(
-        modifier = Modifier
-            .clickable(onClick = onClick)
-            .padding(vertical = 8.dp),
-        verticalAlignment = Alignment.CenterVertically
+        modifier =
+            Modifier
+                .clickable(onClick = onClick)
+                .padding(vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         if (showBackButton) {
             Icon(
                 Icons.Default.ArrowBackIosNew,
-                modifier = Modifier
-                    .padding(vertical = 2.dp)
-                    .padding(start = 4.dp)
-                    .size(36.dp),
-                contentDescription = stringResource(
-                    id = R.string.back_content_description,
-                    profileScreen.tabTitle
-                )
+                modifier =
+                    Modifier
+                        .padding(vertical = 2.dp)
+                        .padding(start = 4.dp)
+                        .size(36.dp),
+                contentDescription =
+                    stringResource(
+                        id = R.string.back_content_description,
+                        profileScreen.tabTitle,
+                    ),
             )
             Spacer(modifier = Modifier.size(12.dp))
         }
         Icon(
             profileScreen.icon,
-            modifier = Modifier
-                .padding(vertical = 2.dp)
-                .padding(start = 4.dp)
-                .size(36.dp),
-            contentDescription = stringResource(
-                id = R.string.profile_screen_listItem_icon_content_description,
-                profileScreen.tabTitle
-            )
+            modifier =
+                Modifier
+                    .padding(vertical = 2.dp)
+                    .padding(start = 4.dp)
+                    .size(36.dp),
+            contentDescription =
+                stringResource(
+                    id = R.string.profile_screen_listItem_icon_content_description,
+                    profileScreen.tabTitle,
+                ),
         )
         Spacer(modifier = Modifier.size(12.dp))
         Text(
             text = profileScreen.tabTitle,
-            style = MaterialTheme.typography.titleLarge.copy(
-                fontWeight = FontWeight.Medium
-            ),
-            modifier = Modifier.fillMaxWidth()
+            style =
+                MaterialTheme.typography.titleLarge.copy(
+                    fontWeight = FontWeight.Medium,
+                ),
+            modifier = Modifier.fillMaxWidth(),
         )
     }
 }

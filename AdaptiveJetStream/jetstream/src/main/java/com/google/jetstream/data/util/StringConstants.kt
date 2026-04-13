@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+@file:Suppress("ktlint:standard:property-naming")
+
 package com.google.jetstream.data.util
 
 object StringConstants {
@@ -49,12 +51,15 @@ object StringConstants {
     object Composable {
         object ContentDescription {
             fun moviePoster(movieName: String) = "Movie poster of $movieName"
+
             fun image(imageName: String) = "image of $imageName"
+
             const val MoviesCarousel = "Movies Carousel"
             const val UserAvatar = "User Profile Button"
             const val DashboardSearchButton = "Dashboard Search Button"
             const val BrandLogoImage = "Brand Logo Image"
             const val FilterSelected = "Filter Selected"
+
             fun reviewerName(name: String) = "$name's logo"
         }
 
@@ -65,41 +70,46 @@ object StringConstants {
         const val HomeScreenNowPlayingMoviesTitle = "Now Playing Movies"
         const val PopularFilmsThisWeekTitle = "Popular films this week"
         const val BingeWatchDramasTitle = "Bingewatch dramas"
+
         fun movieDetailsScreenSimilarTo(name: String) = "Similar to $name"
+
         fun reviewCount(count: String) = "$count reviews"
 
         object Placeholders {
             const val AboutSectionTitle = "About JetStream"
-            const val AboutSectionDescription = "Welcome to Jetstream! We are a new and" +
-                " exciting streaming platform that offers a vast selection of movies," +
-                " TV shows, and original content for you to enjoy. Our team is dedicated" +
-                " to providing an intuitive and seamless streaming experience for all" +
-                " users. With a simple and intuitive interface, you can easily find and" +
-                " watch your favourite content in just a few clicks. We are constantly" +
-                " updating and expanding our library, so there is always something new" +
-                " to discover. We also offer personalised recommendations based on your" +
-                " viewing history, so you can easily find new and exciting content to" +
-                " enjoy. Thank you for choosing Jetstream for all of your entertainment" +
-                " needs. We hope you have a great time streaming!"
+            const val AboutSectionDescription =
+                "Welcome to Jetstream! We are a new and" +
+                    " exciting streaming platform that offers a vast selection of movies," +
+                    " TV shows, and original content for you to enjoy. Our team is dedicated" +
+                    " to providing an intuitive and seamless streaming experience for all" +
+                    " users. With a simple and intuitive interface, you can easily find and" +
+                    " watch your favourite content in just a few clicks. We are constantly" +
+                    " updating and expanding our library, so there is always something new" +
+                    " to discover. We also offer personalised recommendations based on your" +
+                    " viewing history, so you can easily find new and exciting content to" +
+                    " enjoy. Thank you for choosing Jetstream for all of your entertainment" +
+                    " needs. We hope you have a great time streaming!"
             const val AboutSectionAppVersionTitle = "Application Version"
             const val LanguageSectionTitle = "Language"
-            val LanguageSectionItems = listOf(
-                "English (US)",
-                "English (UK)",
-                "Français",
-                "Española",
-                "हिंदी"
-            )
+            val LanguageSectionItems =
+                listOf(
+                    "English (US)",
+                    "English (UK)",
+                    "Français",
+                    "Española",
+                    "हिंदी",
+                )
             const val SearchHistorySectionTitle = "Search history"
             const val SearchHistoryClearAll = "Clear All"
-            val SampleSearchHistory = listOf(
-                "The Light Knight",
-                "Iceberg",
-                "Jungle Gump",
-                "The Devilfather",
-                "Space Wars",
-                "The Lion Queen"
-            )
+            val SampleSearchHistory =
+                listOf(
+                    "The Light Knight",
+                    "Iceberg",
+                    "Jungle Gump",
+                    "The Devilfather",
+                    "Space Wars",
+                    "The Lion Queen",
+                )
             const val SubtitlesSectionTitle = "Settings"
             const val SubtitlesSectionSubtitlesItem = "Subtitles"
             const val SubtitlesSectionLanguageItem = "Subtitles Language"

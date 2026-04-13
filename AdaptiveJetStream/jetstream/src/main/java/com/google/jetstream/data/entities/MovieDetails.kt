@@ -37,7 +37,6 @@ data class MovieDetails(
     val originalLanguage: String,
     val budget: String,
     val revenue: String,
-    val similarMovies: MovieList,
-    val reviewsAndRatings: List<MovieReviewsAndRatings>
+    val similarMovies: List<Movie>,
+    val reviewsAndRatings: List<MovieReviewsAndRatings>,
 )
-

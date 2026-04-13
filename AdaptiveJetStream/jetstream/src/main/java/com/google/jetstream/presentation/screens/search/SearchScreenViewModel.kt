@@ -19,68 +19,77 @@ package com.google.jetstream.presentation.screens.search
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.jetstream.data.entities.MovieList
+import com.google.jetstream.data.entities.Movie
 import com.google.jetstream.data.repositories.MovieRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
-class SearchScreenViewModel @Inject constructor(
-    private val movieRepository: MovieRepository
-) : ViewModel() {
+class SearchScreenViewModel
+    @Inject
+    constructor(
+        private val movieRepository: MovieRepository,
+    ) : ViewModel() {
+        private val searchCommandFlow = MutableSharedFlow<SearchCommand>()
+        private var searchText = TextFieldValue("")
 
-    private val searchCommandFlow = MutableSharedFlow<SearchCommand>()
-    private var searchText = TextFieldValue("")
+        private val internalSearchState =
+            searchCommandFlow.map { command ->
+                when (command) {
+                    is SearchCommand.StartSearch -> {
+                        SearchState.Searching
+                    }
 
-    private val internalSearchState = searchCommandFlow.map { command ->
-        when (command) {
-            is SearchCommand.StartSearch -> SearchState.Searching
-            is SearchCommand.UpdateSearchText -> {
-                searchText = command.textFieldValue
-                SearchState.Ready(searchText, emptyList())
+                    is SearchCommand.UpdateSearchText -> {
+                        searchText = command.textFieldValue
+                        SearchState.Ready(searchText, emptyList())
+                    }
+
+                    is SearchCommand.SearchDone -> {
+                        SearchState.Ready(searchText, command.movieList)
+                    }
+                }
             }
 
-            is SearchCommand.SearchDone -> {
-                SearchState.Ready(searchText, command.movieList)
+        fun query() {
+            viewModelScope.launch { postQuery(searchText) }
+        }
+
+        fun updateSearchText(textFieldValue: TextFieldValue) {
+            viewModelScope.launch {
+                searchCommandFlow.emit(SearchCommand.UpdateSearchText(textFieldValue))
             }
         }
-    }
 
-    fun query() {
-        viewModelScope.launch { postQuery(searchText) }
-    }
-
-    fun updateSearchText(textFieldValue: TextFieldValue) {
-        viewModelScope.launch {
-            searchCommandFlow.emit(SearchCommand.UpdateSearchText(textFieldValue))
+        private suspend fun postQuery(textFieldValue: TextFieldValue) {
+            searchCommandFlow.emit(SearchCommand.StartSearch)
+            val result = movieRepository.searchMovies(query = textFieldValue.text)
+            searchCommandFlow.emit(SearchCommand.SearchDone(result))
         }
-    }
 
-    private suspend fun postQuery(textFieldValue: TextFieldValue) {
-        searchCommandFlow.emit(SearchCommand.StartSearch)
-        val result = movieRepository.searchMovies(query = textFieldValue.text)
-        searchCommandFlow.emit(SearchCommand.SearchDone(result))
+        val searchState =
+            internalSearchState.stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000),
+                initialValue = SearchState.Ready(TextFieldValue(""), emptyList()),
+            )
     }
-
-    val searchState = internalSearchState.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = SearchState.Ready(TextFieldValue(""), emptyList())
-    )
-}
 
 sealed interface SearchState {
     data object Searching : SearchState
-    data class Ready(val textFieldValue: TextFieldValue, val movieList: MovieList) : SearchState
+
+    data class Ready(val textFieldValue: TextFieldValue, val movieList: List<Movie>) : SearchState
 }
 
 sealed interface SearchCommand {
     data object StartSearch : SearchCommand
+
     data class UpdateSearchText(val textFieldValue: TextFieldValue) : SearchCommand
-    data class SearchDone(val movieList: MovieList) : SearchCommand
+
+    data class SearchDone(val movieList: List<Movie>) : SearchCommand
 }

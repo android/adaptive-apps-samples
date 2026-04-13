@@ -37,11 +37,12 @@ val JetStreamBottomListPadding = 28.dp
 val JetStreamBorder
     @Composable get() =
         Border(
-            stroke = BorderStroke(
-                width = JetStreamBorderWidth,
-                color = MaterialTheme.colorScheme.onSurface
-            ),
-            shape = JetStreamCardShape
+            stroke =
+                BorderStroke(
+                    width = JetStreamBorderWidth,
+                    color = MaterialTheme.colorScheme.onSurface,
+                ),
+            shape = JetStreamCardShape,
         )
 
 val jetStreamBorderIndication

@@ -32,7 +32,6 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.unit.dp
 import com.google.jetstream.presentation.app.JetStreamLogo
 import com.google.jetstream.presentation.app.UserAvatar
-import com.google.jetstream.presentation.components.shim.tryRequestFocus
 import com.google.jetstream.presentation.screens.Screens
 
 @Composable
@@ -43,7 +42,7 @@ fun TopAppBar(
 ) {
     val (avatar, search) = remember { FocusRequester.createRefs() }
 
-    /**
+    /*
      * When the row becomes focussed, automatically focus either the search or profile
      * composables depending on the current screen.
      *
@@ -52,43 +51,43 @@ fun TopAppBar(
      */
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
-            .focusProperties {
-                onEnter = {
-                    when (selectedScreen) {
-                        Screens.Profile -> {
-                            avatar.tryRequestFocus()
-                        }
+        modifier =
+            modifier
+                .focusProperties {
+                    onEnter = {
+                        when (selectedScreen) {
+                            Screens.Profile -> {
+                                avatar.requestFocus()
+                            }
 
-                        Screens.Search -> {
-                            search.tryRequestFocus()
-                        }
+                            Screens.Search -> {
+                                search.requestFocus()
+                            }
 
-                        else -> {}
+                            else -> {}
+                        }
                     }
                 }
-            }
-            .focusGroup(),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                .focusGroup(),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         JetStreamLogo(
-            modifier = Modifier
-                .alpha(0.75f)
-                .padding(start = 8.dp),
+            modifier =
+                Modifier
+                    .alpha(0.75f)
+                    .padding(start = 8.dp),
         )
         Spacer(modifier.weight(1f))
         SearchButton(
             modifier = Modifier.focusRequester(search),
             onClick = {
                 showScreen(Screens.Search)
-            }
+            },
         )
         UserAvatar(
             modifier = Modifier.focusRequester(avatar),
             selected = selectedScreen == Screens.Profile,
-            onClick = { showScreen(Screens.Profile) }
+            onClick = { showScreen(Screens.Profile) },
         )
     }
 }
-
-

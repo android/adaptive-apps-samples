@@ -32,9 +32,13 @@ class FakeMovieRepository : MovieRepository {
     }
 
     override fun getFeaturedMovies(): Flow<MovieList> = movieFlow
+
     override fun getTrendingMovies(): Flow<MovieList> = movieFlow
+
     override fun getTop10Movies(): Flow<MovieList> = movieFlow
+
     override fun getNowPlayingMovies(): Flow<MovieList> = movieFlow
+
     override fun getMovieCategories(): Flow<MovieCategoryList> = categoryFlow
 
     override suspend fun getMovieCategoryDetails(categoryId: String): MovieCategoryDetails {
@@ -62,16 +66,21 @@ class FakeMovieRepository : MovieRepository {
             budget = "",
             revenue = "",
             similarMovies = emptyList(),
-            reviewsAndRatings = emptyList()
+            reviewsAndRatings = emptyList(),
         )
     }
 
     override suspend fun searchMovies(query: String): MovieList = emptyList()
 
     override fun getMoviesWithLongThumbnail(): Flow<MovieList> = movieFlow
+
     override fun getMovies(): Flow<MovieList> = movieFlow
+
     override fun getPopularFilmsThisWeek(): Flow<MovieList> = movieFlow
+
     override fun getTVShows(): Flow<MovieList> = movieFlow
+
     override fun getBingeWatchDramas(): Flow<MovieList> = movieFlow
+
     override fun getFavouriteMovies(): Flow<MovieList> = movieFlow
 }

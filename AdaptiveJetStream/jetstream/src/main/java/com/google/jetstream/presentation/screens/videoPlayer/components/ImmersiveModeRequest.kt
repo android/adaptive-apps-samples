@@ -31,7 +31,6 @@ internal fun Activity.toggleImmersiveMode() {
 }
 
 internal sealed interface ImmersiveModeRequest {
-
     fun request(activity: Activity)
 
     data object Enter : ImmersiveModeRequest {
@@ -42,7 +41,7 @@ internal sealed interface ImmersiveModeRequest {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
                 activity.requestFullscreenMode(
                     Activity.FULLSCREEN_MODE_REQUEST_ENTER,
-                    null
+                    null,
                 )
             }
         }
@@ -56,7 +55,7 @@ internal sealed interface ImmersiveModeRequest {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
                 activity.requestFullscreenMode(
                     Activity.FULLSCREEN_MODE_REQUEST_EXIT,
-                    null
+                    null,
                 )
             }
         }

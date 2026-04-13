@@ -46,11 +46,11 @@ fun SearchHistorySection(isExpanded: Boolean = true) {
                 item {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
+                        horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
                         Text(
                             text = SearchHistorySectionTitle,
-                            style = MaterialTheme.typography.headlineSmall
+                            style = MaterialTheme.typography.headlineSmall,
                         )
                         ClearHistoryButton()
                     }
@@ -58,13 +58,14 @@ fun SearchHistorySection(isExpanded: Boolean = true) {
             }
             items(SampleSearchHistory.size) { index ->
                 ListItem(
-                    modifier = Modifier
-                        .padding(top = 8.dp)
-                        .clickable { },
+                    modifier =
+                        Modifier
+                            .padding(top = 8.dp)
+                            .clickable { },
                     headlineContent = {
                         Text(
                             text = SampleSearchHistory[index],
-                            style = MaterialTheme.typography.titleMedium
+                            style = MaterialTheme.typography.titleMedium,
                         )
                     },
                 )
@@ -82,7 +83,7 @@ fun SearchHistorySection(isExpanded: Boolean = true) {
 private fun ClearHistoryButton(modifier: Modifier = Modifier) {
     Button(
         onClick = { /* Clear search history */ },
-        modifier = modifier.clickable { }
+        modifier = modifier.clickable { },
     ) {
         Text(text = StringConstants.Composable.Placeholders.SearchHistoryClearAll)
     }

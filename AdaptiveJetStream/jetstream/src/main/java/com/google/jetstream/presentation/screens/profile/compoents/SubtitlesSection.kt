@@ -41,7 +41,7 @@ import com.google.jetstream.presentation.theme.JetStreamTheme
 fun SubtitlesSection(
     isSubtitlesChecked: Boolean,
     isExpanded: Boolean = true,
-    onSubtitleCheckChange: (isChecked: Boolean) -> Unit
+    onSubtitleCheckChange: (isChecked: Boolean) -> Unit,
 ) {
     val padding = if (isExpanded) 72.dp else 16.dp
     with(StringConstants.Composable.Placeholders) {
@@ -49,54 +49,59 @@ fun SubtitlesSection(
             if (isExpanded) {
                 Text(
                     text = SubtitlesSectionTitle,
-                    style = MaterialTheme.typography.headlineSmall
+                    style = MaterialTheme.typography.headlineSmall,
                 )
             }
             ListItem(
-                modifier = Modifier
-                    .padding(top = 16.dp)
-                    .clickable {
-                        onSubtitleCheckChange(!isSubtitlesChecked)
-                    },
+                modifier =
+                    Modifier
+                        .padding(top = 16.dp)
+                        .clickable {
+                            onSubtitleCheckChange(!isSubtitlesChecked)
+                        },
                 trailingContent = {
                     Switch(
                         checked = isSubtitlesChecked,
                         onCheckedChange = onSubtitleCheckChange,
-                        colors = SwitchDefaults.colors(
-                            checkedThumbColor = MaterialTheme.colorScheme.primaryContainer,
-                            checkedTrackColor = MaterialTheme.colorScheme.primary
-                        )
+                        colors =
+                            SwitchDefaults.colors(
+                                checkedThumbColor = MaterialTheme.colorScheme.primaryContainer,
+                                checkedTrackColor = MaterialTheme.colorScheme.primary,
+                            ),
                     )
                 },
                 headlineContent = {
                     Text(
                         text = SubtitlesSectionSubtitlesItem,
-                        style = MaterialTheme.typography.titleMedium
+                        style = MaterialTheme.typography.titleMedium,
                     )
                 },
-                colors = ListItemDefaults.colors(
-                    containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(4.dp)
-                ),
+                colors =
+                    ListItemDefaults.colors(
+                        containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(4.dp),
+                    ),
             )
             ListItem(
-                modifier = Modifier
-                    .padding(top = 16.dp)
-                    .clickable { },
+                modifier =
+                    Modifier
+                        .padding(top = 16.dp)
+                        .clickable { },
                 trailingContent = {
                     Text(
                         text = SubtitlesSectionLanguageValue,
-                        style = MaterialTheme.typography.labelLarge
+                        style = MaterialTheme.typography.labelLarge,
                     )
                 },
                 headlineContent = {
                     Text(
                         text = SubtitlesSectionLanguageItem,
-                        style = MaterialTheme.typography.titleMedium
+                        style = MaterialTheme.typography.titleMedium,
                     )
                 },
-                colors = ListItemDefaults.colors(
-                    containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(4.dp)
-                ),
+                colors =
+                    ListItemDefaults.colors(
+                        containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(4.dp),
+                    ),
             )
         }
     }

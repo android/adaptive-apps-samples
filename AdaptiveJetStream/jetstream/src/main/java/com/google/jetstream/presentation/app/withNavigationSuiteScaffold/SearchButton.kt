@@ -33,11 +33,11 @@ fun SearchButton(
     icon: ImageVector = Screens.Search.tabIcon ?: Icons.Default.Search,
     contentDescription: String? =
         StringConstants.Composable.ContentDescription.DashboardSearchButton,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
 ) {
     IconButton(
         onClick = onClick,
-        modifier = modifier
+        modifier = modifier,
     ) {
         Icon(
             icon,

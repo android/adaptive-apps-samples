@@ -36,21 +36,21 @@ import org.robolectric.annotation.Config
 @RunWith(RobolectricTestRunner::class)
 @Config(qualifiers = "w1280dp-h800dp")
 class ShowsScreenTest {
-
     @get:Rule
     val composeTestRule = createComposeRule()
 
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 
-    private val testMovie = Movie(
-        id = "1",
-        sources = emptyMap(),
-        subtitleUri = null,
-        posterUri = "",
-        name = "Show Name",
-        description = "Show Description"
-    )
+    private val testMovie =
+        Movie(
+            id = "1",
+            sources = emptyMap(),
+            subtitleUri = null,
+            posterUri = "",
+            name = "Show Name",
+            description = "Show Description",
+        )
     private val tvShowList = List(5) { testMovie.copy(id = "tv_$it", name = "TV Show $it") }
     private val bingeWatchDramaList = List(5) { testMovie.copy(id = "drama_$it", name = "Drama $it") }
 
@@ -63,7 +63,7 @@ class ShowsScreenTest {
                     bingeWatchDramaList = bingeWatchDramaList,
                     onTVShowClick = { _ -> },
                     onScroll = { _ -> },
-                    isTopBarVisible = true
+                    isTopBarVisible = true,
                 )
             }
         }
@@ -82,7 +82,7 @@ class ShowsScreenTest {
                     bingeWatchDramaList = bingeWatchDramaList,
                     onTVShowClick = { _ -> },
                     onScroll = { _ -> },
-                    isTopBarVisible = true
+                    isTopBarVisible = true,
                 )
             }
         }
@@ -90,7 +90,7 @@ class ShowsScreenTest {
         composeTestRule
             .onNodeWithText("Drama 0")
             .assertIsDisplayed()
-        
+
         composeTestRule
             .onNodeWithText("Drama 4")
             .assertIsDisplayed()
@@ -105,7 +105,7 @@ class ShowsScreenTest {
                     bingeWatchDramaList = bingeWatchDramaList,
                     onTVShowClick = { _ -> },
                     onScroll = { _ -> },
-                    isTopBarVisible = true
+                    isTopBarVisible = true,
                 )
             }
         }
@@ -127,7 +127,7 @@ class ShowsScreenTest {
                     onTVShowClick = {},
                     onScroll = {},
                     isTopBarVisible = true,
-                    showScreenViewModel = viewModel
+                    showScreenViewModel = viewModel,
                 )
             }
         }

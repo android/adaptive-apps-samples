@@ -35,7 +35,6 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.unit.dp
 import androidx.media3.common.Player
 import com.google.jetstream.data.entities.MovieDetails
-import com.google.jetstream.presentation.components.shim.tryRequestFocus
 import com.google.jetstream.presentation.screens.videoPlayer.components.button.ClosedCaptionButton
 import com.google.jetstream.presentation.screens.videoPlayer.components.button.ImmersiveModeButton
 import com.google.jetstream.presentation.screens.videoPlayer.components.button.NextButton
@@ -56,11 +55,11 @@ fun VideoPlayerControls(
     movieDetails: MovieDetails,
     player: Player,
     modifier: Modifier = Modifier,
-    isImmersiveModeAvailable: Boolean = false
+    isImmersiveModeAvailable: Boolean = false,
 ) {
     val focusRequester = remember { FocusRequester() }
     LaunchedEffect(Unit) {
-        focusRequester.tryRequestFocus()
+        focusRequester.requestFocus()
     }
 
     val isTabletop = currentWindowAdaptiveInfo().windowPosture.isTabletop
@@ -72,7 +71,7 @@ fun VideoPlayerControls(
                 secondaryText = movieDetails.releaseDate,
                 tertiaryText = movieDetails.director,
                 type = VideoPlayerMediaTitleType.DEFAULT,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
         },
         mediaActions = {
@@ -88,11 +87,11 @@ fun VideoPlayerControls(
                 onSeek = { player.seekTo(player.duration.times(it).toLong()) },
                 contentDuration = player.duration.milliseconds,
                 modifier = Modifier.focusRequester(focusRequester),
-                shouldShowPlayPauseButton = !isTabletop
+                shouldShowPlayPauseButton = !isTabletop,
             )
         },
         more = null,
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
@@ -103,17 +102,19 @@ private fun TabletopMediaActions(
 ) {
     Column(
         modifier = Modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Row(
-            modifier = Modifier
-                .padding(bottom = BottomPadding)
-                .weight(1f),
-            horizontalArrangement = Arrangement.spacedBy(
-                TabletopActionSpacing,
-                Alignment.CenterHorizontally
-            ),
-            verticalAlignment = Alignment.CenterVertically
+            modifier =
+                Modifier
+                    .padding(bottom = BottomPadding)
+                    .weight(1f),
+            horizontalArrangement =
+                Arrangement.spacedBy(
+                    TabletopActionSpacing,
+                    Alignment.CenterHorizontally,
+                ),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             PreviousButton(player = player, modifier = Modifier.size(TabletopButtonSize))
             PlayPauseButton(player = player, modifier = Modifier.size(TabletopButtonSize))
@@ -123,10 +124,11 @@ private fun TabletopMediaActions(
             player = player,
             isImmersiveModeAvailable = isImmersiveModeAvailable,
             modifier = Modifier.weight(1f),
-            horizontalArrangement = Arrangement.spacedBy(
-                TabletopActionSpacing,
-                Alignment.CenterHorizontally
-            )
+            horizontalArrangement =
+                Arrangement.spacedBy(
+                    TabletopActionSpacing,
+                    Alignment.CenterHorizontally,
+                ),
         )
     }
 }
@@ -138,9 +140,10 @@ private fun DefaultMediaActions(
 ) {
     val scrollState = rememberScrollState()
     Row(
-        modifier = Modifier
-            .padding(bottom = BottomPadding)
-            .horizontalScroll(scrollState),
+        modifier =
+            Modifier
+                .padding(bottom = BottomPadding)
+                .horizontalScroll(scrollState),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(DefaultActionSpacing),
     ) {
@@ -155,12 +158,12 @@ private fun PlayerActions(
     player: Player,
     isImmersiveModeAvailable: Boolean,
     modifier: Modifier = Modifier,
-    horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(DefaultActionSpacing)
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(DefaultActionSpacing),
 ) {
     Row(
         modifier = modifier,
         horizontalArrangement = horizontalArrangement,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         RepeatButton(player = player)
         PlayListButton()

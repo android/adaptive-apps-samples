@@ -21,18 +21,31 @@ import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.ProvidableCompositionLocal
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.window.core.layout.WindowSizeClass
+import com.google.jetstream.presentation.components.feature.LocalEngagementMode
 import com.google.jetstream.presentation.components.feature.isWidthAtLeastExpanded
 import com.google.jetstream.presentation.components.feature.isWidthAtLeastLarge
+import com.google.jetstream.presentation.theme.styles.isFocusOptimized
 
-val LocalListItemGap: ProvidableCompositionLocal<Dp> = staticCompositionLocalOf {
-    20.dp
-}
-val LocalProminentListItemGap: ProvidableCompositionLocal<Dp> = staticCompositionLocalOf {
-    32.dp
+val LocalListItemGap: ProvidableCompositionLocal<Dp> =
+    staticCompositionLocalOf {
+        8.dp
+    }
+
+@Composable
+fun rememberListItemGap(): Dp {
+    val isFocusOptimized = LocalEngagementMode.current.isFocusOptimized()
+    return remember(isFocusOptimized) {
+        if (isFocusOptimized) {
+            20.dp
+        } else {
+            8.dp
+        }
+    }
 }
 
 @Immutable
@@ -54,12 +67,12 @@ data class Padding(
 private enum class ContentPadding(val value: Padding) {
     Compact(Padding(horizontal = 16.dp, vertical = 16.dp)),
     Medium(Padding(horizontal = 32.dp, vertical = 16.dp)),
-    Expanded(Padding(horizontal = 64.dp, vertical = 16.dp));
+    Expanded(Padding(horizontal = 64.dp, vertical = 16.dp)),
 }
 
 @Composable
 fun rememberContentPadding(
-    windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
+    windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfo().windowSizeClass,
 ): Padding {
     return when {
         windowSizeClass.isWidthAtLeastLarge() -> {
@@ -76,6 +89,7 @@ fun rememberContentPadding(
     }
 }
 
-val LocalContentPadding: ProvidableCompositionLocal<Padding> = staticCompositionLocalOf {
-    ContentPadding.Expanded.value
-}
+val LocalContentPadding: ProvidableCompositionLocal<Padding> =
+    staticCompositionLocalOf {
+        ContentPadding.Expanded.value
+    }

@@ -64,7 +64,7 @@ fun HomeScreenScreenshot() {
                 onMovieClick = { _ -> },
                 onScroll = { _ -> },
                 goToVideoPlayer = { _ -> },
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
             )
         }
     }
@@ -80,7 +80,7 @@ fun MovieDetailsScreenScreenshot() {
                 movieDetails = TestMovieDetails,
                 goToMoviePlayer = { _ -> },
                 refreshScreenWithNewMovie = { _ -> },
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
             )
         }
     }
@@ -96,7 +96,7 @@ fun CategoryMovieListScreenScreenshot() {
                 categoryDetails = TestCategoryDetails,
                 onBackPressed = {},
                 onMovieSelected = { _ -> },
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
             )
         }
     }
@@ -114,7 +114,7 @@ fun ShowsScreenScreenshot() {
                 onTVShowClick = { _ -> },
                 onScroll = { _ -> },
                 isTopBarVisible = true,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
             )
         }
     }
@@ -132,7 +132,7 @@ fun MoviesScreenScreenshot() {
                 onMovieClick = { _ -> },
                 onScroll = { _ -> },
                 isTopBarVisible = true,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
             )
         }
     }
@@ -148,7 +148,7 @@ fun CategoriesScreenScreenshot() {
                 movieCategories = mockCategoryScreenState.categoryList,
                 onCategoryClick = { _ -> },
                 onScroll = { _ -> },
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
             )
         }
     }
@@ -168,7 +168,7 @@ fun FavouritesScreenScreenshot() {
                 onScroll = { _ -> },
                 onSelectedFilterListUpdated = { _ -> },
                 isTopBarVisible = true,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
             )
         }
     }
@@ -186,7 +186,7 @@ fun SearchScreenScreenshot() {
                 searchMovies = {},
                 updateSearchText = { _ -> },
                 onMovieClick = { _ -> },
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
             )
         }
     }
@@ -208,7 +208,7 @@ fun NavigationSuiteScaffoldLayoutPreview() {
                     AdaptiveAppNavigationItems(
                         currentScreen = Screens.Home,
                         screens = Screens.entries.filter { it.isMainNavigation },
-                        onSelectScreen = {}
+                        onSelectScreen = {},
                     )
                 },
                 content = { padding ->
@@ -220,26 +220,26 @@ fun NavigationSuiteScaffoldLayoutPreview() {
                         onMovieClick = { _ -> },
                         onScroll = { _ -> },
                         goToVideoPlayer = { _ -> },
-                        modifier = Modifier.padding(padding).fillMaxSize()
+                        modifier = Modifier.padding(padding).fillMaxSize(),
                     )
                 },
                 topBar = {
                     TopAppBar(
-                        modifier = Modifier
-                            .padding(
-                                start = 24.dp,
-                                end = 24.dp,
-                                top = 0.dp
-                            ),
+                        modifier =
+                            Modifier
+                                .padding(
+                                    start = 24.dp,
+                                    end = 24.dp,
+                                    top = 0.dp,
+                                ),
                         selectedScreen = appState.selectedScreen,
                         showScreen = { },
                     )
-                }
+                },
             )
         }
     }
 }
-
 
 @PreviewTest
 @DesktopPreview

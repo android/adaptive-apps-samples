@@ -34,7 +34,10 @@ fun rememberProfileScreenLayoutType(
     navigationComponentType: NavigationComponentType = rememberNavigationComponentType(),
 ): ProfileScreenLayoutType {
     return when (navigationComponentType) {
-        NavigationComponentType.TopBar -> ProfileScreenLayoutType.FullyExpanded
+        NavigationComponentType.TopBar -> {
+            ProfileScreenLayoutType.FullyExpanded
+        }
+
         else -> {
             when {
                 windowSizeClass.isWidthAtLeastLarge() -> ProfileScreenLayoutType.FullyExpanded

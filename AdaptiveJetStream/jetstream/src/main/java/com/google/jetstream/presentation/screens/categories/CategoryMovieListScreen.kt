@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+@file:OptIn(ExperimentalFoundationStyleApi::class)
+
 package com.google.jetstream.presentation.screens.categories
 
 import androidx.activity.compose.BackHandler
@@ -25,6 +27,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -52,26 +55,27 @@ import com.google.jetstream.presentation.theme.Padding
 import com.google.jetstream.presentation.utils.focusOnInitialVisibility
 
 object CategoryMovieListScreen {
-    const val CategoryIdBundleKey = "categoryId"
+    const val CATEGORY_ID_BUNDLE_KEY = "categoryId"
 }
 
-val categoryMovieListScreenArguments = listOf(
-    navArgument(CategoryMovieListScreen.CategoryIdBundleKey) {
-        type = NavType.StringType
-    }
-)
+val categoryMovieListScreenArguments =
+    listOf(
+        navArgument(CategoryMovieListScreen.CATEGORY_ID_BUNDLE_KEY) {
+            type = NavType.StringType
+        },
+    )
 
 @Composable
 fun CategoryMovieListScreen(
     onBackPressed: () -> Unit,
     onMovieSelected: (Movie) -> Unit,
-    categoryMovieListScreenViewModel: CategoryMovieListScreenViewModel = hiltViewModel()
+    categoryMovieListScreenViewModel: CategoryMovieListScreenViewModel = hiltViewModel(),
 ) {
     val uiState by categoryMovieListScreenViewModel.uiState.collectAsStateWithLifecycle()
 
     when (val s = uiState) {
         CategoryMovieListScreenUiState.Loading -> {
-            Loading(modifier = Modifier.fillMaxSize())
+            Loading()
         }
 
         CategoryMovieListScreenUiState.Error -> {
@@ -83,7 +87,7 @@ fun CategoryMovieListScreen(
             CategoryDetails(
                 categoryDetails = categoryDetails,
                 onBackPressed = onBackPressed,
-                onMovieSelected = onMovieSelected
+                onMovieSelected = onMovieSelected,
             )
         }
     }
@@ -94,14 +98,14 @@ internal fun CategoryDetails(
     categoryDetails: MovieCategoryDetails,
     onBackPressed: () -> Unit,
     onMovieSelected: (Movie) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     BackHandler(onBack = onBackPressed)
     BackNavigationContextMenu(onBackPressed) {
         CategoryMovieList(
             categoryDetails = categoryDetails,
             onMovieSelected = onMovieSelected,
-            modifier = modifier
+            modifier = modifier,
         )
     }
 }
@@ -111,7 +115,7 @@ internal fun CategoryMovieList(
     categoryDetails: MovieCategoryDetails,
     onMovieSelected: (Movie) -> Unit,
     modifier: Modifier = Modifier,
-    contentPadding: Padding = LocalContentPadding.current
+    contentPadding: Padding = LocalContentPadding.current,
 ) {
     val isFirstItemVisible = remember { mutableStateOf(false) }
 
@@ -121,33 +125,38 @@ internal fun CategoryMovieList(
     ) {
         Text(
             text = categoryDetails.name,
-            style = MaterialTheme.typography.displaySmall.copy(
-                fontWeight = FontWeight.SemiBold
-            ),
-            modifier = Modifier.padding(
-                vertical = contentPadding.top.times(3.5f)
-            )
+            style =
+                MaterialTheme.typography.displaySmall.copy(
+                    fontWeight = FontWeight.SemiBold,
+                ),
+            modifier =
+                Modifier.padding(
+                    vertical = contentPadding.top.times(3.5f),
+                ),
         )
         LazyVerticalGrid(
             columns = GridCells.Fixed(6),
-            contentPadding = PaddingValues(bottom = JetStreamBottomListPadding)
+            contentPadding = PaddingValues(bottom = JetStreamBottomListPadding),
         ) {
             itemsIndexed(
                 categoryDetails.movies,
                 key = { _, movie ->
                     movie.id
-                }
+                },
             ) { index, movie ->
                 MovieCard(
                     onClick = { onMovieSelected(movie) },
-                    modifier = Modifier
-                        .aspectRatio(1 / 1.5f)
-                        .padding(8.dp)
-                        .then(
-                            if (index == 0)
-                                Modifier.focusOnInitialVisibility(isFirstItemVisible)
-                            else Modifier
-                        ),
+                    modifier =
+                        Modifier
+                            .aspectRatio(1 / 1.5f)
+                            .padding(8.dp)
+                            .then(
+                                if (index == 0) {
+                                    Modifier.focusOnInitialVisibility(isFirstItemVisible)
+                                } else {
+                                    Modifier
+                                },
+                            ),
                 ) {
                     PosterImage(movie = movie, modifier = Modifier.fillMaxSize())
                 }

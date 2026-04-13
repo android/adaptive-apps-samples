@@ -26,7 +26,7 @@ internal fun NavHostController.openMovieDetailScreen(movie: Movie) =
 
 internal fun NavHostController.openMovieDetailsScreen(movieId: String) {
     navigate(
-        Screens.MovieDetails.withArgs(movieId)
+        Screens.MovieDetails.withArgs(movieId),
     )
 }
 
@@ -36,7 +36,7 @@ internal fun NavController.openVideoPlayer(movieId: String) {
 
 internal fun NavController.openCategoryMovieList() = { categoryId: String ->
     navigate(
-        Screens.CategoryMovieList.withArgs(categoryId)
+        Screens.CategoryMovieList.withArgs(categoryId),
     )
 }
 

@@ -22,7 +22,7 @@ data class MovieCast(
     val id: String,
     val characterName: String,
     val realName: String,
-    val avatarUrl: String
+    val avatarUrl: String,
 )
 
 fun MovieCastResponseItem.toMovieCast(): MovieCast =
@@ -30,5 +30,5 @@ fun MovieCastResponseItem.toMovieCast(): MovieCast =
         id,
         characterName,
         realName,
-        avatarUrl
+        avatarUrl,
     )

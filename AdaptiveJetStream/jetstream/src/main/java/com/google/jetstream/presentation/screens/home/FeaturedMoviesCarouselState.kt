@@ -58,7 +58,7 @@ internal class FeaturedMoviesCarouselState(
         val Saver =
             Saver<FeaturedMoviesCarouselState, FeaturedMoviesCarouselSnapshot>(
                 save = { FeaturedMoviesCarouselSnapshot.from(it) },
-                restore = { it.into() }
+                restore = { it.into() },
             )
     }
 }
@@ -73,7 +73,7 @@ internal data class FeaturedMoviesCarouselSnapshot(
         FeaturedMoviesCarouselState(
             itemCount = itemCount,
             initialActiveIndex = activeItemIndex,
-            initialWatchNowButtonVisibility = watchButtonVisibility
+            initialWatchNowButtonVisibility = watchButtonVisibility,
         )
 
     companion object {
@@ -81,7 +81,7 @@ internal data class FeaturedMoviesCarouselSnapshot(
             FeaturedMoviesCarouselSnapshot(
                 itemCount = state.itemCount,
                 activeItemIndex = state.activeItemIndex,
-                watchButtonVisibility = state.watchNowButtonVisibility
+                watchButtonVisibility = state.watchNowButtonVisibility,
             )
     }
 }

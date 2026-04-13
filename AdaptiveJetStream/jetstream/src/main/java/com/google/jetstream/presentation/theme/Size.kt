@@ -31,29 +31,34 @@ import com.google.jetstream.presentation.app.rememberNavigationComponentType
 import com.google.jetstream.presentation.components.feature.isIWidthCompact
 import com.google.jetstream.presentation.components.feature.isWidthMedium
 
-val LocalFeaturedCarouselHeight: ProvidableCompositionLocal<Dp> = staticCompositionLocalOf {
-    324.dp
-}
+val LocalFeaturedCarouselHeight: ProvidableCompositionLocal<Dp> =
+    staticCompositionLocalOf {
+        324.dp
+    }
 
-val LocalVerticalCardAspectRatio: ProvidableCompositionLocal<Float> = staticCompositionLocalOf {
-    10.5f / 16f
-}
+val LocalVerticalCardAspectRatio: ProvidableCompositionLocal<Float> =
+    staticCompositionLocalOf {
+        10.5f / 16f
+    }
 
-val LocalHorizontalCardAspectRatio: ProvidableCompositionLocal<Float> = staticCompositionLocalOf {
-    16f / 9f
-}
+val LocalHorizontalCardAspectRatio: ProvidableCompositionLocal<Float> =
+    staticCompositionLocalOf {
+        16f / 9f
+    }
 
-val LocalCardWidth: ProvidableCompositionLocal<Dp> = staticCompositionLocalOf {
-    126.dp
-}
+val LocalCardWidth: ProvidableCompositionLocal<Dp> =
+    staticCompositionLocalOf {
+        126.dp
+    }
 
-val LocalProminentCardSize: ProvidableCompositionLocal<DpSize> = staticCompositionLocalOf {
-    DpSize(432.dp, 216.dp)
-}
+val LocalProminentCardSize: ProvidableCompositionLocal<DpSize> =
+    staticCompositionLocalOf {
+        DpSize(432.dp, 216.dp)
+    }
 
 @Composable
 fun rememberFeaturedCarouselHeight(
-    navigationComponentType: NavigationComponentType = rememberNavigationComponentType()
+    navigationComponentType: NavigationComponentType = rememberNavigationComponentType(),
 ): Dp {
     return remember(navigationComponentType) {
         when (navigationComponentType) {
@@ -65,11 +70,13 @@ fun rememberFeaturedCarouselHeight(
 
 @Composable
 fun rememberVerticalCardAspectRatio(
-    navigationComponentType: NavigationComponentType = rememberNavigationComponentType()
+    navigationComponentType: NavigationComponentType = rememberNavigationComponentType(),
 ): Float {
     return remember(navigationComponentType) {
         when (navigationComponentType) {
-            NavigationComponentType.TopBar -> 0.65625f // 10.5f / 16f
+            NavigationComponentType.TopBar -> 0.65625f
+
+            // 10.5f / 16f
             else -> 0.67021f
         }
     }
@@ -77,7 +84,7 @@ fun rememberVerticalCardAspectRatio(
 
 @Composable
 fun rememberCardWidth(
-    windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
+    windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfo().windowSizeClass,
 ): Dp {
     return remember(windowSizeClass) {
         windowSizeClass.cardWidth()
@@ -89,6 +96,7 @@ private fun WindowSizeClass.cardWidth(): Dp {
         isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND) -> {
             165.dp
         }
+
         else -> {
             126.dp
         }
@@ -96,31 +104,8 @@ private fun WindowSizeClass.cardWidth(): Dp {
 }
 
 @Composable
-fun rememberProminentCardSize(
-    windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
-): DpSize {
-    return remember(windowSizeClass) {
-        when {
-            !windowSizeClass.isWidthAtLeastBreakpoint(
-                WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND
-            ) -> {
-                DpSize(360.dp, 360.dp)
-            }
-            !windowSizeClass.isWidthAtLeastBreakpoint(
-                WindowSizeClass.WIDTH_DP_EXPANDED_LOWER_BOUND
-            ) -> {
-                DpSize(540.dp, 304.dp)
-            }
-            else -> {
-                DpSize(432.dp, 216.dp)
-            }
-        }
-    }
-}
-
-@Composable
 fun rememberCategoryGridColumns(
-    navigationComponentType: NavigationComponentType = rememberNavigationComponentType()
+    navigationComponentType: NavigationComponentType = rememberNavigationComponentType(),
 ): GridCells {
     return remember(navigationComponentType) {
         when (navigationComponentType) {
@@ -132,7 +117,7 @@ fun rememberCategoryGridColumns(
 
 @Composable
 fun rememberCategoryCardAspectRatio(
-    windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
+    windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfo().windowSizeClass,
 ): Float {
     return when {
         windowSizeClass.isIWidthCompact() -> 1f

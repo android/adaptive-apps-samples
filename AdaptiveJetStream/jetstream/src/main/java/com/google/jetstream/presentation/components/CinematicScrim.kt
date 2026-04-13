@@ -14,26 +14,40 @@
  * limitations under the License.
  */
 
+@file:OptIn(ExperimentalFoundationStyleApi::class)
+
 package com.google.jetstream.presentation.components
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
+import androidx.compose.foundation.style.Style
+import androidx.compose.foundation.style.then
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import com.google.jetstream.presentation.components.shim.stylable.StylableBox
 
 @Composable
 fun CinematicScrim(
     modifier: Modifier = Modifier,
-    colors: List<Color> = listOf(
-        Color.Black.copy(alpha = 0.1f),
-        Color.Black.copy(alpha = 0.8f)
-    )
+    style: Style = Style,
 ) {
-    Box(
-        modifier = modifier.background(
-            Brush.verticalGradient(colors)
-        )
+    StylableBox(
+        modifier = modifier,
+        style = CinematicScrimDefaults.style then style,
     )
+}
+
+object CinematicScrimDefaults {
+    val style =
+        Style {
+            background(
+                Brush.verticalGradient(
+                    listOf(
+                        Color.Black.copy(alpha = 0.1f),
+                        Color.Black.copy(alpha = 0.8f),
+                    ),
+                ),
+            )
+        }
 }

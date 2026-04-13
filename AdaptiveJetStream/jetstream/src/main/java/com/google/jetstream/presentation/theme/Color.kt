@@ -16,6 +16,8 @@
 
 package com.google.jetstream.presentation.theme
 
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
@@ -46,80 +48,92 @@ val Brown300 = Color(0xFFA1887F)
 val Gray300 = Color(0xFFE0E0E0)
 val BlueGray300 = Color(0xFF90A4AE)
 
-val ourColors = listOf(
-    Coral,
-    LightYellow,
-    Red300,
-    Pink300,
-    Purple300,
-    DeepPurple300,
-    Indigo300,
-    Blue300,
-    LightBlue300,
-    Cyan300,
-    Teal300,
-    Green300,
-    LightGreen300,
-    Lime300,
-    Yellow300,
-    Amber300,
-    Orange300,
-    DeepOrange300,
-    Brown300,
-    Gray300,
-    BlueGray300,
-)
+val ourColors =
+    listOf(
+        Coral,
+        LightYellow,
+        Red300,
+        Pink300,
+        Purple300,
+        DeepPurple300,
+        Indigo300,
+        Blue300,
+        LightBlue300,
+        Cyan300,
+        Teal300,
+        Green300,
+        LightGreen300,
+        Lime300,
+        Yellow300,
+        Amber300,
+        Orange300,
+        DeepOrange300,
+        Brown300,
+        Gray300,
+        BlueGray300,
+    )
 internal val lightColorScheme
-    @Composable get() = lightColorScheme(
-        primary = colorResource(R.color.primary),
-        onPrimary = colorResource(R.color.onPrimary),
-        primaryContainer = colorResource(R.color.primaryContainer),
-        onPrimaryContainer = colorResource(R.color.onPrimaryContainer),
-        secondary = colorResource(R.color.secondary),
-        onSecondary = colorResource(R.color.onSecondary),
-        secondaryContainer = colorResource(R.color.secondaryContainer),
-        onSecondaryContainer = colorResource(R.color.onSecondaryContainer),
-        tertiary = colorResource(R.color.tertiary),
-        onTertiary = colorResource(R.color.onTertiary),
-        tertiaryContainer = colorResource(R.color.tertiaryContainer),
-        onTertiaryContainer = colorResource(R.color.onTertiaryContainer),
-        background = colorResource(R.color.background),
-        onBackground = colorResource(R.color.onBackground),
-        surface = colorResource(R.color.surface),
-        onSurface = colorResource(R.color.onSurface),
-        surfaceVariant = colorResource(R.color.surfaceVariant),
-        onSurfaceVariant = colorResource(R.color.onSurfaceVariant),
-        surfaceContainer = colorResource(R.color.surface),
-        error = colorResource(R.color.error),
-        onError = colorResource(R.color.onError),
-        errorContainer = colorResource(R.color.errorContainer),
-        onErrorContainer = colorResource(R.color.onErrorContainer),
-        outline = colorResource(R.color.outline),
-    )
+    @Composable get() =
+        lightColorScheme(
+            primary = colorResource(R.color.primary),
+            onPrimary = colorResource(R.color.onPrimary),
+            primaryContainer = colorResource(R.color.primaryContainer),
+            onPrimaryContainer = colorResource(R.color.onPrimaryContainer),
+            secondary = colorResource(R.color.secondary),
+            onSecondary = colorResource(R.color.onSecondary),
+            secondaryContainer = colorResource(R.color.secondaryContainer),
+            onSecondaryContainer = colorResource(R.color.onSecondaryContainer),
+            tertiary = colorResource(R.color.tertiary),
+            onTertiary = colorResource(R.color.onTertiary),
+            tertiaryContainer = colorResource(R.color.tertiaryContainer),
+            onTertiaryContainer = colorResource(R.color.onTertiaryContainer),
+            background = colorResource(R.color.background),
+            onBackground = colorResource(R.color.onBackground),
+            surface = colorResource(R.color.surface),
+            onSurface = colorResource(R.color.onSurface),
+            surfaceVariant = colorResource(R.color.surfaceVariant),
+            onSurfaceVariant = colorResource(R.color.onSurfaceVariant),
+            surfaceContainer = colorResource(R.color.surface),
+            error = colorResource(R.color.error),
+            onError = colorResource(R.color.onError),
+            errorContainer = colorResource(R.color.errorContainer),
+            onErrorContainer = colorResource(R.color.onErrorContainer),
+            outline = colorResource(R.color.outline),
+        )
 internal val darkColorScheme
-    @Composable get() = darkColorScheme(
-        primary = colorResource(R.color.primary),
-        onPrimary = colorResource(R.color.onPrimary),
-        primaryContainer = colorResource(R.color.primaryContainer),
-        onPrimaryContainer = colorResource(R.color.onPrimaryContainer),
-        secondary = colorResource(R.color.secondary),
-        onSecondary = colorResource(R.color.onSecondary),
-        secondaryContainer = colorResource(R.color.secondaryContainer),
-        onSecondaryContainer = colorResource(R.color.onSecondaryContainer),
-        tertiary = colorResource(R.color.tertiary),
-        onTertiary = colorResource(R.color.onTertiary),
-        tertiaryContainer = colorResource(R.color.tertiaryContainer),
-        onTertiaryContainer = colorResource(R.color.onTertiaryContainer),
-        background = colorResource(R.color.background),
-        onBackground = colorResource(R.color.onBackground),
-        surface = colorResource(R.color.surface),
-        onSurface = colorResource(R.color.onSurface),
-        surfaceContainer = colorResource(R.color.surface),
-        surfaceVariant = colorResource(R.color.surfaceVariant),
-        onSurfaceVariant = colorResource(R.color.onSurfaceVariant),
-        error = colorResource(R.color.error),
-        onError = colorResource(R.color.onError),
-        errorContainer = colorResource(R.color.errorContainer),
-        onErrorContainer = colorResource(R.color.onErrorContainer),
-        outline = colorResource(R.color.outline),
-    )
+    @Composable get() =
+        darkColorScheme(
+            primary = colorResource(R.color.primary),
+            onPrimary = colorResource(R.color.onPrimary),
+            primaryContainer = colorResource(R.color.primaryContainer),
+            onPrimaryContainer = colorResource(R.color.onPrimaryContainer),
+            secondary = colorResource(R.color.secondary),
+            onSecondary = colorResource(R.color.onSecondary),
+            secondaryContainer = colorResource(R.color.secondaryContainer),
+            onSecondaryContainer = colorResource(R.color.onSecondaryContainer),
+            tertiary = colorResource(R.color.tertiary),
+            onTertiary = colorResource(R.color.onTertiary),
+            tertiaryContainer = colorResource(R.color.tertiaryContainer),
+            onTertiaryContainer = colorResource(R.color.onTertiaryContainer),
+            background = colorResource(R.color.background),
+            onBackground = colorResource(R.color.onBackground),
+            surface = colorResource(R.color.surface),
+            onSurface = colorResource(R.color.onSurface),
+            surfaceContainer = colorResource(R.color.surface),
+            surfaceVariant = colorResource(R.color.surfaceVariant),
+            onSurfaceVariant = colorResource(R.color.onSurfaceVariant),
+            error = colorResource(R.color.error),
+            onError = colorResource(R.color.onError),
+            errorContainer = colorResource(R.color.errorContainer),
+            onErrorContainer = colorResource(R.color.onErrorContainer),
+            outline = colorResource(R.color.outline),
+        )
+
+@Composable
+fun colorScheme(): ColorScheme {
+    return if (isSystemInDarkTheme()) {
+        darkColorScheme
+    } else {
+        lightColorScheme
+    }
+}

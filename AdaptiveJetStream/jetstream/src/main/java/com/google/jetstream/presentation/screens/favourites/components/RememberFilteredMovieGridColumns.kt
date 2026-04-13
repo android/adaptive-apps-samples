@@ -36,12 +36,13 @@ fun rememberFilteredMoviesGridColumns(
 
 private fun calculateFilteredMoviesGridColumns(
     navigationComponentType: NavigationComponentType,
-    windowSizeClass: WindowSizeClass
+    windowSizeClass: WindowSizeClass,
 ): GridCells {
     return when (navigationComponentType) {
         NavigationComponentType.TopBar -> {
             GridCells.Fixed(6)
         }
+
         else -> {
             windowSizeClass.filteredMoviesGridColumns()
         }
@@ -53,9 +54,13 @@ private fun WindowSizeClass.filteredMoviesGridColumns(): GridCells {
         isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_EXPANDED_LOWER_BOUND) -> {
             GridCells.Fixed(6)
         }
+
         isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND) -> {
             GridCells.Fixed(4)
         }
-        else -> GridCells.Fixed(3)
+
+        else -> {
+            GridCells.Fixed(3)
+        }
     }
 }

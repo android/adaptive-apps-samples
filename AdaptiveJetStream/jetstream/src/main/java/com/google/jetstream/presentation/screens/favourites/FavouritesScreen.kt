@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -31,7 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.google.jetstream.data.entities.MovieList
+import com.google.jetstream.data.entities.Movie
 import com.google.jetstream.presentation.components.Loading
 import com.google.jetstream.presentation.screens.favourites.components.FilteredMoviesGrid
 import com.google.jetstream.presentation.screens.favourites.components.MovieFilterChipRow
@@ -39,17 +40,18 @@ import com.google.jetstream.presentation.screens.favourites.components.rememberF
 import com.google.jetstream.presentation.theme.LocalContentPadding
 import com.google.jetstream.presentation.theme.Padding
 
+@OptIn(ExperimentalFoundationStyleApi::class)
 @Composable
 fun FavouritesScreen(
     onMovieClick: (movieId: String) -> Unit,
     onScroll: (isTopBarVisible: Boolean) -> Unit,
     isTopBarVisible: Boolean,
-    favouriteScreenViewModel: FavouriteScreenViewModel = hiltViewModel()
+    favouriteScreenViewModel: FavouriteScreenViewModel = hiltViewModel(),
 ) {
     val uiState by favouriteScreenViewModel.uiState.collectAsStateWithLifecycle()
     when (val s = uiState) {
         is FavouriteScreenUiState.Loading -> {
-            Loading(modifier = Modifier.fillMaxSize())
+            Loading()
         }
 
         is FavouriteScreenUiState.Ready -> {
@@ -61,7 +63,7 @@ fun FavouritesScreen(
                 modifier = Modifier.fillMaxSize(),
                 filterList = FavouriteScreenViewModel.filterList,
                 selectedFilterList = s.selectedFilterList,
-                onSelectedFilterListUpdated = favouriteScreenViewModel::updateSelectedFilterList
+                onSelectedFilterListUpdated = favouriteScreenViewModel::updateSelectedFilterList,
             )
         }
     }
@@ -69,7 +71,7 @@ fun FavouritesScreen(
 
 @Composable
 internal fun Catalog(
-    favouriteMovieList: MovieList,
+    favouriteMovieList: List<Movie>,
     filterList: FilterList,
     selectedFilterList: FilterList,
     onMovieClick: (movieId: String) -> Unit,
@@ -77,7 +79,7 @@ internal fun Catalog(
     onSelectedFilterListUpdated: (FilterList) -> Unit,
     isTopBarVisible: Boolean,
     modifier: Modifier = Modifier,
-    contentPadding: Padding = LocalContentPadding.current
+    contentPadding: Padding = LocalContentPadding.current,
 ) {
     val filteredMoviesGridState = rememberLazyGridState()
 
@@ -100,18 +102,19 @@ internal fun Catalog(
     }
 
     val chipRowTopPadding by animateDpAsState(
-        targetValue = if (shouldShowTopBar) 0.dp else contentPadding.top, label = ""
+        targetValue = if (shouldShowTopBar) 0.dp else contentPadding.top,
+        label = "",
     )
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier.padding(horizontal = contentPadding.start)
+        modifier = modifier.padding(horizontal = contentPadding.start),
     ) {
         MovieFilterChipRow(
             filterList = filterList,
             selectedFilterList = selectedFilterList,
             onSelectedFilterListUpdated = onSelectedFilterListUpdated,
-            modifier = Modifier.padding(top = chipRowTopPadding)
+            modifier = Modifier.padding(top = chipRowTopPadding),
         )
         FilteredMoviesGrid(
             state = filteredMoviesGridState,

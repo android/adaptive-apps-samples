@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+@file:OptIn(ExperimentalFoundationStyleApi::class)
+
 package com.google.jetstream.presentation.components
 
 import androidx.compose.animation.AnimatedContent
@@ -28,8 +30,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -55,7 +56,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.jetstream.data.entities.Movie
-import com.google.jetstream.data.entities.MovieList
 import com.google.jetstream.presentation.theme.LocalCardWidth
 import com.google.jetstream.presentation.theme.LocalContentPadding
 import com.google.jetstream.presentation.theme.LocalHorizontalCardAspectRatio
@@ -80,68 +80,72 @@ sealed interface ItemDirection {
 
 @Composable
 fun MoviesRow(
-    movieList: MovieList,
+    movieList: List<Movie>,
     modifier: Modifier = Modifier,
     itemDirection: ItemDirection = ItemDirection.Vertical,
     contentPadding: Padding = LocalContentPadding.current,
     title: String? = null,
-    titleStyle: TextStyle = MaterialTheme.typography.headlineLarge.copy(
-        fontWeight = FontWeight.Medium,
-        fontSize = 30.sp
-    ),
+    titleStyle: TextStyle =
+        MaterialTheme.typography.headlineLarge.copy(
+            fontWeight = FontWeight.Medium,
+            fontSize = 30.sp,
+        ),
     showItemTitle: Boolean = true,
     showIndexOverImage: Boolean = false,
-    onMovieSelected: (movie: Movie) -> Unit = {}
+    onMovieSelected: (movie: Movie) -> Unit = {},
 ) {
     val (lazyRow, firstItem) = remember { FocusRequester.createRefs() }
 
     Column(
-        modifier = modifier.focusGroup()
+        modifier = modifier.focusGroup(),
     ) {
         if (title != null) {
             Text(
                 text = title,
                 style = titleStyle,
-                modifier = Modifier
-                    .alpha(1f)
-                    .padding(
-                        contentPadding
-                            .copy(top = 16.dp, bottom = 16.dp, end = 0.dp)
-                            .intoPaddingValues()
-                    )
+                modifier =
+                    Modifier
+                        .alpha(1f)
+                        .padding(
+                            contentPadding
+                                .copy(top = 16.dp, bottom = 16.dp, end = 0.dp)
+                                .intoPaddingValues(),
+                        ),
             )
         }
         AnimatedContent(
             targetState = movieList,
             label = "",
         ) { movieState ->
-            LazyRow(
+            MovieList(
+                movieList = movieState,
                 contentPadding =
-                contentPadding.copy(top = 0.dp, bottom = 16.dp).intoPaddingValues(),
+                    contentPadding.copy(top = 0.dp, bottom = 16.dp)
+                        .intoPaddingValues(),
                 horizontalArrangement = Arrangement.spacedBy(LocalListItemGap.current),
-                modifier = Modifier
-                    .focusRequester(lazyRow)
-                    .focusRestorer(fallback = firstItem)
-            ) {
-                itemsIndexed(movieState, key = { _, movie -> movie.id }) { index, movie ->
-                    val itemModifier = if (index == 0) {
+                modifier =
+                    Modifier
+                        .focusRequester(lazyRow)
+                        .focusRestorer(fallback = firstItem),
+            ) { index, movie ->
+                val itemModifier =
+                    if (index == 0) {
                         Modifier.focusRequester(firstItem)
                     } else {
                         Modifier
                     }
-                    MoviesRowItem(
-                        modifier = itemModifier.weight(1f),
-                        index = index,
-                        itemDirection = itemDirection,
-                        onMovieSelected = {
-                            lazyRow.saveFocusedChild()
-                            onMovieSelected(it)
-                        },
-                        movie = movie,
-                        showItemTitle = showItemTitle,
-                        showIndexOverImage = showIndexOverImage
-                    )
-                }
+                ImmersiveListItem(
+                    modifier = itemModifier.weight(1f),
+                    index = index,
+                    itemDirection = itemDirection,
+                    onMovieSelected = {
+                        lazyRow.saveFocusedChild()
+                        onMovieSelected(it)
+                    },
+                    movie = movie,
+                    showItemTitle = showItemTitle,
+                    showIndexOverImage = showIndexOverImage,
+                )
             }
         }
     }
@@ -149,83 +153,81 @@ fun MoviesRow(
 
 @Composable
 fun ImmersiveListMoviesRow(
-    movieList: MovieList,
+    movieList: List<Movie>,
     modifier: Modifier = Modifier,
     itemDirection: ItemDirection = ItemDirection.Vertical,
     contentPadding: Padding = LocalContentPadding.current,
     title: String? = null,
-    titleStyle: TextStyle = MaterialTheme.typography.headlineLarge.copy(
-        fontWeight = FontWeight.Medium,
-        fontSize = 30.sp
-    ),
+    titleStyle: TextStyle =
+        MaterialTheme.typography.headlineLarge.copy(
+            fontWeight = FontWeight.Medium,
+            fontSize = 30.sp,
+        ),
     showItemTitle: Boolean = true,
     showIndexOverImage: Boolean = false,
     onMovieSelected: (Movie) -> Unit = {},
-    onMovieFocused: (Movie) -> Unit = {}
+    onMovieFocused: (Movie) -> Unit = {},
 ) {
     val (lazyRow, firstItem) = remember { FocusRequester.createRefs() }
 
     Column(
-        modifier = modifier.focusGroup()
+        modifier = modifier.focusGroup(),
     ) {
         if (title != null) {
             Text(
                 text = title,
                 style = titleStyle,
-                modifier = Modifier
-                    .alpha(1f)
-                    .padding(
-                        Padding(
-                            start = contentPadding.start,
-                            top = 16.dp,
-                            bottom = 16.dp
-                        ).intoPaddingValues()
-                    )
+                modifier =
+                    Modifier
+                        .alpha(1f)
+                        .padding(
+                            Padding(
+                                start = contentPadding.start,
+                                top = 16.dp,
+                                bottom = 16.dp,
+                            ).intoPaddingValues(),
+                        ),
             )
         }
         AnimatedContent(
             targetState = movieList,
             label = "",
         ) { movieState ->
-            LazyRow(
+            MovieList(
+                movieList = movieState,
                 contentPadding = contentPadding.copy(top = 0.dp, bottom = 0.dp).intoPaddingValues(),
                 horizontalArrangement = Arrangement.spacedBy(20.dp),
-                modifier = Modifier
-                    .focusRequester(lazyRow)
-                    .focusRestorer(fallback = firstItem)
-            ) {
-                itemsIndexed(
-                    movieState,
-                    key = { _, movie ->
-                        movie.id
-                    }
-                ) { index, movie ->
-                    val itemModifier = if (index == 0) {
+                modifier =
+                    Modifier
+                        .focusRequester(lazyRow)
+                        .focusRestorer(fallback = firstItem),
+            ) { index, movie ->
+                val itemModifier =
+                    if (index == 0) {
                         Modifier.focusRequester(firstItem)
                     } else {
                         Modifier
                     }
-                    MoviesRowItem(
-                        modifier = itemModifier.weight(1f),
-                        index = index,
-                        itemDirection = itemDirection,
-                        onMovieSelected = {
-                            lazyRow.saveFocusedChild()
-                            onMovieSelected(it)
-                        },
-                        onMovieFocused = onMovieFocused,
-                        movie = movie,
-                        showItemTitle = showItemTitle,
-                        showIndexOverImage = showIndexOverImage
-                    )
-                }
+                ImmersiveListItem(
+                    modifier = itemModifier.weight(1f),
+                    index = index,
+                    itemDirection = itemDirection,
+                    onMovieSelected = {
+                        lazyRow.saveFocusedChild()
+                        onMovieSelected(it)
+                    },
+                    onMovieFocused = onMovieFocused,
+                    movie = movie,
+                    showItemTitle = showItemTitle,
+                    showIndexOverImage = showIndexOverImage,
+                )
             }
         }
     }
 }
 
 @Composable
-private fun MoviesRowItem(
+private fun ImmersiveListItem(
     index: Int,
     movie: Movie,
     onMovieSelected: (Movie) -> Unit,
@@ -250,19 +252,20 @@ private fun MoviesRowItem(
             MoviesRowItemText(
                 showItemTitle = showItemTitle,
                 isItemFocused = true,
-                movie = movie
+                movie = movie,
             )
         },
         interactionSource = interactionSource,
-        modifier = modifier
+        modifier = modifier,
     ) {
         MoviesRowItemImage(
-            modifier = Modifier
-                .width(LocalCardWidth.current)
-                .aspectRatio(itemDirection.aspectRatio()),
+            modifier =
+                Modifier
+                    .width(LocalCardWidth.current)
+                    .aspectRatio(itemDirection.aspectRatio()),
             showIndexOverImage = showIndexOverImage,
             movie = movie,
-            index = index
+            index = index,
         )
     }
 }
@@ -277,32 +280,36 @@ private fun MoviesRowItemImage(
     Box(contentAlignment = Alignment.CenterStart) {
         PosterImage(
             movie = movie,
-            modifier = modifier
-                .fillMaxWidth()
-                .drawWithContent {
-                    drawContent()
-                    if (showIndexOverImage) {
-                        drawRect(
-                            color = Color.Black.copy(
-                                alpha = 0.1f
+            modifier =
+                modifier
+                    .fillMaxWidth()
+                    .drawWithContent {
+                        drawContent()
+                        if (showIndexOverImage) {
+                            drawRect(
+                                color =
+                                    Color.Black.copy(
+                                        alpha = 0.1f,
+                                    ),
                             )
-                        )
-                    }
-                },
+                        }
+                    },
         )
         if (showIndexOverImage) {
             Text(
                 modifier = Modifier.padding(16.dp),
                 text = "#${index.inc()}",
-                style = MaterialTheme.typography.displayLarge
-                    .copy(
-                        shadow = Shadow(
-                            offset = Offset(0.5f, 0.5f),
-                            blurRadius = 5f
+                style =
+                    MaterialTheme.typography.displayLarge
+                        .copy(
+                            shadow =
+                                Shadow(
+                                    offset = Offset(0.5f, 0.5f),
+                                    blurRadius = 5f,
+                                ),
+                            color = Color.White,
                         ),
-                        color = Color.White
-                    ),
-                fontWeight = FontWeight.SemiBold
+                fontWeight = FontWeight.SemiBold,
             )
         }
     }
@@ -313,7 +320,7 @@ private fun MoviesRowItemText(
     showItemTitle: Boolean,
     isItemFocused: Boolean,
     movie: Movie,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     if (showItemTitle) {
         val movieNameAlpha by animateFloatAsState(
@@ -322,14 +329,16 @@ private fun MoviesRowItemText(
         )
         Text(
             text = movie.name,
-            style = MaterialTheme.typography.bodyMedium.copy(
-                fontWeight = FontWeight.SemiBold
-            ),
+            style =
+                MaterialTheme.typography.bodyMedium.copy(
+                    fontWeight = FontWeight.SemiBold,
+                ),
             textAlign = TextAlign.Center,
-            modifier = modifier
-                .alpha(movieNameAlpha)
-                .fillMaxWidth()
-                .padding(top = 4.dp),
+            modifier =
+                modifier
+                    .alpha(movieNameAlpha)
+                    .fillMaxWidth()
+                    .padding(top = 4.dp),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )

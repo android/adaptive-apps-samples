@@ -24,6 +24,11 @@ import androidx.compose.foundation.interaction.FocusInteraction
 import androidx.compose.foundation.interaction.HoverInteraction
 import androidx.compose.foundation.interaction.InteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
+import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
+import androidx.compose.foundation.style.Style
+import androidx.compose.foundation.style.focused
+import androidx.compose.foundation.style.hovered
+import androidx.compose.foundation.style.pressed
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.drawscope.ContentDrawScope
 import androidx.compose.ui.graphics.drawscope.scale
@@ -83,21 +88,21 @@ private class ScaleIndication(
     val press: Float,
     val hover: Float,
     val drag: Float,
-    val interactionSource: InteractionSource
+    val interactionSource: InteractionSource,
 ) : Modifier.Node(), DrawModifierNode {
-
     var scale = Animatable(1f)
 
     override fun onAttach() {
         coroutineScope.launch {
             interactionSource.interactions.collect {
-                val target = when (it) {
-                    is PressInteraction.Press -> press
-                    is FocusInteraction.Focus -> focus
-                    is HoverInteraction.Enter -> hover
-                    is DragInteraction.Start -> drag
-                    else -> 1f
-                }
+                val target =
+                    when (it) {
+                        is PressInteraction.Press -> press
+                        is FocusInteraction.Focus -> focus
+                        is HoverInteraction.Enter -> hover
+                        is DragInteraction.Start -> drag
+                        else -> 1f
+                    }
                 scale.animateTo(target)
             }
         }
@@ -106,6 +111,31 @@ private class ScaleIndication(
     override fun ContentDrawScope.draw() {
         scale(scale.value) {
             this@draw.drawContent()
+        }
+    }
+}
+
+@OptIn(ExperimentalFoundationStyleApi::class)
+fun scaleIndicationStyle(
+    focused: Float = 1.05f,
+    pressed: Float = 0.9f,
+    hovered: Float = focused,
+): Style {
+    return Style {
+        focused {
+            animate {
+                scale(focused)
+            }
+        }
+        pressed {
+            animate {
+                scale(pressed)
+            }
+        }
+        hovered {
+            animate {
+                scale(hovered)
+            }
         }
     }
 }

@@ -26,12 +26,13 @@ import com.google.jetstream.data.util.StringConstants
 fun BackNavigationContextMenu(
     onBackPressed: () -> Unit,
     modifier: Modifier = Modifier,
-    content: @Composable BoxScope.() -> Unit
+    content: @Composable BoxScope.() -> Unit,
 ) {
-    val contextMenuItemList = remember {
-        listOf(
-            ContextMenuItem(StringConstants.Composable.ContextMenu.Back, onBackPressed)
-        )
-    }
+    val contextMenuItemList =
+        remember {
+            listOf(
+                ContextMenuItem(StringConstants.Composable.ContextMenu.Back, onBackPressed),
+            )
+        }
     ContextMenuArea(contextMenuItemList, modifier, content)
 }

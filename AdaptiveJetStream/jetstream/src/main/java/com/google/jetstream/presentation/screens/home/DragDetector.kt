@@ -32,7 +32,7 @@ internal fun Modifier.dragDetector(
     dragDetector: DragDetector =
         rememberDragDetector(
             moveToPrevious = state::moveToPreviousItem,
-            moveToNext = state::moveToNextItem
+            moveToNext = state::moveToNextItem,
         ),
 ): Modifier =
     pointerInput(Unit) {

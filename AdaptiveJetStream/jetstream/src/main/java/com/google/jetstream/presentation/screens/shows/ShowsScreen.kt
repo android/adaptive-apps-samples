@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -34,15 +35,14 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.jetstream.data.entities.Movie
-import com.google.jetstream.data.entities.MovieList
 import com.google.jetstream.data.util.StringConstants
 import com.google.jetstream.presentation.components.Loading
 import com.google.jetstream.presentation.components.MoviesRow
-import com.google.jetstream.presentation.components.shim.tryRequestFocus
-import com.google.jetstream.presentation.screens.movies.components.ProminentMovieList
+import com.google.jetstream.presentation.screens.movies.ProminentMovieList
 import com.google.jetstream.presentation.theme.LocalContentPadding
 import com.google.jetstream.presentation.theme.Padding
 
+@OptIn(ExperimentalFoundationStyleApi::class)
 @Composable
 fun ShowsScreen(
     onTVShowClick: (movie: Movie) -> Unit,
@@ -53,7 +53,7 @@ fun ShowsScreen(
     val uiState = showScreenViewModel.uiState.collectAsStateWithLifecycle()
     when (val currentState = uiState.value) {
         is ShowScreenUiState.Loading -> {
-            Loading(modifier = Modifier.fillMaxSize())
+            Loading()
         }
 
         is ShowScreenUiState.Ready -> {
@@ -63,7 +63,7 @@ fun ShowsScreen(
                 onTVShowClick = onTVShowClick,
                 onScroll = onScroll,
                 isTopBarVisible = isTopBarVisible,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
             )
         }
     }
@@ -71,13 +71,13 @@ fun ShowsScreen(
 
 @Composable
 internal fun Catalog(
-    tvShowList: MovieList,
-    bingeWatchDramaList: MovieList,
+    tvShowList: List<Movie>,
+    bingeWatchDramaList: List<Movie>,
     onTVShowClick: (movie: Movie) -> Unit,
     onScroll: (isTopBarVisible: Boolean) -> Unit,
     isTopBarVisible: Boolean,
     modifier: Modifier = Modifier,
-    contentPadding: Padding = LocalContentPadding.current
+    contentPadding: Padding = LocalContentPadding.current,
 ) {
     val lazyListState = rememberLazyListState()
     val shouldShowTopBar by remember {
@@ -99,18 +99,19 @@ internal fun Catalog(
     LazyColumn(
         state = lazyListState,
         contentPadding = PaddingValues(top = contentPadding.top, bottom = 104.dp),
-        modifier = modifier
-            .focusProperties {
-                onEnter = {
-                    featured.tryRequestFocus()
-                }
-            }
+        modifier =
+            modifier
+                .focusProperties {
+                    onEnter = {
+                        featured.requestFocus()
+                    }
+                },
     ) {
         item {
             ProminentMovieList(
                 movieList = tvShowList,
                 onMovieClick = onTVShowClick,
-                modifier = Modifier.focusRequester(featured)
+                modifier = Modifier.focusRequester(featured),
             )
         }
         item {
@@ -118,7 +119,7 @@ internal fun Catalog(
                 modifier = Modifier.padding(top = contentPadding.top),
                 title = StringConstants.Composable.BingeWatchDramasTitle,
                 movieList = bingeWatchDramaList,
-                onMovieSelected = onTVShowClick
+                onMovieSelected = onTVShowClick,
             )
         }
     }

@@ -28,52 +28,52 @@ import com.google.jetstream.presentation.screens.Screens
 @Composable
 fun rememberKeyboardShortcuts(
     onSelectScreen: (Screens) -> Unit,
-): List<KeyboardShortcut> = remember {
-    listOf(
-        KeyboardShortcut(
-            key = Key.Comma,
-            modifierKeys = setOf(ModifierKey.Ctrl),
-            action = { onSelectScreen(Screens.Profile) }
-        ),
-        KeyboardShortcut(
-            key = Key.P,
-            modifierKeys = setOf(ModifierKey.Ctrl, ModifierKey.Alt),
-            action = { onSelectScreen(Screens.Profile) }
-        ),
-        KeyboardShortcut(
-            key = Key.H,
-            modifierKeys = setOf(ModifierKey.Ctrl, ModifierKey.Alt),
-            action = { onSelectScreen(Screens.Home) }
-        ),
-        KeyboardShortcut(
-            key = Key.C,
-            modifierKeys = setOf(ModifierKey.Ctrl, ModifierKey.Alt),
-            action = { onSelectScreen(Screens.Categories) }
-        ),
-        KeyboardShortcut(
-            key = Key.M,
-            modifierKeys = setOf(ModifierKey.Ctrl, ModifierKey.Alt),
-            action = { onSelectScreen(Screens.Movies) }
-        ),
-        KeyboardShortcut(
-            key = Key.T,
-            modifierKeys = setOf(ModifierKey.Ctrl, ModifierKey.Alt),
-            action = { onSelectScreen(Screens.Shows) }
-        ),
-        KeyboardShortcut(
-            key = Key.F,
-            modifierKeys = setOf(ModifierKey.Ctrl, ModifierKey.Alt),
-            action = { onSelectScreen(Screens.Favourites) }
-        ),
-        KeyboardShortcut(
-            key = Key.Slash,
-            action = { onSelectScreen(Screens.Search) }
-        ),
-        KeyboardShortcut(
-            key = Key.S,
-            modifierKeys = setOf(ModifierKey.Ctrl, ModifierKey.Alt),
-            action = { onSelectScreen(Screens.Search) }
-        ),
-    )
-}
-
+): List<KeyboardShortcut> =
+    remember {
+        listOf(
+            KeyboardShortcut(
+                key = Key.Comma,
+                modifierKeys = setOf(ModifierKey.Ctrl),
+                action = { onSelectScreen(Screens.Profile) },
+            ),
+            KeyboardShortcut(
+                key = Key.P,
+                modifierKeys = setOf(ModifierKey.Ctrl, ModifierKey.Alt),
+                action = { onSelectScreen(Screens.Profile) },
+            ),
+            KeyboardShortcut(
+                key = Key.H,
+                modifierKeys = setOf(ModifierKey.Ctrl, ModifierKey.Alt),
+                action = { onSelectScreen(Screens.Home) },
+            ),
+            KeyboardShortcut(
+                key = Key.C,
+                modifierKeys = setOf(ModifierKey.Ctrl, ModifierKey.Alt),
+                action = { onSelectScreen(Screens.Categories) },
+            ),
+            KeyboardShortcut(
+                key = Key.M,
+                modifierKeys = setOf(ModifierKey.Ctrl, ModifierKey.Alt),
+                action = { onSelectScreen(Screens.Movies) },
+            ),
+            KeyboardShortcut(
+                key = Key.T,
+                modifierKeys = setOf(ModifierKey.Ctrl, ModifierKey.Alt),
+                action = { onSelectScreen(Screens.Shows) },
+            ),
+            KeyboardShortcut(
+                key = Key.F,
+                modifierKeys = setOf(ModifierKey.Ctrl, ModifierKey.Alt),
+                action = { onSelectScreen(Screens.Favourites) },
+            ),
+            KeyboardShortcut(
+                key = Key.Slash,
+                action = { onSelectScreen(Screens.Search) },
+            ),
+            KeyboardShortcut(
+                key = Key.S,
+                modifierKeys = setOf(ModifierKey.Ctrl, ModifierKey.Alt),
+                action = { onSelectScreen(Screens.Search) },
+            ),
+        )
+    }

@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+@file:OptIn(ExperimentalFoundationStyleApi::class)
+
 package com.google.jetstream.presentation.screens.favourites.components
 
 import androidx.compose.foundation.layout.Arrangement
@@ -24,9 +26,10 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.google.jetstream.data.entities.MovieList
+import com.google.jetstream.data.entities.Movie
 import com.google.jetstream.presentation.components.MovieCard
 import com.google.jetstream.presentation.components.PosterImage
 import com.google.jetstream.presentation.theme.JetStreamBottomListPadding
@@ -35,7 +38,7 @@ import com.google.jetstream.presentation.theme.LocalListItemGap
 @Composable
 fun FilteredMoviesGrid(
     state: LazyGridState,
-    movieList: MovieList,
+    movieList: List<Movie>,
     onMovieClick: (movieId: String) -> Unit,
     modifier: Modifier = Modifier,
     columns: GridCells = GridCells.Fixed(6),

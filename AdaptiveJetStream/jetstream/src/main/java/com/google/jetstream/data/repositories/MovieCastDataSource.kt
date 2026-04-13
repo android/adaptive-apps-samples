@@ -21,15 +21,17 @@ import com.google.jetstream.data.util.AssetReader
 import com.google.jetstream.data.util.StringConstants
 import javax.inject.Inject
 
-class MovieCastDataSource @Inject constructor(
-    assetsReader: AssetReader
-) {
+class MovieCastDataSource
+    @Inject
+    constructor(
+        assetsReader: AssetReader,
+    ) {
+        private val movieCastDataReader =
+            CachedDataReader {
+                readMovieCastData(assetsReader, StringConstants.Assets.MovieCast).map {
+                    it.toMovieCast()
+                }
+            }
 
-    private val movieCastDataReader = CachedDataReader {
-        readMovieCastData(assetsReader, StringConstants.Assets.MovieCast).map {
-            it.toMovieCast()
-        }
+        suspend fun getMovieCastList() = movieCastDataReader.read()
     }
-
-    suspend fun getMovieCastList() = movieCastDataReader.read()
-}
