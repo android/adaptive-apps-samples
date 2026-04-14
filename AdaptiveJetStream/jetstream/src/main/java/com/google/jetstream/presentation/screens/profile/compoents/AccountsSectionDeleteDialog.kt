@@ -30,7 +30,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.google.jetstream.R
-import com.google.jetstream.presentation.theme.JetStreamCardShape
+import com.google.jetstream.presentation.theme.JetStreamTokens
 import com.google.jetstream.tvmaterial.StandardDialog
 
 @OptIn(
@@ -55,7 +55,9 @@ fun AccountsSectionDeleteDialog(
         onDismissRequest = onDismissRequest,
         confirmButton = {
             AccountsSectionDialogButton(
-                modifier = Modifier.padding(start = 8.dp).focusRequester(confirmButton),
+                modifier = Modifier
+                    .padding(start = 8.dp)
+                    .focusRequester(confirmButton),
                 text = stringResource(R.string.yes_delete_account),
                 onClick = onDismissRequest,
             )
@@ -84,6 +86,6 @@ fun AccountsSectionDeleteDialog(
             )
         },
         containerColor = MaterialTheme.colorScheme.onSurface,
-        shape = JetStreamCardShape,
+        shape = JetStreamTokens.CardShape,
     )
 }
