@@ -69,6 +69,7 @@ fun ShowsScreen(
     }
 }
 
+@OptIn(ExperimentalFoundationStyleApi::class)
 @Composable
 internal fun Catalog(
     tvShowList: List<Movie>,

@@ -23,11 +23,9 @@ import androidx.compose.foundation.style.hovered
 import androidx.compose.foundation.style.pressed
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.google.jetstream.presentation.theme.colorScheme
 
 @OptIn(ExperimentalFoundationStyleApi::class)
 @Composable
@@ -83,6 +81,28 @@ fun scaleIndicationStyle(
         hovered {
             animate {
                 scale(hovered)
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalFoundationStyleApi::class)
+@Composable
+fun contentColorIndicationStyle(
+    contentColor: Color = MaterialTheme.colorScheme.onSurface,
+    focusedContentColor: Color = contentColor,
+    pressedContentColor: Color = focusedContentColor,
+): Style {
+    return Style {
+        contentColor(contentColor)
+        focused {
+            animate {
+                contentColor(focusedContentColor)
+            }
+        }
+        pressed {
+            animate {
+                contentColor(pressedContentColor)
             }
         }
     }

@@ -182,9 +182,10 @@ private fun WatchTrailerButton(
         }
     val textStyle = MaterialTheme.typography.titleSmall
 
-    val defaultStyle = Style {
-        textStyle(textStyle)
-    }
+    val defaultStyle =
+        Style {
+            textStyle(textStyle)
+        }
 
     Button(
         onClick = goToMoviePlayer,

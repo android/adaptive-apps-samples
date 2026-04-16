@@ -29,6 +29,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.graphics.drawable.toDrawable
 import coil.compose.AsyncImage
+import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.google.jetstream.data.entities.Movie
 import com.google.jetstream.data.util.StringConstants
@@ -44,6 +45,8 @@ fun PosterImage(
         model =
             ImageRequest.Builder(LocalContext.current)
                 .crossfade(true)
+                .diskCachePolicy(CachePolicy.ENABLED)
+                .memoryCachePolicy(CachePolicy.ENABLED)
                 .placeholder(PosterImageDefaults.placeHolderColor.toArgb().toDrawable())
                 .error(PosterImageDefaults.errorColor.toArgb().toDrawable())
                 .data(movie.posterUri)

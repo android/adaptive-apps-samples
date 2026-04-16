@@ -192,7 +192,6 @@ internal fun MovieDetailsList(
                     StringConstants
                         .Composable
                         .movieDetailsScreenSimilarTo(movieDetails.name),
-                titleStyle = MaterialTheme.typography.titleMedium,
                 movieList = movieDetails.similarMovies,
                 onMovieSelected = refreshScreenWithNewMovie,
             )

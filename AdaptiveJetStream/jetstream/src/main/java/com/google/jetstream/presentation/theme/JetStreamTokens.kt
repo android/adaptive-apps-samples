@@ -17,17 +17,22 @@
 package com.google.jetstream.presentation.theme
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
 import androidx.compose.foundation.style.Style
 import androidx.compose.foundation.style.then
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ShapeDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
+import com.google.jetstream.presentation.components.feature.EngagementMode
+import com.google.jetstream.presentation.components.feature.LocalEngagementMode
 import com.google.jetstream.presentation.components.shim.Border
 import com.google.jetstream.presentation.components.shim.borderIndication
 import com.google.jetstream.presentation.components.shim.borderIndicationStyle
+import com.google.jetstream.presentation.components.shim.contentColorIndicationStyle
 import com.google.jetstream.presentation.components.shim.scaleIndicationStyle
 
 val JetStreamBorder
@@ -45,6 +50,9 @@ val jetStreamBorderIndication
     @Composable get() = borderIndication(focused = JetStreamBorder)
 
 object JetStreamTokens {
+    val ScreenOverScanMargin = PaddingValues(bottom = 108.dp)
+    val SectionGap = 32.dp
+
     val CardShape = ShapeDefaults.ExtraSmall
     val ButtonShape = ShapeDefaults.ExtraSmall
     val IconSize = DpSize(20.dp, 20.dp)
@@ -55,11 +63,45 @@ object JetStreamTokens {
      */
     val VerticalListBottomPadding = 28.dp
 
+    const val SUBTITLE_ALPHA = 0.6f
+    const val DESCRIPTION_ALPHA = 0.8f
+
+    // val TitleListGap = 16.dp
+    val TitleListGap = 0.dp
+
+    const val PORTRAIT_CARD_ASPECT_RATIO = 16f / 9f
+    const val LANDSCAPE_CARD_ASPECT_RATIO = 10.5f / 16f
+    val CardWidth = 126.dp
+    val ImmersiveListCardWidth = 160.dp
+    val PortraitCardSize = DpSize(CardWidth, CardWidth * PORTRAIT_CARD_ASPECT_RATIO)
+    val LandscapeCardSize =
+        DpSize(ImmersiveListCardWidth, ImmersiveListCardWidth * LANDSCAPE_CARD_ASPECT_RATIO)
 
     @OptIn(ExperimentalFoundationStyleApi::class)
     @Composable
     fun indication(): Style {
-        return borderIndicationStyle(focused = BorderWidth) then scaleIndicationStyle()
+        return borderIndication() then scaleIndicationStyle()
+    }
+
+    @OptIn(ExperimentalFoundationStyleApi::class)
+    @Composable
+    fun borderIndication(): Style {
+        return borderIndicationStyle(focused = BorderWidth)
+    }
+
+    @OptIn(ExperimentalFoundationStyleApi::class)
+    @Composable
+    fun contentColorIndication(): Style {
+        val contentColor =
+            when (LocalEngagementMode.current) {
+                EngagementMode.Leanback -> Color.Transparent
+                else -> MaterialTheme.colorScheme.onSurface
+            }
+
+        return contentColorIndicationStyle(
+            contentColor = contentColor,
+            focusedContentColor = MaterialTheme.colorScheme.onSurface,
+        )
     }
 
     @OptIn(ExperimentalFoundationStyleApi::class)
@@ -79,5 +121,4 @@ object JetStreamTokens {
             clip(true)
         } then indication()
     }
-
 }

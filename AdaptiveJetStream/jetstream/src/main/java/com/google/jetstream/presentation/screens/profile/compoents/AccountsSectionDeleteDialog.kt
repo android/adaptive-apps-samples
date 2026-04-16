@@ -55,9 +55,10 @@ fun AccountsSectionDeleteDialog(
         onDismissRequest = onDismissRequest,
         confirmButton = {
             AccountsSectionDialogButton(
-                modifier = Modifier
-                    .padding(start = 8.dp)
-                    .focusRequester(confirmButton),
+                modifier =
+                    Modifier
+                        .padding(start = 8.dp)
+                        .focusRequester(confirmButton),
                 text = stringResource(R.string.yes_delete_account),
                 onClick = onDismissRequest,
             )

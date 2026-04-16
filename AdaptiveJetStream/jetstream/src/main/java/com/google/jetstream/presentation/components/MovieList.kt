@@ -24,13 +24,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.google.jetstream.data.entities.Movie
+import com.google.jetstream.presentation.theme.LocalListItemGap
 
 @Composable
 fun MovieList(
     movieList: List<Movie>,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp),
-    horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(8.dp),
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(LocalListItemGap.current),
     itemContent: @Composable (Int, Movie) -> Unit = { _, _ -> },
 ) {
     LazyRow(

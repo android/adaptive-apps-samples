@@ -71,6 +71,7 @@ fun MoviesScreen(
     }
 }
 
+@OptIn(ExperimentalFoundationStyleApi::class)
 @Composable
 internal fun Catalog(
     movieList: List<Movie>,

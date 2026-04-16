@@ -16,39 +16,39 @@
 
 package com.google.jetstream.presentation.components.shim
 
+import androidx.compose.foundation.interaction.InteractionSource
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsFocusedAsState
-import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.style.focused
-import androidx.compose.foundation.style.pressed
-import androidx.compose.material3.LocalContentColor
+import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
+import androidx.compose.foundation.style.MutableStyleState
+import androidx.compose.foundation.style.Style
+import androidx.compose.foundation.style.styleable
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
+import com.google.jetstream.presentation.theme.JetStreamTokens
 
+@OptIn(ExperimentalFoundationStyleApi::class)
 @Composable
 fun StandardCardContainer(
-    imageCard: @Composable (interactionSource: MutableInteractionSource) -> Unit,
+    imageCard: @Composable (interactionSource: InteractionSource) -> Unit,
     title: @Composable () -> Unit,
     modifier: Modifier = Modifier,
+    style: Style = Style,
     subtitle: @Composable () -> Unit = {},
     description: @Composable () -> Unit = {},
-    contentColor: CardContainerColors = CardContainerDefaults.contentColor(),
-    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    interactionSource: InteractionSource = remember { MutableInteractionSource() },
 ) {
-    val focused by interactionSource.collectIsFocusedAsState()
-    val pressed by interactionSource.collectIsPressedAsState()
+    val styleState =
+        remember(interactionSource) {
+            MutableStyleState(interactionSource = interactionSource)
+        }
 
-    Column(modifier = modifier) {
+    Column(modifier = modifier.styleable(styleState = styleState, style)) {
         Box {
             imageCard(interactionSource)
         }
@@ -56,46 +56,13 @@ fun StandardCardContainer(
             modifier = Modifier.align(Alignment.CenterHorizontally),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            CardContainerContent(
-                title = title,
-                subtitle = subtitle,
-                description = description,
-                contentColor = contentColor.color(focused = focused, pressed = pressed),
-            )
+            ProvideTextStyle(MaterialTheme.typography.titleMedium) { title() }
+            ProvideTextStyle(MaterialTheme.typography.bodySmall) {
+                Box(Modifier.styleable { alpha(JetStreamTokens.SUBTITLE_ALPHA) }) { subtitle() }
+            }
+            ProvideTextStyle(MaterialTheme.typography.bodySmall) {
+                Box(Modifier.styleable { alpha(JetStreamTokens.DESCRIPTION_ALPHA) }) { description() }
+            }
         }
-    }
-}
-
-object CardContainerDefaults {
-
-}
-
-@Composable
-internal fun CardContainerContent(
-    title: @Composable () -> Unit,
-    subtitle: @Composable () -> Unit = {},
-    description: @Composable () -> Unit = {},
-    contentColor: Color,
-) {
-    CompositionLocalProvider(LocalContentColor provides contentColor) {
-        CardContent(title, subtitle, description)
-    }
-}
-
-private const val SUBTITLE_ALPHA = 0.6f
-private const val DESCRIPTION_ALPHA = 0.8f
-
-@Composable
-internal fun CardContent(
-    title: @Composable () -> Unit,
-    subtitle: @Composable () -> Unit = {},
-    description: @Composable () -> Unit = {},
-) {
-    ProvideTextStyle(MaterialTheme.typography.titleMedium) { title.invoke() }
-    ProvideTextStyle(MaterialTheme.typography.bodySmall) {
-        Box(Modifier.graphicsLayer { alpha = SUBTITLE_ALPHA }) { subtitle.invoke() }
-    }
-    ProvideTextStyle(MaterialTheme.typography.bodySmall) {
-        Box(Modifier.graphicsLayer { alpha = DESCRIPTION_ALPHA }) { description.invoke() }
     }
 }
