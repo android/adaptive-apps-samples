@@ -21,6 +21,7 @@ package com.google.jetstream.presentation.components
 import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
 import androidx.compose.foundation.style.Style
 import androidx.compose.foundation.style.styleable
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -47,7 +48,7 @@ fun PosterImage(
                 .crossfade(true)
                 .diskCachePolicy(CachePolicy.ENABLED)
                 .memoryCachePolicy(CachePolicy.ENABLED)
-                .placeholder(PosterImageDefaults.placeHolderColor.toArgb().toDrawable())
+                .placeholder(PosterImageDefaults.placeholderColor.toArgb().toDrawable())
                 .error(PosterImageDefaults.errorColor.toArgb().toDrawable())
                 .data(movie.posterUri)
                 .build(),
@@ -57,6 +58,8 @@ fun PosterImage(
 }
 
 private object PosterImageDefaults {
-    val placeHolderColor = Color.LightGray
+    val placeholderColor: Color @Composable get() {
+        return MaterialTheme.colorScheme.background
+    }
     val errorColor = Color.DarkGray
 }

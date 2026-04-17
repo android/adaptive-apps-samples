@@ -177,10 +177,9 @@ private fun Catalog(
         verticalArrangement = Arrangement.spacedBy(JetStreamTokens.SectionGap),
     ) {
         item(contentType = "FeaturedMoviesCarousel") {
-            FeaturedMoviesCarousel(
-                movies = featuredMovies,
-                padding = contentPadding,
-                goToVideoPlayer = goToVideoPlayer,
+            FeaturedMovies(
+                moveList = featuredMovies,
+                onMovieSelected = goToVideoPlayer,
                 modifier =
                     Modifier
                         .fillMaxWidth()
@@ -200,6 +199,9 @@ private fun Catalog(
                             }
                         }
                         .focusGroup(),
+                style = {
+                    contentPadding(start = contentPadding.start, end = contentPadding.end, top = 0.dp, bottom = 0.dp)
+                },
             )
         }
         item(contentType = "MoviesRow") {

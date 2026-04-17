@@ -79,4 +79,7 @@ https://www.apache.org/licenses/LICENSE-2.0
 
     <string name="full_space_mode">Full space</string>
     <string name="home_space_mode">Home space</string>
+
+    <string name="next_item">Next item</string>
+    <string name="previous_item">Previous item</string>
 </resources>

@@ -77,9 +77,9 @@ private fun defaultStyle(): Style {
     val contentColor = MaterialTheme.colorScheme.surface
 
     return JetStreamTokens.buttonStyle() then
-            Style {
-                textStyle(Typography.titleSmall)
-                contentColor(contentColor)
-                background(backgroundColor)
-            }
+        Style {
+            textStyle(Typography.titleSmall)
+            contentColor(contentColor)
+            background(backgroundColor)
+        }
 }
