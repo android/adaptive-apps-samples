@@ -187,9 +187,6 @@ dependencies {
     // extra material icons
     implementation(libs.androidx.material.icons.extended)
 
-    // Material components optimized for TV apps
-    implementation(libs.androidx.tv.material)
-
     // Material components for mobile
     implementation(libs.androidx.compose.material3)
 
