@@ -16,6 +16,7 @@
 
 package com.google.jetstream.presentation.components.shim
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ExperimentalFlexBoxApi
@@ -38,18 +39,28 @@ import androidx.compose.material3.carousel.CarouselState
 import androidx.compose.material3.carousel.HorizontalUncontainedCarousel
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.google.jetstream.R
 import com.google.jetstream.presentation.components.feature.JetStreamUiMedia
 import com.google.jetstream.presentation.components.shim.stylable.StylableBox
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.yield
 
 @OptIn(
     ExperimentalGridApi::class,
@@ -62,6 +73,8 @@ fun FeaturedCarousel(
     state: CarouselState,
     modifier: Modifier = Modifier,
     style: Style = Style,
+    isAutoScrollEnabled: Boolean = true,
+    autoScrollInterval: Long = 5000L,
     carouselIndicator: @Composable () -> Unit = {
         FeaturedCarouselDefaults.IndicatorRow(
             itemCount = itemCount,
@@ -82,14 +95,24 @@ fun FeaturedCarousel(
     },
     content: @Composable CarouselItemScope.(Int) -> Unit = {},
 ) {
-    Box(contentAlignment = Alignment.BottomEnd, modifier = modifier) {
-        HorizontalUncontainedCarousel(
+    var autoScroll by remember { mutableStateOf(isAutoScrollEnabled) }
+
+    Box(
+        contentAlignment = Alignment.BottomEnd,
+        modifier =
+            modifier
+                .onFocusChanged {
+                    autoScroll = !it.hasFocus
+                }
+                .carouselNavigation(state, itemCount, rememberCoroutineScope()),
+    ) {
+        AutoScrollHorizontalUncontainedCarousel(
+            itemCount = itemCount,
             state = state,
-            modifier =
-                Modifier
-                    .styleable(style = style)
-                    .autoScroll(state = state, itemCount = itemCount),
-            itemWidth = JetStreamUiMedia.map { windowWidth }.value, // ToDo: replace with MediaQuery
+            style = style,
+            itemWidth = JetStreamUiMedia.map { windowWidth }.value,
+            isAutoScrollEnabled = autoScroll,
+            autoScrollInterval = autoScrollInterval,
         ) { index ->
             content(index)
         }
@@ -97,7 +120,7 @@ fun FeaturedCarousel(
             verticalAlignment = Alignment.CenterVertically,
             modifier =
                 Modifier.styleable {
-                    externalPadding(16.dp)
+                    externalPadding(horizontal = 48.dp, vertical = 16.dp)
                 },
         ) {
             previousButton()
@@ -105,6 +128,34 @@ fun FeaturedCarousel(
             nextButton()
         }
     }
+}
+
+@OptIn(ExperimentalFoundationStyleApi::class)
+@Composable
+private fun AutoScrollHorizontalUncontainedCarousel(
+    itemCount: Int,
+    state: CarouselState,
+    itemWidth: Dp,
+    modifier: Modifier = Modifier,
+    style: Style = Style,
+    isAutoScrollEnabled: Boolean,
+    autoScrollInterval: Long = 5000L,
+    content: @Composable CarouselItemScope.(Int) -> Unit = {},
+) {
+    HorizontalUncontainedCarousel(
+        state = state,
+        modifier =
+            modifier
+                .styleable(style = style)
+                .autoScroll(
+                    state = state,
+                    itemCount = itemCount,
+                    autoScrollInterval = autoScrollInterval,
+                    enabled = isAutoScrollEnabled,
+                ),
+        itemWidth = itemWidth,
+        content = content,
+    )
 }
 
 object FeaturedCarouselDefaults {
@@ -241,14 +292,45 @@ private fun Modifier.autoScroll(
     enabled: Boolean = true,
 ): Modifier {
     LaunchedEffect(state, itemCount, autoScrollInterval, enabled) {
+        Log.d("AutoScroll", "enabled: $enabled")
         if (enabled) {
             while (true) {
-                yield()
                 delay(autoScrollInterval)
-                val nextItemIndex = (state.currentItem + 1) % itemCount
-                state.animateScrollToItem(nextItemIndex)
+                state.nextItem(itemCount)
             }
         }
     }
     return this
+}
+
+private fun Modifier.carouselNavigation(
+    state: CarouselState,
+    itemCount: Int,
+    coroutineScope: CoroutineScope,
+): Modifier {
+    return onKeyEvent { keyEvent ->
+        when (keyEvent.key) {
+            Key.DirectionLeft
+            if keyEvent.type == KeyEventType.KeyUp &&
+                keyEvent.modifierKeys() == ModifierKeys.None -> {
+                coroutineScope.launch {
+                    state.previousItem(itemCount)
+                }
+                true
+            }
+
+            Key.DirectionRight
+            if keyEvent.type == KeyEventType.KeyUp &&
+                keyEvent.modifierKeys() == ModifierKeys.None -> {
+                coroutineScope.launch {
+                    state.nextItem(itemCount)
+                }
+                true
+            }
+
+            else -> {
+                false
+            }
+        }
+    }
 }
