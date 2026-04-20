@@ -17,13 +17,14 @@
 package com.google.jetstream.presentation.screens.favourites.components
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
+import androidx.compose.foundation.style.MutableStyleState
+import androidx.compose.foundation.style.styleable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.FilterChip
@@ -37,10 +38,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.google.jetstream.data.util.StringConstants
-import com.google.jetstream.presentation.components.shim.Border
-import com.google.jetstream.presentation.components.shim.borderIndication
-import com.google.jetstream.presentation.theme.JetStreamTokens
+import com.google.jetstream.presentation.components.shim.indication.borderIndication
 
+@OptIn(ExperimentalFoundationStyleApi::class)
 @Composable
 fun MovieFilterChip(
     label: String,
@@ -49,11 +49,16 @@ fun MovieFilterChip(
     modifier: Modifier = Modifier,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
 ) {
+    val styleState = remember(interactionSource) { MutableStyleState(interactionSource) }
+
     FilterChip(
         modifier =
             modifier
                 .padding(end = 16.dp)
-                .indication(interactionSource, borderIndication(focused = ChipFocusedBorder)),
+                .styleable(
+                    styleState = styleState,
+                    borderIndication(focused = 1.5.dp),
+                ),
         onClick = { onCheckedChange(!isChecked) },
         selected = isChecked,
         leadingIcon = {
@@ -81,14 +86,3 @@ fun MovieFilterChip(
         },
     )
 }
-
-private val ChipFocusedBorder
-    @Composable get() =
-        Border(
-            stroke =
-                BorderStroke(
-                    width = 1.5.dp,
-                    color = MaterialTheme.colorScheme.onSurface,
-                ),
-            shape = JetStreamTokens.CardShape,
-        )

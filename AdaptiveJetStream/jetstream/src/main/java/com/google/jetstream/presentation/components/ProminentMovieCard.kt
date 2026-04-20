@@ -39,7 +39,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.google.jetstream.data.entities.Movie
 import com.google.jetstream.presentation.components.feature.LocalEngagementMode
-import com.google.jetstream.presentation.components.shim.scaleIndication
+import com.google.jetstream.presentation.components.shim.indication.scaleIndication
 import com.google.jetstream.presentation.components.shim.stylable.StylableBox
 import com.google.jetstream.presentation.components.shim.stylable.StylableGrid
 import com.google.jetstream.presentation.theme.Padding
@@ -114,10 +114,8 @@ private fun ProminentMovieCard(
                     interactionSource = interactionSource,
                     style = {
                         height(48.dp)
+                        scaleIndication()
                     },
-                    modifier =
-                        Modifier
-                            .scaleIndication(interactionSource = interactionSource),
                 )
             }
         }
