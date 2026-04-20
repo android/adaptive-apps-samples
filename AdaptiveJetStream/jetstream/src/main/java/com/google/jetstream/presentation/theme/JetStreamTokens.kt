@@ -29,25 +29,14 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import com.google.jetstream.presentation.components.feature.EngagementMode
 import com.google.jetstream.presentation.components.feature.LocalEngagementMode
-import com.google.jetstream.presentation.components.shim.Border
-import com.google.jetstream.presentation.components.shim.borderIndication
-import com.google.jetstream.presentation.components.shim.borderIndicationStyle
-import com.google.jetstream.presentation.components.shim.contentColorIndicationStyle
-import com.google.jetstream.presentation.components.shim.scaleIndicationStyle
+import com.google.jetstream.presentation.components.shim.indication.Border
+import com.google.jetstream.presentation.components.shim.indication.borderIndication
+import com.google.jetstream.presentation.components.shim.indication.contentColorIndication
+import com.google.jetstream.presentation.components.shim.indication.scaleIndication
 
 val JetStreamBorder
     @Composable get() =
-        Border(
-            stroke =
-                BorderStroke(
-                    width = JetStreamTokens.BorderWidth,
-                    color = MaterialTheme.colorScheme.onSurface,
-                ),
-            shape = JetStreamTokens.CardShape,
-        )
-
-val jetStreamBorderIndication
-    @Composable get() = borderIndication(focused = JetStreamBorder)
+        Border.current(width = JetStreamTokens.BorderWidth)
 
 object JetStreamTokens {
     val ScreenOverScanMargin = PaddingValues(bottom = 108.dp)
@@ -80,13 +69,13 @@ object JetStreamTokens {
     @OptIn(ExperimentalFoundationStyleApi::class)
     @Composable
     fun indication(): Style {
-        return borderIndication() then scaleIndicationStyle()
+        return borderIndication() then scaleIndication()
     }
 
     @OptIn(ExperimentalFoundationStyleApi::class)
     @Composable
     fun borderIndication(): Style {
-        return borderIndicationStyle(focused = BorderWidth)
+        return borderIndication(focused = BorderWidth)
     }
 
     @OptIn(ExperimentalFoundationStyleApi::class)
@@ -98,7 +87,7 @@ object JetStreamTokens {
                 else -> MaterialTheme.colorScheme.onSurface
             }
 
-        return contentColorIndicationStyle(
+        return contentColorIndication(
             contentColor = contentColor,
             focusedContentColor = MaterialTheme.colorScheme.onSurface,
         )

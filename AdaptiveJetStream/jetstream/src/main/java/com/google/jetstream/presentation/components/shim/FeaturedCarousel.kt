@@ -1,3 +1,19 @@
+/*
+ * Copyright 2026 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.google.jetstream.presentation.components.shim
 
 import androidx.compose.foundation.layout.Arrangement
@@ -35,8 +51,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.yield
 
-@OptIn(ExperimentalGridApi::class, ExperimentalFlexBoxApi::class,
-    ExperimentalFoundationStyleApi::class
+@OptIn(
+    ExperimentalGridApi::class,
+    ExperimentalFlexBoxApi::class,
+    ExperimentalFoundationStyleApi::class,
 )
 @Composable
 fun FeaturedCarousel(
@@ -67,8 +85,10 @@ fun FeaturedCarousel(
     Box(contentAlignment = Alignment.BottomEnd, modifier = modifier) {
         HorizontalUncontainedCarousel(
             state = state,
-            modifier = Modifier.styleable(style = style)
-                .autoScroll(state = state, itemCount = itemCount),
+            modifier =
+                Modifier
+                    .styleable(style = style)
+                    .autoScroll(state = state, itemCount = itemCount),
             itemWidth = JetStreamUiMedia.map { windowWidth }.value, // ToDo: replace with MediaQuery
         ) { index ->
             content(index)

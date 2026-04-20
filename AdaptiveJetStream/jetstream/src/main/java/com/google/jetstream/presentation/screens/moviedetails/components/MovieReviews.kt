@@ -46,7 +46,7 @@ import androidx.compose.ui.unit.dp
 import com.google.jetstream.R
 import com.google.jetstream.data.entities.MovieReviewsAndRatings
 import com.google.jetstream.data.util.StringConstants
-import com.google.jetstream.presentation.components.shim.scaleIndicationStyle
+import com.google.jetstream.presentation.components.shim.scaleIndication
 import com.google.jetstream.presentation.components.shim.stylable.StylableBox
 import com.google.jetstream.presentation.theme.LocalContentPadding
 import com.google.jetstream.presentation.theme.Padding
@@ -71,7 +71,7 @@ fun MovieReviews(
             modifier
                 .styleable(
                     styleState = styleState,
-                    scaleIndicationStyle(),
+                    scaleIndication(),
                     {
                         contentPaddingStart(contentPadding.start)
                     },
