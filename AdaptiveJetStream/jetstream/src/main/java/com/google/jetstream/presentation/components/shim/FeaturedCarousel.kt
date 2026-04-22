@@ -16,7 +16,7 @@
 
 package com.google.jetstream.presentation.components.shim
 
-import android.util.Log
+import androidx.compose.foundation.focusGroup
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ExperimentalFlexBoxApi
@@ -44,9 +44,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusProperties
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.key
@@ -57,10 +60,16 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.google.jetstream.R
 import com.google.jetstream.presentation.components.feature.JetStreamUiMedia
+import com.google.jetstream.presentation.components.onPointerHovered
 import com.google.jetstream.presentation.components.shim.stylable.StylableBox
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.yield
 
 @OptIn(
     ExperimentalGridApi::class,
@@ -96,14 +105,35 @@ fun FeaturedCarousel(
     content: @Composable CarouselItemScope.(Int) -> Unit = {},
 ) {
     var autoScroll by remember { mutableStateOf(isAutoScrollEnabled) }
+    val carouselItems =
+        remember(itemCount) {
+            List(itemCount) { FocusRequester() }
+        }
+
+    LaunchedEffect(state.currentItem) {
+        state.onScrollFinished {
+            if (!autoScroll) {
+                carouselItems[state.currentItem].requestFocus()
+            }
+        }
+    }
 
     Box(
         contentAlignment = Alignment.BottomEnd,
         modifier =
             modifier
-                .onFocusChanged {
-                    autoScroll = !it.hasFocus
+                .focusProperties {
+                    onEnter = {
+                        autoScroll = false
+                    }
+                    onExit = {
+                        autoScroll = true
+                    }
                 }
+                .onPointerHovered(
+                    onEnter = { autoScroll = false },
+                    onExit = { autoScroll = true },
+                )
                 .carouselNavigation(state, itemCount, rememberCoroutineScope()),
     ) {
         AutoScrollHorizontalUncontainedCarousel(
@@ -114,7 +144,14 @@ fun FeaturedCarousel(
             isAutoScrollEnabled = autoScroll,
             autoScrollInterval = autoScrollInterval,
         ) { index ->
-            content(index)
+            Box(
+                modifier =
+                    Modifier
+                        .focusRequester(focusRequester = carouselItems[index])
+                        .focusGroup(),
+            ) {
+                content(index)
+            }
         }
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -197,7 +234,7 @@ object FeaturedCarouselDefaults {
         IconButton(
             onClick = {
                 coroutineScope.launch {
-                    state.previousItem(itemCount)
+                    state.previousItem()
                 }
             },
             enabled = state.hasPreviousItem(),
@@ -261,19 +298,30 @@ object FeaturedCarouselDefaults {
 private suspend fun CarouselState.nextItem(
     itemCount: Int,
 ) {
-    if (itemCount != 0) {
-        val nextItemIndex = (currentItem + 1) % itemCount
-        animateScrollToItem(nextItemIndex)
+    onScrollFinished {
+        if (hasNextItem(itemCount)) {
+            currentCoroutineContext().ensureActive()
+            val nextItemIndex = currentItem + 1
+            animateScrollToItem(nextItemIndex)
+        }
     }
 }
 
-private suspend fun CarouselState.previousItem(
-    itemCount: Int,
-) {
-    if (itemCount != 0) {
-        val previousItemIndex = (itemCount + currentItem - 1) % itemCount
-        animateScrollToItem(previousItemIndex)
+private suspend fun CarouselState.previousItem() {
+    onScrollFinished {
+        if (hasPreviousItem()) {
+            currentCoroutineContext().ensureActive()
+            val previousItemIndex = currentItem - 1
+            animateScrollToItem(previousItemIndex)
+        }
     }
+}
+
+internal suspend fun CarouselState.onScrollFinished(block: suspend () -> Unit) {
+    snapshotFlow {
+        isScrollInProgress
+    }.filter { !it }.first()
+    block()
 }
 
 private fun CarouselState.hasPreviousItem(): Boolean {
@@ -292,10 +340,10 @@ private fun Modifier.autoScroll(
     enabled: Boolean = true,
 ): Modifier {
     LaunchedEffect(state, itemCount, autoScrollInterval, enabled) {
-        Log.d("AutoScroll", "enabled: $enabled")
         if (enabled) {
             while (true) {
                 delay(autoScrollInterval)
+                yield()
                 state.nextItem(itemCount)
             }
         }
@@ -303,7 +351,7 @@ private fun Modifier.autoScroll(
     return this
 }
 
-private fun Modifier.carouselNavigation(
+internal fun Modifier.carouselNavigation(
     state: CarouselState,
     itemCount: Int,
     coroutineScope: CoroutineScope,
@@ -311,14 +359,15 @@ private fun Modifier.carouselNavigation(
     return onKeyEvent { keyEvent ->
         when (keyEvent.key) {
             Key.DirectionLeft
-            if keyEvent.type == KeyEventType.KeyUp &&
-                keyEvent.modifierKeys() == ModifierKeys.None -> {
+                if keyEvent.type == KeyEventType.KeyUp &&
+                        keyEvent.modifierKeys() == ModifierKeys.None -> {
                 coroutineScope.launch {
-                    state.previousItem(itemCount)
+                    state.previousItem()
                 }
                 true
             }
 
+            /*
             Key.DirectionRight
             if keyEvent.type == KeyEventType.KeyUp &&
                 keyEvent.modifierKeys() == ModifierKeys.None -> {
@@ -328,6 +377,7 @@ private fun Modifier.carouselNavigation(
                 true
             }
 
+             */
             else -> {
                 false
             }

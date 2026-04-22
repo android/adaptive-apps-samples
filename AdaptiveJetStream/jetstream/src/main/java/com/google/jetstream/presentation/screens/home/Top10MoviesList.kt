@@ -20,15 +20,24 @@ package com.google.jetstream.presentation.screens.home
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
+import androidx.compose.foundation.style.Style
 import androidx.compose.foundation.style.fillWidth
+import androidx.compose.foundation.style.styleable
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.carousel.HorizontalMultiBrowseCarousel
 import androidx.compose.material3.carousel.rememberCarouselState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.StrokeJoin
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.google.jetstream.R
@@ -39,6 +48,9 @@ import com.google.jetstream.presentation.components.SectionTitle
 import com.google.jetstream.presentation.components.feature.EngagementMode
 import com.google.jetstream.presentation.components.feature.JetStreamUiMedia
 import com.google.jetstream.presentation.components.feature.LocalEngagementMode
+import com.google.jetstream.presentation.components.shim.carouselNavigation
+import com.google.jetstream.presentation.components.shim.indication.scaleIndication
+import com.google.jetstream.presentation.components.shim.stylable.StylableBox
 import com.google.jetstream.presentation.screens.home.immersivelist.ImmersiveList
 import com.google.jetstream.presentation.theme.JetStreamTokens
 import com.google.jetstream.presentation.theme.LocalContentPadding
@@ -68,6 +80,7 @@ fun Top10MoviesList(
     }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun Top10MoviesList(
     movieList: List<Movie>,
@@ -92,17 +105,21 @@ private fun Top10MoviesList(
             val itemWidth by JetStreamUiMedia.map {
                 (windowWidth.value * 0.4).dp
             }
+            val carouselState = rememberCarouselState { movieList.size }
 
-            // Material3 の Carousel 実装例
             HorizontalMultiBrowseCarousel(
-                state = rememberCarouselState { movieList.size },
+                state = carouselState,
                 preferredItemWidth = itemWidth, // 各カードの幅
                 itemSpacing = LocalListItemGap.current,
                 contentPadding = LocalContentPadding.current.intoPaddingValues(),
-                modifier = modifier,
+                modifier =
+                    modifier.carouselNavigation(
+                        state = carouselState,
+                        itemCount = movieList.size,
+                        coroutineScope = rememberCoroutineScope(),
+                    ),
             ) { index ->
                 val movie = movieList[index]
-                // 各映画のカードを表示
                 MovieCard(
                     onClick = { onMovieClick(movie) },
                     style = JetStreamTokens.contentColorIndication(),
@@ -110,13 +127,17 @@ private fun Top10MoviesList(
                         Text(text = movie.name)
                     },
                     image = {
-                        PosterImage(
-                            movie = movie,
-                            style = {
-                                fillWidth()
-                                height((JetStreamTokens.PortraitCardSize.height.value * 1.414).dp)
-                            },
-                        )
+                        Box {
+                            PosterImage(
+                                movie = movie,
+                                style = {
+                                    fillWidth()
+                                    height((JetStreamTokens.PortraitCardSize.height.value * 1.414).dp)
+                                    scaleIndication(focused = 1f)
+                                },
+                            )
+                            OutlinedRankText(rank = index + 1, style = { externalPadding(8.dp) })
+                        }
                     },
                 )
             }
@@ -134,5 +155,54 @@ private fun listComponentType(): ListComponentType {
     return when (LocalEngagementMode.current) {
         EngagementMode.Leanback -> ListComponentType.ImmersiveList
         else -> ListComponentType.Carousel
+    }
+}
+
+@Composable
+private fun OutlinedRankText(
+    rank: Int,
+    modifier: Modifier = Modifier,
+    style: Style = Style,
+) {
+    val text = "#$rank"
+
+    val base = MaterialTheme.typography.displayLarge
+
+    val textStyle =
+        base.copy(
+            color = MaterialTheme.colorScheme.onSurface,
+        )
+    val outlineTextStyle =
+        base.copy(
+            color = MaterialTheme.colorScheme.surface.copy(alpha = 0.4f),
+            drawStyle =
+                Stroke(
+                    miter = 20f,
+                    width = 10f,
+                    join = StrokeJoin.Round,
+                ),
+        )
+
+    StylableBox(
+        modifier = modifier,
+        style = style,
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            text = text,
+            style = outlineTextStyle,
+            modifier =
+                Modifier.styleable {
+                    textStyle(outlineTextStyle)
+                },
+        )
+        Text(
+            text = text,
+            style = textStyle,
+            modifier =
+                Modifier.styleable {
+                    textStyle(textStyle)
+                },
+        )
     }
 }

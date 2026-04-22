@@ -38,6 +38,7 @@ fun StylableCard(
     style: Style = Style,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     contentAlignment: Alignment = Alignment.TopStart,
+    enabled: Boolean = true,
     content: @Composable () -> Unit,
 ) {
     StylableBox(
@@ -47,6 +48,7 @@ fun StylableCard(
                     onClick = onClick,
                     interactionSource = interactionSource,
                     indication = null,
+                    enabled = enabled,
                 )
                 .semantics {
                     role = Role.Button
