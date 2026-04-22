@@ -24,9 +24,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
 import androidx.compose.foundation.style.MutableStyleState
 import androidx.compose.foundation.style.Style
-import androidx.compose.foundation.style.focused
-import androidx.compose.foundation.style.hovered
 import androidx.compose.foundation.style.styleable
+import androidx.compose.foundation.style.then
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.material3.Button
@@ -41,7 +40,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.google.jetstream.R
-import com.google.jetstream.presentation.theme.JetStreamButtonShape
+import com.google.jetstream.presentation.theme.JetStreamTokens
 import com.google.jetstream.presentation.theme.Typography
 
 @Composable
@@ -56,11 +55,9 @@ fun WatchNowButton(
             MutableStyleState(interactionSource = interactionSource)
         }
 
-    val defaultStyle = defaultStyle()
-
     Button(
         onClick = onClick,
-        modifier = modifier.styleable(styleState = styleState, defaultStyle, style),
+        modifier = modifier.styleable(styleState = styleState, defaultStyle(), style),
         // Workaround: Button is filled with default container color without the following setting.
         colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
         interactionSource = interactionSource,
@@ -78,25 +75,11 @@ fun WatchNowButton(
 private fun defaultStyle(): Style {
     val backgroundColor = MaterialTheme.colorScheme.onSurface
     val contentColor = MaterialTheme.colorScheme.surface
-    val outlineColor = MaterialTheme.colorScheme.outlineVariant
-    return remember(backgroundColor, contentColor) {
+
+    return JetStreamTokens.buttonStyle() then
         Style {
             textStyle(Typography.titleSmall)
             contentColor(contentColor)
             background(backgroundColor)
-            shape(JetStreamButtonShape)
-            hovered {
-                animate {
-                    border(3.dp, outlineColor)
-                    scale(1.05f)
-                }
-            }
-            focused {
-                animate {
-                    border(3.dp, outlineColor)
-                    scale(1.05f)
-                }
-            }
         }
-    }
 }

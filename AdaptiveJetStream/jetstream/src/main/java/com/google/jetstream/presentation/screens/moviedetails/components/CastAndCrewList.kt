@@ -92,10 +92,7 @@ private fun CastAndCrewItem(
 ) {
     val background = MaterialTheme.colorScheme.surfaceVariant
     ClassicCard(
-        modifier =
-            modifier
-                // .padding(end = 20.dp, bottom = 16.dp)
-                .aspectRatio(1 / 1.8f),
+        modifier = modifier.aspectRatio(1 / 1.8f),
         style = {
             background(background)
         },

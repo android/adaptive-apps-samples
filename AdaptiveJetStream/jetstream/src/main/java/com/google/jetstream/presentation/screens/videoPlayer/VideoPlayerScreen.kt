@@ -128,12 +128,12 @@ fun VideoPlayerScreen(
         }
 
         is VideoPlayerScreenUiState.Error -> {
+            val background = MaterialTheme.colorScheme.background
             Error(
-                modifier =
-                    Modifier
-                        .fillMaxSize()
-                        // Workaround to make video player visible when spatial UI is enabled.
-                        .background(MaterialTheme.colorScheme.background),
+                style = {
+                    // Workaround to make video player visible when spatial UI is enabled.
+                    background(background)
+                },
             )
         }
 

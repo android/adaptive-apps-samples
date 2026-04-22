@@ -16,41 +16,35 @@
 
 package com.google.jetstream.presentation.components
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
+import androidx.compose.foundation.style.Style
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.google.jetstream.presentation.components.shim.StandardCardContainer
-import com.google.jetstream.presentation.components.shim.borderIndication
-import com.google.jetstream.presentation.theme.JetStreamBorder
+import com.google.jetstream.presentation.components.shim.stylable.StylableCard
 
+@OptIn(ExperimentalFoundationStyleApi::class)
 @Composable
 fun MovieCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    style: Style = Style,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     title: @Composable () -> Unit = {},
-    content: @Composable BoxScope.() -> Unit,
+    image: @Composable () -> Unit,
 ) {
     StandardCardContainer(
         modifier = modifier,
+        style = style,
         interactionSource = interactionSource,
         title = title,
         imageCard = {
-            Box(
-                modifier =
-                    Modifier.clickable(
-                        interactionSource = it,
-                        indication =
-                            borderIndication(
-                                focused = JetStreamBorder,
-                            ),
-                        onClick = onClick,
-                    ),
-                content = content,
+            StylableCard(
+                onClick = onClick,
+                interactionSource = interactionSource,
+                content = image,
             )
         },
     )

@@ -64,7 +64,7 @@ import com.google.jetstream.presentation.components.Loading
 import com.google.jetstream.presentation.components.MoviesRow
 import com.google.jetstream.presentation.components.desktop.BackNavigationContextMenu
 import com.google.jetstream.presentation.components.feature.LocalEngagementMode
-import com.google.jetstream.presentation.components.shim.scaleIndicationStyle
+import com.google.jetstream.presentation.components.shim.indication.scaleIndication
 import com.google.jetstream.presentation.components.shim.stylable.StylableBox
 import com.google.jetstream.presentation.screens.moviedetails.components.CastAndCrewList
 import com.google.jetstream.presentation.screens.moviedetails.components.MovieDetails
@@ -192,7 +192,6 @@ internal fun MovieDetailsList(
                     StringConstants
                         .Composable
                         .movieDetailsScreenSimilarTo(movieDetails.name),
-                titleStyle = MaterialTheme.typography.titleMedium,
                 movieList = movieDetails.similarMovies,
                 onMovieSelected = refreshScreenWithNewMovie,
             )
@@ -219,7 +218,7 @@ internal fun MovieDetailsList(
                     Modifier
                         .styleable(
                             styleState = styleState,
-                            scaleIndicationStyle(),
+                            scaleIndication(),
                             {
                                 fillWidth()
                                 contentPaddingStart(contentPadding.start)

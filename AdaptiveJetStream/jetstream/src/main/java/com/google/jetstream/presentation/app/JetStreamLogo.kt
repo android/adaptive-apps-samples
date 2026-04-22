@@ -32,7 +32,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.google.jetstream.R
 import com.google.jetstream.data.util.StringConstants
-import com.google.jetstream.presentation.theme.IconSize
+import com.google.jetstream.presentation.theme.JetStreamTokens
 import com.google.jetstream.presentation.theme.LexendExa
 
 @Composable
@@ -49,7 +49,7 @@ fun JetStreamLogo(
             modifier =
                 Modifier
                     .padding(end = 4.dp)
-                    .size(IconSize),
+                    .size(JetStreamTokens.IconSize),
         )
         Text(
             text = stringResource(R.string.brand_logo_text),

@@ -103,7 +103,7 @@ internal fun Catalog(
     val shouldShowTopBar by remember {
         derivedStateOf {
             lazyGridState.firstVisibleItemIndex == 0 &&
-                    lazyGridState.firstVisibleItemScrollOffset < 100
+                lazyGridState.firstVisibleItemScrollOffset < 100
         }
     }
     LaunchedEffect(shouldShowTopBar) {

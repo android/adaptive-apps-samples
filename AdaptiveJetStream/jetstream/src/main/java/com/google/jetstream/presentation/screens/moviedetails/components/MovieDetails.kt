@@ -56,12 +56,9 @@ import coil.request.ImageRequest
 import com.google.jetstream.R
 import com.google.jetstream.data.entities.MovieDetails
 import com.google.jetstream.data.util.StringConstants
-import com.google.jetstream.presentation.components.shim.borderIndicationStyle
-import com.google.jetstream.presentation.components.shim.scaleIndicationStyle
 import com.google.jetstream.presentation.components.shim.stylable.StylableGrid
 import com.google.jetstream.presentation.screens.moviedetails.Descriptor
-import com.google.jetstream.presentation.theme.JetStreamBorderWidth
-import com.google.jetstream.presentation.theme.JetStreamButtonShape
+import com.google.jetstream.presentation.theme.JetStreamTokens
 import com.google.jetstream.presentation.theme.LocalContentPadding
 import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
@@ -187,8 +184,6 @@ private fun WatchTrailerButton(
 
     val defaultStyle =
         Style {
-            shape(JetStreamButtonShape)
-            clip(true)
             textStyle(textStyle)
         }
 
@@ -197,15 +192,12 @@ private fun WatchTrailerButton(
         modifier =
             modifier.styleable(
                 styleState = styleState,
+                JetStreamTokens.buttonStyle(),
                 defaultStyle,
-                borderIndicationStyle(
-                    focused = JetStreamBorderWidth,
-                ),
-                scaleIndicationStyle(),
                 style,
             ),
         // Workaround
-        shape = JetStreamButtonShape,
+        shape = JetStreamTokens.ButtonShape,
         interactionSource = interactionSource,
     ) {
         Icon(

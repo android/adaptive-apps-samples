@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
@@ -94,7 +95,7 @@ fun SearchScreen(
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalFoundationStyleApi::class)
 @Composable
 internal fun SearchResult(
     searchText: TextFieldValue,
@@ -179,13 +180,11 @@ internal fun SearchResult(
                         .fillMaxSize()
                         .padding(top = contentPadding.top * 2)
                         .focusRequester(searchResult)
-                        .onPlaced {
-                            if (movieList.isNotEmpty()) {
-                                searchResult.requestFocus()
-                            }
-                        },
+                        .onPlaced { searchResult.requestFocus() },
+                title = "",
                 movieList = movieList,
-            ) { selectedMovie -> onMovieClick(selectedMovie) }
+                onMovieSelected = onMovieClick,
+            )
         }
     }
 }

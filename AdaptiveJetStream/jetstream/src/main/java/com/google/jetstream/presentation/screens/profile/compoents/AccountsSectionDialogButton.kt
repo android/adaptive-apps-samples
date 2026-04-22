@@ -21,7 +21,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.google.jetstream.presentation.theme.JetStreamButtonShape
+import com.google.jetstream.presentation.theme.JetStreamTokens
 
 @Composable
 fun AccountsSectionDialogButton(
@@ -31,7 +31,7 @@ fun AccountsSectionDialogButton(
 ) {
     Button(
         onClick = onClick,
-        shape = JetStreamButtonShape,
+        shape = JetStreamTokens.ButtonShape,
         modifier = modifier.clickable(onClick = onClick),
     ) {
         Text(text = text)

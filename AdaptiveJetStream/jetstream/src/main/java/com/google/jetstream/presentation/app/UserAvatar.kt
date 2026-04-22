@@ -18,7 +18,9 @@ package com.google.jetstream.presentation.app
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
+import androidx.compose.foundation.style.MutableStyleState
+import androidx.compose.foundation.style.styleable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material3.Icon
@@ -30,9 +32,10 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import com.google.jetstream.data.util.StringConstants
-import com.google.jetstream.presentation.components.shim.borderIndication
-import com.google.jetstream.presentation.theme.JetStreamBorder
+import com.google.jetstream.presentation.components.shim.indication.borderIndication
+import com.google.jetstream.presentation.theme.JetStreamTokens
 
+@OptIn(ExperimentalFoundationStyleApi::class)
 @Composable
 fun UserAvatar(
     selected: Boolean,
@@ -43,7 +46,7 @@ fun UserAvatar(
     onClick: () -> Unit,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
-    val border = JetStreamBorder.copy(shape = CircleShape)
+    val styleState = remember(interactionSource) { MutableStyleState(interactionSource) }
 
     IconButton(
         onClick = onClick,
@@ -61,7 +64,10 @@ fun UserAvatar(
             modifier =
                 modifier
                     .fillMaxSize()
-                    .borderIndication(interactionSource = interactionSource, focused = border),
+                    .styleable(
+                        styleState = styleState,
+                        borderIndication(focused = JetStreamTokens.BorderWidth),
+                    ),
         )
     }
 }

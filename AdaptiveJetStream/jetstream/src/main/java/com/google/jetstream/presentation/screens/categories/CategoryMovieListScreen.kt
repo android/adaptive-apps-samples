@@ -49,7 +49,7 @@ import com.google.jetstream.presentation.components.Loading
 import com.google.jetstream.presentation.components.MovieCard
 import com.google.jetstream.presentation.components.PosterImage
 import com.google.jetstream.presentation.components.desktop.BackNavigationContextMenu
-import com.google.jetstream.presentation.theme.JetStreamBottomListPadding
+import com.google.jetstream.presentation.theme.JetStreamTokens
 import com.google.jetstream.presentation.theme.LocalContentPadding
 import com.google.jetstream.presentation.theme.Padding
 import com.google.jetstream.presentation.utils.focusOnInitialVisibility
@@ -136,7 +136,7 @@ internal fun CategoryMovieList(
         )
         LazyVerticalGrid(
             columns = GridCells.Fixed(6),
-            contentPadding = PaddingValues(bottom = JetStreamBottomListPadding),
+            contentPadding = PaddingValues(bottom = JetStreamTokens.VerticalListBottomPadding),
         ) {
             itemsIndexed(
                 categoryDetails.movies,

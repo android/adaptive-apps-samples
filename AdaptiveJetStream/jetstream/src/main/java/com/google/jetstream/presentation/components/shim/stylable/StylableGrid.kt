@@ -28,6 +28,14 @@ import androidx.compose.foundation.style.styleable
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
+/**
+ * A grid component that supports styling via the [Style] API.
+ *
+ * @param config The configuration for the grid (rows, columns, etc.).
+ * @param modifier The modifier to be applied to the grid.
+ * @param style The style to be applied to the grid.
+ * @param content The content of the grid.
+ */
 @Composable
 fun StylableGrid(
     config: GridConfigurationScope.() -> Unit,

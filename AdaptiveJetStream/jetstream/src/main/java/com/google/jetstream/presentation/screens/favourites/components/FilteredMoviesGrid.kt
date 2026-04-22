@@ -32,7 +32,7 @@ import androidx.compose.ui.Modifier
 import com.google.jetstream.data.entities.Movie
 import com.google.jetstream.presentation.components.MovieCard
 import com.google.jetstream.presentation.components.PosterImage
-import com.google.jetstream.presentation.theme.JetStreamBottomListPadding
+import com.google.jetstream.presentation.theme.JetStreamTokens
 import com.google.jetstream.presentation.theme.LocalListItemGap
 
 @Composable
@@ -49,7 +49,7 @@ fun FilteredMoviesGrid(
         columns = columns,
         verticalArrangement = Arrangement.spacedBy(LocalListItemGap.current),
         horizontalArrangement = Arrangement.spacedBy(LocalListItemGap.current),
-        contentPadding = PaddingValues(bottom = JetStreamBottomListPadding),
+        contentPadding = PaddingValues(bottom = JetStreamTokens.VerticalListBottomPadding),
     ) {
         items(movieList, key = { it.id }) { movie ->
             MovieCard(

@@ -49,7 +49,7 @@ sealed interface EngagementMode {
     ) : EngagementMode
 
     data object Leanback : EngagementMode {
-        override val isBackButtonRequired: Boolean = true
+        override val isBackButtonRequired: Boolean = false
         override val hasImmersiveMode: Boolean = false
     }
 

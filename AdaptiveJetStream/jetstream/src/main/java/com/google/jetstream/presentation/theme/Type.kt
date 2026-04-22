@@ -108,9 +108,8 @@ val Typography =
             ),
         titleLarge =
             TextStyle(
-                fontSize = 22.sp,
-                lineHeight = 28.sp,
-                fontWeight = FontWeight.Normal,
+                fontSize = 30.sp,
+                fontWeight = FontWeight.Medium,
                 letterSpacing = 0.sp,
                 fontFamily = Inter,
                 textMotion = TextMotion.Animated,

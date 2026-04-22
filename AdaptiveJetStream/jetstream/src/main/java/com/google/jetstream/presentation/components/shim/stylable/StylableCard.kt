@@ -28,11 +28,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
-import com.google.jetstream.presentation.components.shim.borderIndicationStyle
-import com.google.jetstream.presentation.components.shim.scaleIndicationStyle
-import com.google.jetstream.presentation.theme.JetStreamBorderWidth
-import com.google.jetstream.presentation.theme.JetStreamCardShape
+import com.google.jetstream.presentation.theme.JetStreamTokens
 
+/**
+ * A card component that supports styling and interaction tracking.
+ * It is built on top of [StylableBox] and adds click handling.
+ *
+ * @param onClick Called when the card is clicked.
+ * @param modifier The modifier to be applied to the card.
+ * @param style The style to be applied to the card.
+ * @param interactionSource The interaction source to track focus, hover, and press states.
+ * @param contentAlignment The alignment of the content within the card.
+ * @param enabled Whether the card is enabled and clickable.
+ * @param content The content of the card.
+ */
 @OptIn(ExperimentalFoundationStyleApi::class)
 @Composable
 fun StylableCard(
@@ -41,6 +50,7 @@ fun StylableCard(
     style: Style = Style,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     contentAlignment: Alignment = Alignment.TopStart,
+    enabled: Boolean = true,
     content: @Composable () -> Unit,
 ) {
     StylableBox(
@@ -50,33 +60,15 @@ fun StylableCard(
                     onClick = onClick,
                     interactionSource = interactionSource,
                     indication = null,
+                    enabled = enabled,
                 )
                 .semantics {
                     role = Role.Button
                 },
-        style = StylableCardDefaults.style() then style,
+        style = JetStreamTokens.cardStyle() then style,
         contentAlignment = contentAlignment,
         interactionSource = interactionSource,
     ) {
         content()
-    }
-}
-
-@OptIn(ExperimentalFoundationStyleApi::class)
-object StylableCardDefaults {
-    val shape =
-        Style {
-            shape(JetStreamCardShape)
-            clip()
-        }
-
-    @Composable
-    fun style(): Style {
-        val borderIndication =
-            borderIndicationStyle(
-                focused = JetStreamBorderWidth,
-            )
-        val scaleIndication = scaleIndicationStyle()
-        return shape then borderIndication then scaleIndication
     }
 }
