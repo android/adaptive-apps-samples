@@ -115,7 +115,6 @@ private fun Top10MoviesList(
                 modifier =
                     modifier.carouselNavigation(
                         state = carouselState,
-                        itemCount = movieList.size,
                         coroutineScope = rememberCoroutineScope(),
                     ),
             ) { index ->

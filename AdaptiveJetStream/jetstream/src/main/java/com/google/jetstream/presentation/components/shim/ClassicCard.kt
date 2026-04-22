@@ -24,6 +24,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.google.jetstream.presentation.components.shim.stylable.StylableCard
 
+/**
+ * A classic card component that displays an image, title, subtitle, and description.
+ * It uses [StylableCard] as its base.
+ *
+ * @param onClick Called when the card is clicked.
+ * @param image The composable for the image.
+ * @param title The composable for the title.
+ * @param modifier The modifier to be applied to the card.
+ * @param style The style to be applied to the card.
+ * @param subtitle The composable for the subtitle.
+ * @param description The composable for the description.
+ */
 @OptIn(ExperimentalFoundationStyleApi::class, ExperimentalFlexBoxApi::class)
 @Composable
 fun ClassicCard(

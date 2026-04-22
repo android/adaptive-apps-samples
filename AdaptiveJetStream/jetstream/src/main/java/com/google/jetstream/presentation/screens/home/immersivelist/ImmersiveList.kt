@@ -49,6 +49,15 @@ import com.google.jetstream.presentation.components.gradientOverlay
 import com.google.jetstream.presentation.components.shim.stylable.StylableBox
 import com.google.jetstream.presentation.theme.LocalContentPadding
 
+/**
+ * A composable that displays an immersive list of movies.
+ *
+ * @param movieList The list of movies to display.
+ * @param modifier The modifier to be applied to the list.
+ * @param onMovieSelected Called when a movie is selected.
+ * @param onExpanded Called when the list is expanded.
+ * @param onCollapsed Called when the list is collapsed.
+ */
 @OptIn(ExperimentalFoundationStyleApi::class, ExperimentalFoundationApi::class)
 @Composable
 fun ImmersiveList(
@@ -87,6 +96,18 @@ fun ImmersiveList(
     )
 }
 
+/**
+ * Internal implementation of the ImmersiveList that handles the state and transitions.
+ *
+ * @param selectedMovie The movie currently selected in the list.
+ * @param movieList The list of movies to display.
+ * @param isExpanded Whether the immersive list is expanded.
+ * @param onMovieSelected Called when a movie is selected.
+ * @param onMovieFocused Called when a movie is focused.
+ * @param modifier The modifier to be applied to the list.
+ * @param onExpanded Called when the list is expanded.
+ * @param onCollapsed Called when the list is collapsed.
+ */
 @OptIn(ExperimentalFoundationStyleApi::class, ExperimentalFoundationApi::class)
 @Composable
 fun ImmersiveList(
@@ -175,6 +196,9 @@ fun ImmersiveList(
     )
 }
 
+/**
+ * A frame for the immersive list that arranges the poster, title, description, and list.
+ */
 @OptIn(ExperimentalFoundationStyleApi::class, ExperimentalGridApi::class)
 @Composable
 private fun ImmersiveListFrame(
@@ -199,6 +223,9 @@ private fun ImmersiveListFrame(
     }
 }
 
+/**
+ * Displays the background poster for the selected movie.
+ */
 @OptIn(ExperimentalFoundationStyleApi::class)
 @Composable
 private fun Background(
@@ -213,6 +240,9 @@ private fun Background(
     )
 }
 
+/**
+ * Displays the title of the movie.
+ */
 @OptIn(ExperimentalFoundationStyleApi::class)
 @Composable
 private fun Title(movie: Movie, modifier: Modifier = Modifier, style: Style = Style) {
@@ -231,6 +261,9 @@ private fun Title(movie: Movie, modifier: Modifier = Modifier, style: Style = St
     )
 }
 
+/**
+ * Displays the description of the movie.
+ */
 @OptIn(ExperimentalFoundationStyleApi::class)
 @Composable
 private fun Description(movie: Movie, modifier: Modifier = Modifier, style: Style = Style) {

@@ -32,6 +32,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.google.jetstream.presentation.theme.JetStreamTokens
 
+/**
+ * A container for a standard card that displays an image card, title, subtitle, and description.
+ * It manages a [MutableStyleState] based on the provided [interactionSource].
+ *
+ * @param imageCard The composable for the image card part of the container.
+ * @param title The composable for the title.
+ * @param modifier The modifier to be applied to the container.
+ * @param style The style to be applied to the container.
+ * @param subtitle The composable for the subtitle.
+ * @param description The composable for the description.
+ * @param interactionSource The interaction source for the card.
+ */
 @OptIn(ExperimentalFoundationStyleApi::class)
 @Composable
 fun StandardCardContainer(

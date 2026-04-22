@@ -29,6 +29,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
+/**
+ * A box component that supports styling via the [Style] API.
+ *
+ * @param modifier The modifier to be applied to the box.
+ * @param style The style to be applied to the box.
+ * @param contentAlignment The alignment of the content within the box.
+ * @param content The content of the box.
+ */
 @OptIn(ExperimentalFoundationStyleApi::class)
 @Composable
 fun StylableBox(
@@ -46,6 +54,15 @@ fun StylableBox(
     )
 }
 
+/**
+ * A box component that supports styling and interaction tracking.
+ *
+ * @param modifier The modifier to be applied to the box.
+ * @param style The style to be applied to the box.
+ * @param contentAlignment The alignment of the content within the box.
+ * @param interactionSource The interaction source to track focus, hover, etc.
+ * @param content The content of the box.
+ */
 @OptIn(ExperimentalFoundationStyleApi::class)
 @Composable
 fun StylableBox(

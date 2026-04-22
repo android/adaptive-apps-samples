@@ -22,6 +22,9 @@ import androidx.compose.ui.input.key.isCtrlPressed
 import androidx.compose.ui.input.key.isMetaPressed
 import androidx.compose.ui.input.key.isShiftPressed
 
+/**
+ * Represents a set of keyboard modifier keys (Ctrl, Shift, Alt, Meta).
+ */
 data class ModifierKeys(
     val ctrl: Boolean = false,
     val shift: Boolean = false,
@@ -29,16 +32,26 @@ data class ModifierKeys(
     val meta: Boolean = false,
 ) {
     companion object {
+        /** No modifier keys pressed. */
         val None = ModifierKeys()
+        /** Ctrl key pressed. */
         val Ctrl = ModifierKeys(ctrl = true)
+        /** Shift key pressed. */
         val Shift = ModifierKeys(shift = true)
+        /** Alt key pressed. */
         val Alt = ModifierKeys(alt = true)
+        /** Ctrl and Shift keys pressed. */
         val CtrlShift = ModifierKeys(ctrl = true, shift = true)
+        /** Ctrl and Alt keys pressed. */
         val CtrlAlt = ModifierKeys(ctrl = true, alt = true)
+        /** Ctrl, Shift, and Alt keys pressed. */
         val CtrlShiftAlt = ModifierKeys(ctrl = true, shift = true, alt = true)
     }
 }
 
+/**
+ * Extracts the [ModifierKeys] state from a [KeyEvent].
+ */
 fun KeyEvent.modifierKeys(): ModifierKeys {
     return ModifierKeys(
         ctrl = isCtrlPressed,

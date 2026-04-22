@@ -44,6 +44,15 @@ import com.google.jetstream.presentation.components.shim.carouselNavigation
 import com.google.jetstream.presentation.components.shim.indication.scaleIndication
 import com.google.jetstream.presentation.components.shim.stylable.StylableCard
 
+/**
+ * A container composable that switches between different carousel types based on the current
+ * [EngagementMode].
+ *
+ * @param moveList The list of movies to be displayed in the carousel.
+ * @param onMovieSelected Callback triggered when a movie in the carousel is clicked.
+ * @param modifier The modifier to be applied to the layout.
+ * @param style The style to be applied to the carousel.
+ */
 @Composable
 fun FeaturedMovies(
     moveList: List<Movie>,
@@ -72,11 +81,17 @@ fun FeaturedMovies(
     }
 }
 
+/**
+ * Defines the types of carousels available for displaying featured movies.
+ */
 enum class FeaturedMovieCarouselType {
     Hero,
     Featured,
 }
 
+/**
+ * Determines the appropriate [FeaturedMovieCarouselType] based on the current [LocalEngagementMode].
+ */
 @Composable
 fun featuredMovieCarouselType(): FeaturedMovieCarouselType {
     return when (LocalEngagementMode.current) {
@@ -85,6 +100,16 @@ fun featuredMovieCarouselType(): FeaturedMovieCarouselType {
     }
 }
 
+/**
+ * Displays a list of featured movies using a [HorizontalCenteredHeroCarousel].
+ * This carousel is typically used in mobile or tablet-like engagement modes.
+ *
+ * @param moveList The list of movies to display.
+ * @param onMovieSelected Callback when a movie is selected.
+ * @param modifier The modifier for this composable.
+ * @param style The style for the carousel.
+ * @param state The state of the carousel.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HeroMovieCarousel(
@@ -101,7 +126,6 @@ fun HeroMovieCarousel(
                 .styleable(style = style)
                 .carouselNavigation(
                     state = state,
-                    itemCount = moveList.size,
                     coroutineScope = rememberCoroutineScope(),
                 ),
     ) {
@@ -116,6 +140,16 @@ fun HeroMovieCarousel(
     }
 }
 
+/**
+ * Displays a list of featured movies using a [FeaturedCarousel].
+ * This carousel is typically used in leanback (TV) or workstation modes.
+ *
+ * @param movieList The list of movies to display.
+ * @param onMovieSelected Callback when a movie is selected.
+ * @param modifier The modifier for this composable.
+ * @param style The style for the carousel.
+ * @param state The state of the carousel.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FeaturedMovieCarousel(
@@ -139,7 +173,6 @@ fun FeaturedMovieCarousel(
         previousButton = {
             if (LocalEngagementMode.current.isBackButtonRequired) {
                 FeaturedCarouselDefaults.PreviousButton(
-                    itemCount = movieList.size,
                     state = state,
                 )
             }
@@ -160,6 +193,14 @@ fun FeaturedMovieCarousel(
     }
 }
 
+/**
+ * A card component representing a movie within a carousel.
+ *
+ * @param movie The movie data to display.
+ * @param modifier The modifier for the card.
+ * @param style The style for the card.
+ * @param onMovieSelected Callback when the card is clicked.
+ */
 @Composable
 fun CarouselMovieCard(
     movie: Movie,

@@ -71,6 +71,20 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.yield
 
+/**
+ * A featured carousel component that displays a list of items with auto-scroll capability.
+ *
+ * @param itemCount The number of items in the carousel.
+ * @param state The state of the carousel.
+ * @param modifier The modifier to be applied to the carousel.
+ * @param style The style to be applied to the carousel.
+ * @param isAutoScrollEnabled Whether auto-scroll is enabled.
+ * @param autoScrollInterval The interval between auto-scrolls in milliseconds.
+ * @param carouselIndicator The composable to be used as the carousel indicator.
+ * @param previousButton The composable to be used as the previous button.
+ * @param nextButton The composable to be used as the next button.
+ * @param content The content of each carousel item.
+ */
 @OptIn(
     ExperimentalGridApi::class,
     ExperimentalFlexBoxApi::class,
@@ -92,7 +106,6 @@ fun FeaturedCarousel(
     },
     previousButton: @Composable () -> Unit = {
         FeaturedCarouselDefaults.PreviousButton(
-            itemCount = itemCount,
             state = state,
         )
     },
@@ -134,7 +147,7 @@ fun FeaturedCarousel(
                     onEnter = { autoScroll = false },
                     onExit = { autoScroll = true },
                 )
-                .carouselNavigation(state, itemCount, rememberCoroutineScope()),
+                .carouselNavigation(state, rememberCoroutineScope()),
     ) {
         AutoScrollHorizontalUncontainedCarousel(
             itemCount = itemCount,
@@ -167,6 +180,9 @@ fun FeaturedCarousel(
     }
 }
 
+/**
+ * An internal implementation of a horizontal uncontained carousel with auto-scroll logic.
+ */
 @OptIn(ExperimentalFoundationStyleApi::class)
 @Composable
 private fun AutoScrollHorizontalUncontainedCarousel(
@@ -195,7 +211,13 @@ private fun AutoScrollHorizontalUncontainedCarousel(
     )
 }
 
+/**
+ * Contains default implementations for [FeaturedCarousel] components.
+ */
 object FeaturedCarouselDefaults {
+    /**
+     * A button to navigate to the next item in the carousel.
+     */
     @OptIn(ExperimentalFoundationStyleApi::class)
     @Composable
     fun NextButton(
@@ -222,10 +244,12 @@ object FeaturedCarouselDefaults {
         }
     }
 
+    /**
+     * A button to navigate to the previous item in the carousel.
+     */
     @OptIn(ExperimentalFoundationStyleApi::class)
     @Composable
     fun PreviousButton(
-        itemCount: Int,
         state: CarouselState,
         modifier: Modifier = Modifier,
         style: Style = Style,
@@ -247,6 +271,9 @@ object FeaturedCarouselDefaults {
         }
     }
 
+    /**
+     * A row of indicators for the carousel.
+     */
     @OptIn(ExperimentalFoundationStyleApi::class)
     @Composable
     fun IndicatorRow(
@@ -269,6 +296,9 @@ object FeaturedCarouselDefaults {
         }
     }
 
+    /**
+     * A single indicator for the carousel.
+     */
     @OptIn(ExperimentalFoundationStyleApi::class)
     @Composable
     fun Indicator(
@@ -295,6 +325,9 @@ object FeaturedCarouselDefaults {
     }
 }
 
+/**
+ * Animates to the next item in the carousel if it exists.
+ */
 private suspend fun CarouselState.nextItem(
     itemCount: Int,
 ) {
@@ -307,6 +340,9 @@ private suspend fun CarouselState.nextItem(
     }
 }
 
+/**
+ * Animates to the previous item in the carousel if it exists.
+ */
 private suspend fun CarouselState.previousItem() {
     onScrollFinished {
         if (hasPreviousItem()) {
@@ -317,6 +353,9 @@ private suspend fun CarouselState.previousItem() {
     }
 }
 
+/**
+ * Suspends until the carousel scroll has finished.
+ */
 internal suspend fun CarouselState.onScrollFinished(block: suspend () -> Unit) {
     snapshotFlow {
         isScrollInProgress
@@ -324,14 +363,23 @@ internal suspend fun CarouselState.onScrollFinished(block: suspend () -> Unit) {
     block()
 }
 
+/**
+ * Returns true if there is a previous item to navigate to.
+ */
 private fun CarouselState.hasPreviousItem(): Boolean {
     return currentItem > 0
 }
 
+/**
+ * Returns true if there is a next item to navigate to.
+ */
 private fun CarouselState.hasNextItem(itemCount: Int): Boolean {
     return currentItem < itemCount - 1
 }
 
+/**
+ * A modifier that automatically scrolls the carousel at a given interval.
+ */
 @Composable
 private fun Modifier.autoScroll(
     state: CarouselState,
@@ -351,33 +399,24 @@ private fun Modifier.autoScroll(
     return this
 }
 
+/**
+ * A modifier that handles DPAD navigation for the carousel.
+ */
 internal fun Modifier.carouselNavigation(
     state: CarouselState,
-    itemCount: Int,
     coroutineScope: CoroutineScope,
 ): Modifier {
     return onKeyEvent { keyEvent ->
         when (keyEvent.key) {
             Key.DirectionLeft
-                if keyEvent.type == KeyEventType.KeyUp &&
-                        keyEvent.modifierKeys() == ModifierKeys.None -> {
+            if keyEvent.type == KeyEventType.KeyUp &&
+                keyEvent.modifierKeys() == ModifierKeys.None -> {
                 coroutineScope.launch {
                     state.previousItem()
                 }
                 true
             }
 
-            /*
-            Key.DirectionRight
-            if keyEvent.type == KeyEventType.KeyUp &&
-                keyEvent.modifierKeys() == ModifierKeys.None -> {
-                coroutineScope.launch {
-                    state.nextItem(itemCount)
-                }
-                true
-            }
-
-             */
             else -> {
                 false
             }
