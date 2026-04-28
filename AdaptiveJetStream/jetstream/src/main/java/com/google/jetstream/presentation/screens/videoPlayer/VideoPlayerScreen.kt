@@ -31,7 +31,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -39,7 +38,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalMediaQueryApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.UiMediaScope
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -48,6 +49,7 @@ import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onPlaced
+import androidx.compose.ui.mediaQuery
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
@@ -186,7 +188,7 @@ private fun VideoPlayerScreenContent(
     }
 }
 
-@OptIn(UnstableApi::class)
+@kotlin.OptIn(ExperimentalMediaQueryApi::class)
 @Composable
 private fun VideoPlayer(
     nowPlayingInfo: NowPlayingInfo,
@@ -198,7 +200,7 @@ private fun VideoPlayer(
 
     // TODO: Move to ViewModel for better reuse
     val pulseState = rememberVideoPlayerPulseState()
-    val isTabletopMode = currentWindowAdaptiveInfo().windowPosture.isTabletop
+    val isTabletopMode = mediaQuery { windowPosture == UiMediaScope.Posture.Tabletop }
     val videoPlayerState =
         rememberVideoPlayerState(
             player = player,
