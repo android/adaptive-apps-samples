@@ -65,6 +65,8 @@ object JetStreamTokens {
     val LandscapeCardSize =
         DpSize(ImmersiveListCardWidth, ImmersiveListCardWidth * LANDSCAPE_CARD_ASPECT_RATIO)
 
+    val LeanbackWindowSize = DpSize(960.dp, 540.dp)
+
     @OptIn(ExperimentalFoundationStyleApi::class)
     @Composable
     fun indication(): Style {

@@ -16,40 +16,41 @@
 
 package com.google.jetstream.presentation.screens.categories
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.jetstream.data.entities.MovieCategoryDetails
 import com.google.jetstream.data.repositories.MovieRepository
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import javax.inject.Inject
 
-@HiltViewModel
+@HiltViewModel(assistedFactory = CategoryMovieListScreenViewModel.Factory::class)
 class CategoryMovieListScreenViewModel
-    @Inject
+    @AssistedInject
     constructor(
-        savedStateHandle: SavedStateHandle,
+        @Assisted categoryId: String,
         movieRepository: MovieRepository,
     ) : ViewModel() {
         val uiState =
-            savedStateHandle.getStateFlow<String?>(
-                CategoryMovieListScreen.CATEGORY_ID_BUNDLE_KEY,
-                null,
-            ).map { id ->
-                if (id == null) {
-                    CategoryMovieListScreenUiState.Error
-                } else {
+            flowOf(categoryId)
+                .map { id ->
                     val categoryDetails = movieRepository.getMovieCategoryDetails(id)
                     CategoryMovieListScreenUiState.Done(categoryDetails)
-                }
-            }.stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5_000),
-                initialValue = CategoryMovieListScreenUiState.Loading,
-            )
+                }.stateIn(
+                    scope = viewModelScope,
+                    started = SharingStarted.WhileSubscribed(5_000),
+                    initialValue = CategoryMovieListScreenUiState.Loading,
+                )
+
+        @AssistedFactory
+        interface Factory {
+            fun create(categoryId: String): CategoryMovieListScreenViewModel
+        }
     }
 
 sealed interface CategoryMovieListScreenUiState {

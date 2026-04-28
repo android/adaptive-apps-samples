@@ -34,7 +34,6 @@ import androidx.compose.ui.unit.dp
 import com.android.tools.screenshot.PreviewTest
 import com.google.jetstream.presentation.app.UserAvatar
 import com.google.jetstream.presentation.app.withNavigationSuiteScaffold.TopAppBar
-import com.google.jetstream.presentation.screens.Screens
 
 @PreviewTest
 @Preview

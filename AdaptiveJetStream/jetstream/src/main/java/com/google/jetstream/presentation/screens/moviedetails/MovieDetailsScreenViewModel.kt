@@ -16,39 +16,40 @@
 
 package com.google.jetstream.presentation.screens.moviedetails
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.jetstream.data.entities.MovieDetails
 import com.google.jetstream.data.repositories.MovieRepository
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import javax.inject.Inject
 
-@HiltViewModel
+@HiltViewModel(assistedFactory = MovieDetailsScreenViewModel.Factory::class)
 class MovieDetailsScreenViewModel
-    @Inject
+    @AssistedInject
     constructor(
-        savedStateHandle: SavedStateHandle,
+        @Assisted movieId: String,
         repository: MovieRepository,
     ) : ViewModel() {
         val uiState =
-            savedStateHandle
-                .getStateFlow<String?>(MovieDetailsScreen.MOVIE_ID_BUNDLE_KEY, null)
-                .map { id ->
-                    if (id == null) {
-                        MovieDetailsScreenUiState.Error
-                    } else {
-                        val details = repository.getMovieDetails(movieId = id)
-                        MovieDetailsScreenUiState.Done(movieDetails = details)
-                    }
-                }.stateIn(
-                    scope = viewModelScope,
-                    started = SharingStarted.WhileSubscribed(5_000),
-                    initialValue = MovieDetailsScreenUiState.Loading,
-                )
+            flowOf(movieId).map { id ->
+                val details = repository.getMovieDetails(movieId = id)
+                MovieDetailsScreenUiState.Done(movieDetails = details)
+            }.stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000),
+                initialValue = MovieDetailsScreenUiState.Loading,
+            )
+
+        @AssistedFactory
+        interface Factory {
+            fun create(movieId: String): MovieDetailsScreenViewModel
+        }
     }
 
 sealed class MovieDetailsScreenUiState {

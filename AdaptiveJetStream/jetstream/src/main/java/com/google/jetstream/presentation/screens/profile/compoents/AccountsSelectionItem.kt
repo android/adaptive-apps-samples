@@ -16,126 +16,75 @@
 
 package com.google.jetstream.presentation.screens.profile.compoents
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.ExperimentalFlexBoxApi
+import androidx.compose.foundation.layout.ExperimentalGridApi
+import androidx.compose.foundation.layout.FlexBox
+import androidx.compose.foundation.layout.FlexDirection
+import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
+import androidx.compose.foundation.style.fillSize
+import androidx.compose.foundation.style.styleable
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.google.jetstream.data.util.StringConstants
-import com.google.jetstream.presentation.components.FoldablePreview
-import com.google.jetstream.presentation.components.PhonePreview
-import com.google.jetstream.presentation.components.TvPreview
-import com.google.jetstream.presentation.theme.JetStreamTheme
+import com.google.jetstream.presentation.components.shim.stylable.StylableCard
+import com.google.jetstream.presentation.screens.profile.section.AccountsSectionData
 
+@OptIn(
+    ExperimentalFoundationStyleApi::class,
+    ExperimentalGridApi::class,
+    ExperimentalFlexBoxApi::class,
+)
 @Composable
 fun AccountsSelectionItem(
     accountsSectionData: AccountsSectionData,
     modifier: Modifier = Modifier,
-    isExpanded: Boolean = true,
-    key: Any? = null,
 ) {
-    key(key) {
-        Surface(
+    val backgroundColor = MaterialTheme.colorScheme.surfaceColorAtElevation(4.dp)
+    StylableCard(
+        modifier = modifier,
+        enabled = accountsSectionData.onClick != null,
+        onClick = accountsSectionData.onClick ?: {},
+        style = {
+            background(backgroundColor)
+        },
+    ) {
+        val value = accountsSectionData.value
+
+        FlexBox(
+            config = {
+                direction(FlexDirection.Column)
+            },
             modifier =
-                modifier
-                    .background(MaterialTheme.colorScheme.surfaceColorAtElevation(4.dp))
-                    .clickable(onClick = accountsSectionData.onClick),
-            shape = MaterialTheme.shapes.extraSmall,
+                Modifier.styleable {
+                    fillSize()
+                    contentPadding(16.dp)
+                },
         ) {
-            if (isExpanded) {
-                Column(
+            Text(
+                text = accountsSectionData.title,
+                style =
+                    MaterialTheme.typography.titleSmall.copy(
+                        fontSize = 15.sp,
+                    ),
+            )
+            if (value != null) {
+                Text(
+                    text = value,
+                    style =
+                        MaterialTheme.typography.labelMedium.copy(
+                            fontWeight = FontWeight.Normal,
+                        ),
                     modifier =
-                        Modifier
-                            .fillMaxSize()
-                            .padding(16.dp),
-                    verticalArrangement = Arrangement.Bottom,
-                ) {
-                    AccountData(accountsSectionData)
-                }
-            } else {
-                Row(
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 8.dp, vertical = 16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                ) {
-                    AccountData(accountsSectionData)
-                }
+                        Modifier.styleable {
+                            alpha(0.75f)
+                        },
+                )
             }
-        }
-    }
-}
-
-@Composable
-private fun AccountData(accountsSectionData: AccountsSectionData) {
-    Text(
-        text = accountsSectionData.title,
-        style =
-            MaterialTheme.typography.titleSmall.copy(
-                fontSize = 15.sp,
-            ),
-    )
-    Spacer(modifier = Modifier.padding(vertical = 2.dp))
-    accountsSectionData.value?.let { nnValue ->
-        Text(
-            text = nnValue,
-            style =
-                MaterialTheme.typography.labelMedium.copy(
-                    fontWeight = FontWeight.Normal,
-                ),
-            modifier = Modifier.alpha(0.75f),
-        )
-    }
-}
-
-@PhonePreview
-@FoldablePreview
-@Composable
-fun AccountSelectionItemPreview() {
-    val mockData =
-        AccountsSectionData(
-            title =
-                StringConstants.Composable.Placeholders
-                    .AccountsSelectionViewSubscriptionsTitle,
-        )
-
-    JetStreamTheme {
-        Box(modifier = Modifier.background(MaterialTheme.colorScheme.surface)) {
-            AccountsSelectionItem(mockData, isExpanded = false)
-        }
-    }
-}
-
-@TvPreview
-@Composable
-fun AccountSelectionItemTvPreview() {
-    val mockData =
-        AccountsSectionData(
-            title =
-                StringConstants.Composable.Placeholders
-                    .AccountsSelectionViewSubscriptionsTitle,
-        )
-
-    JetStreamTheme {
-        Box(modifier = Modifier.background(MaterialTheme.colorScheme.surface)) {
-            AccountsSelectionItem(mockData, isExpanded = true)
         }
     }
 }

@@ -26,8 +26,6 @@ import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.ExperimentalMediaQueryApi
 import androidx.compose.ui.UiMediaScope
-import androidx.compose.ui.unit.dp
-import androidx.window.core.layout.WindowSizeClass
 
 sealed interface EngagementMode {
     val isBackButtonRequired: Boolean
@@ -81,6 +79,12 @@ fun currentEngagementMode(): State<EngagementMode> {
                 EngagementMode.Enclosed
             }
 
+            windowSizeClass.isIWidthCompact() -> {
+                EngagementMode.Compact(
+                    isBackButtonRequired = inputModality == InputModality.PointingDevice,
+                )
+            }
+
             viewingDistance == UiMediaScope.ViewingDistance.Medium -> {
                 EngagementMode.Cabin
             }
@@ -91,12 +95,6 @@ fun currentEngagementMode(): State<EngagementMode> {
 
             windowSizeClass.isWidthAtLeastLarge() -> {
                 EngagementMode.Workstation(
-                    isBackButtonRequired = inputModality == InputModality.PointingDevice,
-                )
-            }
-
-            windowSizeClass.isIWidthCompact() -> {
-                EngagementMode.Compact(
                     isBackButtonRequired = inputModality == InputModality.PointingDevice,
                 )
             }

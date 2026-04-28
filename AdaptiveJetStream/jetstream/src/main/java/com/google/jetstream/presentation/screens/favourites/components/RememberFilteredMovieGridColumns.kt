@@ -17,50 +17,23 @@
 package com.google.jetstream.presentation.screens.favourites.components
 
 import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.window.core.layout.WindowSizeClass
-import com.google.jetstream.presentation.app.NavigationComponentType
-import com.google.jetstream.presentation.app.rememberNavigationComponentType
+import com.google.jetstream.presentation.components.feature.EngagementMode
+import com.google.jetstream.presentation.components.feature.LocalEngagementMode
 
 @Composable
-fun rememberFilteredMoviesGridColumns(
-    navigationComponentType: NavigationComponentType = rememberNavigationComponentType(),
-    windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfo().windowSizeClass,
-): GridCells {
-    return remember(navigationComponentType, windowSizeClass) {
-        calculateFilteredMoviesGridColumns(navigationComponentType, windowSizeClass)
+fun rememberFilteredMoviesGridColumns(): GridCells {
+    val engagementMode = LocalEngagementMode.current
+    return remember(engagementMode) {
+        engagementMode.filteredMovieGridColumns()
     }
 }
 
-private fun calculateFilteredMoviesGridColumns(
-    navigationComponentType: NavigationComponentType,
-    windowSizeClass: WindowSizeClass,
-): GridCells {
-    return when (navigationComponentType) {
-        NavigationComponentType.TopBar -> {
-            GridCells.Fixed(6)
-        }
-
-        else -> {
-            windowSizeClass.filteredMoviesGridColumns()
-        }
-    }
-}
-
-private fun WindowSizeClass.filteredMoviesGridColumns(): GridCells {
-    return when {
-        isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_EXPANDED_LOWER_BOUND) -> {
-            GridCells.Fixed(6)
-        }
-
-        isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND) -> {
-            GridCells.Fixed(4)
-        }
-
-        else -> {
-            GridCells.Fixed(3)
-        }
+private fun EngagementMode.filteredMovieGridColumns(): GridCells {
+    return when (this) {
+        is EngagementMode.Compact -> GridCells.Fixed(3)
+        is EngagementMode.Medium -> GridCells.Fixed(4)
+        else -> GridCells.Fixed(6)
     }
 }

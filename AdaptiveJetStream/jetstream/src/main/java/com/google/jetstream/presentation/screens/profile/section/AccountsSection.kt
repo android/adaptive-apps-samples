@@ -14,18 +14,14 @@
  * limitations under the License.
  */
 
-package com.google.jetstream.presentation.screens.profile.compoents
+package com.google.jetstream.presentation.screens.profile.section
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
+import androidx.compose.foundation.style.fillWidth
+import androidx.compose.foundation.style.styleable
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
@@ -33,32 +29,27 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.unit.dp
 import com.google.jetstream.data.util.StringConstants
-import com.google.jetstream.presentation.components.FoldablePreview
-import com.google.jetstream.presentation.components.PhonePreview
 import com.google.jetstream.presentation.components.TvPreview
-import com.google.jetstream.presentation.theme.JetStreamTheme
+import com.google.jetstream.presentation.screens.profile.compoents.AccountsSectionDeleteDialog
+import com.google.jetstream.presentation.screens.profile.compoents.AccountsSelectionItem
 import com.google.jetstream.presentation.theme.LocalContentPadding
-import com.google.jetstream.presentation.theme.Padding
 
 @Immutable
 data class AccountsSectionData(
     val title: String,
     val value: String? = null,
-    val onClick: () -> Unit = {},
+    val onClick: (() -> Unit)? = null,
 )
 
+@OptIn(ExperimentalFoundationStyleApi::class)
 @TvPreview
 @Composable
-fun AccountsSection(
-    numberOfColumns: Int = 2,
-    contentPadding: Padding = LocalContentPadding.current,
-) {
+fun AccountsSection() {
     var showDeleteDialog by remember { mutableStateOf(false) }
-    val focusRequester = remember { FocusRequester() }
+
+    // ToDo: Move the data definition outside of the composable
     val accountsSectionListItems =
         remember {
             listOf(
@@ -92,49 +83,24 @@ fun AccountsSection(
                 ),
             )
         }
-
-    LazyVerticalGrid(
-        modifier =
-            Modifier
-                .fillMaxSize()
-                .padding(horizontal = contentPadding.start),
-        columns = GridCells.Fixed(numberOfColumns),
-        content = {
-            val itemModifier =
-                if (numberOfColumns == 2) {
-                    Modifier
-                        .focusRequester(focusRequester)
-                        .padding(8.dp)
-                        .fillMaxWidth()
-                        .aspectRatio(2f)
-                } else {
-                    Modifier
-                }
-            items(accountsSectionListItems.size) { index ->
-                AccountsSelectionItem(
-                    modifier = itemModifier,
-                    key = index,
-                    accountsSectionData = accountsSectionListItems[index],
-                    isExpanded = numberOfColumns == 2,
-                )
-            }
-        },
-    )
+    LazyColumn(
+        contentPadding = LocalContentPadding.current.intoPaddingValues(),
+    ) {
+        items(accountsSectionListItems) { data ->
+            AccountsSelectionItem(
+                modifier =
+                    Modifier.styleable {
+                        fillWidth()
+                        externalPadding(8.dp)
+                    },
+                accountsSectionData = data,
+            )
+        }
+    }
 
     AccountsSectionDeleteDialog(
         showDialog = showDeleteDialog,
         onDismissRequest = { showDeleteDialog = false },
         modifier = Modifier.width(428.dp),
     )
-}
-
-@PhonePreview
-@FoldablePreview
-@Composable
-private fun SingleColumnAccountPreview() {
-    JetStreamTheme {
-        Box(modifier = Modifier.background(MaterialTheme.colorScheme.surface)) {
-            AccountsSection(numberOfColumns = 1)
-        }
-    }
 }

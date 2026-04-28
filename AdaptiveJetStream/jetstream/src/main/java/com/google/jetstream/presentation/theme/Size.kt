@@ -26,8 +26,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.window.core.layout.WindowSizeClass
-import com.google.jetstream.presentation.app.NavigationComponentType
-import com.google.jetstream.presentation.app.rememberNavigationComponentType
+import com.google.jetstream.presentation.components.feature.EngagementMode
+import com.google.jetstream.presentation.components.feature.LocalEngagementMode
 import com.google.jetstream.presentation.components.feature.isIWidthCompact
 import com.google.jetstream.presentation.components.feature.isWidthMedium
 
@@ -41,40 +41,28 @@ val LocalVerticalCardAspectRatio: ProvidableCompositionLocal<Float> =
         10.5f / 16f
     }
 
-val LocalHorizontalCardAspectRatio: ProvidableCompositionLocal<Float> =
-    staticCompositionLocalOf {
-        16f / 9f
-    }
-
 val LocalCardWidth: ProvidableCompositionLocal<Dp> =
     staticCompositionLocalOf {
         126.dp
     }
 
-val LocalProminentCardSize: ProvidableCompositionLocal<DpSize> =
-    staticCompositionLocalOf {
-        DpSize(432.dp, 216.dp)
-    }
-
 @Composable
-fun rememberFeaturedCarouselHeight(
-    navigationComponentType: NavigationComponentType = rememberNavigationComponentType(),
-): Dp {
-    return remember(navigationComponentType) {
-        when (navigationComponentType) {
-            NavigationComponentType.TopBar -> 324.dp
+fun rememberFeaturedCarouselHeight(): Dp {
+    val engagementMode = LocalEngagementMode.current
+    return remember(engagementMode) {
+        when (engagementMode) {
+            EngagementMode.Leanback -> 324.dp
             else -> 385.dp
         }
     }
 }
 
 @Composable
-fun rememberVerticalCardAspectRatio(
-    navigationComponentType: NavigationComponentType = rememberNavigationComponentType(),
-): Float {
-    return remember(navigationComponentType) {
-        when (navigationComponentType) {
-            NavigationComponentType.TopBar -> 0.65625f
+fun rememberVerticalCardAspectRatio(): Float {
+    val engagementMode = LocalEngagementMode.current
+    return remember(engagementMode) {
+        when (engagementMode) {
+            EngagementMode.Leanback, EngagementMode.Cabin, is EngagementMode.Workstation -> 0.65625f
 
             // 10.5f / 16f
             else -> 0.67021f
@@ -104,24 +92,22 @@ private fun WindowSizeClass.cardWidth(): Dp {
 }
 
 @Composable
-fun rememberCategoryGridColumns(
-    navigationComponentType: NavigationComponentType = rememberNavigationComponentType(),
-): GridCells {
-    return remember(navigationComponentType) {
-        when (navigationComponentType) {
-            NavigationComponentType.TopBar -> GridCells.Fixed(4)
+fun rememberCategoryGridColumns(): GridCells {
+    val engagementMode = LocalEngagementMode.current
+    return remember(engagementMode) {
+        when (engagementMode) {
+            EngagementMode.Leanback, EngagementMode.Cabin, is EngagementMode.Workstation -> GridCells.Fixed(4)
             else -> GridCells.Fixed(3)
         }
     }
 }
 
 @Composable
-fun rememberCategoryCardAspectRatio(
-    windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfo().windowSizeClass,
-): Float {
-    return when {
-        windowSizeClass.isIWidthCompact() -> 1f
-        windowSizeClass.isWidthMedium() -> 1.4471f
+fun rememberCategoryCardAspectRatio(): Float {
+    val engagementMode = LocalEngagementMode.current
+    return when (engagementMode) {
+        is EngagementMode.Compact -> 1f
+        is EngagementMode.Medium -> 1.4471f
         else -> 1.7777f // 16:9
     }
 }

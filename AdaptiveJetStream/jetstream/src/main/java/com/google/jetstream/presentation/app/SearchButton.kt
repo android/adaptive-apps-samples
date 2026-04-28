@@ -14,25 +14,18 @@
  * limitations under the License.
  */
 
-package com.google.jetstream.presentation.app.withNavigationSuiteScaffold
+package com.google.jetstream.presentation.app
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import com.google.jetstream.data.util.StringConstants
-import com.google.jetstream.presentation.screens.Screens
 
 @Composable
 fun SearchButton(
     modifier: Modifier = Modifier,
-    icon: ImageVector = Screens.Search.tabIcon ?: Icons.Default.Search,
-    contentDescription: String? =
-        StringConstants.Composable.ContentDescription.DashboardSearchButton,
     onClick: () -> Unit = {},
 ) {
     IconButton(
@@ -40,8 +33,8 @@ fun SearchButton(
         modifier = modifier,
     ) {
         Icon(
-            icon,
-            contentDescription = contentDescription,
+            painter = Destination.Search.icon,
+            contentDescription = StringConstants.Composable.ContentDescription.DashboardSearchButton,
             tint = LocalContentColor.current,
         )
     }

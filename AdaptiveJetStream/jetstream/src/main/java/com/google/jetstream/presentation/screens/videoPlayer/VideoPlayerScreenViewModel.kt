@@ -23,7 +23,6 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.ui.geometry.Size
 import androidx.concurrent.futures.await
 import androidx.core.net.toUri
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.C
@@ -38,37 +37,32 @@ import com.google.jetstream.data.entities.Movie
 import com.google.jetstream.data.entities.MovieDetails
 import com.google.jetstream.data.entities.StereoscopicVisionType
 import com.google.jetstream.data.repositories.MovieRepository
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
+@HiltViewModel(assistedFactory = VideoPlayerScreenViewModel.Factory::class)
 class VideoPlayerScreenViewModel
-    @Inject
+    @AssistedInject
     constructor(
-        savedStateHandle: SavedStateHandle,
+        @Assisted movieId: String,
         private val repository: MovieRepository,
         @ApplicationContext private val context: Context,
     ) : ViewModel() {
         private val playerManager = PlayerManager()
 
         private val specifiedMovieDetails =
-            savedStateHandle
-                .getStateFlow<String?>(VideoPlayerScreen.MOVIE_ID_BUNDLE_KEY, null)
-                .map {
-                    if (it != null) {
-                        repository.getMovieDetails(movieId = it)
-                    } else {
-                        null
-                    }
-                }
+            flowOf(movieId).map { repository.getMovieDetails(movieId = it) }
 
         private var isSpatialUiEnabledFlow = MutableStateFlow(false)
 
@@ -134,7 +128,8 @@ class VideoPlayerScreenViewModel
                     null
                 } else {
                     val movieDetails = resolvedMovie.movieDetails
-                    val stereoscopicVisionType = StereoscopicVisionType.select(movieDetails, isSpatialUiEnabled)
+                    val stereoscopicVisionType =
+                        StereoscopicVisionType.select(movieDetails, isSpatialUiEnabled)
                     val nowPlayingInfo =
                         NowPlayingInfo(
                             movieDetails = movieDetails,
@@ -198,6 +193,11 @@ class VideoPlayerScreenViewModel
                 isSpatialUiEnabledFlow.emit(isEnabled)
             }
         }
+
+        @AssistedFactory
+        interface Factory {
+            fun create(movieId: String): VideoPlayerScreenViewModel
+        }
     }
 
 private class PlayerManager {
@@ -231,7 +231,8 @@ private class PlayerManager {
             p.addMediaItem(nowPlayingInfo.intoMediaItem())
             p.addMediaItems(
                 nowPlayingInfo.movieDetails.similarMovies.map {
-                    val stereoscopicVisionType = StereoscopicVisionType.select(it, isSpatialUiEnabled)
+                    val stereoscopicVisionType =
+                        StereoscopicVisionType.select(it, isSpatialUiEnabled)
                     it.intoMediaItem(stereoscopicVisionType)
                 },
             )
@@ -380,7 +381,10 @@ private fun StereoscopicVisionType.Companion.select(
     isSpatialUiEnabled: Boolean,
 ): StereoscopicVisionType {
     return if (isSpatialUiEnabled) {
-        StereoscopicVisionType.select(sources, listOf(StereoscopicVisionType.SideBySide, StereoscopicVisionType.Mono))
+        StereoscopicVisionType.select(
+            sources,
+            listOf(StereoscopicVisionType.SideBySide, StereoscopicVisionType.Mono),
+        )
     } else {
         StereoscopicVisionType.Mono
     }
