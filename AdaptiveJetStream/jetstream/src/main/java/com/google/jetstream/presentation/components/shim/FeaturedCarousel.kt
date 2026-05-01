@@ -332,11 +332,9 @@ private suspend fun CarouselState.nextItem(
     itemCount: Int,
 ) {
     onScrollFinished {
-        if (hasNextItem(itemCount)) {
-            currentCoroutineContext().ensureActive()
-            val nextItemIndex = currentItem + 1
-            animateScrollToItem(nextItemIndex)
-        }
+        currentCoroutineContext().ensureActive()
+        val nextItemIndex = (currentItem + 1) % itemCount
+        animateScrollToItem(nextItemIndex)
     }
 }
 
@@ -409,8 +407,8 @@ internal fun Modifier.carouselNavigation(
     return onKeyEvent { keyEvent ->
         when (keyEvent.key) {
             Key.DirectionLeft
-            if keyEvent.type == KeyEventType.KeyUp &&
-                keyEvent.modifierKeys() == ModifierKeys.None -> {
+                if keyEvent.type == KeyEventType.KeyUp &&
+                        keyEvent.modifierKeys() == ModifierKeys.None -> {
                 coroutineScope.launch {
                     state.previousItem()
                 }
