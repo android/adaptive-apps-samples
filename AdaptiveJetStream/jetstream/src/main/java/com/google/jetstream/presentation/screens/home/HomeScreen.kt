@@ -16,7 +16,6 @@
 
 package com.google.jetstream.presentation.screens.home
 
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.focusGroup
 import androidx.compose.foundation.gestures.LocalBringIntoViewSpec
@@ -115,7 +114,7 @@ internal fun Catalog(
     val shouldShowTopBar by remember {
         derivedStateOf {
             lazyListState.firstVisibleItemIndex == 0 &&
-                lazyListState.firstVisibleItemScrollOffset < 300
+                    lazyListState.firstVisibleItemScrollOffset < 300
         }
     }
 
@@ -248,7 +247,6 @@ private fun Catalog(
                 onExpanded = onExpanded,
                 onCollapsed = {
                     onCollapsed()
-                    Log.d("Home", "onCollapsed: $isTrendingFocused")
                 },
             )
         }
