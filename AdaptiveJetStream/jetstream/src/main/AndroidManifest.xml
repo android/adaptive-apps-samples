@@ -48,6 +48,7 @@ https://www.apache.org/licenses/LICENSE-2.0
     <application
         android:name=".JetStreamApplication"
         android:allowBackup="true"
+        android:appCategory="video"
         android:banner="@mipmap/app_banner"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -62,10 +63,6 @@ https://www.apache.org/licenses/LICENSE-2.0
         <profileable
             android:shell="true"
             tools:targetApi="35" />
-
-        <meta-data
-            android:name="com.android.automotive"
-            android:resource="@xml/automotive_app_desc" />
 
         <activity
             android:name=".MainActivity"
