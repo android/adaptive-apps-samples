@@ -16,7 +16,6 @@
 
 package com.google.jetstream.presentation.app
 
-import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalGridApi
@@ -25,7 +24,6 @@ import androidx.compose.foundation.layout.GridConfigurationScope
 import androidx.compose.foundation.layout.GridTrackSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.DpSize
@@ -270,6 +268,9 @@ private sealed interface AppLayout {
     }
 }
 
+/**
+ * Data structure describing a grid area.
+ */
 private data class GridArea(
     val row: Int = 0,
     val column: Int = 0,

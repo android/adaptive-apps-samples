@@ -23,13 +23,10 @@ import androidx.compose.runtime.ProvidableCompositionLocal
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.window.core.layout.WindowSizeClass
 import com.google.jetstream.presentation.components.feature.EngagementMode
 import com.google.jetstream.presentation.components.feature.LocalEngagementMode
-import com.google.jetstream.presentation.components.feature.isIWidthCompact
-import com.google.jetstream.presentation.components.feature.isWidthMedium
 
 val LocalFeaturedCarouselHeight: ProvidableCompositionLocal<Dp> =
     staticCompositionLocalOf {
@@ -96,8 +93,15 @@ fun rememberCategoryGridColumns(): GridCells {
     val engagementMode = LocalEngagementMode.current
     return remember(engagementMode) {
         when (engagementMode) {
-            EngagementMode.Leanback, EngagementMode.Cabin, is EngagementMode.Workstation -> GridCells.Fixed(4)
-            else -> GridCells.Fixed(3)
+            EngagementMode.Leanback, EngagementMode.Cabin, is EngagementMode.Workstation -> {
+                GridCells.Fixed(
+                    4,
+                )
+            }
+
+            else -> {
+                GridCells.Fixed(3)
+            }
         }
     }
 }

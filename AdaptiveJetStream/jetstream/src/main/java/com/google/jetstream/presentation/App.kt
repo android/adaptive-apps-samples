@@ -60,16 +60,25 @@ import com.google.jetstream.presentation.screens.shows.ShowsScreen
 import com.google.jetstream.presentation.screens.videoPlayer.VideoPlayerScreen
 import com.google.jetstream.presentation.screens.videoPlayer.VideoPlayerScreenViewModel
 
+/**
+ * Main entry point for the JetStream application UI.
+ * This composable sets up the navigation backstack, global navigation components,
+ * and defines the routing for all screens in the app using Navigation3.
+ */
 @OptIn(ExperimentalFoundationStyleApi::class, ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 fun App(
     modifier: Modifier = Modifier,
 ) {
+    // Manages the navigation history, starting at the Home destination
     val backStack = rememberNavBackStack(Destination.Home)
+    // Selects the navigation implementation (Rail, Bar, or TopBar) based on device type/mode
     val appNavigation = selectAppNavigation()
+    // Tracks visibility of the top bar/navigation rail for hide-on-scroll behavior
     var isTopbarVisible by rememberSaveable { mutableStateOf(true) }
 
     Surface {
+        // NavDisplay handles the actual swapping of screens based on the backStack
         NavDisplay(
             backStack = backStack,
             entryDecorators =
@@ -79,10 +88,12 @@ fun App(
                 ),
             sceneStrategies =
                 listOf(
+                    // Strategy for List-Detail layouts (e.g., Profile screen)
                     rememberListDetailSceneStrategy(),
                 ),
             sceneDecoratorStrategies =
                 listOf(
+                    // Custom strategy to wrap screens in the appropriate app-level navigation (Rail/Bar/TopBar)
                     rememberAppLayoutSceneDecorator(
                         navigation = {
                             appNavigation.Navigation(

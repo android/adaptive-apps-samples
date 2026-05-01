@@ -25,11 +25,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.android.tools.screenshot.PreviewTest
-import com.google.jetstream.presentation.app.AppState
-import com.google.jetstream.presentation.app.withNavigationSuiteScaffold.AdaptiveAppNavigationItems
-import com.google.jetstream.presentation.app.withNavigationSuiteScaffold.NavigationSuiteScaffoldLayout
-import com.google.jetstream.presentation.app.withNavigationSuiteScaffold.TopAppBar
-import com.google.jetstream.presentation.app.withTopBarNavigation.TopBarWithNavigationLayout
 import com.google.jetstream.presentation.components.AdaptivePreview
 import com.google.jetstream.presentation.components.AutoPreview
 import com.google.jetstream.presentation.components.DesktopPreview
@@ -192,78 +187,4 @@ fun SearchScreenScreenshot() {
     }
 }
 
-@PreviewTest
-@PhonePreview
-@TabletPreview
-@FoldablePreview
-@Composable
-fun NavigationSuiteScaffoldLayoutPreview() {
-    JetStreamPreview {
-        Surface {
-            val appState = AppState()
-
-            NavigationSuiteScaffoldLayout(
-                isNavigationVisible = true,
-                navigationItems = {
-                    AdaptiveAppNavigationItems(
-                        currentScreen = Screens.Home,
-                        screens = Screens.entries.filter { it.isMainNavigation },
-                        onSelectScreen = {},
-                    )
-                },
-                content = { padding ->
-                    HomeCatalog(
-                        featuredMovies = TestMovieList,
-                        trendingMovies = TestMovieList,
-                        top10Movies = TestMovieList,
-                        nowPlayingMovies = TestMovieList,
-                        onMovieClick = { _ -> },
-                        onScroll = { _ -> },
-                        goToVideoPlayer = { _ -> },
-                        modifier = Modifier.padding(padding).fillMaxSize(),
-                    )
-                },
-                topBar = {
-                    TopAppBar(
-                        modifier =
-                            Modifier
-                                .padding(
-                                    start = 24.dp,
-                                    end = 24.dp,
-                                    top = 0.dp,
-                                ),
-                        selectedScreen = appState.selectedScreen,
-                        showScreen = { },
-                    )
-                },
-            )
-        }
-    }
-}
-
-@PreviewTest
-@DesktopPreview
-@TvPreview
-@AutoPreview
-@Composable
-fun TopBarWithNavigationLayoutPreview() {
-    JetStreamPreview {
-        Surface {
-            val appState = AppState()
-            TopBarWithNavigationLayout(
-                selectedScreen = appState.selectedScreen,
-                isNavigationVisible = appState.isNavigationVisible,
-                isTopBarVisible = appState.isNavigationVisible && appState.isTopBarVisible,
-                isTopBarFocussed = appState.isTopBarFocused,
-                onTopBarFocusChanged = { hasFocus ->
-                    appState.updateTopBarFocusState(hasFocus)
-                },
-                onTopBarVisible = { appState.showTopBar() },
-                onActivityBackPressed = { },
-                onShowScreen = {},
-            ) {
-                Text("Preview content")
-            }
-        }
-    }
-}
+// ToDo: define screenshots tests for app level layouts.

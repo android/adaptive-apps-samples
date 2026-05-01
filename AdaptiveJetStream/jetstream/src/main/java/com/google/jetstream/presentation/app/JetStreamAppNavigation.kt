@@ -255,6 +255,9 @@ object TopBarNavigation : JetStreamAppNavigation {
     }
 }
 
+/**
+ * Navigation implementation optimized for the spatial UI.
+ */
 object SpatialNavigation : JetStreamAppNavigation {
     @Composable
     override fun SubNavigation(
@@ -337,6 +340,10 @@ fun selectAppNavigation(): JetStreamAppNavigation {
     }
 }
 
+/**
+ * Composable representing the top navigation bar used in Leanback/TV layouts.
+ * It displays the user profile, main navigation tabs, and the app logo in a grid.
+ */
 @OptIn(
     ExperimentalFlexBoxApi::class,
     ExperimentalFoundationStyleApi::class,
@@ -393,6 +400,10 @@ private fun Topbar(
     }
 }
 
+/**
+ * A horizontal row of tabs for navigating between the app's root destinations.
+ * Includes support for focus-based navigation and a specialized search tab.
+ */
 @Composable
 private fun TabRow(
     current: Destination?,
@@ -459,6 +470,11 @@ private fun TabRow(
     }
 }
 
+/**
+ * Determines the currently selected tab index based on the [current] destination.
+ * Returns the index of the destination in [Destination.RootDestinations], or the
+ * index of the Search destination if applicable.
+ */
 private fun currentTabIndex(current: Destination?): Int {
     val index = Destination.RootDestinations.indexOf(current)
     return when {

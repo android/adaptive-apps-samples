@@ -407,8 +407,8 @@ internal fun Modifier.carouselNavigation(
     return onKeyEvent { keyEvent ->
         when (keyEvent.key) {
             Key.DirectionLeft
-                if keyEvent.type == KeyEventType.KeyUp &&
-                        keyEvent.modifierKeys() == ModifierKeys.None -> {
+            if keyEvent.type == KeyEventType.KeyUp &&
+                keyEvent.modifierKeys() == ModifierKeys.None -> {
                 coroutineScope.launch {
                     state.previousItem()
                 }
