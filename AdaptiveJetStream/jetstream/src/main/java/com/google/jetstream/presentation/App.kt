@@ -19,7 +19,6 @@ package com.google.jetstream.presentation
 import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
 import androidx.compose.material3.Surface
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
-import androidx.compose.material3.adaptive.layout.ThreePaneScaffoldScope
 import androidx.compose.material3.adaptive.navigation3.ListDetailSceneStrategy
 import androidx.compose.material3.adaptive.navigation3.rememberListDetailSceneStrategy
 import androidx.compose.runtime.Composable
@@ -31,9 +30,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
+import androidx.navigation3.runtime.EntryProviderScope
+import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.metadata
-import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import com.google.jetstream.presentation.app.Destination
@@ -70,17 +70,17 @@ import com.google.jetstream.presentation.screens.videoPlayer.VideoPlayerScreenVi
 fun App(
     modifier: Modifier = Modifier,
 ) {
-    // Manages the navigation history, starting at the Home destination
-    val backStack = rememberNavBackStack(Destination.Home)
+    val navigator = rememberNavigator(initialDestination = Destination.Home)
+
     // Selects the navigation implementation (Rail, Bar, or TopBar) based on device type/mode
     val appNavigation = selectAppNavigation()
     // Tracks visibility of the top bar/navigation rail for hide-on-scroll behavior
     var isTopbarVisible by rememberSaveable { mutableStateOf(true) }
 
     Surface {
-        // NavDisplay handles the actual swapping of screens based on the backStack
         NavDisplay(
-            backStack = backStack,
+            backStack = navigator.backStack,
+            modifier = modifier,
             entryDecorators =
                 listOf(
                     rememberSaveableStateHolderNavEntryDecorator(),
@@ -97,243 +97,340 @@ fun App(
                     rememberAppLayoutSceneDecorator(
                         navigation = {
                             appNavigation.Navigation(
-                                current = backStack.lastOrNull() as? Destination,
-                                onNavigation = backStack::add,
+                                current = navigator.current,
+                                onNavigation = navigator::navigate,
                                 isVisible = isTopbarVisible,
                             )
                         },
                         subNavigation = {
                             appNavigation.SubNavigation(
-                                current = backStack.lastOrNull() as? Destination,
-                                onNavigation = backStack::add,
+                                current = navigator.current,
+                                onNavigation = navigator::navigate,
                             )
                         },
                     ),
                 ),
             entryProvider =
                 entryProvider {
-                    entry<Destination.Home>(
-                        metadata = Destination.Home.navEntryMetadata(),
-                    ) {
-                        HomeScreen(
-                            onMovieClick = {
-                                backStack.add(Destination.MovieDetails(movieId = it.id))
-                            },
-                            goToVideoPlayer = {
-                                backStack.add(Destination.VideoPlayer(movieId = it.id))
-                            },
-                            onScroll = {
-                                isTopbarVisible = it
-                            },
-                            isTopBarVisible = true,
-                        )
-                    }
-                    entry<Destination.Categories>(
-                        metadata = Destination.Categories.navEntryMetadata(),
-                    ) {
-                        CategoriesScreen(
-                            onCategoryClick = {
-                                backStack.add(Destination.CategoryMovieList(categoryId = it))
-                            },
-                        )
-                    }
-                    entry<Destination.Movies>(
-                        metadata = Destination.Movies.navEntryMetadata(),
-                    ) {
-                        MoviesScreen(
-                            onMovieClick = {
-                                backStack.add(Destination.MovieDetails(movieId = it.id))
-                            },
-                            onScroll = {
-                                isTopbarVisible = it
-                            },
-                            isTopBarVisible = true,
-                        )
-                    }
-                    entry<Destination.Shows>(
-                        metadata = Destination.Shows.navEntryMetadata(),
-                    ) {
-                        ShowsScreen(
-                            onTVShowClick = {
-                                backStack.add(Destination.MovieDetails(movieId = it.id))
-                            },
-                            onScroll = {
-                                isTopbarVisible = it
-                            },
-                            isTopBarVisible = true,
-                        )
-                    }
-                    entry<Destination.Favourites>(
-                        metadata = Destination.Favourites.navEntryMetadata(),
-                    ) {
-                        FavouritesScreen(
-                            onMovieClick = {
-                                backStack.add(Destination.MovieDetails(movieId = it))
-                            },
-                            onScroll = {
-                                isTopbarVisible = it
-                            },
-                            isTopBarVisible = true,
-                        )
-                    }
-                    entry<Destination.Search>(
-                        metadata = Destination.Search.navEntryMetadata(),
-                    ) {
-                        SearchScreen(
-                            onMovieClick = {
-                                backStack.add(Destination.MovieDetails(movieId = it.id))
-                            },
-                            onScroll = {
-                                isTopbarVisible = it
-                            },
-                        )
-                    }
-                    entry<Destination.MovieDetails>(
-                        metadata = Destination.MovieDetails.navEntryMetadata(),
-                    ) { destination ->
-                        val viewModel =
-                            hiltViewModel<MovieDetailsScreenViewModel, MovieDetailsScreenViewModel.Factory>(
-                                creationCallback = { factory ->
-                                    factory.create(destination.movieId)
-                                },
-                            )
-                        MovieDetailsScreen(
-                            goToMoviePlayer = {
-                                backStack.add(Destination.VideoPlayer(movieId = it.id))
-                            },
-                            refreshScreenWithNewMovie = {
-                                backStack.removeLastOrNull()
-                                backStack.add(Destination.MovieDetails(movieId = it.id))
-                            },
-                            onBackPressed = backStack::removeLastOrNull,
-                            movieDetailsScreenViewModel = viewModel,
-                        )
-                    }
-                    entry<Destination.CategoryMovieList>(
-                        metadata = Destination.CategoryMovieList.navEntryMetadata(),
-                    ) {
-                        val viewModel =
-                            hiltViewModel<CategoryMovieListScreenViewModel, CategoryMovieListScreenViewModel.Factory>(
-                                creationCallback = { factory ->
-                                    factory.create(it.categoryId)
-                                },
-                            )
-                        CategoryMovieListScreen(
-                            onBackPressed = backStack::removeLastOrNull,
-                            onMovieSelected = {
-                                backStack.add(Destination.MovieDetails(movieId = it.id))
-                            },
-                            categoryMovieListScreenViewModel = viewModel,
-                        )
-                    }
-                    entry<Destination.VideoPlayer>(
-                        metadata = Destination.VideoPlayer.navEntryMetadata(),
-                    ) { destination ->
-                        val viewModel =
-                            hiltViewModel<VideoPlayerScreenViewModel, VideoPlayerScreenViewModel.Factory>(
-                                creationCallback = { factory ->
-                                    factory.create(destination.movieId)
-                                },
-                            )
-                        VideoPlayerScreen(
-                            onBackPressed = backStack::removeLastOrNull,
-                            videoPlayerScreenViewModel = viewModel,
-                        )
-                    }
-                    entry<Destination.Profile>(
-                        metadata =
-                            Destination.Profile.navEntryMetadata {
-                                AboutSection()
-                            },
-                    ) {
-                        ProfileScreen(
-                            onDestinationSelected = {
-                                backStack.add(it)
-                            },
-                        )
-                    }
-                    entry<Destination.About>(
-                        metadata = Destination.About.navEntryMetadata(),
-                    ) {
-                        AboutSection()
-                    }
-                    entry<Destination.Accounts>(
-                        metadata = Destination.Accounts.navEntryMetadata(),
-                    ) {
-                        AccountsSection()
-                    }
-                    entry<Destination.Subtitles>(
-                        metadata = Destination.Subtitles.navEntryMetadata(),
-                    ) {
-                        var isSubtitleChecked by rememberSaveable { mutableStateOf(false) }
-                        SubtitlesSection(isSubtitlesChecked = isSubtitleChecked) {
-                            isSubtitleChecked = it
-                        }
-                    }
-                    entry<Destination.Language>(
-                        metadata = Destination.Language.navEntryMetadata(),
-                    ) {
-                        var selectedLanguageIndex by rememberSaveable {
-                            mutableIntStateOf(0)
-                        }
-                        LanguageSection(selectedIndex = selectedLanguageIndex) {
-                            selectedLanguageIndex = it
-                        }
-                    }
-                    entry<Destination.SearchHistory>(
-                        metadata = Destination.SearchHistory.navEntryMetadata(),
-                    ) {
-                        SearchHistorySection()
-                    }
-                    entry<Destination.HelpAndSupport>(
-                        metadata = Destination.HelpAndSupport.navEntryMetadata(),
-                    ) {
-                        HelpAndSupportSection()
-                    }
+                    homeEntry(
+                        navigator = navigator,
+                        isTopbarVisible = isTopbarVisible,
+                        onUpdateTopbarVisibility = {
+                            isTopbarVisible = it
+                        },
+                    )
+
+                    categoriesEntry(navigator)
+
+                    moviesEntry(
+                        navigator = navigator,
+                        isTopbarVisible = isTopbarVisible,
+                        onUpdateTopbarVisibility = {
+                            isTopbarVisible = it
+                        },
+                    )
+
+                    showsEntry(
+                        navigator = navigator,
+                        isTopbarVisible = isTopbarVisible,
+                        onUpdateTopbarVisibility = { isTopbarVisible = it },
+                    )
+
+                    favoritesEntry(
+                        navigator = navigator,
+                        isTopbarVisible = isTopbarVisible,
+                        onUpdateTopbarVisibility = { isTopbarVisible = it },
+                    )
+
+                    searchEntry(
+                        navigator = navigator,
+                        onUpdateTopbarVisibility = { isTopbarVisible = it },
+                    )
+
+                    moveDetailsEntry(navigator)
+
+                    videoPlayerEntry(navigator)
+
+                    profileEntries(navigator)
                 },
-            modifier = modifier,
+        )
+    }
+}
+
+private fun EntryProviderScope<NavKey>.homeEntry(
+    navigator: Navigator,
+    isTopbarVisible: Boolean,
+    onUpdateTopbarVisibility: (Boolean) -> Unit,
+) {
+    entry<Destination.Home>(
+        metadata =
+            metadata {
+                put(PresentationType.PresentationTypeKey, PresentationType.SinglePane)
+            },
+    ) {
+        HomeScreen(
+            onMovieClick = {
+                navigator.navigate(Destination.MovieDetails(movieId = it.id))
+            },
+            goToVideoPlayer = {
+                navigator.navigate(Destination.VideoPlayer(movieId = it.id))
+            },
+            onScroll = onUpdateTopbarVisibility,
+            isTopBarVisible = isTopbarVisible,
+        )
+    }
+}
+
+private fun EntryProviderScope<NavKey>.categoriesEntry(
+    navigator: Navigator,
+) {
+    entry<Destination.Categories>(
+        metadata =
+            metadata {
+                put(PresentationType.PresentationTypeKey, PresentationType.SinglePane)
+            },
+    ) {
+        CategoriesScreen(
+            onCategoryClick = {
+                navigator.navigate(Destination.CategoryMovieList(categoryId = it))
+            },
+        )
+    }
+
+    entry<Destination.CategoryMovieList>(
+        metadata =
+            metadata {
+                put(PresentationType.PresentationTypeKey, PresentationType.Overlay)
+            },
+    ) {
+        val viewModel =
+            hiltViewModel<CategoryMovieListScreenViewModel, CategoryMovieListScreenViewModel.Factory>(
+                creationCallback = { factory ->
+                    factory.create(it.categoryId)
+                },
+            )
+        CategoryMovieListScreen(
+            onBackPressed = navigator::goBack,
+            onMovieSelected = { movie ->
+                navigator.navigate(Destination.MovieDetails(movieId = movie.id))
+            },
+            categoryMovieListScreenViewModel = viewModel,
+        )
+    }
+}
+
+private fun EntryProviderScope<NavKey>.moviesEntry(
+    navigator: Navigator,
+    isTopbarVisible: Boolean,
+    onUpdateTopbarVisibility: (Boolean) -> Unit,
+) {
+    entry<Destination.Movies>(
+        metadata =
+            metadata {
+                put(PresentationType.PresentationTypeKey, PresentationType.SinglePane)
+            },
+    ) {
+        MoviesScreen(
+            onMovieClick = {
+                navigator.navigate(Destination.MovieDetails(movieId = it.id))
+            },
+            onScroll = onUpdateTopbarVisibility,
+            isTopBarVisible = isTopbarVisible,
+        )
+    }
+}
+
+private fun EntryProviderScope<NavKey>.showsEntry(
+    navigator: Navigator,
+    isTopbarVisible: Boolean,
+    onUpdateTopbarVisibility: (Boolean) -> Unit,
+) {
+    entry<Destination.Shows>(
+        metadata =
+            metadata {
+                put(PresentationType.PresentationTypeKey, PresentationType.SinglePane)
+            },
+    ) {
+        ShowsScreen(
+            onTVShowClick = {
+                navigator.navigate(Destination.MovieDetails(movieId = it.id))
+            },
+            onScroll = onUpdateTopbarVisibility,
+            isTopBarVisible = isTopbarVisible,
+        )
+    }
+}
+
+private fun EntryProviderScope<NavKey>.moveDetailsEntry(
+    navigator: Navigator,
+) {
+    entry<Destination.MovieDetails>(
+        metadata =
+            metadata {
+                put(PresentationType.PresentationTypeKey, PresentationType.Overlay)
+            },
+    ) { destination ->
+        val viewModel =
+            hiltViewModel<MovieDetailsScreenViewModel, MovieDetailsScreenViewModel.Factory>(
+                creationCallback = { factory ->
+                    factory.create(destination.movieId)
+                },
+            )
+        MovieDetailsScreen(
+            goToMoviePlayer = {
+                navigator.navigate(Destination.VideoPlayer(movieId = it.id))
+            },
+            refreshScreenWithNewMovie = {
+                navigator.goBack()
+                navigator.navigate(Destination.MovieDetails(movieId = it.id))
+            },
+            onBackPressed = navigator::goBack,
+            movieDetailsScreenViewModel = viewModel,
+        )
+    }
+}
+
+private fun EntryProviderScope<NavKey>.favoritesEntry(
+    navigator: Navigator,
+    isTopbarVisible: Boolean,
+    onUpdateTopbarVisibility: (Boolean) -> Unit,
+) {
+    entry<Destination.Favourites>(
+        metadata =
+            metadata {
+                put(PresentationType.PresentationTypeKey, PresentationType.SinglePane)
+            },
+    ) {
+        FavouritesScreen(
+            onMovieClick = {
+                navigator.navigate(Destination.MovieDetails(movieId = it))
+            },
+            onScroll = onUpdateTopbarVisibility,
+            isTopBarVisible = isTopbarVisible,
+        )
+    }
+}
+
+private fun EntryProviderScope<NavKey>.searchEntry(
+    navigator: Navigator,
+    onUpdateTopbarVisibility: (Boolean) -> Unit,
+) {
+    entry<Destination.Search>(
+        metadata =
+            metadata {
+                put(PresentationType.PresentationTypeKey, PresentationType.SinglePane)
+            },
+    ) {
+        SearchScreen(
+            onMovieClick = {
+                navigator.navigate(Destination.MovieDetails(movieId = it.id))
+            },
+            onScroll = onUpdateTopbarVisibility,
+        )
+    }
+}
+
+private fun EntryProviderScope<NavKey>.videoPlayerEntry(
+    navigator: Navigator,
+) {
+    entry<Destination.VideoPlayer>(
+        metadata =
+            metadata {
+                put(PresentationType.PresentationTypeKey, PresentationType.Overlay)
+            },
+    ) { destination ->
+        val viewModel =
+            hiltViewModel<VideoPlayerScreenViewModel, VideoPlayerScreenViewModel.Factory>(
+                creationCallback = { factory ->
+                    factory.create(destination.movieId)
+                },
+            )
+        VideoPlayerScreen(
+            onBackPressed = navigator::goBack,
+            videoPlayerScreenViewModel = viewModel,
         )
     }
 }
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
-private fun Destination.navEntryMetadata(
-    detailsPlaceHolder: @Composable ThreePaneScaffoldScope.() -> Unit = {},
-): Map<String, Any> {
-    return metadata {
-        put(Destination.MetadataKey, presentationType)
-    } +
-        when (presentationType) {
-            PresentationType.ListDetailChild -> {
-                ListDetailSceneStrategy.detailPane()
-            }
-
-            PresentationType.ListDetailParent -> {
+private fun EntryProviderScope<NavKey>.profileEntries(
+    navigator: Navigator,
+) {
+    entry<Destination.Profile>(
+        metadata =
+            metadata {
+                put(PresentationType.PresentationTypeKey, PresentationType.ListDetailParent)
+            } +
                 ListDetailSceneStrategy.listPane(
-                    detailPlaceholder = detailsPlaceHolder,
-                )
-            }
+                    detailPlaceholder = {
+                        AboutSection()
+                    },
+                ),
+    ) {
+        ProfileScreen(
+            onDestinationSelected = navigator::navigate,
+        )
+    }
 
-            else -> {
-                mapOf()
-            }
+    entry<Destination.About>(
+        metadata =
+            metadata {
+                put(PresentationType.PresentationTypeKey, PresentationType.ListDetailChild)
+            } + ListDetailSceneStrategy.detailPane(),
+    ) {
+        AboutSection()
+    }
+
+    entry<Destination.Accounts>(
+        metadata =
+            metadata {
+                put(PresentationType.PresentationTypeKey, PresentationType.ListDetailChild)
+            } + ListDetailSceneStrategy.detailPane(),
+    ) {
+        AccountsSection()
+    }
+
+    entry<Destination.Subtitles>(
+        metadata =
+            metadata {
+                put(PresentationType.PresentationTypeKey, PresentationType.ListDetailChild)
+            } + ListDetailSceneStrategy.detailPane(),
+    ) {
+        var isSubtitleChecked by rememberSaveable { mutableStateOf(false) }
+        SubtitlesSection(isSubtitlesChecked = isSubtitleChecked) {
+            isSubtitleChecked = it
         }
-}
-
-private fun Destination.MovieDetails.Companion.navEntryMetadata(): Map<String, Any> {
-    return metadata {
-        put(Destination.MetadataKey, presentationType)
     }
-}
 
-private fun Destination.CategoryMovieList.Companion.navEntryMetadata(): Map<String, Any> {
-    return metadata {
-        put(Destination.MetadataKey, presentationType)
+    entry<Destination.Language>(
+        metadata =
+            metadata {
+                put(PresentationType.PresentationTypeKey, PresentationType.ListDetailChild)
+            } + ListDetailSceneStrategy.detailPane(),
+    ) {
+        var selectedLanguageIndex by rememberSaveable {
+            mutableIntStateOf(0)
+        }
+        LanguageSection(selectedIndex = selectedLanguageIndex) {
+            selectedLanguageIndex = it
+        }
     }
-}
 
-private fun Destination.VideoPlayer.Companion.navEntryMetadata(): Map<String, Any> {
-    return metadata {
-        put(Destination.MetadataKey, presentationType)
+    entry<Destination.SearchHistory>(
+        metadata =
+            metadata {
+                put(PresentationType.PresentationTypeKey, PresentationType.ListDetailChild)
+            } + ListDetailSceneStrategy.detailPane(),
+    ) {
+        SearchHistorySection()
+    }
+
+    entry<Destination.HelpAndSupport>(
+        metadata =
+            metadata {
+                put(PresentationType.PresentationTypeKey, PresentationType.ListDetailChild)
+            } + ListDetailSceneStrategy.detailPane(),
+    ) {
+        HelpAndSupportSection()
     }
 }

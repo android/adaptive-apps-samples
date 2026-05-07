@@ -36,7 +36,7 @@ import androidx.compose.ui.unit.dp
 import com.google.jetstream.data.util.StringConstants.Composable.Placeholders.AboutSectionAppVersionTitle
 import com.google.jetstream.data.util.StringConstants.Composable.Placeholders.AboutSectionDescription
 import com.google.jetstream.data.util.StringConstants.Composable.Placeholders.AboutSectionTitle
-import com.google.jetstream.presentation.screens.profile.compoents.ProfileSectionTitle
+import com.google.jetstream.presentation.screens.profile.components.ProfileSectionTitle
 import com.google.jetstream.presentation.theme.LocalContentPadding
 
 @OptIn(ExperimentalFoundationStyleApi::class)

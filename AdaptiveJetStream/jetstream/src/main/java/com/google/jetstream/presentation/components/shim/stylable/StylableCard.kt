@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
+import androidx.lifecycle.compose.dropUnlessResumed
 import com.google.jetstream.presentation.theme.JetStreamTokens
 
 /**
@@ -57,7 +58,7 @@ fun StylableCard(
         modifier =
             modifier
                 .clickable(
-                    onClick = onClick,
+                    onClick = dropUnlessResumed(block = onClick),
                     interactionSource = interactionSource,
                     indication = null,
                     enabled = enabled,

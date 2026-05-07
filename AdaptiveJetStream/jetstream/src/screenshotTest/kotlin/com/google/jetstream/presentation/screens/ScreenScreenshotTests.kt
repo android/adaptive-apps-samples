@@ -17,22 +17,13 @@
 package com.google.jetstream.presentation.screens
 
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.unit.dp
 import com.android.tools.screenshot.PreviewTest
 import com.google.jetstream.presentation.components.AdaptivePreview
-import com.google.jetstream.presentation.components.AutoPreview
-import com.google.jetstream.presentation.components.DesktopPreview
-import com.google.jetstream.presentation.components.FoldablePreview
 import com.google.jetstream.presentation.components.JetStreamPreview
-import com.google.jetstream.presentation.components.PhonePreview
-import com.google.jetstream.presentation.components.TabletPreview
-import com.google.jetstream.presentation.components.TvPreview
 import com.google.jetstream.presentation.components.mockCategoryScreenState
 import com.google.jetstream.presentation.screens.categories.CategoryDetails
 import com.google.jetstream.presentation.screens.favourites.FavouriteScreenViewModel

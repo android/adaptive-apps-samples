@@ -99,7 +99,7 @@ fun MoviesRow(
 ) {
     Column(
         modifier =
-            Modifier
+            modifier
                 .styleable(style = style)
                 .focusGroup(),
     ) {
@@ -107,7 +107,7 @@ fun MoviesRow(
         MovieList(
             movieList = movieList,
             contentPadding = LocalContentPadding.current.intoPaddingValues(),
-            modifier = modifier.focusRestorer(),
+            modifier = Modifier.focusRestorer(),
             itemContent = itemContent,
         )
     }

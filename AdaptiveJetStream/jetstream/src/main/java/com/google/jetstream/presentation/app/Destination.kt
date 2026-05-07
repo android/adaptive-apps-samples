@@ -16,166 +16,57 @@
 
 package com.google.jetstream.presentation.app
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Subtitles
-import androidx.compose.material.icons.filled.Support
-import androidx.compose.material.icons.filled.Translate
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.res.painterResource
 import androidx.navigation3.runtime.NavKey
-import androidx.navigation3.runtime.NavMetadataKey
-import com.google.jetstream.R
 import kotlinx.serialization.Serializable
 
 // ToDo: update names to read the resource file
 @Serializable
-sealed class Destination(
-    val presentationType: PresentationType = PresentationType.SinglePane,
-) : NavKey {
-    open val name: String
-        @Composable get() {
-            return ""
-        }
-    open val icon: Painter?
-        @Composable get() {
-            return null
-        }
+sealed class Destination : NavKey {
+    @Serializable
+    data object Home : Destination()
 
     @Serializable
-    data object Home : Destination() {
-        override val name: String @Composable get() = "Home"
-        override val icon: Painter @Composable get() = painterResource(R.drawable.ic_home)
-    }
+    data object Categories : Destination()
 
     @Serializable
-    data object Categories : Destination() {
-        override val name: String @Composable get() = "Categories"
-        override val icon: Painter @Composable get() = painterResource(R.drawable.ic_category)
-    }
+    data object Movies : Destination()
 
     @Serializable
-    data object Movies : Destination() {
-        override val name: String @Composable get() = "Movies"
-        override val icon: Painter @Composable get() = painterResource(R.drawable.ic_movies)
-    }
+    data object Shows : Destination()
 
     @Serializable
-    data object Shows : Destination() {
-        override val name: String @Composable get() = "Shows"
-        override val icon: Painter @Composable get() = painterResource(R.drawable.ic_shows)
-    }
+    data object Favourites : Destination()
 
     @Serializable
-    data object Favourites : Destination() {
-        override val name: String @Composable get() = "Favourites"
-        override val icon: Painter @Composable get() = painterResource(R.drawable.ic_favorites)
-    }
+    data object Search : Destination()
 
     @Serializable
-    data object Search : Destination() {
-        override val name: String @Composable get() = "Search"
-        override val icon: Painter @Composable get() = rememberVectorPainter(Icons.Default.Search)
-    }
+    data object Profile : Destination()
 
     @Serializable
-    data object Profile : Destination(presentationType = PresentationType.ListDetailParent) {
-        override val name: String @Composable get() = "Profile"
-        override val icon: Painter @Composable get() = rememberVectorPainter(Icons.Default.Person)
-    }
+    data class CategoryMovieList(val categoryId: String) : Destination()
 
     @Serializable
-    data class CategoryMovieList(val categoryId: String) : Destination() {
-        companion object {
-            val presentationType = PresentationType.SinglePane
-        }
-    }
+    data class MovieDetails(val movieId: String) : Destination()
 
     @Serializable
-    data class MovieDetails(val movieId: String) : Destination() {
-        companion object {
-            val presentationType = PresentationType.Overlay
-        }
-    }
+    data class VideoPlayer(val movieId: String) : Destination()
 
     @Serializable
-    data class VideoPlayer(val movieId: String) :
-        Destination(presentationType = PresentationType.Overlay) {
-        companion object {
-            val presentationType = PresentationType.Overlay
-        }
-    }
+    data object About : Destination()
 
     @Serializable
-    data object About : Destination(presentationType = PresentationType.ListDetailChild) {
-        override val name: String @Composable get() = "About"
-        override val icon: Painter @Composable get() = rememberVectorPainter(Icons.Default.Info)
-    }
+    data object Accounts : Destination()
 
     @Serializable
-    data object Accounts : Destination(presentationType = PresentationType.ListDetailChild) {
-        override val name: String @Composable get() = "Accounts"
-        override val icon: Painter @Composable get() = rememberVectorPainter(Icons.Default.Person)
-    }
+    data object Subtitles : Destination()
 
     @Serializable
-    data object Subtitles : Destination(presentationType = PresentationType.ListDetailChild) {
-        override val name: String @Composable get() = "Subtitles"
-        override val icon: Painter @Composable get() = rememberVectorPainter(Icons.Default.Subtitles)
-    }
+    data object Language : Destination()
 
     @Serializable
-    data object Language : Destination(presentationType = PresentationType.ListDetailChild) {
-        override val name: String @Composable get() = "Language"
-        override val icon: Painter @Composable get() = rememberVectorPainter(Icons.Default.Translate)
-    }
+    data object SearchHistory : Destination()
 
     @Serializable
-    data object SearchHistory : Destination(presentationType = PresentationType.ListDetailChild) {
-        override val name: String @Composable get() = "Search history"
-        override val icon: Painter @Composable get() = rememberVectorPainter(Icons.Default.Search)
-    }
-
-    @Serializable
-    data object HelpAndSupport : Destination(presentationType = PresentationType.ListDetailChild) {
-        override val name: String @Composable get() = "Help and Support"
-        override val icon: Painter @Composable get() = rememberVectorPainter(Icons.Default.Support)
-    }
-
-    companion object {
-        val MetadataKey = object : NavMetadataKey<PresentationType> {}
-        val RootDestinations: List<Destination>
-            get() {
-                return listOf(
-                    Home,
-                    Categories,
-                    Movies,
-                    Shows,
-                    Favourites,
-                )
-            }
-
-        val ProfileSettings: List<Destination>
-            get() {
-                return listOf(
-                    About,
-                    Accounts,
-                    Subtitles,
-                    Language,
-                    SearchHistory,
-                    HelpAndSupport,
-                )
-            }
-    }
-}
-
-enum class PresentationType {
-    SinglePane,
-    ListDetailParent,
-    ListDetailChild,
-    Overlay,
+    data object HelpAndSupport : Destination()
 }

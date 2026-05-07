@@ -114,7 +114,7 @@ internal fun Catalog(
     val shouldShowTopBar by remember {
         derivedStateOf {
             lazyListState.firstVisibleItemIndex == 0 &&
-                    lazyListState.firstVisibleItemScrollOffset < 300
+                lazyListState.firstVisibleItemScrollOffset < 300
         }
     }
 

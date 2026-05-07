@@ -30,8 +30,8 @@ import com.google.jetstream.data.util.StringConstants.Composable.Placeholders.He
 import com.google.jetstream.data.util.StringConstants.Composable.Placeholders.HelpAndSupportSectionFAQItem
 import com.google.jetstream.data.util.StringConstants.Composable.Placeholders.HelpAndSupportSectionPrivacyItem
 import com.google.jetstream.data.util.StringConstants.Composable.Placeholders.HelpAndSupportSectionTitle
-import com.google.jetstream.presentation.screens.profile.compoents.ProfileSectionTitle
-import com.google.jetstream.presentation.screens.profile.compoents.SettingItem
+import com.google.jetstream.presentation.screens.profile.components.ProfileSectionTitle
+import com.google.jetstream.presentation.screens.profile.components.SettingItem
 import com.google.jetstream.presentation.theme.LocalContentPadding
 
 @Composable

@@ -26,8 +26,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.google.jetstream.data.util.StringConstants
 import com.google.jetstream.data.util.StringConstants.Composable.Placeholders.SampleSearchHistory
-import com.google.jetstream.presentation.screens.profile.compoents.ProfileSectionTitle
-import com.google.jetstream.presentation.screens.profile.compoents.SettingItemValue
+import com.google.jetstream.presentation.screens.profile.components.ProfileSectionTitle
+import com.google.jetstream.presentation.screens.profile.components.SettingItemValue
 import com.google.jetstream.presentation.theme.LocalContentPadding
 
 @Composable

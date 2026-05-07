@@ -32,8 +32,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.google.jetstream.data.util.StringConstants
 import com.google.jetstream.presentation.components.TvPreview
-import com.google.jetstream.presentation.screens.profile.compoents.AccountsSectionDeleteDialog
-import com.google.jetstream.presentation.screens.profile.compoents.AccountsSelectionItem
+import com.google.jetstream.presentation.screens.profile.components.AccountsSectionDeleteDialog
+import com.google.jetstream.presentation.screens.profile.components.AccountsSelectionItem
 import com.google.jetstream.presentation.theme.LocalContentPadding
 
 @Immutable

@@ -25,7 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import com.google.jetstream.data.util.StringConstants.Composable.Placeholders.LanguageSectionItems
 import com.google.jetstream.data.util.StringConstants.Composable.Placeholders.LanguageSectionTitle
-import com.google.jetstream.presentation.screens.profile.compoents.SelectionItem
+import com.google.jetstream.presentation.screens.profile.components.SelectionItem
 import com.google.jetstream.presentation.theme.LocalContentPadding
 
 @Composable

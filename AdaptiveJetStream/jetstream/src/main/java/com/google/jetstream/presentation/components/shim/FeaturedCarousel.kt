@@ -231,7 +231,7 @@ object FeaturedCarouselDefaults {
         IconButton(
             onClick = {
                 coroutineScope.launch {
-                    state.nextItem(itemCount)
+                    state.scrollToNextItem(itemCount)
                 }
             },
             enabled = state.hasNextItem(itemCount),
@@ -258,7 +258,7 @@ object FeaturedCarouselDefaults {
         IconButton(
             onClick = {
                 coroutineScope.launch {
-                    state.previousItem()
+                    state.scrollToPreviousItem()
                 }
             },
             enabled = state.hasPreviousItem(),
@@ -328,7 +328,7 @@ object FeaturedCarouselDefaults {
 /**
  * Animates to the next item in the carousel if it exists.
  */
-private suspend fun CarouselState.nextItem(
+private suspend fun CarouselState.scrollToNextItem(
     itemCount: Int,
 ) {
     onScrollFinished {
@@ -341,7 +341,7 @@ private suspend fun CarouselState.nextItem(
 /**
  * Animates to the previous item in the carousel if it exists.
  */
-private suspend fun CarouselState.previousItem() {
+private suspend fun CarouselState.scrollToPreviousItem() {
     onScrollFinished {
         if (hasPreviousItem()) {
             currentCoroutineContext().ensureActive()
@@ -390,7 +390,7 @@ private fun Modifier.autoScroll(
             while (true) {
                 delay(autoScrollInterval)
                 yield()
-                state.nextItem(itemCount)
+                state.scrollToNextItem(itemCount)
             }
         }
     }
@@ -410,7 +410,7 @@ internal fun Modifier.carouselNavigation(
             if keyEvent.type == KeyEventType.KeyUp &&
                 keyEvent.modifierKeys() == ModifierKeys.None -> {
                 coroutineScope.launch {
-                    state.previousItem()
+                    state.scrollToPreviousItem()
                 }
                 true
             }

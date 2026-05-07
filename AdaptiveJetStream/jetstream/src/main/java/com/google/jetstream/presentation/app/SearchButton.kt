@@ -33,7 +33,7 @@ fun SearchButton(
         modifier = modifier,
     ) {
         Icon(
-            painter = Destination.Search.icon,
+            painter = NavigationItem.Search.icon,
             contentDescription = StringConstants.Composable.ContentDescription.DashboardSearchButton,
             tint = LocalContentColor.current,
         )

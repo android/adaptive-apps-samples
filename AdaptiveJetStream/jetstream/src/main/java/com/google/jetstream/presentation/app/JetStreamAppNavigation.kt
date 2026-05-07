@@ -174,22 +174,19 @@ object DefaultNavigation : JetStreamAppNavigation {
         current: Destination?,
         onNavigation: (Destination) -> Unit,
     ) {
-        Destination.RootDestinations.forEach { destination ->
+        NavigationItem.RootDestinations.forEach { item ->
             NavigationRailItem(
-                selected = destination == current,
-                onClick = { onNavigation(destination) },
+                selected = item.destination == current,
+                onClick = { onNavigation(item.destination) },
                 icon = {
-                    val painter = destination.icon
-                    if (painter != null) {
-                        Icon(
-                            painter = painter,
-                            contentDescription = destination.name,
-                            modifier = Modifier.size(24.dp),
-                        )
-                    }
+                    Icon(
+                        painter = item.icon,
+                        contentDescription = item.name,
+                        modifier = Modifier.size(24.dp),
+                    )
                 },
                 label = {
-                    Text(text = destination.name)
+                    Text(text = item.name)
                 },
             )
         }
@@ -373,6 +370,8 @@ private fun Topbar(
                 .styleable {
                     contentPaddingStart(contentPadding.start)
                     contentPaddingEnd(contentPadding.end)
+                    externalPaddingTop(8.dp)
+                    externalPaddingBottom(8.dp)
                 }
                 .focusRestorer(fallback = focusRequester)
                 .focusGroup(),
@@ -419,7 +418,7 @@ private fun TabRow(
 
     val focusRequesterList =
         remember {
-            List(Destination.RootDestinations.size + 1) {
+            List(NavigationItem.RootDestinations.size + 1) {
                 FocusRequester()
             }
         }
@@ -432,22 +431,22 @@ private fun TabRow(
                 .focusRestorer(fallback = focusRequesterList[selectedTabIndex])
                 .focusGroup(),
     ) {
-        Destination.RootDestinations.forEachIndexed { index, destination ->
+        NavigationItem.RootDestinations.forEachIndexed { index, item ->
             Tab(
-                selected = destination == current,
+                selected = item.destination == current,
                 onClick = {
-                    onTabClicked(destination)
+                    onTabClicked(item.destination)
                 },
                 modifier =
                     Modifier
                         .onFocusChanged {
                             if (it.isFocused) {
-                                onTabFocused(destination)
+                                onTabFocused(item.destination)
                             }
                         }
                         .focusRequester(focusRequesterList[index]),
             ) {
-                Text(text = destination.name, style = textStyle)
+                Text(text = item.name, style = textStyle)
             }
         }
         Tab(
@@ -463,8 +462,8 @@ private fun TabRow(
                     .focusRequester(focusRequesterList.last()),
         ) {
             Icon(
-                painter = Destination.Search.icon,
-                contentDescription = Destination.Search.name,
+                painter = NavigationItem.Search.icon,
+                contentDescription = NavigationItem.Search.name,
             )
         }
     }
@@ -472,14 +471,14 @@ private fun TabRow(
 
 /**
  * Determines the currently selected tab index based on the [current] destination.
- * Returns the index of the destination in [Destination.RootDestinations], or the
+ * Returns the index of the destination in [NavigationItem.RootDestinations], or the
  * index of the Search destination if applicable.
  */
 private fun currentTabIndex(current: Destination?): Int {
-    val index = Destination.RootDestinations.indexOf(current)
+    val index = NavigationItem.RootDestinations.indexOfFirst { it.destination == current }
     return when {
         index > -1 -> index
-        current == Destination.Search -> Destination.RootDestinations.size
+        current == Destination.Search -> NavigationItem.RootDestinations.size
         else -> 0
     }
 }

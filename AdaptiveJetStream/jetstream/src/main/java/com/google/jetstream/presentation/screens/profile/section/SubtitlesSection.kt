@@ -31,8 +31,8 @@ import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.google.jetstream.data.util.StringConstants
-import com.google.jetstream.presentation.screens.profile.compoents.ProfileSectionTitle
-import com.google.jetstream.presentation.screens.profile.compoents.SettingItem
+import com.google.jetstream.presentation.screens.profile.components.ProfileSectionTitle
+import com.google.jetstream.presentation.screens.profile.components.SettingItem
 import com.google.jetstream.presentation.theme.LocalContentPadding
 
 @OptIn(ExperimentalFoundationStyleApi::class)

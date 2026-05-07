@@ -37,6 +37,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.dropUnlessResumed
 import com.google.jetstream.data.entities.Movie
 import com.google.jetstream.presentation.components.feature.LocalEngagementMode
 import com.google.jetstream.presentation.components.shim.indication.scaleIndication
@@ -63,7 +64,7 @@ fun ProminentMovieCard(
             modifier = modifier,
             style = style,
             interactionSource = interactionSource,
-            onClick = { onMovieClick(movie) },
+            onClick = dropUnlessResumed { onMovieClick(movie) },
         )
     }
 }

@@ -25,6 +25,7 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -38,9 +39,12 @@ class CategoryMovieListScreenViewModel
     ) : ViewModel() {
         val uiState =
             flowOf(categoryId)
-                .map { id ->
+                .map<String, CategoryMovieListScreenUiState> { id ->
                     val categoryDetails = movieRepository.getMovieCategoryDetails(id)
                     CategoryMovieListScreenUiState.Done(categoryDetails)
+                }
+                .catch {
+                    emit(CategoryMovieListScreenUiState.Error)
                 }.stateIn(
                     scope = viewModelScope,
                     started = SharingStarted.WhileSubscribed(5_000),

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.jetstream.presentation.screens.profile.compoents
+package com.google.jetstream.presentation.screens.profile.components
 
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemColors

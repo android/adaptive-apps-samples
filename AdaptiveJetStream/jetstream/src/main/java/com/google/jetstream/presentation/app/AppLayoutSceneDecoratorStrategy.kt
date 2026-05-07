@@ -22,6 +22,9 @@ import androidx.compose.foundation.layout.ExperimentalGridApi
 import androidx.compose.foundation.layout.Grid
 import androidx.compose.foundation.layout.GridConfigurationScope
 import androidx.compose.foundation.layout.GridTrackSize
+import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
+import androidx.compose.foundation.style.styleable
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -30,22 +33,41 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.runtime.NavMetadataKey
 import androidx.navigation3.runtime.get
 import androidx.navigation3.scene.Scene
 import androidx.navigation3.scene.SceneDecoratorStrategy
 import androidx.navigation3.scene.SceneDecoratorStrategyScope
 import androidx.xr.compose.material3.ExperimentalMaterial3XrApi
 import androidx.xr.compose.spatial.Subspace
-import androidx.xr.compose.subspace.MovePolicy
 import androidx.xr.compose.subspace.ResizePolicy
 import androidx.xr.compose.subspace.SpatialPanel
+import androidx.xr.compose.subspace.layout.SubspaceModifier
+import androidx.xr.compose.subspace.layout.movable
 import androidx.xr.compose.unit.DpVolumeSize
 import com.google.jetstream.presentation.components.feature.EngagementMode
 import com.google.jetstream.presentation.components.feature.LocalEngagementMode
 import com.google.jetstream.presentation.theme.JetStreamTokens
 
+enum class PresentationType {
+    SinglePane,
+    ListDetailParent,
+    ListDetailChild,
+    Overlay,
+    ;
+
+    companion object {
+        val PresentationTypeKey = object : NavMetadataKey<PresentationType> {}
+    }
+}
+
 /**
- * Strategy for decorating a scene based on its presentation type.
+ * Strategy for decorating a scene with navigation component and subNavigation component
+ * based on its presentation type and current EngagementMode.
+ *
+ * @param navigation A component implementing global navigation.
+ * @param subNavigation A component implement supplement navigation.
+ * @param engagementMode The current EngagementMode.
  */
 class AppLayoutSceneDecoratorStrategy(
     val engagementMode: EngagementMode,
@@ -55,7 +77,7 @@ class AppLayoutSceneDecoratorStrategy(
     override fun SceneDecoratorStrategyScope<NavKey>.decorateScene(
         scene: Scene<NavKey>,
     ): Scene<NavKey> {
-        val presentationType = scene.metadata[Destination.MetadataKey]
+        val presentationType = scene.metadata[PresentationType.PresentationTypeKey]
 
         // If the presentation type is Overlay, do not decorate the scene
         return when {
@@ -104,15 +126,14 @@ private class SpatialAppLayoutSceneDecorator(
                     minimumSize = DpVolumeSize.from(JetStreamTokens.LeanbackWindowSize),
                 )
             }
-        val dragPolicy = remember { MovePolicy() }
-        val presentationType = scene.metadata[Destination.MetadataKey]
+        val presentationType = scene.metadata[PresentationType.PresentationTypeKey]
 
         val isNavigationVisible = presentationType != PresentationType.Overlay
 
         Subspace {
             SpatialPanel(
                 resizePolicy = resizePolicy,
-                dragPolicy = dragPolicy,
+                modifier = SubspaceModifier.movable(),
             ) {
                 Surface {
                     MainPanel(
@@ -159,21 +180,26 @@ private class AppLayoutSceneDecorator(
     override val previousEntries: List<NavEntry<NavKey>>
         get() = scene.previousEntries
 
-    @OptIn(ExperimentalGridApi::class)
+    @OptIn(ExperimentalGridApi::class, ExperimentalFoundationStyleApi::class)
     override val content: @Composable (() -> Unit) = {
         val layout = selectLayout()
-        val subNavigationArea = layout.subNavigation
+        val subNavigationArea = layout.subNavigationArea
+        val backgroundColor = MaterialTheme.colorScheme.surface
 
         Grid(
-            config = layout.config,
+            config = layout.gridConfig,
+            modifier =
+                Modifier.styleable {
+                    background(backgroundColor)
+                },
         ) {
             Box(
                 modifier =
                     Modifier.gridItem(
-                        column = layout.navigation.column,
-                        row = layout.navigation.row,
-                        rowSpan = layout.navigation.rowSpan,
-                        columnSpan = layout.navigation.columnSpan,
+                        column = layout.navigationArea.column,
+                        row = layout.navigationArea.row,
+                        rowSpan = layout.navigationArea.rowSpan,
+                        columnSpan = layout.navigationArea.columnSpan,
                     ),
             ) {
                 navigation()
@@ -203,7 +229,7 @@ private class AppLayoutSceneDecorator(
     private fun selectLayout(): AppLayout {
         return when (LocalEngagementMode.current) {
             is EngagementMode.Compact -> AppLayout.NavigationBar
-            EngagementMode.Leanback -> AppLayout.TopBar
+            EngagementMode.Leanback, EngagementMode.Cabin, is EngagementMode.Workstation -> AppLayout.TopBar
             else -> AppLayout.NavigationRail
         }
     }
@@ -216,31 +242,51 @@ private class AppLayoutSceneDecorator(
  */
 @OptIn(ExperimentalGridApi::class)
 private sealed interface AppLayout {
-    val config: GridConfigurationScope.() -> Unit
-    val navigation: GridArea
-    val subNavigation: GridArea?
-    val content: GridArea
+    val gridConfig: GridConfigurationScope.() -> Unit
+    val navigationArea: GridArea
+    val subNavigationArea: GridArea?
+    val contentArea: GridArea
 
     /**
      * Layout using a bottom navigation bar, typically for Compact.
+     * The navigation, subNavigation, and content are rendered in the following layout:
+     *   - navigation: area A
+     *   - subNavigation: area B
+     *   - content: area C
+     *
+     *   B B B B
+     *   C C C C
+     *   C C C C
+     *   C C C C
+     *   C C C C
+     *   A A A A
      */
     object NavigationBar : AppLayout {
-        override val config: GridConfigurationScope.() -> Unit = {
+        override val gridConfig: GridConfigurationScope.() -> Unit = {
             column(GridTrackSize.MinMax(350.dp, 1.fr))
             row(GridTrackSize.Auto)
             row(GridTrackSize.MinMax(200.dp, 1.fr))
             row(GridTrackSize.Auto)
         }
-        override val navigation = GridArea(row = -1, column = 1)
-        override val subNavigation = GridArea(row = 1, column = 1)
-        override val content = GridArea(row = 2, column = 1)
+        override val navigationArea = GridArea(row = -1, column = 1)
+        override val subNavigationArea = GridArea(row = 1, column = 1)
+        override val contentArea = GridArea(row = 2, column = 1)
     }
 
     /**
      * Layout using a side navigation rail, typically for Medium.
+     * It layouts navigation, subNavigation and content as follows.
+     *   - navigation: area A
+     *   - subNavigation: area B
+     *   - content: area C
+     *
+     *   A B B B B
+     *   A C C C C
+     *   A C C C C
+     *   A C C C C
      */
     object NavigationRail : AppLayout {
-        override val config: GridConfigurationScope.() -> Unit
+        override val gridConfig: GridConfigurationScope.() -> Unit
             get() = {
                 column(GridTrackSize.Auto)
                 column(GridTrackSize.MinMax(200.dp, 1.fr))
@@ -248,23 +294,32 @@ private sealed interface AppLayout {
                 row(GridTrackSize.MinMax(200.dp, 1.fr))
                 rowGap(8.dp)
             }
-        override val navigation = GridArea(column = 1, row = 1, rowSpan = 2, columnSpan = 1)
-        override val subNavigation = GridArea(column = 2, row = 1)
-        override val content = GridArea(column = 2, row = 2)
+        override val navigationArea = GridArea(column = 1, row = 1, rowSpan = 2, columnSpan = 1)
+        override val subNavigationArea = GridArea(column = 2, row = 1)
+        override val contentArea = GridArea(column = 2, row = 2)
     }
 
     /**
      * Layout using a top navigation bar, typically for Leanback.
+     * It layouts navigation, subNavigation and content as follows.
+     *   - navigation: area A
+     *   - subNavigation: N/A
+     *   - content: area C
+     *
+     *   A A A A A
+     *   C C C C C
+     *   C C C C C
+     *   C C C C C
      */
     object TopBar : AppLayout {
-        override val config: GridConfigurationScope.() -> Unit = {
+        override val gridConfig: GridConfigurationScope.() -> Unit = {
             column(1f)
             row(GridTrackSize.Auto)
             row(GridTrackSize.MinMax(300.dp, 1.fr))
         }
-        override val navigation: GridArea = GridArea(row = 1, column = 1)
-        override val subNavigation: GridArea? = null
-        override val content: GridArea = GridArea(row = 2, column = 1)
+        override val navigationArea: GridArea = GridArea(row = 1, column = 1)
+        override val subNavigationArea: GridArea? = null
+        override val contentArea: GridArea = GridArea(row = 2, column = 1)
     }
 }
 

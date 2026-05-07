@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Google LLC
+ * Copyright 2026 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,26 +14,23 @@
  * limitations under the License.
  */
 
-package com.google.jetstream.presentation.screens.profile.compoents
+package com.google.jetstream.presentation.screens.profile.components
 
-import androidx.compose.foundation.clickable
-import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.google.jetstream.presentation.theme.JetStreamTokens
+import androidx.compose.ui.text.TextStyle
 
 @Composable
-fun AccountsSectionDialogButton(
+fun ProfileSectionTitle(
+    title: String,
     modifier: Modifier = Modifier,
-    text: String,
-    onClick: () -> Unit,
+    style: TextStyle = MaterialTheme.typography.headlineSmall,
 ) {
-    Button(
-        onClick = onClick,
-        shape = JetStreamTokens.ButtonShape,
-        modifier = modifier.clickable(onClick = onClick),
-    ) {
-        Text(text = text)
-    }
+    Text(
+        text = title,
+        modifier = modifier,
+        style = style,
+    )
 }

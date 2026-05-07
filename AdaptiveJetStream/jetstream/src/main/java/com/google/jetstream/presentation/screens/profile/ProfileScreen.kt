@@ -24,6 +24,8 @@ import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
 import androidx.compose.foundation.style.MutableStyleState
 import androidx.compose.foundation.style.Style
 import androidx.compose.foundation.style.fillWidth
+import androidx.compose.foundation.style.focused
+import androidx.compose.foundation.style.hovered
 import androidx.compose.foundation.style.styleable
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
@@ -38,8 +40,10 @@ import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.dropUnlessResumed
 import com.google.jetstream.R
 import com.google.jetstream.presentation.app.Destination
+import com.google.jetstream.presentation.app.NavigationItem
 import com.google.jetstream.presentation.components.shim.indication.borderIndication
 import com.google.jetstream.presentation.components.shim.indication.scaleIndication
 import com.google.jetstream.presentation.theme.LocalContentPadding
@@ -52,11 +56,11 @@ fun ProfileScreen(
     LazyColumn(
         contentPadding = LocalContentPadding.current.intoPaddingValues(),
     ) {
-        items(Destination.ProfileSettings) { destination ->
+        items(NavigationItem.ProfileSettings) { item ->
             SectionListItem(
-                destination = destination,
+                navigationItem = item,
                 onClick = {
-                    onDestinationSelected(destination)
+                    onDestinationSelected(item.destination)
                 },
             )
         }
@@ -66,20 +70,21 @@ fun ProfileScreen(
 @OptIn(ExperimentalFoundationStyleApi::class)
 @Composable
 private fun SectionListItem(
-    destination: Destination,
+    navigationItem: NavigationItem,
     modifier: Modifier = Modifier,
     style: Style = Style,
     onClick: () -> Unit = {},
 ) {
-    val icon = destination.icon
-    val name = destination.name
+    val icon = navigationItem.icon
+    val name = navigationItem.name
     val textStyle =
         MaterialTheme.typography.bodyMedium.copy(
             fontWeight = FontWeight.Medium,
         )
+    val tintColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
 
     val interactionSource =
-        remember(destination) {
+        remember(navigationItem) {
             MutableInteractionSource()
         }
     val styleState =
@@ -93,28 +98,33 @@ private fun SectionListItem(
                 fillWidth()
                 borderIndication()
                 scaleIndication()
+
+                focused {
+                    foreground(tintColor)
+                }
+                hovered {
+                    foreground(tintColor)
+                }
             }
         }
 
     ListItem(
         trailingContent = {
-            if (icon != null) {
-                Icon(
-                    painter = icon,
-                    modifier =
-                        Modifier.styleable {
-                            externalPaddingTop(2.dp)
-                            externalPaddingBottom(2.dp)
-                            externalPaddingStart(4.dp)
-                            size(20.dp)
-                        },
-                    contentDescription =
-                        stringResource(
-                            id = R.string.profile_screen_listItem_icon_content_description,
-                            name,
-                        ),
-                )
-            }
+            Icon(
+                painter = icon,
+                modifier =
+                    Modifier.styleable {
+                        externalPaddingTop(2.dp)
+                        externalPaddingBottom(2.dp)
+                        externalPaddingStart(4.dp)
+                        size(20.dp)
+                    },
+                contentDescription =
+                    stringResource(
+                        id = R.string.profile_screen_listItem_icon_content_description,
+                        name,
+                    ),
+            )
         },
         headlineContent = {
             Text(
@@ -137,7 +147,7 @@ private fun SectionListItem(
                 .clickable(
                     interactionSource = interactionSource,
                     indication = null,
-                    onClick = onClick,
+                    onClick = dropUnlessResumed(block = onClick),
                 )
                 .semantics {
                     role = Role.Button

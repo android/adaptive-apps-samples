@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.jetstream.presentation.screens.profile.compoents
+package com.google.jetstream.presentation.screens.profile.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -30,6 +30,7 @@ import androidx.compose.material3.ListItemDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.dropUnlessResumed
 
 @OptIn(ExperimentalFoundationStyleApi::class)
 @Composable
@@ -62,7 +63,7 @@ fun SelectionItem(
                 .clickable(
                     interactionSource = interactionSource,
                     indication = null,
-                    onClick = onClick,
+                    onClick = dropUnlessResumed(block = onClick),
                 )
                 .styleable(
                     styleState = styleState,

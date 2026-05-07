@@ -17,12 +17,14 @@
 package com.google.jetstream.presentation.theme
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
 import androidx.compose.foundation.style.Style
 import androidx.compose.foundation.style.then
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ShapeDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
@@ -110,5 +112,17 @@ object JetStreamTokens {
             shape(CardShape)
             clip(true)
         } then indication()
+    }
+
+    @Composable
+    fun gridCells(): GridCells {
+        val engagementMode = LocalEngagementMode.current
+        return remember(engagementMode) {
+            when (engagementMode) {
+                is EngagementMode.Compact -> GridCells.Fixed(3)
+                is EngagementMode.Medium -> GridCells.Fixed(4)
+                else -> GridCells.Fixed(6)
+            }
+        }
     }
 }

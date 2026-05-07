@@ -17,6 +17,7 @@
 package com.google.jetstream
 
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.view.KeyEvent
@@ -25,6 +26,7 @@ import android.view.KeyboardShortcutInfo
 import android.view.Menu
 import android.view.WindowInsetsController
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.safeDrawingPadding
@@ -46,7 +48,16 @@ class MainActivity : ComponentActivity() {
         installSplashScreen()
         super.onCreate(savedInstanceState)
 
-        enableEdgeToEdge()
+        enableEdgeToEdge(
+            statusBarStyle =
+                SystemBarStyle.dark(
+                    Color.TRANSPARENT,
+                ),
+            navigationBarStyle =
+                SystemBarStyle.dark(
+                    Color.TRANSPARENT,
+                ),
+        )
         tryEnableCustomHeader()
         setContent {
             ProvideLocalEngagementMode {
