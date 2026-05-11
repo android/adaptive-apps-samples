@@ -64,6 +64,21 @@ https://www.apache.org/licenses/LICENSE-2.0
     <string name="back_from_video_player">Back from video player screen</string>
     <string name="back_from_movie_details">Back from movie details screen</string>
     <string name="toggle_play_pause">Toggle play/pause</string>
+
+    <string name="navigation_home">Home</string>
+    <string name="navigation_categories">Categories</string>
+    <string name="navigation_movies">Movies</string>
+    <string name="navigation_shows">Shows</string>
+    <string name="navigation_favorites">Favourites</string>
+    <string name="navigation_search">Search</string>
+    <string name="navigation_profile">Profile</string>
+    <string name="navigation_about">About</string>
+    <string name="navigation_accounts">Accounts</string>
+    <string name="navigation_subtitles">Subtitles</string>
+    <string name="navigation_language">Language</string>
+    <string name="navigation_search_history">Search history</string>
+    <string name="navigation_help_and_support">Help and Support</string>
+
     <string name="rewind_10_sec">Rewind 10 seconds</string>
     <string name="skip_10_sec">Skip 10 seconds</string>
     <string name="pan_up">Pan up</string>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Google LLC
+ * Copyright 2025 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,26 +14,28 @@
  * limitations under the License.
  */
 
-package com.google.jetstream.presentation.screens.profile.compoents
+package com.google.jetstream.presentation.app
 
-import androidx.compose.foundation.clickable
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.google.jetstream.presentation.theme.JetStreamTokens
+import com.google.jetstream.data.util.StringConstants
 
 @Composable
-fun AccountsSectionDialogButton(
+fun SearchButton(
     modifier: Modifier = Modifier,
-    text: String,
-    onClick: () -> Unit,
+    onClick: () -> Unit = {},
 ) {
-    Button(
+    IconButton(
         onClick = onClick,
-        shape = JetStreamTokens.ButtonShape,
-        modifier = modifier.clickable(onClick = onClick),
+        modifier = modifier,
     ) {
-        Text(text = text)
+        Icon(
+            painter = NavigationItem.Search.icon,
+            contentDescription = StringConstants.Composable.ContentDescription.DashboardSearchButton,
+            tint = LocalContentColor.current,
+        )
     }
 }

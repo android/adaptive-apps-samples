@@ -36,7 +36,7 @@ import com.google.jetstream.data.entities.Movie
 import com.google.jetstream.presentation.components.Loading
 import com.google.jetstream.presentation.screens.favourites.components.FilteredMoviesGrid
 import com.google.jetstream.presentation.screens.favourites.components.MovieFilterChipRow
-import com.google.jetstream.presentation.screens.favourites.components.rememberFilteredMoviesGridColumns
+import com.google.jetstream.presentation.theme.JetStreamTokens
 import com.google.jetstream.presentation.theme.LocalContentPadding
 import com.google.jetstream.presentation.theme.Padding
 
@@ -120,7 +120,7 @@ internal fun Catalog(
             state = filteredMoviesGridState,
             movieList = favouriteMovieList,
             onMovieClick = onMovieClick,
-            columns = rememberFilteredMoviesGridColumns(),
+            columns = JetStreamTokens.gridCells(),
         )
     }
 }

@@ -24,10 +24,11 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
+import androidx.compose.foundation.style.fillSize
+import androidx.compose.foundation.style.styleable
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -58,13 +59,6 @@ object CategoryMovieListScreen {
     const val CATEGORY_ID_BUNDLE_KEY = "categoryId"
 }
 
-val categoryMovieListScreenArguments =
-    listOf(
-        navArgument(CategoryMovieListScreen.CATEGORY_ID_BUNDLE_KEY) {
-            type = NavType.StringType
-        },
-    )
-
 @Composable
 fun CategoryMovieListScreen(
     onBackPressed: () -> Unit,
@@ -84,10 +78,16 @@ fun CategoryMovieListScreen(
 
         is CategoryMovieListScreenUiState.Done -> {
             val categoryDetails = s.movieCategoryDetails
+            val backgroundColor = MaterialTheme.colorScheme.surface
             CategoryDetails(
                 categoryDetails = categoryDetails,
                 onBackPressed = onBackPressed,
                 onMovieSelected = onMovieSelected,
+                modifier =
+                    Modifier.styleable {
+                        fillSize()
+                        background(backgroundColor)
+                    },
             )
         }
     }
@@ -135,7 +135,7 @@ internal fun CategoryMovieList(
                 ),
         )
         LazyVerticalGrid(
-            columns = GridCells.Fixed(6),
+            columns = JetStreamTokens.gridCells(),
             contentPadding = PaddingValues(bottom = JetStreamTokens.VerticalListBottomPadding),
         ) {
             itemsIndexed(

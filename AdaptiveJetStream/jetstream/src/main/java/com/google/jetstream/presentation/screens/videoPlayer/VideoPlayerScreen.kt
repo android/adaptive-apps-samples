@@ -61,7 +61,7 @@ import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.ui.compose.PlayerSurface
 import androidx.media3.ui.compose.modifiers.resizeWithContentScale
-import androidx.xr.compose.platform.LocalSpatialConfiguration
+import androidx.xr.compose.platform.LocalSession
 import androidx.xr.compose.spatial.ContentEdge
 import androidx.xr.compose.spatial.Orbiter
 import androidx.xr.compose.spatial.Subspace
@@ -72,6 +72,7 @@ import androidx.xr.compose.subspace.layout.fillMaxSize
 import androidx.xr.compose.subspace.layout.height
 import androidx.xr.compose.subspace.layout.offset
 import androidx.xr.compose.subspace.layout.width
+import androidx.xr.scenecore.scene
 import com.google.jetstream.R
 import com.google.jetstream.data.entities.MovieDetails
 import com.google.jetstream.data.entities.StereoscopicVisionType
@@ -95,10 +96,6 @@ import com.google.jetstream.presentation.screens.videoPlayer.components.remember
 import com.google.jetstream.presentation.screens.videoPlayer.components.rememberVideoPlayerState
 import com.google.jetstream.presentation.screens.videoPlayer.components.toggleImmersiveMode
 import com.google.jetstream.presentation.utils.handleDPadKeyEvents
-
-object VideoPlayerScreen {
-    const val MOVIE_ID_BUNDLE_KEY = "movieId"
-}
 
 /**
  * [Work in progress] A composable screen for playing a video.
@@ -212,7 +209,7 @@ private fun VideoPlayer(
         .collectAsStateWithLifecycle(Size(1980f, 1080f))
 
     val engagementMode = LocalEngagementMode.current
-    val spatialConfiguration = LocalSpatialConfiguration.current
+    val session = LocalSession.current
 
     val focusRequester = remember { FocusRequester() }
 
@@ -224,11 +221,11 @@ private fun VideoPlayer(
                     action = {
                         when (engagementMode) {
                             EngagementMode.Spatial -> {
-                                spatialConfiguration.requestHomeSpaceMode()
+                                session?.scene?.requestHomeSpaceMode()
                             }
 
                             EngagementMode.Enclosed -> {
-                                spatialConfiguration.requestFullSpaceMode()
+                                session?.scene?.requestFullSpaceMode()
                             }
 
                             else -> {

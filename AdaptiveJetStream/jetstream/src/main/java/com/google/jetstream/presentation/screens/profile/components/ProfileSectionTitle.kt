@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Google LLC
+ * Copyright 2026 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,23 @@
  * limitations under the License.
  */
 
-package com.google.jetstream.presentation.screens.profile
+package com.google.jetstream.presentation.screens.profile.components
 
-import androidx.compose.ui.test.junit4.createComposeRule
-import org.junit.Rule
-import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
-import org.robolectric.annotation.Config
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
 
-@RunWith(RobolectricTestRunner::class)
-@Config(qualifiers = "w1280dp-h800dp")
-class ProfileScreenTest {
-    @get:Rule
-    val composeTestRule = createComposeRule()
-
-    // Define screenshot tests for the Profile screen.
+@Composable
+fun ProfileSectionTitle(
+    title: String,
+    modifier: Modifier = Modifier,
+    style: TextStyle = MaterialTheme.typography.headlineSmall,
+) {
+    Text(
+        text = title,
+        modifier = modifier,
+        style = style,
+    )
 }

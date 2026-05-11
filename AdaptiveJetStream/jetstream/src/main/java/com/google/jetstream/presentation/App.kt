@@ -16,98 +16,421 @@
 
 package com.google.jetstream.presentation
 
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
+import androidx.compose.material3.Surface
+import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
+import androidx.compose.material3.adaptive.navigation3.ListDetailSceneStrategy
+import androidx.compose.material3.adaptive.navigation3.rememberListDetailSceneStrategy
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.navigation.compose.rememberNavController
-import com.google.jetstream.presentation.app.AppState
-import com.google.jetstream.presentation.app.NavigationComponentType
-import com.google.jetstream.presentation.app.NavigationTree
-import com.google.jetstream.presentation.app.rememberAppState
-import com.google.jetstream.presentation.app.rememberKeyboardShortcuts
-import com.google.jetstream.presentation.app.rememberNavigationComponentType
-import com.google.jetstream.presentation.app.updateTopBarVisibility
-import com.google.jetstream.presentation.app.withNavigationSuiteScaffold.AppWithNavigationSuiteScaffold
-import com.google.jetstream.presentation.app.withSpatialNavigation.AppWithSpatialNavigation
-import com.google.jetstream.presentation.app.withTopBarNavigation.AppWithTopBarNavigation
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
+import androidx.navigation3.runtime.EntryProviderScope
+import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.metadata
+import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
+import androidx.navigation3.ui.NavDisplay
+import com.google.jetstream.presentation.app.Destination
+import com.google.jetstream.presentation.app.PresentationType
+import com.google.jetstream.presentation.app.rememberAppLayoutSceneDecorator
+import com.google.jetstream.presentation.app.selectAppNavigation
+import com.google.jetstream.presentation.screens.categories.CategoriesScreen
+import com.google.jetstream.presentation.screens.categories.CategoryMovieListScreen
+import com.google.jetstream.presentation.screens.categories.CategoryMovieListScreenViewModel
+import com.google.jetstream.presentation.screens.favourites.FavouritesScreen
+import com.google.jetstream.presentation.screens.home.HomeScreen
+import com.google.jetstream.presentation.screens.moviedetails.MovieDetailsScreen
+import com.google.jetstream.presentation.screens.moviedetails.MovieDetailsScreenViewModel
+import com.google.jetstream.presentation.screens.movies.MoviesScreen
+import com.google.jetstream.presentation.screens.profile.ProfileScreen
+import com.google.jetstream.presentation.screens.profile.section.AboutSection
+import com.google.jetstream.presentation.screens.profile.section.AccountsSection
+import com.google.jetstream.presentation.screens.profile.section.HelpAndSupportSection
+import com.google.jetstream.presentation.screens.profile.section.LanguageSection
+import com.google.jetstream.presentation.screens.profile.section.SearchHistorySection
+import com.google.jetstream.presentation.screens.profile.section.SubtitlesSection
+import com.google.jetstream.presentation.screens.search.SearchScreen
+import com.google.jetstream.presentation.screens.shows.ShowsScreen
+import com.google.jetstream.presentation.screens.videoPlayer.VideoPlayerScreen
+import com.google.jetstream.presentation.screens.videoPlayer.VideoPlayerScreenViewModel
 
+/**
+ * Main entry point for the JetStream application UI.
+ * This composable sets up the navigation backstack, global navigation components,
+ * and defines the routing for all screens in the app using Navigation3.
+ */
+@OptIn(ExperimentalFoundationStyleApi::class, ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 fun App(
-    onActivityBackPressed: () -> Unit,
     modifier: Modifier = Modifier,
-    appState: AppState = rememberAppState(),
 ) {
-    val navController = rememberNavController()
+    val navigator = rememberNavigator(initialDestination = Destination.Home)
 
-    val navigationComponentType = rememberNavigationComponentType()
+    // Selects the navigation implementation (Rail, Bar, or TopBar) based on device type/mode
+    val appNavigation = selectAppNavigation()
+    // Tracks visibility of the top bar/navigation rail for hide-on-scroll behavior
+    var isTopbarVisible by rememberSaveable { mutableStateOf(true) }
 
-    val keyboardShortcuts =
-        rememberKeyboardShortcuts(
-            onSelectScreen = { screen ->
-                if (appState.selectedScreen != screen) {
-                    navController.navigate(screen())
-                }
+    Surface {
+        NavDisplay(
+            backStack = navigator.backStack,
+            modifier = modifier,
+            entryDecorators =
+                listOf(
+                    rememberSaveableStateHolderNavEntryDecorator(),
+                    rememberViewModelStoreNavEntryDecorator(),
+                ),
+            sceneStrategies =
+                listOf(
+                    // Strategy for List-Detail layouts (e.g., Profile screen)
+                    rememberListDetailSceneStrategy(),
+                ),
+            sceneDecoratorStrategies =
+                listOf(
+                    // Custom strategy to wrap screens in the appropriate app-level navigation (Rail/Bar/TopBar)
+                    rememberAppLayoutSceneDecorator(
+                        navigation = {
+                            appNavigation.Navigation(
+                                current = navigator.current,
+                                onNavigation = navigator::navigate,
+                                isVisible = isTopbarVisible,
+                            )
+                        },
+                        subNavigation = {
+                            appNavigation.SubNavigation(
+                                current = navigator.current,
+                                onNavigation = navigator::navigate,
+                            )
+                        },
+                    ),
+                ),
+            entryProvider =
+                entryProvider {
+                    homeEntry(
+                        navigator = navigator,
+                        isTopbarVisible = isTopbarVisible,
+                        onUpdateTopbarVisibility = {
+                            isTopbarVisible = it
+                        },
+                    )
+
+                    categoriesEntry(navigator)
+
+                    moviesEntry(
+                        navigator = navigator,
+                        isTopbarVisible = isTopbarVisible,
+                        onUpdateTopbarVisibility = {
+                            isTopbarVisible = it
+                        },
+                    )
+
+                    showsEntry(
+                        navigator = navigator,
+                        isTopbarVisible = isTopbarVisible,
+                        onUpdateTopbarVisibility = { isTopbarVisible = it },
+                    )
+
+                    favoritesEntry(
+                        navigator = navigator,
+                        isTopbarVisible = isTopbarVisible,
+                        onUpdateTopbarVisibility = { isTopbarVisible = it },
+                    )
+
+                    searchEntry(
+                        navigator = navigator,
+                        onUpdateTopbarVisibility = { isTopbarVisible = it },
+                    )
+
+                    moveDetailsEntry(navigator)
+
+                    videoPlayerEntry(navigator)
+
+                    profileEntries(navigator)
+                },
+        )
+    }
+}
+
+private fun EntryProviderScope<NavKey>.homeEntry(
+    navigator: Navigator,
+    isTopbarVisible: Boolean,
+    onUpdateTopbarVisibility: (Boolean) -> Unit,
+) {
+    entry<Destination.Home>(
+        metadata =
+            metadata {
+                put(PresentationType.PresentationTypeKey, PresentationType.SinglePane)
+            },
+    ) {
+        HomeScreen(
+            onMovieClick = {
+                navigator.navigate(Destination.MovieDetails(movieId = it.id))
+            },
+            goToVideoPlayer = {
+                navigator.navigate(Destination.VideoPlayer(movieId = it.id))
+            },
+            onScroll = onUpdateTopbarVisibility,
+            isTopBarVisible = isTopbarVisible,
+        )
+    }
+}
+
+private fun EntryProviderScope<NavKey>.categoriesEntry(
+    navigator: Navigator,
+) {
+    entry<Destination.Categories>(
+        metadata =
+            metadata {
+                put(PresentationType.PresentationTypeKey, PresentationType.SinglePane)
+            },
+    ) {
+        CategoriesScreen(
+            onCategoryClick = {
+                navigator.navigate(Destination.CategoryMovieList(categoryId = it))
             },
         )
-
-    LaunchedEffect(Unit) {
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            appState.updateSelectedScreen(destination)
-        }
     }
 
-    LaunchedEffect(navigationComponentType) {
-        appState.updateNavigationComponentType(navigationComponentType)
+    entry<Destination.CategoryMovieList>(
+        metadata =
+            metadata {
+                put(PresentationType.PresentationTypeKey, PresentationType.Overlay)
+            },
+    ) {
+        val viewModel =
+            hiltViewModel<CategoryMovieListScreenViewModel, CategoryMovieListScreenViewModel.Factory>(
+                creationCallback = { factory ->
+                    factory.create(it.categoryId)
+                },
+            )
+        CategoryMovieListScreen(
+            onBackPressed = navigator::goBack,
+            onMovieSelected = { movie ->
+                navigator.navigate(Destination.MovieDetails(movieId = movie.id))
+            },
+            categoryMovieListScreenViewModel = viewModel,
+        )
     }
+}
 
-    // The main content that is displayed on every screen
-    val mainContent = @Composable { padding: PaddingValues ->
-        NavigationTree(
-            navController = navController,
-            isTopBarVisible = appState.isTopBarVisible,
-            modifier = Modifier.padding(padding),
-            onScroll = { updateTopBarVisibility(appState, it) },
+private fun EntryProviderScope<NavKey>.moviesEntry(
+    navigator: Navigator,
+    isTopbarVisible: Boolean,
+    onUpdateTopbarVisibility: (Boolean) -> Unit,
+) {
+    entry<Destination.Movies>(
+        metadata =
+            metadata {
+                put(PresentationType.PresentationTypeKey, PresentationType.SinglePane)
+            },
+    ) {
+        MoviesScreen(
+            onMovieClick = {
+                navigator.navigate(Destination.MovieDetails(movieId = it.id))
+            },
+            onScroll = onUpdateTopbarVisibility,
+            isTopBarVisible = isTopbarVisible,
+        )
+    }
+}
+
+private fun EntryProviderScope<NavKey>.showsEntry(
+    navigator: Navigator,
+    isTopbarVisible: Boolean,
+    onUpdateTopbarVisibility: (Boolean) -> Unit,
+) {
+    entry<Destination.Shows>(
+        metadata =
+            metadata {
+                put(PresentationType.PresentationTypeKey, PresentationType.SinglePane)
+            },
+    ) {
+        ShowsScreen(
+            onTVShowClick = {
+                navigator.navigate(Destination.MovieDetails(movieId = it.id))
+            },
+            onScroll = onUpdateTopbarVisibility,
+            isTopBarVisible = isTopbarVisible,
+        )
+    }
+}
+
+private fun EntryProviderScope<NavKey>.moveDetailsEntry(
+    navigator: Navigator,
+) {
+    entry<Destination.MovieDetails>(
+        metadata =
+            metadata {
+                put(PresentationType.PresentationTypeKey, PresentationType.Overlay)
+            },
+    ) { destination ->
+        val viewModel =
+            hiltViewModel<MovieDetailsScreenViewModel, MovieDetailsScreenViewModel.Factory>(
+                creationCallback = { factory ->
+                    factory.create(destination.movieId)
+                },
+            )
+        MovieDetailsScreen(
+            goToMoviePlayer = {
+                navigator.navigate(Destination.VideoPlayer(movieId = it.id))
+            },
+            refreshScreenWithNewMovie = {
+                navigator.goBack()
+                navigator.navigate(Destination.MovieDetails(movieId = it.id))
+            },
+            onBackPressed = navigator::goBack,
+            movieDetailsScreenViewModel = viewModel,
+        )
+    }
+}
+
+private fun EntryProviderScope<NavKey>.favoritesEntry(
+    navigator: Navigator,
+    isTopbarVisible: Boolean,
+    onUpdateTopbarVisibility: (Boolean) -> Unit,
+) {
+    entry<Destination.Favourites>(
+        metadata =
+            metadata {
+                put(PresentationType.PresentationTypeKey, PresentationType.SinglePane)
+            },
+    ) {
+        FavouritesScreen(
+            onMovieClick = {
+                navigator.navigate(Destination.MovieDetails(movieId = it))
+            },
+            onScroll = onUpdateTopbarVisibility,
+            isTopBarVisible = isTopbarVisible,
+        )
+    }
+}
+
+private fun EntryProviderScope<NavKey>.searchEntry(
+    navigator: Navigator,
+    onUpdateTopbarVisibility: (Boolean) -> Unit,
+) {
+    entry<Destination.Search>(
+        metadata =
+            metadata {
+                put(PresentationType.PresentationTypeKey, PresentationType.SinglePane)
+            },
+    ) {
+        SearchScreen(
+            onMovieClick = {
+                navigator.navigate(Destination.MovieDetails(movieId = it.id))
+            },
+            onScroll = onUpdateTopbarVisibility,
+        )
+    }
+}
+
+private fun EntryProviderScope<NavKey>.videoPlayerEntry(
+    navigator: Navigator,
+) {
+    entry<Destination.VideoPlayer>(
+        metadata =
+            metadata {
+                put(PresentationType.PresentationTypeKey, PresentationType.Overlay)
+            },
+    ) { destination ->
+        val viewModel =
+            hiltViewModel<VideoPlayerScreenViewModel, VideoPlayerScreenViewModel.Factory>(
+                creationCallback = { factory ->
+                    factory.create(destination.movieId)
+                },
+            )
+        VideoPlayerScreen(
+            onBackPressed = navigator::goBack,
+            videoPlayerScreenViewModel = viewModel,
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3AdaptiveApi::class)
+private fun EntryProviderScope<NavKey>.profileEntries(
+    navigator: Navigator,
+) {
+    entry<Destination.Profile>(
+        metadata =
+            metadata {
+                put(PresentationType.PresentationTypeKey, PresentationType.ListDetailParent)
+            } +
+                ListDetailSceneStrategy.listPane(
+                    detailPlaceholder = {
+                        AboutSection()
+                    },
+                ),
+    ) {
+        ProfileScreen(
+            onDestinationSelected = navigator::navigate,
         )
     }
 
-    when (navigationComponentType) {
-        NavigationComponentType.Spatial -> {
-            // Android XR 3D environment, also known as Full Space mode.
-            AppWithSpatialNavigation(
-                appState = appState,
-                navController = navController,
-                keyboardShortcuts = keyboardShortcuts,
-                modifier = modifier,
-            ) { paddingValues ->
-                mainContent(paddingValues)
-            }
-        }
+    entry<Destination.About>(
+        metadata =
+            metadata {
+                put(PresentationType.PresentationTypeKey, PresentationType.ListDetailChild)
+            } + ListDetailSceneStrategy.detailPane(),
+    ) {
+        AboutSection()
+    }
 
-        NavigationComponentType.TopBar -> {
-            // TV, Automotive, Large windows on desktop and XR 2D environment (Home space mode).
-            AppWithTopBarNavigation(
-                appState = appState,
-                navController = navController,
-                keyboardShortcuts = keyboardShortcuts,
-                onActivityBackPressed = onActivityBackPressed,
-                modifier = modifier,
-            ) { paddingValues ->
-                mainContent(paddingValues)
-            }
-        }
+    entry<Destination.Accounts>(
+        metadata =
+            metadata {
+                put(PresentationType.PresentationTypeKey, PresentationType.ListDetailChild)
+            } + ListDetailSceneStrategy.detailPane(),
+    ) {
+        AccountsSection()
+    }
 
-        else -> {
-            // All other form factors (phone, tablet, foldable etc).
-            AppWithNavigationSuiteScaffold(
-                appState = appState,
-                navController = navController,
-                keyboardShortcuts = keyboardShortcuts,
-                modifier = modifier,
-            ) { paddingValues ->
-                mainContent(paddingValues)
-            }
+    entry<Destination.Subtitles>(
+        metadata =
+            metadata {
+                put(PresentationType.PresentationTypeKey, PresentationType.ListDetailChild)
+            } + ListDetailSceneStrategy.detailPane(),
+    ) {
+        var isSubtitleChecked by rememberSaveable { mutableStateOf(false) }
+        SubtitlesSection(isSubtitlesChecked = isSubtitleChecked) {
+            isSubtitleChecked = it
         }
+    }
+
+    entry<Destination.Language>(
+        metadata =
+            metadata {
+                put(PresentationType.PresentationTypeKey, PresentationType.ListDetailChild)
+            } + ListDetailSceneStrategy.detailPane(),
+    ) {
+        var selectedLanguageIndex by rememberSaveable {
+            mutableIntStateOf(0)
+        }
+        LanguageSection(selectedIndex = selectedLanguageIndex) {
+            selectedLanguageIndex = it
+        }
+    }
+
+    entry<Destination.SearchHistory>(
+        metadata =
+            metadata {
+                put(PresentationType.PresentationTypeKey, PresentationType.ListDetailChild)
+            } + ListDetailSceneStrategy.detailPane(),
+    ) {
+        SearchHistorySection()
+    }
+
+    entry<Destination.HelpAndSupport>(
+        metadata =
+            metadata {
+                put(PresentationType.PresentationTypeKey, PresentationType.ListDetailChild)
+            } + ListDetailSceneStrategy.detailPane(),
+    ) {
+        HelpAndSupportSection()
     }
 }

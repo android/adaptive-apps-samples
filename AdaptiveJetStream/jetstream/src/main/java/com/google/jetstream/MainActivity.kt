@@ -17,6 +17,7 @@
 package com.google.jetstream
 
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.view.KeyEvent
@@ -25,6 +26,7 @@ import android.view.KeyboardShortcutInfo
 import android.view.Menu
 import android.view.WindowInsetsController
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.safeDrawingPadding
@@ -46,14 +48,21 @@ class MainActivity : ComponentActivity() {
         installSplashScreen()
         super.onCreate(savedInstanceState)
 
-        enableEdgeToEdge()
+        enableEdgeToEdge(
+            statusBarStyle =
+                SystemBarStyle.dark(
+                    Color.TRANSPARENT,
+                ),
+            navigationBarStyle =
+                SystemBarStyle.dark(
+                    Color.TRANSPARENT,
+                ),
+        )
         tryEnableCustomHeader()
         setContent {
             ProvideLocalEngagementMode {
                 JetStreamTheme {
                     App(
-                        // TODO: Figure out why this is being used instead of a BackHandler
-                        onActivityBackPressed = onBackPressedDispatcher::onBackPressed,
                         // TODO: Is it necessary to tell every child that they need to use safe drawing padding?
                         //  This feels like it would be better declared by the main app layouts rather than being mandated here
                         modifier =

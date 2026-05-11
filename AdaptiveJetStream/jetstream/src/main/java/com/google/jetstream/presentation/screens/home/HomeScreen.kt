@@ -27,6 +27,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -152,7 +154,7 @@ internal fun Catalog(
     }
 }
 
-@OptIn(ExperimentalFoundationStyleApi::class)
+@OptIn(ExperimentalFoundationStyleApi::class, ExperimentalFoundationApi::class)
 @Composable
 private fun Catalog(
     featuredMovies: List<Movie>,
@@ -168,6 +170,14 @@ private fun Catalog(
 ) {
     val contentPadding = LocalContentPadding.current
     val (carousel, trending, top10, nowPlaying) = remember { FocusRequester.createRefs() }
+    val bringIntoViewRequesterForTrending = remember { BringIntoViewRequester() }
+    var isTrendingFocused by remember { mutableStateOf(false) }
+
+    LaunchedEffect(LocalBringIntoViewSpec.current) {
+        if (isTrendingFocused) {
+            bringIntoViewRequesterForTrending.bringIntoView()
+        }
+    }
 
     LazyColumn(
         state = lazyListState,
@@ -200,7 +210,12 @@ private fun Catalog(
                         }
                         .focusGroup(),
                 style = {
-                    contentPadding(start = contentPadding.start, end = contentPadding.end, top = 0.dp, bottom = 0.dp)
+                    contentPadding(
+                        start = contentPadding.start,
+                        end = contentPadding.end,
+                        top = 0.dp,
+                        bottom = 0.dp,
+                    )
                 },
             )
         }
@@ -209,7 +224,19 @@ private fun Catalog(
                 movieList = trendingMovies,
                 title = StringConstants.Composable.HomeScreenTrendingTitle,
                 onMovieSelected = onMovieClick,
-                modifier = Modifier.focusRequester(trending),
+                modifier =
+                    Modifier
+                        .focusRequester(trending)
+                        .bringIntoViewRequester(bringIntoViewRequesterForTrending)
+                        .focusProperties {
+                            onEnter = {
+                                if (requestedFocusDirection == FocusDirection.Up) {
+                                    isTrendingFocused = true
+                                }
+                            }
+                            onExit = { isTrendingFocused = false }
+                        }
+                        .focusGroup(),
             )
         }
         item(contentType = "Top10MoviesList") {
@@ -218,7 +245,9 @@ private fun Catalog(
                 onMovieClick = onMovieClick,
                 modifier = Modifier.focusRequester(top10),
                 onExpanded = onExpanded,
-                onCollapsed = onCollapsed,
+                onCollapsed = {
+                    onCollapsed()
+                },
             )
         }
         item(contentType = "MoviesRow") {
