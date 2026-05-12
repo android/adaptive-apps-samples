@@ -18,6 +18,7 @@
 
 package com.google.jetstream.presentation.components.feature
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ProvidableCompositionLocal
@@ -69,7 +70,8 @@ sealed interface EngagementMode {
 
 @Composable
 fun currentEngagementMode(): State<EngagementMode> {
-    return JetStreamUiMedia.map {
+    return JetStreamUiMedia.query {
+        Log.d("EnagementMode", "$viewingDistance, $isMultiWindowMode")
         when {
             isSpatialUiEnabled -> {
                 EngagementMode.Spatial
@@ -85,7 +87,7 @@ fun currentEngagementMode(): State<EngagementMode> {
                 )
             }
 
-            viewingDistance == UiMediaScope.ViewingDistance.Medium -> {
+            viewingDistance == UiMediaScope.ViewingDistance.Medium && !isMultiWindowMode -> {
                 EngagementMode.Cabin
             }
 

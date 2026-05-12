@@ -102,7 +102,7 @@ private fun Top10MoviesList(
         }
 
         else -> {
-            val itemWidth by JetStreamUiMedia.map {
+            val itemWidth by JetStreamUiMedia.query {
                 (windowWidth.value * 0.4).dp
             }
             val carouselState = rememberCarouselState { movieList.size }

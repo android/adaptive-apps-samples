@@ -185,7 +185,6 @@ private class AppLayoutSceneDecorator(
         val layout = selectLayout()
         val subNavigationArea = layout.subNavigationArea
         val backgroundColor = MaterialTheme.colorScheme.surface
-
         Grid(
             config = layout.gridConfig,
             modifier =

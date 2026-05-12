@@ -95,7 +95,7 @@ enum class FeaturedMovieCarouselType {
 @Composable
 fun featuredMovieCarouselType(): FeaturedMovieCarouselType {
     return when (LocalEngagementMode.current) {
-        EngagementMode.Leanback, is EngagementMode.Workstation -> FeaturedMovieCarouselType.Featured
+        EngagementMode.Cabin, EngagementMode.Leanback, is EngagementMode.Workstation -> FeaturedMovieCarouselType.Featured
         else -> FeaturedMovieCarouselType.Hero
     }
 }

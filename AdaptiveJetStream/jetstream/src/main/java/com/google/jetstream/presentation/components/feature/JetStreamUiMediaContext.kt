@@ -18,6 +18,7 @@
 
 package com.google.jetstream.presentation.components.feature
 
+import androidx.activity.compose.LocalActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.State
@@ -42,6 +43,7 @@ interface JetStreamUiMediaContext : UiMediaScope {
     val isSpatialUiEnabled: Boolean
     val hasXrSpatialFeature: Boolean
     val windowSizeClass: WindowSizeClass
+    val isMultiWindowMode: Boolean
 }
 
 private class JetStreamUiMediaContextImpl(
@@ -49,6 +51,7 @@ private class JetStreamUiMediaContextImpl(
     override val inputModality: InputModality,
     override val isSpatialUiEnabled: Boolean,
     override val hasXrSpatialFeature: Boolean,
+    override val isMultiWindowMode: Boolean,
 ) : JetStreamUiMediaContext, UiMediaScope by uiMediaScope {
     override val windowSizeClass: WindowSizeClass
         get() {
@@ -58,12 +61,7 @@ private class JetStreamUiMediaContextImpl(
 
 internal object JetStreamUiMedia {
     @Composable
-    fun query(condition: JetStreamUiMediaContext.() -> Boolean): Boolean {
-        return LocalJetStreamUiMediaContext.current.condition()
-    }
-
-    @Composable
-    fun <T> map(mapper: JetStreamUiMediaContext.() -> T): State<T> {
+    fun <T> query(mapper: JetStreamUiMediaContext.() -> T): State<T> {
         val currentMapper by rememberUpdatedState(mapper)
         val context = LocalJetStreamUiMediaContext.current
         return remember(context) {
@@ -79,16 +77,20 @@ internal object JetStreamUiMedia {
         hasXrSpatialFeature: Boolean = LocalSpatialConfiguration.current.hasXrSpatialFeature,
         isSpatialUiEnabled: Boolean = LocalSpatialCapabilities.current.isSpatialUiEnabled,
         uiMediaScope: UiMediaScope = LocalUiMediaScope.current,
+        isMultiWindowMode: Boolean = LocalActivity.current?.isInMultiWindowMode ?: false,
     ): JetStreamUiMediaContext {
         return remember(
             inputModality,
             isSpatialUiEnabled,
+            uiMediaScope,
+            isMultiWindowMode,
         ) {
             JetStreamUiMediaContextImpl(
                 inputModality = inputModality,
                 isSpatialUiEnabled = isSpatialUiEnabled,
                 uiMediaScope = uiMediaScope,
                 hasXrSpatialFeature = hasXrSpatialFeature,
+                isMultiWindowMode = isMultiWindowMode,
             )
         }
     }
@@ -98,6 +100,7 @@ internal object JetStreamUiMedia {
             inputModality = InputModality.Touch,
             isSpatialUiEnabled = false,
             hasXrSpatialFeature = false,
+            isMultiWindowMode = false,
             uiMediaScope =
                 object : UiMediaScope {
                     override val windowPosture = UiMediaScope.Posture.Flat

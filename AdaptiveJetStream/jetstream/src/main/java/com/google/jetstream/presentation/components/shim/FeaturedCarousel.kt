@@ -153,7 +153,7 @@ fun FeaturedCarousel(
             itemCount = itemCount,
             state = state,
             style = style,
-            itemWidth = JetStreamUiMedia.map { windowWidth }.value,
+            itemWidth = JetStreamUiMedia.query { windowWidth }.value,
             isAutoScrollEnabled = autoScroll,
             autoScrollInterval = autoScrollInterval,
         ) { index ->
