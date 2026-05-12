@@ -154,11 +154,13 @@ private fun CategoryCard(
 
             focused {
                 animate {
+                    background(backgroundBrush)
                     alpha(1f)
                 }
             }
             hovered {
                 animate {
+                    background(backgroundBrush)
                     alpha(1f)
                 }
             }
