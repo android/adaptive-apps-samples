@@ -48,7 +48,7 @@ fun rememberFeaturedCarouselHeight(): Dp {
     val engagementMode = LocalEngagementMode.current
     return remember(engagementMode) {
         when (engagementMode) {
-            EngagementMode.Leanback -> 324.dp
+            is EngagementMode.Leanback -> 324.dp
             else -> 385.dp
         }
     }
@@ -59,7 +59,7 @@ fun rememberVerticalCardAspectRatio(): Float {
     val engagementMode = LocalEngagementMode.current
     return remember(engagementMode) {
         when (engagementMode) {
-            EngagementMode.Leanback, EngagementMode.Cabin, is EngagementMode.Workstation -> 0.65625f
+            is EngagementMode.Leanback, is EngagementMode.Cabin, is EngagementMode.Workstation -> 0.65625f
 
             // 10.5f / 16f
             else -> 0.67021f
@@ -93,7 +93,7 @@ fun rememberCategoryGridColumns(): GridCells {
     val engagementMode = LocalEngagementMode.current
     return remember(engagementMode) {
         when (engagementMode) {
-            EngagementMode.Leanback, EngagementMode.Cabin, is EngagementMode.Workstation -> {
+            is EngagementMode.Leanback, is EngagementMode.Cabin, is EngagementMode.Workstation -> {
                 GridCells.Fixed(
                     4,
                 )

@@ -95,7 +95,7 @@ enum class FeaturedMovieCarouselType {
 @Composable
 fun featuredMovieCarouselType(): FeaturedMovieCarouselType {
     return when (LocalEngagementMode.current) {
-        EngagementMode.Cabin, EngagementMode.Leanback, is EngagementMode.Workstation -> FeaturedMovieCarouselType.Featured
+        is EngagementMode.Cabin, is EngagementMode.Leanback, is EngagementMode.Workstation -> FeaturedMovieCarouselType.Featured
         else -> FeaturedMovieCarouselType.Hero
     }
 }
@@ -163,7 +163,7 @@ fun FeaturedMovieCarousel(
         itemCount = movieList.size,
         state = state,
         nextButton = {
-            if (LocalEngagementMode.current.isBackButtonRequired) {
+            if (LocalEngagementMode.current.hasPointingDevice) {
                 FeaturedCarouselDefaults.NextButton(
                     itemCount = movieList.size,
                     state = state,
@@ -171,7 +171,7 @@ fun FeaturedMovieCarousel(
             }
         },
         previousButton = {
-            if (LocalEngagementMode.current.isBackButtonRequired) {
+            if (LocalEngagementMode.current.hasPointingDevice) {
                 FeaturedCarouselDefaults.PreviousButton(
                     state = state,
                 )

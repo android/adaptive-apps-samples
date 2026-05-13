@@ -18,7 +18,6 @@
 
 package com.google.jetstream.presentation.components.feature
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ProvidableCompositionLocal
@@ -31,38 +30,50 @@ import androidx.compose.ui.UiMediaScope
 sealed interface EngagementMode {
     val isBackButtonRequired: Boolean
     val hasImmersiveMode: Boolean
+    val hasPointingDevice: Boolean
 
     data class Compact(
         override val isBackButtonRequired: Boolean = false,
         override val hasImmersiveMode: Boolean = true,
+        override val hasPointingDevice: Boolean = false,
     ) : EngagementMode
 
     data class Medium(
         override val isBackButtonRequired: Boolean = false,
         override val hasImmersiveMode: Boolean = true,
+        override val hasPointingDevice: Boolean = false,
     ) : EngagementMode
 
     data class Workstation(
         override val isBackButtonRequired: Boolean = true,
         override val hasImmersiveMode: Boolean = true,
+        override val hasPointingDevice: Boolean = false,
     ) : EngagementMode
 
-    data object Leanback : EngagementMode {
+    data class Leanback(
+        override val hasPointingDevice: Boolean = false,
+    ) : EngagementMode {
         override val isBackButtonRequired: Boolean = false
         override val hasImmersiveMode: Boolean = false
     }
 
-    data object Cabin : EngagementMode {
+    data class Cabin(
+        override val hasPointingDevice: Boolean,
+    ) : EngagementMode {
         override val isBackButtonRequired: Boolean = true
         override val hasImmersiveMode: Boolean = true
     }
 
-    data object Enclosed : EngagementMode {
+    data class Enclosed(
+        override val hasPointingDevice: Boolean,
+    ) : EngagementMode {
         override val isBackButtonRequired: Boolean = true
         override val hasImmersiveMode: Boolean = false
     }
 
-    data object Spatial : EngagementMode {
+    data class Spatial(
+        override val hasPointingDevice: Boolean,
+    ) : EngagementMode {
         override val isBackButtonRequired: Boolean = true
         override val hasImmersiveMode: Boolean = false
     }
@@ -71,39 +82,49 @@ sealed interface EngagementMode {
 @Composable
 fun currentEngagementMode(): State<EngagementMode> {
     return JetStreamUiMedia.query {
-        Log.d("EnagementMode", "$viewingDistance, $isMultiWindowMode")
         when {
             isSpatialUiEnabled -> {
-                EngagementMode.Spatial
+                EngagementMode.Spatial(
+                    hasPointingDevice = hasPointingDevice,
+                )
             }
 
             hasXrSpatialFeature -> {
-                EngagementMode.Enclosed
+                EngagementMode.Enclosed(
+                    hasPointingDevice = hasPointingDevice,
+                )
             }
 
             windowSizeClass.isIWidthCompact() -> {
                 EngagementMode.Compact(
-                    isBackButtonRequired = inputModality == InputModality.PointingDevice,
+                    isBackButtonRequired = hasPointingDevice,
+                    hasPointingDevice = hasPointingDevice,
                 )
             }
 
             viewingDistance == UiMediaScope.ViewingDistance.Medium && !isMultiWindowMode -> {
-                EngagementMode.Cabin
+                EngagementMode.Cabin(
+                    hasPointingDevice = hasPointingDevice,
+                )
             }
 
             viewingDistance == UiMediaScope.ViewingDistance.Far -> {
-                EngagementMode.Leanback
+                EngagementMode.Leanback(
+                    hasPointingDevice = hasPointingDevice,
+                )
             }
 
             windowSizeClass.isWidthAtLeastLarge() -> {
                 EngagementMode.Workstation(
-                    isBackButtonRequired = inputModality == InputModality.PointingDevice,
+                    isBackButtonRequired = hasPointingDevice,
+                    hasPointingDevice = hasPointingDevice,
                 )
             }
 
             else -> {
                 EngagementMode.Medium(
-                    isBackButtonRequired = inputModality == InputModality.PointingDevice,
+                    isBackButtonRequired = hasPointingDevice,
+                    hasPointingDevice = hasPointingDevice,
                 )
             }
         }

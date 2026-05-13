@@ -163,7 +163,7 @@ object DefaultNavigation : JetStreamAppNavigation {
                 current = current,
                 onNavigation = onNavigation,
             )
-            if (LocalEngagementMode.current == EngagementMode.Enclosed) {
+            if (LocalEngagementMode.current is EngagementMode.Enclosed) {
                 EnableSpatialUiButton()
             }
         }
@@ -322,11 +322,11 @@ fun selectAppNavigation(): JetStreamAppNavigation {
     val engagementMode = LocalEngagementMode.current
     return remember(engagementMode) {
         when (engagementMode) {
-            EngagementMode.Spatial -> {
+            is EngagementMode.Spatial -> {
                 SpatialNavigation
             }
 
-            EngagementMode.Leanback, EngagementMode.Cabin, is EngagementMode.Workstation -> {
+            is EngagementMode.Leanback, is EngagementMode.Cabin, is EngagementMode.Workstation -> {
                 TopBarNavigation
             }
 

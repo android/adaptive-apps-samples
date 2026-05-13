@@ -36,7 +36,7 @@ val NoScrollSpec =
 @Composable
 fun defaultBringIntoViewSpec(): BringIntoViewSpec {
     return when (LocalEngagementMode.current) {
-        EngagementMode.Leanback -> PivotBringIntoViewSpec
+        is EngagementMode.Leanback -> PivotBringIntoViewSpec
         else -> DefaultBringIntoViewSpec
     }
 }
@@ -53,11 +53,10 @@ private val PivotBringIntoViewSpec =
             size: Float,
             containerSize: Float,
         ): Float {
-            val leadingEdgeOfItemRequestingFocus = offset
             val trailingEdgeOfItemRequestingFocus = offset + size
 
             val sizeOfItemRequestingFocus =
-                abs(trailingEdgeOfItemRequestingFocus - leadingEdgeOfItemRequestingFocus)
+                abs(trailingEdgeOfItemRequestingFocus - offset)
             val childSmallerThanParent = sizeOfItemRequestingFocus <= containerSize
             val initialTargetForLeadingEdge =
                 parentFraction * containerSize - (childFraction * sizeOfItemRequestingFocus)
@@ -72,6 +71,6 @@ private val PivotBringIntoViewSpec =
                     initialTargetForLeadingEdge
                 }
 
-            return leadingEdgeOfItemRequestingFocus - targetForLeadingEdge
+            return offset - targetForLeadingEdge
         }
     }

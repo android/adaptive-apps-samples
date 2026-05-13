@@ -120,8 +120,8 @@ sealed interface ProminentCardStyle {
 }
 
 fun EngagementMode.isFocusOptimized(): Boolean {
-    return this == EngagementMode.Leanback ||
-        this == EngagementMode.Cabin ||
+    return this is EngagementMode.Leanback ||
+        this is EngagementMode.Cabin ||
         this is EngagementMode.Workstation
 }
 

@@ -110,7 +110,7 @@ fun VideoPlayerScreen(
     videoPlayerScreenViewModel: VideoPlayerScreenViewModel = hiltViewModel(),
 ) {
     val uiState by videoPlayerScreenViewModel.uiState.collectAsStateWithLifecycle()
-    val isSpatialUiEnabled = LocalEngagementMode.current == EngagementMode.Spatial
+    val isSpatialUiEnabled = LocalEngagementMode.current is EngagementMode.Spatial
     LaunchedEffect(isSpatialUiEnabled) {
         videoPlayerScreenViewModel.updateSpatialUiEnabled(isSpatialUiEnabled)
     }
@@ -220,11 +220,11 @@ private fun VideoPlayer(
                     key = Key.F,
                     action = {
                         when (engagementMode) {
-                            EngagementMode.Spatial -> {
+                            is EngagementMode.Spatial -> {
                                 session?.scene?.requestHomeSpaceMode()
                             }
 
-                            EngagementMode.Enclosed -> {
+                            is EngagementMode.Enclosed -> {
                                 session?.scene?.requestFullSpaceMode()
                             }
 
@@ -277,7 +277,7 @@ private fun VideoPlayer(
         }
     }
 
-    if (engagementMode == EngagementMode.Spatial) {
+    if (engagementMode is EngagementMode.Spatial) {
         SpatialVideoPlayer(
             nowPlayingInfo = nowPlayingInfo,
             player = player,

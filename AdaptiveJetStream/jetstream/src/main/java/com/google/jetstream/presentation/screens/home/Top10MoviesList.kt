@@ -152,7 +152,7 @@ private enum class ListComponentType {
 @Composable
 private fun listComponentType(): ListComponentType {
     return when (LocalEngagementMode.current) {
-        EngagementMode.Leanback -> ListComponentType.ImmersiveList
+        is EngagementMode.Leanback -> ListComponentType.ImmersiveList
         else -> ListComponentType.Carousel
     }
 }

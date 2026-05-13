@@ -86,7 +86,7 @@ object JetStreamTokens {
     fun contentColorIndication(): Style {
         val contentColor =
             when (LocalEngagementMode.current) {
-                EngagementMode.Leanback -> Color.Transparent
+                is EngagementMode.Leanback -> Color.Transparent
                 else -> MaterialTheme.colorScheme.onSurface
             }
 
