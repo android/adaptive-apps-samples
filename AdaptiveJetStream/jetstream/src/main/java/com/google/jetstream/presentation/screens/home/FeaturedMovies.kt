@@ -29,13 +29,13 @@ import androidx.compose.material3.carousel.CarouselState
 import androidx.compose.material3.carousel.HorizontalCenteredHeroCarousel
 import androidx.compose.material3.carousel.rememberCarouselState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.google.jetstream.data.entities.Movie
 import com.google.jetstream.presentation.components.PosterImage
-import com.google.jetstream.presentation.components.colorOverlay
 import com.google.jetstream.presentation.components.feature.EngagementMode
 import com.google.jetstream.presentation.components.feature.LocalEngagementMode
 import com.google.jetstream.presentation.components.shim.FeaturedCarousel
@@ -208,6 +208,12 @@ fun CarouselMovieCard(
     style: Style = Style,
     onMovieSelected: (movie: Movie) -> Unit = {},
 ) {
+    val surfaceColor = MaterialTheme.colorScheme.surface
+    val scrimColor =
+        remember(surfaceColor) {
+            surfaceColor.copy(alpha = 0.3f)
+        }
+
     StylableCard(
         modifier = modifier,
         contentAlignment = Alignment.BottomStart,
@@ -220,8 +226,8 @@ fun CarouselMovieCard(
             movie = movie,
             style = {
                 fillSize()
+                foreground(scrimColor)
             },
-            modifier = Modifier.colorOverlay(MaterialTheme.colorScheme.surface.copy(alpha = 0.3f)),
         )
 
         val textStyle = MaterialTheme.typography.titleLarge

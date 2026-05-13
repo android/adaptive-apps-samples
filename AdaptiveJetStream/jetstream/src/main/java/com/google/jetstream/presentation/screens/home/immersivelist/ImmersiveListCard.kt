@@ -35,7 +35,6 @@ import androidx.compose.ui.text.font.FontWeight
 import com.google.jetstream.data.entities.Movie
 import com.google.jetstream.presentation.components.MovieCard
 import com.google.jetstream.presentation.components.PosterImage
-import com.google.jetstream.presentation.components.colorOverlay
 import com.google.jetstream.presentation.components.shim.stylable.StylableBox
 import com.google.jetstream.presentation.theme.JetStreamTokens
 
@@ -50,6 +49,12 @@ internal fun ImmersiveListCard(
     onMovieSelected: (Movie) -> Unit = {},
     onMovieFocused: (Movie) -> Unit = {},
 ) {
+    val surfaceColor = MaterialTheme.colorScheme.surface
+    val scrimColor =
+        remember(surfaceColor) {
+            surfaceColor.copy(alpha = 0.1f)
+        }
+
     MovieCard(
         onClick = { onMovieSelected(movie) },
         style = JetStreamTokens.contentColorIndication() then style,
@@ -62,13 +67,8 @@ internal fun ImmersiveListCard(
                 movie = movie,
                 style = {
                     size(JetStreamTokens.LandscapeCardSize)
+                    foreground(scrimColor)
                 },
-                modifier =
-                    Modifier.colorOverlay(
-                        MaterialTheme.colorScheme.surface.copy(
-                            alpha = 0.1f,
-                        ),
-                    ),
             )
         },
         interactionSource = interactionSource,
