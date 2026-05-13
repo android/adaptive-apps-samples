@@ -21,6 +21,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
 import androidx.compose.foundation.style.Style
 import androidx.compose.foundation.style.then
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ShapeDefaults
 import androidx.compose.runtime.Composable
@@ -68,6 +69,14 @@ object JetStreamTokens {
         DpSize(ImmersiveListCardWidth, ImmersiveListCardWidth * LANDSCAPE_CARD_ASPECT_RATIO)
 
     val LeanbackWindowSize = DpSize(960.dp, 540.dp)
+
+    val ScrollNavigationButtonColors @Composable get() =
+        IconButtonDefaults.iconButtonColors(
+            containerColor = MaterialTheme.colorScheme.onSurface,
+            contentColor = MaterialTheme.colorScheme.surface,
+            disabledContentColor = Color.Transparent,
+            disabledContainerColor = Color.Transparent,
+        )
 
     @OptIn(ExperimentalFoundationStyleApi::class)
     @Composable

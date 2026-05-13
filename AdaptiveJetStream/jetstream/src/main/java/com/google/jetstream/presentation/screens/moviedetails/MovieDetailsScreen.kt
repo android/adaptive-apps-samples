@@ -65,7 +65,7 @@ import com.google.jetstream.presentation.components.MoviesRow
 import com.google.jetstream.presentation.components.desktop.BackNavigationContextMenu
 import com.google.jetstream.presentation.components.feature.LocalEngagementMode
 import com.google.jetstream.presentation.components.shim.indication.scaleIndication
-import com.google.jetstream.presentation.components.shim.stylable.StylableBox
+import com.google.jetstream.presentation.components.shim.styleable.StyleableBox
 import com.google.jetstream.presentation.screens.moviedetails.components.CastAndCrewList
 import com.google.jetstream.presentation.screens.moviedetails.components.MovieDetails
 import com.google.jetstream.presentation.screens.moviedetails.components.MovieReviews
@@ -272,7 +272,7 @@ internal fun Descriptor(
 @Composable
 private fun BottomDivider(modifier: Modifier = Modifier, style: Style = Style) {
     val color = MaterialTheme.colorScheme.onSurface
-    StylableBox(
+    StyleableBox(
         style =
             Style {
                 fillWidth()

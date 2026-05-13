@@ -22,11 +22,11 @@ import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
 import androidx.compose.foundation.style.Style
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.google.jetstream.presentation.components.shim.stylable.StylableCard
+import com.google.jetstream.presentation.components.shim.styleable.StyleableCard
 
 /**
  * A classic card component that displays an image, title, subtitle, and description.
- * It uses [StylableCard] as its base.
+ * It uses [StyleableCard] as its base.
  *
  * @param onClick Called when the card is clicked.
  * @param image The composable for the image.
@@ -47,7 +47,7 @@ fun ClassicCard(
     subtitle: @Composable () -> Unit = {},
     description: @Composable () -> Unit = {},
 ) {
-    StylableCard(
+    StyleableCard(
         onClick = onClick,
         modifier = modifier,
         style = style,

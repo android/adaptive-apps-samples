@@ -61,7 +61,7 @@ import androidx.compose.ui.unit.dp
 import com.google.jetstream.R
 import com.google.jetstream.presentation.components.feature.JetStreamUiMedia
 import com.google.jetstream.presentation.components.onPointerHovered
-import com.google.jetstream.presentation.components.shim.stylable.StylableBox
+import com.google.jetstream.presentation.components.shim.styleable.StyleableBox
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
@@ -321,14 +321,14 @@ object FeaturedCarouselDefaults {
                 clip()
                 size(8.dp)
             }
-        StylableBox(style = defaultStyle then style, modifier = modifier)
+        StyleableBox(style = defaultStyle then style, modifier = modifier)
     }
 }
 
 /**
  * Animates to the next item in the carousel if it exists.
  */
-private suspend fun CarouselState.scrollToNextItem(
+suspend fun CarouselState.scrollToNextItem(
     itemCount: Int,
 ) {
     onScrollFinished {
@@ -341,7 +341,7 @@ private suspend fun CarouselState.scrollToNextItem(
 /**
  * Animates to the previous item in the carousel if it exists.
  */
-private suspend fun CarouselState.scrollToPreviousItem() {
+suspend fun CarouselState.scrollToPreviousItem() {
     onScrollFinished {
         if (hasPreviousItem()) {
             currentCoroutineContext().ensureActive()
@@ -364,14 +364,14 @@ internal suspend fun CarouselState.onScrollFinished(block: suspend () -> Unit) {
 /**
  * Returns true if there is a previous item to navigate to.
  */
-private fun CarouselState.hasPreviousItem(): Boolean {
+fun CarouselState.hasPreviousItem(): Boolean {
     return currentItem > 0
 }
 
 /**
  * Returns true if there is a next item to navigate to.
  */
-private fun CarouselState.hasNextItem(itemCount: Int): Boolean {
+fun CarouselState.hasNextItem(itemCount: Int): Boolean {
     return currentItem < itemCount - 1
 }
 

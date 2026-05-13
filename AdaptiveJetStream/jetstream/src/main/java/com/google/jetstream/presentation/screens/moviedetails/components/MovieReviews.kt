@@ -47,7 +47,7 @@ import com.google.jetstream.R
 import com.google.jetstream.data.entities.MovieReviewsAndRatings
 import com.google.jetstream.data.util.StringConstants
 import com.google.jetstream.presentation.components.shim.indication.scaleIndication
-import com.google.jetstream.presentation.components.shim.stylable.StylableBox
+import com.google.jetstream.presentation.components.shim.styleable.StyleableBox
 import com.google.jetstream.presentation.theme.LocalContentPadding
 import com.google.jetstream.presentation.theme.Padding
 
@@ -128,7 +128,7 @@ private fun Review(
             modifier
                 .styleable(style = style),
     ) {
-        StylableBox(
+        StyleableBox(
             contentAlignment = Alignment.Center,
             style = {
                 fillSize()

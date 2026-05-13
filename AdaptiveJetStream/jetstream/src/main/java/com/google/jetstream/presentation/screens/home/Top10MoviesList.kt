@@ -20,37 +20,39 @@ package com.google.jetstream.presentation.screens.home
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
-import androidx.compose.foundation.style.Style
 import androidx.compose.foundation.style.fillWidth
-import androidx.compose.foundation.style.styleable
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.carousel.CarouselState
 import androidx.compose.material3.carousel.HorizontalMultiBrowseCarousel
 import androidx.compose.material3.carousel.rememberCarouselState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.StrokeJoin
-import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.google.jetstream.R
 import com.google.jetstream.data.entities.Movie
-import com.google.jetstream.presentation.components.MovieCard
+import com.google.jetstream.presentation.components.NextItemButton
 import com.google.jetstream.presentation.components.PosterImage
+import com.google.jetstream.presentation.components.PreviousItemButton
+import com.google.jetstream.presentation.components.ScrollNavigationOverlay
 import com.google.jetstream.presentation.components.SectionTitle
 import com.google.jetstream.presentation.components.feature.EngagementMode
 import com.google.jetstream.presentation.components.feature.JetStreamUiMedia
 import com.google.jetstream.presentation.components.feature.LocalEngagementMode
 import com.google.jetstream.presentation.components.shim.carouselNavigation
-import com.google.jetstream.presentation.components.shim.indication.scaleIndication
-import com.google.jetstream.presentation.components.shim.stylable.StylableBox
+import com.google.jetstream.presentation.components.shim.styleable.StyleableBox
 import com.google.jetstream.presentation.screens.home.immersivelist.ImmersiveList
 import com.google.jetstream.presentation.theme.JetStreamTokens
 import com.google.jetstream.presentation.theme.LocalContentPadding
@@ -103,43 +105,105 @@ private fun Top10MoviesList(
 
         else -> {
             val itemWidth by JetStreamUiMedia.query {
-                (windowWidth.value * 0.4).dp
+                (windowWidth.value * 0.8).dp
             }
             val carouselState = rememberCarouselState { movieList.size }
+            val contentPadding = LocalContentPadding.current
 
-            HorizontalMultiBrowseCarousel(
-                state = carouselState,
-                preferredItemWidth = itemWidth, // 各カードの幅
-                itemSpacing = LocalListItemGap.current,
-                contentPadding = LocalContentPadding.current.intoPaddingValues(),
-                modifier =
-                    modifier.carouselNavigation(
-                        state = carouselState,
-                        coroutineScope = rememberCoroutineScope(),
-                    ),
-            ) { index ->
-                val movie = movieList[index]
-                MovieCard(
-                    onClick = { onMovieClick(movie) },
-                    style = JetStreamTokens.contentColorIndication(),
-                    title = {
-                        Text(text = movie.name)
-                    },
-                    image = {
-                        Box {
-                            PosterImage(
-                                movie = movie,
-                                style = {
-                                    fillWidth()
-                                    height((JetStreamTokens.PortraitCardSize.height.value * 1.414).dp)
-                                    scaleIndication(focused = 1f)
-                                },
-                            )
-                            OutlinedRankText(rank = index + 1, style = { externalPadding(8.dp) })
-                        }
-                    },
-                )
+            ScrollNavigationOverlay(
+                previous = {
+                    PreviousItemButton(
+                        carouselState = carouselState,
+                        style = {
+                            externalPaddingStart(contentPadding.start)
+                        },
+                    )
+                },
+                next = {
+                    NextItemButton(
+                        carouselState = carouselState,
+                        itemCount = movieList.size,
+                        style = {
+                            externalPaddingEnd(contentPadding.end)
+                        },
+                    )
+                },
+            ) {
+                Top10MovieListCarousel(carouselState, itemWidth, modifier, movieList, onMovieClick)
             }
+        }
+    }
+}
+
+@Composable
+private fun Top10MovieListCarousel(
+    carouselState: CarouselState,
+    itemWidth: Dp,
+    modifier: Modifier,
+    movieList: List<Movie>,
+    onMovieClick: (Movie) -> Unit,
+) {
+    val surfaceColor = MaterialTheme.colorScheme.surface
+    val scrimColor =
+        remember(surfaceColor) {
+            surfaceColor.copy(alpha = 0.9f)
+        }
+
+    val scrimBrush =
+        Brush.composite(
+            Brush.linearGradient(
+                listOf(
+                    scrimColor,
+                    Color.Transparent,
+                ),
+                start = Offset(0f, Float.POSITIVE_INFINITY),
+                end = Offset(Float.POSITIVE_INFINITY, 0f),
+            ),
+            Brush.verticalGradient(
+                listOf(Color.Transparent, scrimColor),
+            ),
+            BlendMode.Darken,
+        )
+
+    HorizontalMultiBrowseCarousel(
+        state = carouselState,
+        preferredItemWidth = itemWidth,
+        itemSpacing = LocalListItemGap.current,
+        contentPadding = LocalContentPadding.current.intoPaddingValues(),
+        modifier =
+            modifier.carouselNavigation(
+                state = carouselState,
+                coroutineScope = rememberCoroutineScope(),
+            ),
+    ) { index ->
+        val movie = movieList[index]
+        // Set clearance around CarouselMovieCard to ensure border indication is visible.
+        StyleableBox(
+            style = {
+                contentPadding(4.dp)
+            },
+        ) {
+            CarouselMovieCard(
+                onClick = { onMovieClick(movie) },
+                // style = JetStreamTokens.contentColorIndication(),
+                title = {
+                    Text(
+                        text = "#${index + 1}: ${movie.name}",
+                        style = MaterialTheme.typography.titleLarge,
+                        softWrap = true,
+                    )
+                },
+                background = {
+                    PosterImage(
+                        movie = movie,
+                        style = {
+                            fillWidth()
+                            height((JetStreamTokens.PortraitCardSize.height.value * 1.414).dp)
+                            foreground(scrimBrush)
+                        },
+                    )
+                },
+            )
         }
     }
 }
@@ -154,54 +218,5 @@ private fun listComponentType(): ListComponentType {
     return when (LocalEngagementMode.current) {
         is EngagementMode.Leanback -> ListComponentType.ImmersiveList
         else -> ListComponentType.Carousel
-    }
-}
-
-@Composable
-private fun OutlinedRankText(
-    rank: Int,
-    modifier: Modifier = Modifier,
-    style: Style = Style,
-) {
-    val text = "#$rank"
-
-    val base = MaterialTheme.typography.displayLarge
-
-    val textStyle =
-        base.copy(
-            color = MaterialTheme.colorScheme.onSurface,
-        )
-    val outlineTextStyle =
-        base.copy(
-            color = MaterialTheme.colorScheme.surface.copy(alpha = 0.4f),
-            drawStyle =
-                Stroke(
-                    miter = 20f,
-                    width = 10f,
-                    join = StrokeJoin.Round,
-                ),
-        )
-
-    StylableBox(
-        modifier = modifier,
-        style = style,
-        contentAlignment = Alignment.Center,
-    ) {
-        Text(
-            text = text,
-            style = outlineTextStyle,
-            modifier =
-                Modifier.styleable {
-                    textStyle(outlineTextStyle)
-                },
-        )
-        Text(
-            text = text,
-            style = textStyle,
-            modifier =
-                Modifier.styleable {
-                    textStyle(textStyle)
-                },
-        )
     }
 }

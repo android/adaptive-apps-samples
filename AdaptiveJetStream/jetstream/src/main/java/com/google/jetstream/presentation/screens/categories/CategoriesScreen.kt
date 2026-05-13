@@ -52,7 +52,7 @@ import com.google.jetstream.presentation.components.PhonePreview
 import com.google.jetstream.presentation.components.TvPreview
 import com.google.jetstream.presentation.components.feature.LocalEngagementMode
 import com.google.jetstream.presentation.components.mockCategoryScreenState
-import com.google.jetstream.presentation.components.shim.stylable.StylableCard
+import com.google.jetstream.presentation.components.shim.styleable.StyleableCard
 import com.google.jetstream.presentation.theme.LocalContentPadding
 import com.google.jetstream.presentation.theme.LocalListItemGap
 import com.google.jetstream.presentation.theme.Padding
@@ -143,7 +143,7 @@ private fun CategoryCard(
             0.8f
         }
 
-    StylableCard(
+    StyleableCard(
         contentAlignment = Alignment.Center,
         modifier = modifier,
         style = {

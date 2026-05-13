@@ -27,7 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.google.jetstream.R
-import com.google.jetstream.presentation.components.shim.stylable.StylableBox
+import com.google.jetstream.presentation.components.shim.styleable.StyleableBox
 
 @OptIn(ExperimentalFoundationStyleApi::class)
 @Composable
@@ -36,7 +36,7 @@ fun Loading(
     style: Style = Style(),
 ) {
     val textStyle = MaterialTheme.typography.displayMedium
-    StylableBox(
+    StyleableBox(
         modifier = modifier,
         contentAlignment = Alignment.Center,
         style =

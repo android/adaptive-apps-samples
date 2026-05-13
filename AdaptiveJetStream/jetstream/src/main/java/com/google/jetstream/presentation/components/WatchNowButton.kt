@@ -29,6 +29,7 @@ import androidx.compose.foundation.style.then
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -36,7 +37,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.google.jetstream.R
@@ -48,6 +49,9 @@ fun WatchNowButton(
     modifier: Modifier = Modifier,
     interactionSource: MutableInteractionSource? = null,
     style: Style = Style,
+    enabled: Boolean = true,
+    colors: ButtonColors = WatchNowButtonDefaults.colors,
+    shape: Shape = JetStreamTokens.ButtonShape,
     onClick: () -> Unit = {},
 ) {
     val styleState =
@@ -59,8 +63,10 @@ fun WatchNowButton(
         onClick = onClick,
         modifier = modifier.styleable(styleState = styleState, defaultStyle(), style),
         // Workaround: Button is filled with default container color without the following setting.
-        colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+        colors = colors,
+        shape = shape,
         interactionSource = interactionSource,
+        enabled = enabled,
     ) {
         Icon(
             imageVector = Icons.Outlined.PlayArrow,
@@ -71,15 +77,21 @@ fun WatchNowButton(
     }
 }
 
+object WatchNowButtonDefaults {
+    val colors
+        @Composable get() =
+            ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.onSurface,
+                contentColor = MaterialTheme.colorScheme.surface,
+                disabledContainerColor = MaterialTheme.colorScheme.onSurface,
+                disabledContentColor = MaterialTheme.colorScheme.surface,
+            )
+}
+
 @Composable
 private fun defaultStyle(): Style {
-    val backgroundColor = MaterialTheme.colorScheme.onSurface
-    val contentColor = MaterialTheme.colorScheme.surface
-
     return JetStreamTokens.buttonStyle() then
-        Style {
-            textStyle(Typography.titleSmall)
-            contentColor(contentColor)
-            background(backgroundColor)
-        }
+            Style {
+                textStyle(Typography.titleSmall)
+            }
 }

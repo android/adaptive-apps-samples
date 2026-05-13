@@ -35,7 +35,7 @@ import androidx.compose.ui.text.font.FontWeight
 import com.google.jetstream.data.entities.Movie
 import com.google.jetstream.presentation.components.MovieCard
 import com.google.jetstream.presentation.components.PosterImage
-import com.google.jetstream.presentation.components.shim.stylable.StylableBox
+import com.google.jetstream.presentation.components.shim.styleable.StyleableBox
 import com.google.jetstream.presentation.theme.JetStreamTokens
 
 @OptIn(ExperimentalFoundationStyleApi::class)
@@ -97,7 +97,7 @@ internal fun ImmersiveListCardPoster(
             fillSize()
         } then style
 
-    StylableBox(
+    StyleableBox(
         style = currentStyle,
         contentAlignment = Alignment.Center,
         modifier = modifier,
