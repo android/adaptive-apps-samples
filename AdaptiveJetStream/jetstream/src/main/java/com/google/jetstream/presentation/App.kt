@@ -16,6 +16,8 @@
 
 package com.google.jetstream.presentation
 
+import androidx.compose.foundation.focusGroup
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
 import androidx.compose.material3.Surface
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
@@ -25,9 +27,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusProperties
+import androidx.compose.ui.focus.focusRequester
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.EntryProviderScope
@@ -40,6 +46,9 @@ import com.google.jetstream.presentation.app.Destination
 import com.google.jetstream.presentation.app.PresentationType
 import com.google.jetstream.presentation.app.rememberAppLayoutSceneDecorator
 import com.google.jetstream.presentation.app.selectAppNavigation
+import com.google.jetstream.presentation.components.feature.EngagementMode
+import com.google.jetstream.presentation.components.feature.LocalEngagementMode
+import com.google.jetstream.presentation.components.onBackButtonPressed
 import com.google.jetstream.presentation.screens.categories.CategoriesScreen
 import com.google.jetstream.presentation.screens.categories.CategoryMovieListScreen
 import com.google.jetstream.presentation.screens.categories.CategoryMovieListScreenViewModel
@@ -76,8 +85,18 @@ fun App(
     val appNavigation = selectAppNavigation()
     // Tracks visibility of the top bar/navigation rail for hide-on-scroll behavior
     var isTopbarVisible by rememberSaveable { mutableStateOf(true) }
+    var isTopbarFocused by remember { mutableStateOf(true) }
 
-    Surface {
+    Surface(
+        modifier =
+            Modifier.leanbackBackHandler(
+                navigator = navigator,
+                isTopbarVisible = isTopbarVisible,
+                isTopbarFocused = isTopbarFocused,
+            ) {
+                isTopbarVisible = true
+            },
+    ) {
         NavDisplay(
             backStack = navigator.backStack,
             modifier = modifier,
@@ -96,11 +115,25 @@ fun App(
                     // Custom strategy to wrap screens in the appropriate app-level navigation (Rail/Bar/TopBar)
                     rememberAppLayoutSceneDecorator(
                         navigation = {
-                            appNavigation.Navigation(
-                                current = navigator.current,
-                                onNavigation = navigator::navigate,
-                                isVisible = isTopbarVisible,
-                            )
+                            Box(
+                                modifier =
+                                    Modifier
+                                        .focusProperties {
+                                            onExit = {
+                                                isTopbarFocused = false
+                                            }
+                                            onEnter = {
+                                                isTopbarFocused = true
+                                            }
+                                        }
+                                        .focusGroup(),
+                            ) {
+                                appNavigation.Navigation(
+                                    current = navigator.current,
+                                    onNavigation = navigator::navigate,
+                                    isVisible = isTopbarVisible,
+                                )
+                            }
                         },
                         subNavigation = {
                             appNavigation.SubNavigation(
@@ -432,5 +465,41 @@ private fun EntryProviderScope<NavKey>.profileEntries(
             } + ListDetailSceneStrategy.detailPane(),
     ) {
         HelpAndSupportSection()
+    }
+}
+
+@Composable
+private fun Modifier.leanbackBackHandler(
+    navigator: Navigator,
+    isTopbarVisible: Boolean,
+    isTopbarFocused: Boolean,
+    requestTopbarBecomeVisible: () -> Unit,
+): Modifier {
+    return when (LocalEngagementMode.current) {
+        is EngagementMode.Leanback -> {
+            val focusRequester = remember { FocusRequester() }
+            onBackButtonPressed {
+                when {
+                    !isTopbarVisible -> {
+                        requestTopbarBecomeVisible()
+                        focusRequester.requestFocus()
+                    }
+
+                    !isTopbarFocused -> {
+                        focusRequester.requestFocus()
+                    }
+
+                    else -> {
+                        navigator.goBack()
+                    }
+                }
+            }
+                .focusRequester(focusRequester)
+                .focusGroup()
+        }
+
+        else -> {
+            this
+        }
     }
 }
