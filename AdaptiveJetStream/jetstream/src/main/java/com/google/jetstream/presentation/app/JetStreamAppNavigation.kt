@@ -403,6 +403,7 @@ private fun Topbar(
  * A horizontal row of tabs for navigating between the app's root destinations.
  * Includes support for focus-based navigation and a specialized search tab.
  */
+@OptIn(ExperimentalFoundationStyleApi::class)
 @Composable
 private fun TabRow(
     current: Destination?,
@@ -446,7 +447,14 @@ private fun TabRow(
                         }
                         .focusRequester(focusRequesterList[index]),
             ) {
-                Text(text = item.name, style = textStyle)
+                Text(
+                    text = item.name,
+                    style = textStyle,
+                    modifier =
+                        Modifier.styleable {
+                            externalPadding(horizontal = 0.dp, vertical = 8.dp)
+                        },
+                )
             }
         }
         Tab(
