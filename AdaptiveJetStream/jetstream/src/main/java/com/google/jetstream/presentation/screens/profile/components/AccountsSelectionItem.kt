@@ -31,7 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.google.jetstream.presentation.components.shim.stylable.StylableCard
+import com.google.jetstream.presentation.components.shim.styleable.StyleableCard
 import com.google.jetstream.presentation.screens.profile.section.AccountsSectionData
 
 @OptIn(
@@ -45,7 +45,7 @@ fun AccountsSelectionItem(
     modifier: Modifier = Modifier,
 ) {
     val backgroundColor = MaterialTheme.colorScheme.surfaceColorAtElevation(4.dp)
-    StylableCard(
+    StyleableCard(
         modifier = modifier,
         enabled = accountsSectionData.onClick != null,
         onClick = accountsSectionData.onClick ?: {},

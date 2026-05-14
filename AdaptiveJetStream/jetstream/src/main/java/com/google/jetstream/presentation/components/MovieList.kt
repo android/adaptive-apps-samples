@@ -18,14 +18,24 @@ package com.google.jetstream.presentation.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.fastCoerceAtMost
 import com.google.jetstream.data.entities.Movie
 import com.google.jetstream.presentation.theme.LocalListItemGap
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalFoundationStyleApi::class)
 @Composable
 fun MovieList(
     movieList: List<Movie>,
@@ -34,16 +44,63 @@ fun MovieList(
     horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(LocalListItemGap.current),
     itemContent: @Composable (Int, Movie) -> Unit = { _, _ -> },
 ) {
-    LazyRow(
-        contentPadding = contentPadding,
-        horizontalArrangement = horizontalArrangement,
-        modifier = modifier,
+    val state = rememberLazyListState()
+    val coroutineScope = rememberCoroutineScope()
+    val layoutDirection = LocalLayoutDirection.current
+
+    ScrollNavigationOverlay(
+        previous = {
+            PreviousItemButton(
+                onClick = {
+                    coroutineScope.launch {
+                        state.animateToPreviousItem()
+                    }
+                },
+                style = {
+                    externalPaddingStart(contentPadding.calculateStartPadding(layoutDirection))
+                },
+                enabled = state.canScrollBackward,
+            )
+        },
+        next = {
+            NextItemButton(
+                onClick = {
+                    coroutineScope.launch {
+                        state.animateToNextItem()
+                    }
+                },
+                style = {
+                    externalPaddingEnd(contentPadding.calculateEndPadding(layoutDirection))
+                },
+                enabled = state.canScrollForward,
+            )
+        },
     ) {
-        itemsIndexed(
-            items = movieList,
-            key = { _, movie -> movie.id },
-        ) { index, movie ->
-            itemContent(index, movie)
+        LazyRow(
+            state = state,
+            contentPadding = contentPadding,
+            horizontalArrangement = horizontalArrangement,
+            modifier = modifier,
+        ) {
+            itemsIndexed(
+                items = movieList,
+                key = { _, movie -> movie.id },
+            ) { index, movie ->
+                itemContent(index, movie)
+            }
         }
+    }
+}
+
+private suspend fun LazyListState.animateToPreviousItem() {
+    val previousIndex = (firstVisibleItemIndex - 1).coerceAtLeast(0)
+    animateScrollToItem(previousIndex)
+}
+
+private suspend fun LazyListState.animateToNextItem() {
+    val totalItemCount = layoutInfo.totalItemsCount
+    if (totalItemCount > 0) {
+        val nextIndex = (firstVisibleItemIndex + 1).fastCoerceAtMost(totalItemCount - 1)
+        animateScrollToItem(nextIndex)
     }
 }

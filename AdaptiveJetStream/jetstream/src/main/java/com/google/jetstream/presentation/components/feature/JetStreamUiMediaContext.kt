@@ -18,6 +18,7 @@
 
 package com.google.jetstream.presentation.components.feature
 
+import androidx.activity.compose.LocalActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.State
@@ -29,41 +30,39 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.ExperimentalMediaQueryApi
 import androidx.compose.ui.LocalUiMediaScope
 import androidx.compose.ui.UiMediaScope
-import androidx.compose.ui.input.InputMode
-import androidx.compose.ui.mediaQuery
-import androidx.compose.ui.platform.LocalInputModeManager
 import androidx.compose.ui.unit.dp
 import androidx.window.core.layout.WindowSizeClass
 import androidx.xr.compose.platform.LocalSpatialCapabilities
 import androidx.xr.compose.platform.LocalSpatialConfiguration
 
 interface JetStreamUiMediaContext : UiMediaScope {
-    val inputModality: InputModality
     val isSpatialUiEnabled: Boolean
     val hasXrSpatialFeature: Boolean
     val windowSizeClass: WindowSizeClass
+    val isMultiWindowMode: Boolean
+    val hasPointingDevice: Boolean
 }
 
 private class JetStreamUiMediaContextImpl(
     private val uiMediaScope: UiMediaScope,
-    override val inputModality: InputModality,
     override val isSpatialUiEnabled: Boolean,
     override val hasXrSpatialFeature: Boolean,
+    override val isMultiWindowMode: Boolean,
 ) : JetStreamUiMediaContext, UiMediaScope by uiMediaScope {
     override val windowSizeClass: WindowSizeClass
         get() {
             return WindowSizeClass(widthDp = windowWidth.value, heightDp = windowHeight.value)
         }
+    override val hasPointingDevice: Boolean
+        get() {
+            return uiMediaScope.pointerPrecision == UiMediaScope.PointerPrecision.Fine ||
+                uiMediaScope.pointerPrecision == UiMediaScope.PointerPrecision.Blunt
+        }
 }
 
 internal object JetStreamUiMedia {
     @Composable
-    fun query(condition: JetStreamUiMediaContext.() -> Boolean): Boolean {
-        return LocalJetStreamUiMediaContext.current.condition()
-    }
-
-    @Composable
-    fun <T> map(mapper: JetStreamUiMediaContext.() -> T): State<T> {
+    fun <T> query(mapper: JetStreamUiMediaContext.() -> T): State<T> {
         val currentMapper by rememberUpdatedState(mapper)
         val context = LocalJetStreamUiMediaContext.current
         return remember(context) {
@@ -75,29 +74,30 @@ internal object JetStreamUiMedia {
 
     @Composable
     internal fun current(
-        inputModality: InputModality = InputModality.select(),
         hasXrSpatialFeature: Boolean = LocalSpatialConfiguration.current.hasXrSpatialFeature,
         isSpatialUiEnabled: Boolean = LocalSpatialCapabilities.current.isSpatialUiEnabled,
         uiMediaScope: UiMediaScope = LocalUiMediaScope.current,
+        isMultiWindowMode: Boolean = LocalActivity.current?.isInMultiWindowMode ?: false,
     ): JetStreamUiMediaContext {
         return remember(
-            inputModality,
             isSpatialUiEnabled,
+            uiMediaScope,
+            isMultiWindowMode,
         ) {
             JetStreamUiMediaContextImpl(
-                inputModality = inputModality,
                 isSpatialUiEnabled = isSpatialUiEnabled,
                 uiMediaScope = uiMediaScope,
                 hasXrSpatialFeature = hasXrSpatialFeature,
+                isMultiWindowMode = isMultiWindowMode,
             )
         }
     }
 
     internal fun default(): JetStreamUiMediaContext {
         return JetStreamUiMediaContextImpl(
-            inputModality = InputModality.Touch,
             isSpatialUiEnabled = false,
             hasXrSpatialFeature = false,
+            isMultiWindowMode = false,
             uiMediaScope =
                 object : UiMediaScope {
                     override val windowPosture = UiMediaScope.Posture.Flat
@@ -124,38 +124,4 @@ fun ProvideJetStreamUiMediaContext(
         LocalJetStreamUiMediaContext provides jetStreamUiMediaContext,
         content = content,
     )
-}
-
-sealed interface InputModality {
-    data object Touch : InputModality
-
-    data object PointingDevice : InputModality
-
-    data object Dpad : InputModality
-
-    companion object {
-        @Composable
-        fun select(): InputModality {
-            return when {
-                isDpadAvailable() -> Dpad
-
-                mediaQuery {
-                    pointerPrecision == UiMediaScope.PointerPrecision.Fine ||
-                        pointerPrecision == UiMediaScope.PointerPrecision.Blunt
-                } -> PointingDevice
-
-                else -> Touch
-            }
-        }
-
-        @Composable
-        private fun isDpadAvailable(
-            inputMode: InputMode = LocalInputModeManager.current.inputMode,
-            hasNoKeyboard: Boolean = mediaQuery { keyboardKind == UiMediaScope.KeyboardKind.None },
-        ): Boolean {
-            return remember(inputMode, hasNoKeyboard) {
-                inputMode == InputMode.Keyboard && hasNoKeyboard
-            }
-        }
-    }
 }

@@ -23,7 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.google.jetstream.presentation.components.shim.StandardCardContainer
-import com.google.jetstream.presentation.components.shim.stylable.StylableCard
+import com.google.jetstream.presentation.components.shim.styleable.StyleableCard
 
 @OptIn(ExperimentalFoundationStyleApi::class)
 @Composable
@@ -41,7 +41,7 @@ fun MovieCard(
         interactionSource = interactionSource,
         title = title,
         imageCard = {
-            StylableCard(
+            StyleableCard(
                 onClick = onClick,
                 interactionSource = interactionSource,
                 content = image,

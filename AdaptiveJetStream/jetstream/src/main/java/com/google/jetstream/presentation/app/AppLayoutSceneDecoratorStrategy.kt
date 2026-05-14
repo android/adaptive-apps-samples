@@ -81,7 +81,7 @@ class AppLayoutSceneDecoratorStrategy(
 
         // If the presentation type is Overlay, do not decorate the scene
         return when {
-            engagementMode == EngagementMode.Spatial -> {
+            engagementMode is EngagementMode.Spatial -> {
                 SpatialAppLayoutSceneDecorator(
                     scene = scene,
                     navigation = navigation,
@@ -185,7 +185,6 @@ private class AppLayoutSceneDecorator(
         val layout = selectLayout()
         val subNavigationArea = layout.subNavigationArea
         val backgroundColor = MaterialTheme.colorScheme.surface
-
         Grid(
             config = layout.gridConfig,
             modifier =
@@ -229,7 +228,7 @@ private class AppLayoutSceneDecorator(
     private fun selectLayout(): AppLayout {
         return when (LocalEngagementMode.current) {
             is EngagementMode.Compact -> AppLayout.NavigationBar
-            EngagementMode.Leanback, EngagementMode.Cabin, is EngagementMode.Workstation -> AppLayout.TopBar
+            is EngagementMode.Leanback, is EngagementMode.Cabin, is EngagementMode.Workstation -> AppLayout.TopBar
             else -> AppLayout.NavigationRail
         }
     }

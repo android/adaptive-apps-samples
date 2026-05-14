@@ -46,7 +46,7 @@ import com.google.jetstream.data.entities.Movie
 import com.google.jetstream.presentation.components.PosterImage
 import com.google.jetstream.presentation.components.defaultBringIntoViewSpec
 import com.google.jetstream.presentation.components.gradientOverlay
-import com.google.jetstream.presentation.components.shim.stylable.StylableBox
+import com.google.jetstream.presentation.components.shim.styleable.StyleableBox
 import com.google.jetstream.presentation.theme.LocalContentPadding
 
 /**
@@ -209,7 +209,7 @@ private fun ImmersiveListFrame(
     modifier: Modifier = Modifier,
     style: Style = Style,
 ) {
-    StylableBox(
+    StyleableBox(
         modifier = modifier,
         contentAlignment = Alignment.BottomStart,
         style = style,

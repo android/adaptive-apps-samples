@@ -56,7 +56,7 @@ import coil.request.ImageRequest
 import com.google.jetstream.R
 import com.google.jetstream.data.entities.MovieDetails
 import com.google.jetstream.data.util.StringConstants
-import com.google.jetstream.presentation.components.shim.stylable.StylableGrid
+import com.google.jetstream.presentation.components.shim.styleable.StyleableGrid
 import com.google.jetstream.presentation.screens.moviedetails.Descriptor
 import com.google.jetstream.presentation.theme.JetStreamTokens
 import com.google.jetstream.presentation.theme.LocalContentPadding
@@ -88,7 +88,7 @@ internal fun MovieDetails(
             movieDetails = movieDetails,
             modifier = Modifier.matchParentSize(),
         )
-        StylableGrid(
+        StyleableGrid(
             config = {
                 column(0.33f)
                 column(0.33f)

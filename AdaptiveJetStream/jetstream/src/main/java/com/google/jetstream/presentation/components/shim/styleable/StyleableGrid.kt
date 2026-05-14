@@ -16,7 +16,7 @@
 
 @file:OptIn(ExperimentalFoundationStyleApi::class, ExperimentalGridApi::class)
 
-package com.google.jetstream.presentation.components.shim.stylable
+package com.google.jetstream.presentation.components.shim.styleable
 
 import androidx.compose.foundation.layout.ExperimentalGridApi
 import androidx.compose.foundation.layout.Grid
@@ -29,15 +29,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
 /**
- * A grid component that supports styling via the [Style] API.
+ * A Grid component that supports styling through the [Style] API.
  *
- * @param config The configuration for the grid (rows, columns, etc.).
- * @param modifier The modifier to be applied to the grid.
- * @param style The style to be applied to the grid.
+ * @param config The configuration for the grid, allowing specification of rows, columns, and spacing.
+ * @param modifier The modifier to be applied to this grid.
+ * @param style The [Style] to be applied to this grid.
  * @param content The content of the grid.
  */
 @Composable
-fun StylableGrid(
+fun StyleableGrid(
     config: GridConfigurationScope.() -> Unit,
     modifier: Modifier = Modifier,
     style: Style = Style,

@@ -41,8 +41,8 @@ import androidx.lifecycle.compose.dropUnlessResumed
 import com.google.jetstream.data.entities.Movie
 import com.google.jetstream.presentation.components.feature.LocalEngagementMode
 import com.google.jetstream.presentation.components.shim.indication.scaleIndication
-import com.google.jetstream.presentation.components.shim.stylable.StylableBox
-import com.google.jetstream.presentation.components.shim.stylable.StylableGrid
+import com.google.jetstream.presentation.components.shim.styleable.StyleableBox
+import com.google.jetstream.presentation.components.shim.styleable.StyleableGrid
 import com.google.jetstream.presentation.theme.Padding
 import com.google.jetstream.presentation.theme.Typography
 import com.google.jetstream.presentation.theme.styles.LocalProminentCardStyle
@@ -78,7 +78,7 @@ private fun ProminentMovieCard(
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     onClick: () -> Unit = {},
 ) {
-    StylableBox(
+    StyleableBox(
         style = LocalProminentCardStyle.current.card then style,
         interactionSource = interactionSource,
         modifier =
@@ -130,7 +130,7 @@ private fun CardContainer(
     style: Style = Style,
     postfix: @Composable () -> Unit = {},
 ) {
-    StylableGrid(
+    StyleableGrid(
         config = {
             column(1.fr)
 

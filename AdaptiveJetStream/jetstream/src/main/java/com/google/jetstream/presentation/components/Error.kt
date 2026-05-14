@@ -28,14 +28,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import com.google.jetstream.R
-import com.google.jetstream.presentation.components.shim.stylable.StylableBox
+import com.google.jetstream.presentation.components.shim.styleable.StyleableBox
 
 @OptIn(ExperimentalFoundationStyleApi::class)
 @Composable
 fun Error(modifier: Modifier = Modifier, style: Style = Style) {
     val textStyle = MaterialTheme.typography.displayMedium
 
-    StylableBox(
+    StyleableBox(
         modifier = modifier.styleable(styleState = null, defaultStyle(textStyle), style),
         contentAlignment = Alignment.Center,
     ) {

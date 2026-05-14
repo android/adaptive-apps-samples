@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package com.google.jetstream.presentation.components.shim.stylable
+package com.google.jetstream.presentation.components.shim.styleable
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
 import androidx.compose.foundation.style.Style
@@ -25,27 +24,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.semantics.role
-import androidx.compose.ui.semantics.semantics
-import androidx.lifecycle.compose.dropUnlessResumed
 import com.google.jetstream.presentation.theme.JetStreamTokens
 
 /**
- * A card component that supports styling and interaction tracking.
- * It is built on top of [StylableBox] and adds click handling.
+ * A Card component that supports styling and interaction tracking.
+ * This component is built on top of [StyleableSurface] and applies a default card style.
  *
- * @param onClick Called when the card is clicked.
- * @param modifier The modifier to be applied to the card.
- * @param style The style to be applied to the card.
- * @param interactionSource The interaction source to track focus, hover, and press states.
+ * @param onClick Callback to be invoked when this card is clicked.
+ * @param modifier The modifier to be applied to this card.
+ * @param style The [Style] to be applied to this card, which will be combined with the default card style.
+ * @param interactionSource The [MutableInteractionSource] to track focus, hover, and press states.
  * @param contentAlignment The alignment of the content within the card.
- * @param enabled Whether the card is enabled and clickable.
- * @param content The content of the card.
+ * @param enabled Whether this card is enabled and clickable.
+ * @param content The content to be placed inside the card.
  */
 @OptIn(ExperimentalFoundationStyleApi::class)
 @Composable
-fun StylableCard(
+fun StyleableCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     style: Style = Style,
@@ -54,22 +49,12 @@ fun StylableCard(
     enabled: Boolean = true,
     content: @Composable () -> Unit,
 ) {
-    StylableBox(
-        modifier =
-            modifier
-                .clickable(
-                    onClick = dropUnlessResumed(block = onClick),
-                    interactionSource = interactionSource,
-                    indication = null,
-                    enabled = enabled,
-                )
-                .semantics {
-                    role = Role.Button
-                },
+    StyleableSurface(
+        onClick = onClick,
+        modifier = modifier,
         style = JetStreamTokens.cardStyle() then style,
         contentAlignment = contentAlignment,
-        interactionSource = interactionSource,
-    ) {
-        content()
-    }
+        enabled = enabled,
+        content = content,
+    )
 }

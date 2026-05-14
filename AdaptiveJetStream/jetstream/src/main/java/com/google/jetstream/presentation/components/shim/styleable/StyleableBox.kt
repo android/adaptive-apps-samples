@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.jetstream.presentation.components.shim.stylable
+package com.google.jetstream.presentation.components.shim.styleable
 
 import androidx.compose.foundation.interaction.InteractionSource
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -30,22 +30,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
 /**
- * A box component that supports styling via the [Style] API.
+ * A Box component that supports styling through the [Style] API.
  *
- * @param modifier The modifier to be applied to the box.
- * @param style The style to be applied to the box.
- * @param contentAlignment The alignment of the content within the box.
- * @param content The content of the box.
+ * @param modifier The modifier to be applied to this Box.
+ * @param style The [Style] to be applied to this Box.
+ * @param contentAlignment The alignment of the content within the Box.
+ * @param content The content to be placed inside the Box.
  */
 @OptIn(ExperimentalFoundationStyleApi::class)
 @Composable
-fun StylableBox(
+fun StyleableBox(
     modifier: Modifier = Modifier,
     style: Style = Style,
     contentAlignment: Alignment = Alignment.TopStart,
     content: @Composable BoxScope.() -> Unit = {},
 ) {
-    StylableBox(
+    StyleableBox(
         modifier = modifier,
         style = style,
         contentAlignment = contentAlignment,
@@ -55,17 +55,17 @@ fun StylableBox(
 }
 
 /**
- * A box component that supports styling and interaction tracking.
+ * A Box component that supports styling through the [Style] API and tracks interaction states.
  *
- * @param modifier The modifier to be applied to the box.
- * @param style The style to be applied to the box.
- * @param contentAlignment The alignment of the content within the box.
- * @param interactionSource The interaction source to track focus, hover, etc.
- * @param content The content of the box.
+ * @param modifier The modifier to be applied to this Box.
+ * @param style The [Style] to be applied to this Box.
+ * @param contentAlignment The alignment of the content within the Box.
+ * @param interactionSource The [InteractionSource] to track focus, hover, and other interaction states.
+ * @param content The content to be placed inside the Box.
  */
 @OptIn(ExperimentalFoundationStyleApi::class)
 @Composable
-fun StylableBox(
+fun StyleableBox(
     modifier: Modifier = Modifier,
     style: Style = Style,
     contentAlignment: Alignment = Alignment.TopStart,

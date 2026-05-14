@@ -25,14 +25,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import com.google.jetstream.presentation.components.shim.stylable.StylableBox
+import com.google.jetstream.presentation.components.shim.styleable.StyleableBox
 
 @Composable
 fun CinematicScrim(
     modifier: Modifier = Modifier,
     style: Style = Style,
 ) {
-    StylableBox(
+    StyleableBox(
         modifier = modifier,
         style = CinematicScrimDefaults.style then style,
     )

@@ -88,6 +88,8 @@ fun StyleScope.borderIndication(
     pressed: Border = focused,
     hovered: Border = focused,
 ) {
+    border(focused.copyAsTransparent())
+
     focused {
         animate {
             border(border = focused)
@@ -125,6 +127,10 @@ data class Border(
     val width: Dp,
     val brush: Brush,
 ) {
+    fun copyAsTransparent(): Border {
+        return copy(brush = SolidColor(Color.Transparent))
+    }
+
     companion object {
         /**
          * Represents no border (zero width and transparent color).

@@ -69,12 +69,3 @@ fun Modifier.gradientOverlay(gradientColor: Color): Modifier =
             drawRect(linearGradient)
         }
     }
-
-fun Modifier.colorOverlay(color: Color): Modifier {
-    return drawWithCache {
-        onDrawWithContent {
-            drawContent()
-            drawRect(color)
-        }
-    }
-}
