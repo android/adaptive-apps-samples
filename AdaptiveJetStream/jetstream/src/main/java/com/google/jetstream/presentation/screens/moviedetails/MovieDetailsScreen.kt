@@ -150,7 +150,7 @@ internal fun Details(
                 BackButton(
                     onClick = onBackPressed,
                     description = stringResource(R.string.back_from_movie_details),
-                    modifier = Modifier.padding(vertical = 32.dp, horizontal = 52.dp),
+                    modifier = Modifier.padding(LocalContentPadding.current.intoPaddingValues()),
                 )
             }
         }

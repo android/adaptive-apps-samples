@@ -91,7 +91,7 @@ object WatchNowButtonDefaults {
 @Composable
 private fun defaultStyle(): Style {
     return JetStreamTokens.buttonStyle() then
-            Style {
-                textStyle(Typography.titleSmall)
-            }
+        Style {
+            textStyle(Typography.titleSmall)
+        }
 }

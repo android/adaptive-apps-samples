@@ -61,10 +61,7 @@ fun VideoPlayerOverlay(
         AnimatedVisibility(isControlsVisible, Modifier, fadeIn(), fadeOut()) {
             Box(
                 modifier =
-                    Modifier.padding(
-                        top = contentPadding.top,
-                        start = contentPadding.start,
-                    ),
+                    Modifier.padding(contentPadding.intoPaddingValues()),
             ) {
                 backButton()
             }
