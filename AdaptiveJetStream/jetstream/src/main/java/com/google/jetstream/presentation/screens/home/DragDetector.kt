@@ -16,7 +16,7 @@
 
 package com.google.jetstream.presentation.screens.home
 
-import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -36,13 +36,17 @@ internal fun Modifier.dragDetector(
         ),
 ): Modifier =
     pointerInput(Unit) {
-        detectDragGestures { change, dragAmount ->
-            change.consume()
-            dragDetector.update(dragAmount.x)
-        }
+        detectHorizontalDragGestures(
+            onHorizontalDrag = { change, dragAmount ->
+                change.consume()
+                dragDetector.update(dragAmount)
+            },
+            onDragEnd = { dragDetector.reset() },
+            onDragCancel = { dragDetector.reset() }
+        )
     }
 
-internal data class DragDetector(
+internal class DragDetector(
     val threshold: Float,
     val moveToNext: () -> Unit,
     val moveToPrevious: () -> Unit,
@@ -60,7 +64,7 @@ internal data class DragDetector(
         }
     }
 
-    private fun reset() {
+    fun reset() {
         delta = 0f
     }
 }
@@ -69,7 +73,7 @@ internal data class DragDetector(
 internal fun rememberDragDetector(
     moveToNext: () -> Unit = {},
     moveToPrevious: () -> Unit = {},
-    threshold: Dp = 300.dp,
+    threshold: Dp = 80.dp,
     density: Density = LocalDensity.current,
 ): DragDetector =
     remember(threshold, density) {
