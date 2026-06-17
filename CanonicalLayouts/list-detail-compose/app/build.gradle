@@ -16,6 +16,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-parcelize'
     id("org.jetbrains.kotlin.plugin.compose") version "2.2.20"
 }
 
@@ -77,6 +78,7 @@ dependencies {
     implementation "androidx.compose.ui:ui:1.9.1"
     implementation "androidx.compose.ui:ui-tooling-preview"
     implementation "androidx.window:window:1.4.0"
+    implementation "androidx.compose.material:material-icons-extended"
     implementation 'androidx.compose.material3:material3:1.4.0-rc01'
     implementation 'androidx.compose.material3.adaptive:adaptive:1.2.0-beta02'
     implementation 'androidx.compose.material3.adaptive:adaptive-layout:1.2.0-beta02'
