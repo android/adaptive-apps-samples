@@ -20,22 +20,19 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ProvidableCompositionLocal
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.window.core.layout.WindowSizeClass
 import com.google.jetstream.presentation.components.feature.EngagementMode
+import com.google.jetstream.presentation.components.feature.JetStreamUiMedia
 import com.google.jetstream.presentation.components.feature.LocalEngagementMode
 
 val LocalFeaturedCarouselHeight: ProvidableCompositionLocal<Dp> =
     staticCompositionLocalOf {
         324.dp
-    }
-
-val LocalVerticalCardAspectRatio: ProvidableCompositionLocal<Float> =
-    staticCompositionLocalOf {
-        10.5f / 16f
     }
 
 val LocalCardWidth: ProvidableCompositionLocal<Dp> =
@@ -50,19 +47,6 @@ fun rememberFeaturedCarouselHeight(): Dp {
         when (engagementMode) {
             is EngagementMode.Leanback -> 324.dp
             else -> 385.dp
-        }
-    }
-}
-
-@Composable
-fun rememberVerticalCardAspectRatio(): Float {
-    val engagementMode = LocalEngagementMode.current
-    return remember(engagementMode) {
-        when (engagementMode) {
-            is EngagementMode.Leanback, is EngagementMode.Cabin, is EngagementMode.Workstation -> 0.65625f
-
-            // 10.5f / 16f
-            else -> 0.67021f
         }
     }
 }

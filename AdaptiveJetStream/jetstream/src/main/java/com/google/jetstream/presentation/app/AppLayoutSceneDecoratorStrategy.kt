@@ -262,7 +262,10 @@ private sealed interface AppLayout {
      */
     object NavigationBar : AppLayout {
         override val gridConfig: GridConfigurationScope.() -> Unit = {
-            column(GridTrackSize.MinMax(350.dp, 1.fr))
+            // MinMax(0.dp, 1.fr), not a plain Flex(1.fr): a Flex track queries its content's
+            // min-content intrinsic width, which crashes when the content row holds a lazy list
+            // (SubcomposeLayout-backed), as it does here for the Home screen's carousels.
+            column(GridTrackSize.MinMax(0.dp, 1.fr))
             row(GridTrackSize.Auto)
             row(GridTrackSize.MinMax(200.dp, 1.fr))
             row(GridTrackSize.Auto)
