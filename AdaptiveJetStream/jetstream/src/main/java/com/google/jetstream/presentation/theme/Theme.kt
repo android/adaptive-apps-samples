@@ -34,7 +34,6 @@ fun JetStreamTheme(
     // TODO: Consider refactoring this
     CompositionLocalProvider(
         LocalFeaturedCarouselHeight provides rememberFeaturedCarouselHeight(),
-        LocalVerticalCardAspectRatio provides rememberVerticalCardAspectRatio(),
         LocalCardWidth provides rememberCardWidth(),
         LocalListItemGap provides rememberListItemGap(),
         LocalProminentCardStyle provides rememberProminentCardStyle(),

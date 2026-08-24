@@ -26,6 +26,7 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.window.core.layout.WindowSizeClass
+import com.google.jetstream.presentation.components.feature.EngagementMode
 import com.google.jetstream.presentation.components.feature.LocalEngagementMode
 import com.google.jetstream.presentation.components.feature.isWidthAtLeastExpanded
 import com.google.jetstream.presentation.components.feature.isWidthAtLeastLarge
@@ -38,12 +39,13 @@ val LocalListItemGap: ProvidableCompositionLocal<Dp> =
 
 @Composable
 fun rememberListItemGap(): Dp {
-    val isFocusOptimized = LocalEngagementMode.current.isFocusOptimized()
-    return remember(isFocusOptimized) {
-        if (isFocusOptimized) {
-            20.dp
-        } else {
-            8.dp
+    val engagementMode = LocalEngagementMode.current
+    val isFocusOptimized = engagementMode.isFocusOptimized()
+    return remember(engagementMode, isFocusOptimized) {
+        when {
+            isFocusOptimized -> 20.dp
+            engagementMode is EngagementMode.Compact -> 4.dp
+            else -> 8.dp
         }
     }
 }

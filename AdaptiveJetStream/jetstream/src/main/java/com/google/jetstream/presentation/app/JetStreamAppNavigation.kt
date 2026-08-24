@@ -36,6 +36,8 @@ import androidx.compose.foundation.style.styleable
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Tab
@@ -51,6 +53,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.xr.compose.material3.ExperimentalMaterial3XrApi
 import androidx.xr.compose.material3.NavigationRail
@@ -142,15 +145,38 @@ object DefaultNavigation : JetStreamAppNavigation {
         onNavigation: (Destination) -> Unit,
         isVisible: Boolean,
     ) {
-        val direction =
-            when (LocalEngagementMode.current) {
-                is EngagementMode.Compact -> FlexDirection.Row
-                else -> FlexDirection.Column
+        // Compact devices use a dedicated bottom NavigationBar: unlike a FlexBox row of
+        // NavigationRailItems, it distributes items evenly so the bar always fits the
+        // available width instead of overflowing it on narrow screens.
+        if (LocalEngagementMode.current is EngagementMode.Compact) {
+            NavigationBar {
+                NavigationItem.RootDestinations.forEach { item ->
+                    NavigationBarItem(
+                        selected = item.destination == current,
+                        onClick = { onNavigation(item.destination) },
+                        icon = {
+                            Icon(
+                                painter = item.icon,
+                                contentDescription = item.name,
+                                modifier = Modifier.size(24.dp),
+                            )
+                        },
+                        label = {
+                            Text(
+                                text = item.name,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                            )
+                        },
+                    )
+                }
             }
+            return
+        }
 
         FlexBox(
             config = {
-                direction(direction)
+                direction(FlexDirection.Column)
                 justifyContent(FlexJustifyContent.Center)
                 gap(4.dp)
             },
