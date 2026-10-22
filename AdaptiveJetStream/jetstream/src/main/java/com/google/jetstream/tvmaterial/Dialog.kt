@@ -31,10 +31,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
@@ -71,7 +69,6 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.semantics.dismiss
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
@@ -130,8 +127,6 @@ fun StandardDialog(
     properties: DialogProperties = DialogProperties(),
     confirmButton: @Composable () -> Unit,
 ) {
-    MaterialTheme.colorScheme
-
     val elevatedContainerColor =
         MaterialTheme.colorScheme.applyTonalElevation(
             backgroundColor = containerColor,
@@ -211,138 +206,6 @@ fun StandardDialog(
                     }
                 },
             )
-        }
-    }
-}
-
-/**
- * Full-screen dialogs fill the entire screen, containing actions that require a series of tasks to
- * complete. Because they take up the entire screen, full-screen dialogs are the only dialogs over
- * which other dialogs can appear.
- *
- * @param onDismissRequest called when the user tries to dismiss the Dialog by pressing the back
- * button. This is not called when the dismiss button is clicked.
- * @param modifier the [Modifier] to be applied to this dialog
- * @param dismissButton button which is meant to dismiss the dialog. The dialog does not set up any
- * events for this button so they need to be set up by the caller.
- * @param confirmButton button which is meant to confirm a proposed action, thus resolving what
- * triggered the dialog. The dialog does not set up any events for this button so they need to be
- * set up by the caller.
- * @param icon optional icon that will appear above the [title] or above the [text], in case
- * a title was not provided.
- * @param title title which should specify the purpose of the dialog. The title is not mandatory,
- * because there may be sufficient information inside the [text].
- * @param text text which presents the details regarding the dialog's purpose.
- * @param backgroundColor the color used for the background of this dialog. Use [Color.Transparent]
- * to have no color.
- * @param iconContentColor the content color used for the icon.
- * @param titleContentColor the content color used for the title.
- * @param textContentColor the content color used for the text.
- * @param properties typically platform specific properties to further configure the dialog.
- */
-@ExperimentalFoundationApi
-@ExperimentalComposeUiApi
-@Composable
-fun FullScreenDialog(
-    showDialog: Boolean,
-    onDismissRequest: () -> Unit,
-    modifier: Modifier = Modifier,
-    dismissButton: @Composable (() -> Unit)? = null,
-    icon: @Composable (() -> Unit)? = null,
-    title: @Composable (() -> Unit)? = null,
-    text: @Composable (() -> Unit)? = null,
-    backgroundColor: Color = FullScreenDialogDefaults.backgroundColor,
-    iconContentColor: Color = FullScreenDialogDefaults.iconContentColor,
-    titleContentColor: Color = FullScreenDialogDefaults.titleContentColor,
-    textContentColor: Color = FullScreenDialogDefaults.descriptionContentColor,
-    properties: DialogProperties = DialogProperties(),
-    confirmButton: @Composable () -> Unit,
-) {
-    Dialog(
-        showDialog = showDialog,
-        onDismissRequest = onDismissRequest,
-        properties = properties,
-    ) {
-        Box(
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .drawBehind { drawRect(color = backgroundColor) }
-                    .dialogFocusable(),
-            contentAlignment = Alignment.Center,
-        ) {
-            Column(
-                modifier =
-                    Modifier
-                        .fillMaxWidth(FullScreenDialogDefaults.DialogMaxWidth)
-                        .then(modifier),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                CompositionLocalProvider(
-                    LocalContentColor provides iconContentColor,
-                    content = {
-                        icon?.let { nnIcon ->
-                            nnIcon()
-                            Spacer(
-                                modifier = Modifier.padding(FullScreenDialogDefaults.IconPadding),
-                            )
-                        }
-                    },
-                )
-
-                CompositionLocalProvider(
-                    LocalContentColor provides titleContentColor,
-                    content = {
-                        title?.let { nnTitle ->
-                            ProvideTextStyle(
-                                value = FullScreenDialogDefaults.titleTextStyle,
-                            ) {
-                                nnTitle()
-                                Spacer(
-                                    modifier =
-                                        Modifier.padding(
-                                            FullScreenDialogDefaults.TitlePadding,
-                                        ),
-                                )
-                            }
-                        }
-                    },
-                )
-
-                CompositionLocalProvider(
-                    LocalContentColor provides textContentColor,
-                    content = {
-                        text?.let { nnText ->
-                            ProvideTextStyle(FullScreenDialogDefaults.descriptionTextStyle) {
-                                Box(
-                                    modifier = Modifier.weight(weight = 1f, fill = false),
-                                ) { nnText() }
-                                Spacer(
-                                    modifier =
-                                        Modifier.padding(
-                                            FullScreenDialogDefaults.DescriptionPadding,
-                                        ),
-                                )
-                            }
-                        }
-                    },
-                )
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement =
-                        Arrangement.spacedBy(
-                            space = FullScreenDialogDefaults.ButtonSpacing,
-                            alignment = Alignment.CenterHorizontally,
-                        ),
-                ) {
-                    ProvideTextStyle(value = FullScreenDialogDefaults.buttonsTextStyle) {
-                        confirmButton()
-                        dismissButton?.invoke()
-                    }
-                }
-            }
         }
     }
 }
@@ -640,56 +503,6 @@ object StandardDialogDefaults {
 
     /** The default tonal elevation for StandardDialogs */
     val TonalElevation: Dp = Elevation.Level2
-}
-
-object FullScreenDialogDefaults {
-    internal val ButtonSpacing = 16.dp
-    internal val DescriptionPadding = PaddingValues(top = 48.dp)
-    internal val TitlePadding = PaddingValues(top = 20.dp)
-    internal val IconPadding = PaddingValues(top = 32.dp)
-    internal const val DialogMaxWidth = .5f
-    private const val DescriptionColorOpacity = 0.8f
-
-    /** The default background color for FullScreenDialogs */
-    val backgroundColor: Color
-        @ReadOnlyComposable
-        @Composable get() = MaterialTheme.colorScheme.background
-
-    /** The default icon color for FullScreenDialogs */
-    val iconContentColor: Color
-        @ReadOnlyComposable
-        @Composable get() = MaterialTheme.colorScheme.onSurface
-
-    /** The default title color for FullScreenDialogs */
-    val titleContentColor: Color
-        @ReadOnlyComposable
-        @Composable get() = MaterialTheme.colorScheme.onSurface
-
-    /** The default title text style for FullScreenDialogs */
-    val titleTextStyle: TextStyle
-        @ReadOnlyComposable
-        @Composable get() =
-            MaterialTheme.typography.headlineMedium
-                .copy(textAlign = TextAlign.Center)
-
-    /** The default buttons text style for FullScreenDialogs */
-    val buttonsTextStyle: TextStyle
-        @ReadOnlyComposable
-        @Composable get() = MaterialTheme.typography.labelLarge
-
-    /** The default description text color for FullScreenDialogs */
-    val descriptionContentColor: Color
-        @ReadOnlyComposable
-        @Composable get() = MaterialTheme.colorScheme.onSurfaceVariant
-
-    /** The default description text style for FullScreenDialogs */
-    val descriptionTextStyle: TextStyle
-        @ReadOnlyComposable
-        @Composable get() =
-            MaterialTheme.typography.bodyLarge.copy(
-                textAlign = TextAlign.Center,
-                color = LocalContentColor.current.copy(alpha = DescriptionColorOpacity),
-            )
 }
 
 @Composable

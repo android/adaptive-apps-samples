@@ -101,7 +101,7 @@ class MovieRepositoryImpl
                 categories = listOf("Action", "Adventure", "Fantasy", "Comedy"),
                 duration = "1h 59m",
                 director = "Larry Page",
-                screenplay = "Sundai Pichai",
+                screenplay = "Sundar Pichai",
                 music = "Sergey Brin",
                 castAndCrew = castList,
                 status = "Released",

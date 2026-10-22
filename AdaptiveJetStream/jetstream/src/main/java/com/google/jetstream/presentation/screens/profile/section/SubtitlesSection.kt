@@ -17,14 +17,17 @@
 package com.google.jetstream.presentation.screens.profile.section
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
+import androidx.compose.foundation.style.MutableStyleState
 import androidx.compose.foundation.style.styleable
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
@@ -33,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import com.google.jetstream.data.util.StringConstants
 import com.google.jetstream.presentation.screens.profile.components.ProfileSectionTitle
 import com.google.jetstream.presentation.screens.profile.components.SettingItem
+import com.google.jetstream.presentation.theme.JetStreamTokens
 import com.google.jetstream.presentation.theme.LocalContentPadding
 
 @OptIn(ExperimentalFoundationStyleApi::class)
@@ -71,6 +75,10 @@ private fun SubtitleSwitch(
     onValueChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val styleState =
+        remember(interactionSource) { MutableStyleState(interactionSource = interactionSource) }
+
     SettingItem(
         name = StringConstants.Composable.Placeholders.SubtitlesSectionSubtitlesItem,
         value = {
@@ -90,11 +98,18 @@ private fun SubtitleSwitch(
         },
         modifier =
             modifier
-                .clickable {
+                .styleable(
+                    styleState = styleState,
+                    JetStreamTokens.borderIndication(),
+                )
+                .clickable(
+                    interactionSource = interactionSource,
+                    indication = null,
+                ) {
                     onValueChange(!isEnabled)
                 }
                 .semantics {
-                    role = Role.Button
+                    role = Role.Switch
                 },
     )
 }

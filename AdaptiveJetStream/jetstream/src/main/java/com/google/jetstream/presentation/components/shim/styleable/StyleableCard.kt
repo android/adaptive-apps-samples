@@ -53,6 +53,7 @@ fun StyleableCard(
         onClick = onClick,
         modifier = modifier,
         style = JetStreamTokens.cardStyle() then style,
+        interactionSource = interactionSource,
         contentAlignment = contentAlignment,
         enabled = enabled,
         content = content,

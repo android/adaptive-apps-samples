@@ -34,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.input.key.Key
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.EntryProviderScope
@@ -46,8 +47,11 @@ import com.google.jetstream.presentation.app.Destination
 import com.google.jetstream.presentation.app.PresentationType
 import com.google.jetstream.presentation.app.rememberAppLayoutSceneDecorator
 import com.google.jetstream.presentation.app.selectAppNavigation
+import com.google.jetstream.presentation.components.KeyboardShortcut
+import com.google.jetstream.presentation.components.ModifierKey
 import com.google.jetstream.presentation.components.feature.EngagementMode
 import com.google.jetstream.presentation.components.feature.LocalEngagementMode
+import com.google.jetstream.presentation.components.handleKeyboardShortcuts
 import com.google.jetstream.presentation.components.onBackButtonPressed
 import com.google.jetstream.presentation.screens.categories.CategoriesScreen
 import com.google.jetstream.presentation.screens.categories.CategoryMovieListScreen
@@ -85,17 +89,68 @@ fun App(
     val appNavigation = selectAppNavigation()
     // Tracks visibility of the top bar/navigation rail for hide-on-scroll behavior
     var isTopbarVisible by rememberSaveable { mutableStateOf(true) }
-    var isTopbarFocused by remember { mutableStateOf(true) }
+    var isTopbarFocused by remember { mutableStateOf(false) }
+
+    val keyboardShortcuts =
+        remember(navigator) {
+            listOf(
+                KeyboardShortcut(
+                    key = Key.Comma,
+                    modifierKeys = setOf(ModifierKey.Ctrl),
+                    action = { navigator.navigate(Destination.Profile) },
+                ),
+                KeyboardShortcut(
+                    key = Key.P,
+                    modifierKeys = setOf(ModifierKey.Ctrl, ModifierKey.Alt),
+                    action = { navigator.navigate(Destination.Profile) },
+                ),
+                KeyboardShortcut(
+                    key = Key.H,
+                    modifierKeys = setOf(ModifierKey.Ctrl, ModifierKey.Alt),
+                    action = { navigator.navigate(Destination.Home) },
+                ),
+                KeyboardShortcut(
+                    key = Key.M,
+                    modifierKeys = setOf(ModifierKey.Ctrl, ModifierKey.Alt),
+                    action = { navigator.navigate(Destination.Movies) },
+                ),
+                KeyboardShortcut(
+                    key = Key.T,
+                    modifierKeys = setOf(ModifierKey.Ctrl, ModifierKey.Alt),
+                    action = { navigator.navigate(Destination.Shows) },
+                ),
+                KeyboardShortcut(
+                    key = Key.F,
+                    modifierKeys = setOf(ModifierKey.Ctrl, ModifierKey.Alt),
+                    action = { navigator.navigate(Destination.Favourites) },
+                ),
+                KeyboardShortcut(
+                    key = Key.S,
+                    modifierKeys = setOf(ModifierKey.Ctrl, ModifierKey.Alt),
+                    action = { navigator.navigate(Destination.Search) },
+                ),
+                KeyboardShortcut(
+                    key = Key.Slash,
+                    action = {
+                        if (navigator.current != Destination.Search) {
+                            navigator.navigate(Destination.Search)
+                        }
+                    },
+                ),
+            )
+        }
 
     Surface(
         modifier =
-            Modifier.leanbackBackHandler(
-                navigator = navigator,
-                isTopbarVisible = isTopbarVisible,
-                isTopbarFocused = isTopbarFocused,
-            ) {
-                isTopbarVisible = true
-            },
+            Modifier
+                .handleKeyboardShortcuts(keyboardShortcuts)
+                .leanbackBackHandler(
+                    navigator = navigator,
+                    isTopbarVisible = isTopbarVisible,
+                    isTopbarFocused = isTopbarFocused,
+                ) {
+                    isTopbarVisible = true
+                },
     ) {
         NavDisplay(
             backStack = navigator.backStack,
@@ -153,7 +208,12 @@ fun App(
                         },
                     )
 
-                    categoriesEntry(navigator)
+                    categoriesEntry(
+                        navigator = navigator,
+                        onUpdateTopbarVisibility = {
+                            isTopbarVisible = it
+                        },
+                    )
 
                     moviesEntry(
                         navigator = navigator,
@@ -180,7 +240,7 @@ fun App(
                         onUpdateTopbarVisibility = { isTopbarVisible = it },
                     )
 
-                    moveDetailsEntry(navigator)
+                    movieDetailsEntry(navigator)
 
                     videoPlayerEntry(navigator)
 
@@ -216,6 +276,7 @@ private fun EntryProviderScope<NavKey>.homeEntry(
 
 private fun EntryProviderScope<NavKey>.categoriesEntry(
     navigator: Navigator,
+    onUpdateTopbarVisibility: (Boolean) -> Unit,
 ) {
     entry<Destination.Categories>(
         metadata =
@@ -227,6 +288,7 @@ private fun EntryProviderScope<NavKey>.categoriesEntry(
             onCategoryClick = {
                 navigator.navigate(Destination.CategoryMovieList(categoryId = it))
             },
+            onScroll = onUpdateTopbarVisibility,
         )
     }
 
@@ -294,7 +356,7 @@ private fun EntryProviderScope<NavKey>.showsEntry(
     }
 }
 
-private fun EntryProviderScope<NavKey>.moveDetailsEntry(
+private fun EntryProviderScope<NavKey>.movieDetailsEntry(
     navigator: Navigator,
 ) {
     entry<Destination.MovieDetails>(
@@ -478,7 +540,9 @@ private fun Modifier.leanbackBackHandler(
     return when (LocalEngagementMode.current) {
         is EngagementMode.Leanback -> {
             val focusRequester = remember { FocusRequester() }
-            onBackButtonPressed {
+            onBackButtonPressed(
+                enabled = !isTopbarVisible || !isTopbarFocused || navigator.backStack.size > 1,
+            ) {
                 when {
                     !isTopbarVisible -> {
                         requestTopbarBecomeVisible()

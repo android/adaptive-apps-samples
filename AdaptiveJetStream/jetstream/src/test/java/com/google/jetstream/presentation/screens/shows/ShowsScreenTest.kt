@@ -16,9 +16,9 @@
 
 package com.google.jetstream.presentation.screens.shows
 
+import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.hasScrollAction
-import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onRoot
 import com.google.jetstream.data.entities.Movie
@@ -137,6 +137,7 @@ class ShowsScreenTest {
             .assertIsDisplayed()
     }
 
+    @OptIn(ExperimentalFoundationStyleApi::class)
     @Test
     fun loading_isDisplayed() {
         composeTestRule.setContent {

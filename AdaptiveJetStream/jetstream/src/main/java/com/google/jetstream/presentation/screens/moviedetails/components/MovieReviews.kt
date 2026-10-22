@@ -29,6 +29,7 @@ import androidx.compose.foundation.layout.GridTrackSize
 import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
 import androidx.compose.foundation.style.MutableStyleState
 import androidx.compose.foundation.style.Style
+import androidx.compose.foundation.style.externalPadding
 import androidx.compose.foundation.style.fillSize
 import androidx.compose.foundation.style.styleable
 import androidx.compose.material.icons.Icons

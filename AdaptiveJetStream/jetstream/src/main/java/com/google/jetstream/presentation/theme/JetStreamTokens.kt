@@ -57,8 +57,7 @@ object JetStreamTokens {
     const val SUBTITLE_ALPHA = 0.6f
     const val DESCRIPTION_ALPHA = 0.8f
 
-    // val TitleListGap = 16.dp
-    val TitleListGap = 0.dp
+    val TitleListGap = 16.dp
 
     const val PORTRAIT_CARD_ASPECT_RATIO = 16f / 9f
     const val LANDSCAPE_CARD_ASPECT_RATIO = 10.5f / 16f

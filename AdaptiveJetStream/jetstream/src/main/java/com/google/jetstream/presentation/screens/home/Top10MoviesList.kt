@@ -19,9 +19,9 @@
 package com.google.jetstream.presentation.screens.home
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
+import androidx.compose.foundation.style.contentPadding
 import androidx.compose.foundation.style.fillWidth
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
@@ -67,9 +67,7 @@ fun Top10MoviesList(
     onExpanded: () -> Unit = {},
     onCollapsed: () -> Unit = {},
 ) {
-    Column(
-        verticalArrangement = Arrangement.spacedBy(JetStreamTokens.TitleListGap),
-    ) {
+    Column {
         SectionTitle(stringResource(R.string.top_10_movies_title))
         Top10MoviesList(
             movieList = movieList,
@@ -105,7 +103,7 @@ private fun Top10MoviesList(
 
         else -> {
             val itemWidth by JetStreamUiMedia.query {
-                (windowWidth.value * 0.8).dp
+                minOf((windowWidth.value * 0.8).dp, 520.dp)
             }
             val carouselState = rememberCarouselState { movieList.size }
             val contentPadding = LocalContentPadding.current
@@ -173,6 +171,7 @@ private fun Top10MovieListCarousel(
         modifier =
             modifier.carouselNavigation(
                 state = carouselState,
+                itemCount = movieList.size,
                 coroutineScope = rememberCoroutineScope(),
             ),
     ) { index ->

@@ -31,6 +31,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
+import androidx.compose.foundation.style.externalPadding
 import androidx.compose.foundation.style.fillSize
 import androidx.compose.foundation.style.styleable
 import androidx.compose.material3.Icon
@@ -60,6 +61,7 @@ import com.google.jetstream.R
 import com.google.jetstream.presentation.components.feature.EngagementMode
 import com.google.jetstream.presentation.components.feature.LocalEngagementMode
 import com.google.jetstream.presentation.theme.LocalContentPadding
+import androidx.compose.foundation.style.size as styleSize
 
 /**
  * Interface defining the navigation components for the JetStream app.
@@ -204,7 +206,7 @@ object DefaultNavigation : JetStreamAppNavigation {
                 Icon(
                     imageVector = ImageVector.vectorResource(R.drawable.ic_expand_content),
                     modifier = Modifier.size(48.dp),
-                    contentDescription = stringResource(R.string.home_space_mode),
+                    contentDescription = stringResource(R.string.full_space_mode),
                     tint = MaterialTheme.colorScheme.primary,
                 )
             },
@@ -382,7 +384,7 @@ private fun Topbar(
             modifier =
                 Modifier
                     .styleable {
-                        size(32.dp)
+                        styleSize(32.dp)
                     }
                     .gridItem(alignment = Alignment.Center),
         )

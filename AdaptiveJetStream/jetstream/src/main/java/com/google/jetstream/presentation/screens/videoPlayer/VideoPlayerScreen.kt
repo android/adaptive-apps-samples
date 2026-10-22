@@ -155,7 +155,7 @@ private fun VideoPlayerScreenContent(
     onBackPressed: () -> Unit,
 ) {
     val keyboardShortcuts =
-        remember {
+        remember(onBackPressed) {
             listOf(KeyboardShortcut(Key.Escape, action = onBackPressed))
         }
 
@@ -206,7 +206,7 @@ private fun VideoPlayer(
         )
     val videoSize by videoPlayerState
         .videoSize
-        .collectAsStateWithLifecycle(Size(1980f, 1080f))
+        .collectAsStateWithLifecycle(Size(1920f, 1080f))
 
     val engagementMode = LocalEngagementMode.current
     val session = LocalSession.current
@@ -214,7 +214,7 @@ private fun VideoPlayer(
     val focusRequester = remember { FocusRequester() }
 
     val keyboardShortcuts =
-        remember {
+        remember(engagementMode, session, activity, player, videoPlayerState, pulseState) {
             listOf(
                 KeyboardShortcut(
                     key = Key.F,
@@ -390,8 +390,12 @@ private fun SpatialVideoPlayer(
             ) {
                 VideoPlayerOverlay(
                     isControlsVisible = videoPlayerState.isControlsVisible,
+                    centerButton = { VideoPlayerPulse(pulseState) },
                     backButton = {
-                        BackButton(onClick = onBackPressed)
+                        BackButton(
+                            onClick = onBackPressed,
+                            description = stringResource(R.string.back_from_video_player),
+                        )
                     },
                 )
                 SpatialVideoPlayerControls(
@@ -507,7 +511,6 @@ private fun DefaultVideoPlayer(
     pulseState: VideoPlayerPulseState,
     onBackPressed: () -> Unit,
 ) {
-    val focusRequester = remember { FocusRequester() }
     Box(
         modifier = modifier.fillMaxSize(),
     ) {
@@ -530,7 +533,6 @@ private fun DefaultVideoPlayer(
             modifier =
                 Modifier
                     .align(Alignment.BottomCenter)
-                    .focusRequester(focusRequester)
                     .onPreviewKeyEvent {
                         if (videoPlayerState.isControlsVisible) {
                             videoPlayerState.showControls()
@@ -613,7 +615,11 @@ private fun Modifier.onClick(
 ): Modifier =
     // ToDo: Remove the onSpaceBarPress modifier when Compose 1.8 is released
     onSpaceBarPressed {
-        player.pause()
+        if (player.isPlaying) {
+            player.pause()
+        } else {
+            player.play()
+        }
         videoPlayerState.showControls()
     }.clickable {
         when {
@@ -652,7 +658,11 @@ private fun Modifier.dPadEvents(
         onUp = { videoPlayerState.showControls() },
         onDown = { videoPlayerState.showControls() },
         onEnter = {
-            player.pause()
+            if (player.isPlaying) {
+                player.pause()
+            } else {
+                player.play()
+            }
             videoPlayerState.showControls()
         },
     )

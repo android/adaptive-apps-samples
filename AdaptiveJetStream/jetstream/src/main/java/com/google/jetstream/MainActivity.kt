@@ -204,51 +204,6 @@ class MainActivity : ComponentActivity() {
                     ),
                 ),
             ),
-            KeyboardShortcutGroup(
-                getString(R.string.spatial_video),
-                listOf(
-                    KeyboardShortcutInfo(
-                        getString(R.string.pan_up),
-                        KeyEvent.KEYCODE_W,
-                        0,
-                    ),
-                    KeyboardShortcutInfo(
-                        getString(R.string.pan_down),
-                        KeyEvent.KEYCODE_S,
-                        0,
-                    ),
-                    KeyboardShortcutInfo(
-                        getString(R.string.pan_left),
-                        KeyEvent.KEYCODE_A,
-                        0,
-                    ),
-                    KeyboardShortcutInfo(
-                        getString(R.string.pan_right),
-                        KeyEvent.KEYCODE_D,
-                        0,
-                    ),
-                    KeyboardShortcutInfo(
-                        getString(R.string.zoom_in),
-                        KeyEvent.KEYCODE_PLUS,
-                        0,
-                    ),
-                    KeyboardShortcutInfo(
-                        getString(R.string.zoom_in),
-                        KeyEvent.KEYCODE_RIGHT_BRACKET,
-                        0,
-                    ),
-                    KeyboardShortcutInfo(
-                        getString(R.string.zoom_out),
-                        KeyEvent.KEYCODE_MINUS,
-                        0,
-                    ),
-                    KeyboardShortcutInfo(
-                        getString(R.string.zoom_out),
-                        KeyEvent.KEYCODE_LEFT_BRACKET,
-                        0,
-                    ),
-                ),
-            ),
         )
     }
 }

@@ -191,12 +191,12 @@ private const val JETSTREAM_PACKAGE_NAME = "com.google.jetstream"
 private const val INITIAL_WAIT_TIMEOUT = 2000L
 private const val WAIT_TIMEOUT = 1000L
 
-private const val PROFILE_BUTTON_DESCRIPTION = "User Profile"
+private const val PROFILE_BUTTON_DESCRIPTION = "User Profile Button"
 private const val HOME_TAB_LABEL = "Home"
 private const val CATEGORIES_TAB_LABEL = "Categories"
 private const val MOVIES_TAB_LABEL = "Movies"
 private const val SHOWS_TAB_LABEL = "Shows"
 private const val FAVOURITES_TAB_LABEL = "Favourites"
-private const val SEARCH_TAB_DESCRIPTION = "Dashboard Search"
+private const val SEARCH_TAB_DESCRIPTION = "Search"
 private const val TV_SHOWS_CHIP_LABEL = "TV Shows"
 private const val CAROUSEL_DESCRIPTION = "Carousel"

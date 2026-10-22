@@ -45,7 +45,10 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -64,15 +67,14 @@ class VideoPlayerScreenViewModel
         private val specifiedMovieDetails =
             flowOf(movieId).map { repository.getMovieDetails(movieId = it) }
 
-        private var isSpatialUiEnabledFlow = MutableStateFlow(false)
+        private val isSpatialUiEnabledFlow = MutableStateFlow(false)
 
         private val movieDetailsFlow =
             combine(
                 playerManager.player,
                 specifiedMovieDetails,
                 playerManager.currentMediaItem,
-                isSpatialUiEnabledFlow,
-            ) { player, movieDetails, mediaItem, isSpatialUiEnabled ->
+            ) { player, movieDetails, mediaItem ->
                 when {
                     // Wait for the player to be initialized.
                     player == null -> {
@@ -87,16 +89,16 @@ class VideoPlayerScreenViewModel
                     // Use the movie that the player remembers.
                     movieDetails == null -> {
                         val currentMediaItem = player.currentMediaItem
-                        val movieDetails =
+                        val currentDetails =
                             if (currentMediaItem == null) {
                                 null
                             } else {
                                 repository.getMovieDetails(currentMediaItem.mediaId)
                             }
-                        if (movieDetails == null) {
+                        if (currentDetails == null) {
                             null
                         } else {
-                            ResolvedMovie(movieDetails = movieDetails, isPrepared = true)
+                            ResolvedMovie(movieDetails = currentDetails, isPrepared = true)
                         }
                     }
 
@@ -107,16 +109,16 @@ class VideoPlayerScreenViewModel
                             (0 until player.mediaItemCount).any { index ->
                                 player.getMediaItemAt(index).mediaId == movieDetails.id
                             }
-                        val movieDetails =
-                            if (isViewed) {
-                                repository.getMovieDetails(mediaItem.mediaId)
+                        val currentDetails =
+                            if (isViewed && mediaItem != MediaItem.EMPTY) {
+                                repository.getMovieDetails(mediaItem.mediaId) ?: movieDetails
                             } else {
                                 movieDetails
                             }
-                        ResolvedMovie(movieDetails = movieDetails, isPrepared = isViewed)
+                        ResolvedMovie(movieDetails = currentDetails, isPrepared = isViewed)
                     }
                 }
-            }
+            }.distinctUntilChanged()
 
         private val nowPlayingInfo =
             combine(
@@ -130,20 +132,45 @@ class VideoPlayerScreenViewModel
                     val movieDetails = resolvedMovie.movieDetails
                     val stereoscopicVisionType =
                         StereoscopicVisionType.select(movieDetails, isSpatialUiEnabled)
-                    val nowPlayingInfo =
-                        NowPlayingInfo(
-                            movieDetails = movieDetails,
-                            stereoscopicVisionType = stereoscopicVisionType,
-                            videoSize = videoSize.into(),
-                        )
-                    if (!resolvedMovie.isPrepared) {
-                        playerManager.prepare(nowPlayingInfo)
-                    } else {
-                        playerManager.updateCurrentMediaItem(nowPlayingInfo)
-                    }
-                    nowPlayingInfo
+                    NowPlayingInfo(
+                        movieDetails = movieDetails,
+                        stereoscopicVisionType = stereoscopicVisionType,
+                        videoSize = videoSize.into(),
+                    )
                 }
             }
+
+        init {
+            requestPlayer()
+            viewModelScope.launch {
+                combine(
+                    movieDetailsFlow.filterNotNull(),
+                    isSpatialUiEnabledFlow,
+                ) { resolvedMovie, isSpatialUiEnabled ->
+                    resolvedMovie to isSpatialUiEnabled
+                }
+                    .distinctUntilChanged()
+                    .collectLatest { (resolvedMovie, isSpatialUiEnabled) ->
+                        val movieDetails = resolvedMovie.movieDetails
+                        val stereoscopicVisionType =
+                            StereoscopicVisionType.select(movieDetails, isSpatialUiEnabled)
+                        val playingInfo =
+                            NowPlayingInfo(
+                                movieDetails = movieDetails,
+                                stereoscopicVisionType = stereoscopicVisionType,
+                                videoSize = playerManager.videoSize.value.into(),
+                            )
+                        if (!resolvedMovie.isPrepared) {
+                            playerManager.prepare(
+                                nowPlayingInfo = playingInfo,
+                                isSpatialUiEnabled = isSpatialUiEnabled,
+                            )
+                        } else {
+                            playerManager.updateCurrentMediaItem(playingInfo)
+                        }
+                    }
+            }
+        }
 
         val uiState =
             combine(
@@ -153,7 +180,6 @@ class VideoPlayerScreenViewModel
             ) { player, isReady, playingInfo ->
                 when {
                     player == null -> {
-                        requestPlayer()
                         VideoPlayerScreenUiState.Loading
                     }
 
@@ -183,15 +209,16 @@ class VideoPlayerScreenViewModel
         }
 
         fun releasePlayer() {
-            viewModelScope.launch {
-                playerManager.release()
-            }
+            playerManager.release()
         }
 
         fun updateSpatialUiEnabled(isEnabled: Boolean) {
-            viewModelScope.launch {
-                isSpatialUiEnabledFlow.emit(isEnabled)
-            }
+            isSpatialUiEnabledFlow.value = isEnabled
+        }
+
+        override fun onCleared() {
+            super.onCleared()
+            playerManager.release()
         }
 
         @AssistedFactory
@@ -213,9 +240,9 @@ private class PlayerManager {
         create(context)
     }
 
-    suspend fun release() {
-        player.value?.release()
-        emit(null)
+    fun release() {
+        _player.value?.release()
+        _player.value = null
     }
 
     fun prepare(
@@ -270,8 +297,8 @@ private class PlayerManager {
                         isReadyToPlay.tryEmit(playbackState == Player.STATE_READY)
                     }
 
-                    override fun onVideoSizeChanged(updatedVideSize: VideoSize) {
-                        videoSize.tryEmit(updatedVideSize)
+                    override fun onVideoSizeChanged(updatedVideoSize: VideoSize) {
+                        videoSize.tryEmit(updatedVideoSize)
                     }
                 },
             )

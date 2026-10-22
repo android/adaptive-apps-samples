@@ -62,7 +62,7 @@ fun UserAvatar(
             imageVector = icon,
             contentDescription = null,
             modifier =
-                modifier
+                Modifier
                     .fillMaxSize()
                     .styleable(
                         styleState = styleState,

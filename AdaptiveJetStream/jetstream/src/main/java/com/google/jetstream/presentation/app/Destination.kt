@@ -69,4 +69,14 @@ sealed class Destination : NavKey {
 
     @Serializable
     data object HelpAndSupport : Destination()
+
+    val isTopLevelDestination: Boolean
+        get() =
+            this == Home ||
+                this == Categories ||
+                this == Movies ||
+                this == Shows ||
+                this == Favourites ||
+                this == Search ||
+                this == Profile
 }
