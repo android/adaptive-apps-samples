@@ -1,0 +1,15 @@
+title: "List-detail layout using activity embedding"
+description: "A sample demonstrating how to implement a List-Detail canonical layout using Jetpack WindowManager Activity Embedding to split the screen between two activities."
+status:       PUBLISHED
+technologies: [Android, AndroidViews]
+categories:
+    - AndroidViewsLayouts
+languages:    [Kotlin]
+solutions:
+    - Mobile
+github:       android/adaptive-apps-samples
+level:        INTERMEDIATE
+apiRefs:
+    - android:androidx.window.embedding.SplitController
+    - android:androidx.window.embedding.RuleController
+license: apache2

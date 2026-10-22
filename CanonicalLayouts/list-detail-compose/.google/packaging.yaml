@@ -1,0 +1,15 @@
+title: "List-detail canonical layout using Jetpack Compose"
+description: "A sample demonstrating how to implement a List-Detail canonical layout using Jetpack Compose and Compose Material3 Adaptive APIs."
+status:       PUBLISHED
+technologies: [Android, JetpackCompose]
+categories:
+    - JetpackComposeLayouts
+languages:    [Kotlin]
+solutions:
+    - Mobile
+github:       android/adaptive-apps-samples
+level:        INTERMEDIATE
+apiRefs:
+    - android:androidx.compose.material3.adaptive.layout.ListDetailPaneScaffold
+    - android:androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
+license: apache2

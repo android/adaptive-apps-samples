@@ -1,0 +1,19 @@
+title: "JetStream: Adaptive media streaming sample"
+description: "A sample media streaming application designed to adapt to various form factors (mobile, tablet, foldable, Chromebook, TV, Automotive, XR) using a single binary and Compose Material3."
+status:       PUBLISHED
+technologies: [Android, JetpackCompose]
+categories:
+    - JetpackComposeLayouts
+languages:    [Kotlin]
+solutions:
+    - Mobile
+    - TV
+    - Automotive
+    - XR
+github:       android/adaptive-apps-samples
+level:        INTERMEDIATE
+apiRefs:
+    - android:androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+    - android:androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
+    - android:androidx.compose.material3.adaptive.navigation.NavigableListDetailPaneScaffold
+license: apache2
