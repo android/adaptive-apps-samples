@@ -1,0 +1,16 @@
+title: "Adaptive layouts using MediaQuery in Jetpack Compose"
+description: "A sample demonstrating how to use the MediaQuery API in Jetpack Compose to build context-aware, adaptive apps that react to hardware features, peripherals, and physical screen posture."
+status:       PUBLISHED
+technologies: [Android, JetpackCompose]
+categories:
+    - JetpackComposeLayouts
+languages:    [Kotlin]
+solutions:
+    - Mobile
+    - JetpackNavigation
+github:       android/adaptive-apps-samples
+level:        INTERMEDIATE
+apiRefs:
+    - android:androidx.compose.Composable
+    - android:androidx.compose.ui.UiMediaScope
+license: apache2

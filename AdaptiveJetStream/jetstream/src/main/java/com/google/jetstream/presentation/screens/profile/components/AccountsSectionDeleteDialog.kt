@@ -45,8 +45,10 @@ fun AccountsSectionDeleteDialog(
 ) {
     val confirmButton = remember { FocusRequester() }
 
-    LaunchedEffect(Unit) {
-        confirmButton.requestFocus()
+    LaunchedEffect(showDialog) {
+        if (showDialog) {
+            confirmButton.requestFocus()
+        }
     }
 
     StandardDialog(

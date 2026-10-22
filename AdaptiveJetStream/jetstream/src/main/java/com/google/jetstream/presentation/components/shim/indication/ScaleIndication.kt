@@ -19,9 +19,11 @@ package com.google.jetstream.presentation.components.shim.indication
 import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
 import androidx.compose.foundation.style.Style
 import androidx.compose.foundation.style.StyleScope
+import androidx.compose.foundation.style.animate
 import androidx.compose.foundation.style.focused
 import androidx.compose.foundation.style.hovered
 import androidx.compose.foundation.style.pressed
+import androidx.compose.foundation.style.scale
 
 /**
  * Creates a [Style] that applies scale transitions for different interaction states.

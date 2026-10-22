@@ -52,9 +52,7 @@ fun ClassicCard(
         modifier = modifier,
         style = style,
     ) {
-        Column(
-            modifier = modifier,
-        ) {
+        Column {
             image()
             title()
             subtitle()

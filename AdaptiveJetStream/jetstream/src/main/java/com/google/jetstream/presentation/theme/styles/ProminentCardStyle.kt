@@ -21,9 +21,13 @@ package com.google.jetstream.presentation.theme.styles
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
 import androidx.compose.foundation.style.Style
+import androidx.compose.foundation.style.animate
+import androidx.compose.foundation.style.border
+import androidx.compose.foundation.style.contentPadding
 import androidx.compose.foundation.style.fillSize
 import androidx.compose.foundation.style.focused
 import androidx.compose.foundation.style.hovered
+import androidx.compose.foundation.style.size
 import androidx.compose.foundation.style.then
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme

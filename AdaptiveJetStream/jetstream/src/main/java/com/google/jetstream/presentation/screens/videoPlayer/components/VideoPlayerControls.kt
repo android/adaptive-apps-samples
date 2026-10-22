@@ -82,10 +82,15 @@ fun VideoPlayerControls(
             }
         },
         seeker = {
+            val durationMs = player.duration.coerceAtLeast(0L)
             VideoPlayerSeeker(
                 player = player,
-                onSeek = { player.seekTo(player.duration.times(it).toLong()) },
-                contentDuration = player.duration.milliseconds,
+                onSeek = {
+                    if (durationMs > 0L) {
+                        player.seekTo((durationMs * it).toLong())
+                    }
+                },
+                contentDuration = durationMs.milliseconds,
                 modifier = Modifier.focusRequester(focusRequester),
                 shouldShowPlayPauseButton = !isTabletop,
             )

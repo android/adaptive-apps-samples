@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
+import androidx.compose.foundation.style.externalPadding
 import androidx.compose.foundation.style.fillWidth
 import androidx.compose.foundation.style.styleable
 import androidx.compose.runtime.Composable

@@ -1,0 +1,15 @@
+title: "Supporting pane layout using fragments"
+description: "A sample demonstrating how to implement a supporting pane canonical layout using traditional Android fragments and XML layout resource qualifiers."
+status:       PUBLISHED
+technologies: [Android, AndroidViews]
+categories:
+    - AndroidViewsLayouts
+languages:    [Kotlin]
+solutions:
+    - Mobile
+github:       android/adaptive-apps-samples
+level:        INTERMEDIATE
+apiRefs:
+    - android:androidx.fragment.app.Fragment
+    - android:androidx.fragment.app.FragmentContainerView
+license: apache2

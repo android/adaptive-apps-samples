@@ -22,7 +22,7 @@ import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasClickAction
 import androidx.compose.ui.test.junit4.StateRestorationTester
-import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
@@ -33,8 +33,10 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
+@Config(qualifiers = "w1280dp-h800dp")
 class CategoryMovieListScreenAdaptiveTest {
     @get:Rule
     val composeTestRule = createComposeRule()
@@ -80,9 +82,8 @@ class CategoryMovieListScreenAdaptiveTest {
     fun categoryMovieList_displaysAllMovies() {
         composeTestRule.setContent {
             JetStreamTheme {
-                CategoryDetails(
+                CategoryMovieList(
                     categoryDetails = testCategoryDetails,
-                    onBackPressed = {},
                     onMovieSelected = {},
                 )
             }

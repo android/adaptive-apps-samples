@@ -1,0 +1,16 @@
+title: "Feed canonical layout using XML views"
+description: "A sample demonstrating how to implement a Feed canonical layout using traditional Android XML Views and Fragments, adapting the grid structure using resource qualifiers."
+status:       PUBLISHED
+technologies: [Android, AndroidViews]
+categories:
+    - AndroidViewsLayouts
+languages:    [Kotlin]
+solutions:
+    - Mobile
+github:       android/adaptive-apps-samples
+level:        INTERMEDIATE
+apiRefs:
+    - android:view.ViewGroup
+    - android:androidx.recyclerview.widget.RecyclerView
+    - android:androidx.recyclerview.widget.GridLayoutManager
+license: apache2

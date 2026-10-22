@@ -95,7 +95,7 @@ fun currentEngagementMode(): State<EngagementMode> {
                 )
             }
 
-            windowSizeClass.isIWidthCompact() -> {
+            windowSizeClass.isWidthCompact() -> {
                 EngagementMode.Compact(
                     isBackButtonRequired = hasPointingDevice,
                     hasPointingDevice = hasPointingDevice,

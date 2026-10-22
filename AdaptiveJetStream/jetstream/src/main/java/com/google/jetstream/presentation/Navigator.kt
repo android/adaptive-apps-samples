@@ -27,18 +27,30 @@ internal class Navigator(
     val backStack: NavBackStack<NavKey>,
 ) {
     fun navigate(destination: Destination) {
-        if (destination != current) {
+        if (destination == current) return
+        if (destination == Destination.Home) {
+            while (backStack.size > 1) {
+                backStack.removeLastOrNull()
+            }
+            if (backStack.lastOrNull() != Destination.Home) {
+                backStack.add(Destination.Home)
+            }
+        } else if (destination.isTopLevelDestination && current.isTopLevelDestination && current != Destination.Home) {
+            backStack[backStack.lastIndex] = destination
+        } else {
             backStack.add(destination)
         }
     }
 
     fun goBack() {
-        backStack.removeLastOrNull()
+        if (backStack.size > 1) {
+            backStack.removeLastOrNull()
+        }
     }
 
     val current: Destination
         get() {
-            return backStack.last() as Destination
+            return (backStack.lastOrNull() as? Destination) ?: Destination.Home
         }
 }
 

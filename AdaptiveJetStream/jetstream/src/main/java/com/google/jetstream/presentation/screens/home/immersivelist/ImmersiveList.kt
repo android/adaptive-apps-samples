@@ -27,6 +27,7 @@ import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
 import androidx.compose.foundation.style.Style
+import androidx.compose.foundation.style.size
 import androidx.compose.foundation.style.styleable
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -67,8 +68,9 @@ fun ImmersiveList(
     onExpanded: () -> Unit = {},
     onCollapsed: () -> Unit = { },
 ) {
+    val firstMovie = movieList.firstOrNull() ?: return
     var isExpanded by remember { mutableStateOf(false) }
-    var selectedMovie by remember { mutableStateOf(movieList.first()) }
+    var selectedMovie by remember(firstMovie) { mutableStateOf(firstMovie) }
 
     ImmersiveList(
         selectedMovie = selectedMovie,
@@ -269,7 +271,7 @@ private fun Title(movie: Movie, modifier: Modifier = Modifier, style: Style = St
 private fun Description(movie: Movie, modifier: Modifier = Modifier, style: Style = Style) {
     val textStyle = MaterialTheme.typography.bodyLarge
     Text(
-        text = movie.name,
+        text = movie.description,
         style = textStyle,
         modifier =
             modifier.styleable(

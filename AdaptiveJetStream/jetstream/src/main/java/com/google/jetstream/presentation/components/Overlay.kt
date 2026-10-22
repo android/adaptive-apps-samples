@@ -41,7 +41,7 @@ fun Modifier.gradientOverlay(gradientColor: Color): Modifier =
                         Color.Transparent,
                         gradientColor,
                     ),
-                endY = size.width.times(0.3f),
+                startY = size.height.times(0.3f),
             )
         val linearGradient =
             Brush.linearGradient(

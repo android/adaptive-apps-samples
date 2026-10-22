@@ -80,6 +80,7 @@ internal object JetStreamUiMedia {
         isMultiWindowMode: Boolean = LocalActivity.current?.isInMultiWindowMode ?: false,
     ): JetStreamUiMediaContext {
         return remember(
+            hasXrSpatialFeature,
             isSpatialUiEnabled,
             uiMediaScope,
             isMultiWindowMode,

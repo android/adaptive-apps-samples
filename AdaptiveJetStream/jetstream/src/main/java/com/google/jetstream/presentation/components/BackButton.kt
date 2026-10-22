@@ -21,24 +21,8 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.google.jetstream.presentation.components.feature.JetStreamUiMedia
 import com.google.jetstream.presentation.components.feature.LocalEngagementMode
 import com.google.jetstream.presentation.screens.videoPlayer.components.button.VideoPlayerControlsIcon
-
-@Composable
-fun BackButton(
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    icon: ImageVector = Icons.AutoMirrored.Default.ArrowBack,
-    description: String? = null,
-) {
-    VideoPlayerControlsIcon(
-        onClick = onClick,
-        modifier = modifier,
-        icon = icon,
-        contentDescription = description,
-    )
-}
 
 @Composable
 fun BackButton(
@@ -49,11 +33,11 @@ fun BackButton(
     isRequired: Boolean = LocalEngagementMode.current.isBackButtonRequired,
 ) {
     if (isRequired) {
-        BackButton(
+        VideoPlayerControlsIcon(
             onClick = onClick,
             modifier = modifier,
             icon = icon,
-            description = description,
+            contentDescription = description,
         )
     }
 }

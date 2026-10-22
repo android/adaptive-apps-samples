@@ -52,8 +52,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavType
-import androidx.navigation.navArgument
 import com.google.jetstream.R
 import com.google.jetstream.data.entities.Movie
 import com.google.jetstream.data.entities.MovieDetails
@@ -72,17 +70,6 @@ import com.google.jetstream.presentation.screens.moviedetails.components.MovieRe
 import com.google.jetstream.presentation.screens.moviedetails.components.TitleValueText
 import com.google.jetstream.presentation.theme.LocalContentPadding
 import com.google.jetstream.presentation.theme.Padding
-
-object MovieDetailsScreen {
-    const val MOVIE_ID_BUNDLE_KEY = "movieId"
-}
-
-val movieDetailsScreenArguments =
-    listOf(
-        navArgument(MovieDetailsScreen.MOVIE_ID_BUNDLE_KEY) {
-            type = NavType.StringType
-        },
-    )
 
 @OptIn(ExperimentalFoundationStyleApi::class)
 @Composable

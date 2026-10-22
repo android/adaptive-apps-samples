@@ -16,8 +16,12 @@
 
 package com.google.jetstream.presentation.screens.profile
 
-import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.junit4.v2.createComposeRule
+import androidx.compose.ui.test.onNodeWithText
+import com.google.jetstream.presentation.theme.JetStreamTheme
 import org.junit.Rule
+import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
@@ -28,5 +32,21 @@ class ProfileScreenTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
-    // Define screenshot tests for the Profile screen.
+    @Test
+    fun profileScreen_displaysSections() {
+        composeTestRule.setContent {
+            JetStreamTheme {
+                ProfileScreen(
+                    onDestinationSelected = {},
+                )
+            }
+        }
+
+        composeTestRule
+            .onNodeWithText("Accounts")
+            .assertIsDisplayed()
+        composeTestRule
+            .onNodeWithText("About")
+            .assertIsDisplayed()
+    }
 }

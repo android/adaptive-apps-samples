@@ -18,7 +18,6 @@
 
 package com.google.jetstream.presentation.theme
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -43,7 +42,6 @@ fun JetStreamTheme(
         LocalContentPadding provides rememberContentPadding(),
     ) {
         MaterialTheme(
-            // TODO this is redundant because the dark and light color schemes are the same
             colorScheme = colorScheme(),
             shapes = MaterialTheme.shapes,
             typography = Typography,

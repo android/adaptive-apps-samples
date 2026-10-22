@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.ExperimentalGridApi
 import androidx.compose.foundation.layout.FlexBox
 import androidx.compose.foundation.layout.FlexDirection
 import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
+import androidx.compose.foundation.style.contentPadding
 import androidx.compose.foundation.style.fillSize
 import androidx.compose.foundation.style.styleable
 import androidx.compose.material3.MaterialTheme

@@ -29,7 +29,7 @@ fun BackNavigationContextMenu(
     content: @Composable BoxScope.() -> Unit,
 ) {
     val contextMenuItemList =
-        remember {
+        remember(onBackPressed) {
             listOf(
                 ContextMenuItem(StringConstants.Composable.ContextMenu.Back, onBackPressed),
             )

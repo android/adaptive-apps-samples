@@ -22,10 +22,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ExperimentalFlexBoxApi
 import androidx.compose.foundation.layout.ExperimentalGridApi
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
 import androidx.compose.foundation.style.Style
+import androidx.compose.foundation.style.externalPadding
+import androidx.compose.foundation.style.size
 import androidx.compose.foundation.style.styleable
 import androidx.compose.foundation.style.then
 import androidx.compose.material.icons.Icons
@@ -56,9 +57,12 @@ import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.google.jetstream.R
+import com.google.jetstream.data.util.StringConstants
 import com.google.jetstream.presentation.components.feature.JetStreamUiMedia
 import com.google.jetstream.presentation.components.onPointerHovered
 import com.google.jetstream.presentation.components.shim.styleable.StyleableBox
@@ -117,7 +121,9 @@ fun FeaturedCarousel(
     },
     content: @Composable CarouselItemScope.(Int) -> Unit = {},
 ) {
-    var autoScroll by remember { mutableStateOf(isAutoScrollEnabled) }
+    var isFocused by remember { mutableStateOf(false) }
+    var isHovered by remember { mutableStateOf(false) }
+    val autoScroll = isAutoScrollEnabled && !isFocused && !isHovered && itemCount > 0
     val carouselItems =
         remember(itemCount) {
             List(itemCount) { FocusRequester() }
@@ -125,7 +131,7 @@ fun FeaturedCarousel(
 
     LaunchedEffect(state.currentItem) {
         state.onScrollFinished {
-            if (!autoScroll) {
+            if (isFocused && state.currentItem in carouselItems.indices) {
                 carouselItems[state.currentItem].requestFocus()
             }
         }
@@ -135,19 +141,23 @@ fun FeaturedCarousel(
         contentAlignment = Alignment.BottomEnd,
         modifier =
             modifier
+                .semantics {
+                    contentDescription =
+                        StringConstants.Composable.ContentDescription.MoviesCarousel
+                }
                 .focusProperties {
                     onEnter = {
-                        autoScroll = false
+                        isFocused = true
                     }
                     onExit = {
-                        autoScroll = true
+                        isFocused = false
                     }
                 }
                 .onPointerHovered(
-                    onEnter = { autoScroll = false },
-                    onExit = { autoScroll = true },
+                    onEnter = { isHovered = true },
+                    onExit = { isHovered = false },
                 )
-                .carouselNavigation(state, rememberCoroutineScope()),
+                .carouselNavigation(state, itemCount, rememberCoroutineScope()),
     ) {
         AutoScrollHorizontalUncontainedCarousel(
             itemCount = itemCount,
@@ -290,7 +300,6 @@ object FeaturedCarouselDefaults {
             repeat(itemCount) { index ->
                 Indicator(
                     isActive = index == activeItemIndex,
-                    modifier = Modifier.padding(end = gap),
                 )
             }
         }
@@ -331,6 +340,7 @@ object FeaturedCarouselDefaults {
 suspend fun CarouselState.scrollToNextItem(
     itemCount: Int,
 ) {
+    if (itemCount <= 0) return
     onScrollFinished {
         currentCoroutineContext().ensureActive()
         val nextItemIndex = (currentItem + 1) % itemCount
@@ -386,7 +396,7 @@ private fun Modifier.autoScroll(
     enabled: Boolean = true,
 ): Modifier {
     LaunchedEffect(state, itemCount, autoScrollInterval, enabled) {
-        if (enabled) {
+        if (enabled && itemCount > 0) {
             while (true) {
                 delay(autoScrollInterval)
                 yield()
@@ -402,6 +412,7 @@ private fun Modifier.autoScroll(
  */
 internal fun Modifier.carouselNavigation(
     state: CarouselState,
+    itemCount: Int,
     coroutineScope: CoroutineScope,
 ): Modifier {
     return onKeyEvent { keyEvent ->
@@ -411,6 +422,16 @@ internal fun Modifier.carouselNavigation(
                 keyEvent.modifierKeys() == ModifierKeys.None -> {
                 coroutineScope.launch {
                     state.scrollToPreviousItem()
+                }
+                true
+            }
+
+            Key.DirectionRight
+            if keyEvent.type == KeyEventType.KeyUp &&
+                keyEvent.modifierKeys() == ModifierKeys.None &&
+                state.hasNextItem(itemCount) -> {
+                coroutineScope.launch {
+                    state.scrollToNextItem(itemCount)
                 }
                 true
             }

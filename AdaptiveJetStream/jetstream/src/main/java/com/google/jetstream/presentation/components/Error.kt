@@ -42,7 +42,6 @@ fun Error(modifier: Modifier = Modifier, style: Style = Style) {
         Text(
             text = stringResource(id = R.string.message_error),
             style = textStyle,
-            modifier = modifier,
         )
     }
 }
