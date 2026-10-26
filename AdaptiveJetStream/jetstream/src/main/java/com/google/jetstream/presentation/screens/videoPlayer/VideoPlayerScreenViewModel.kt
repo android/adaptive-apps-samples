@@ -65,7 +65,13 @@ class VideoPlayerScreenViewModel
         private val playerManager = PlayerManager()
 
         private val specifiedMovieDetails =
-            flowOf(movieId).map { repository.getMovieDetails(movieId = it) }
+            flowOf(movieId).map { id ->
+                if (id.isBlank()) {
+                    null
+                } else {
+                    runCatching { repository.getMovieDetails(movieId = id) }.getOrNull()
+                }
+            }
 
         private val isSpatialUiEnabledFlow = MutableStateFlow(false)
 
@@ -216,6 +222,10 @@ class VideoPlayerScreenViewModel
             isSpatialUiEnabledFlow.value = isEnabled
         }
 
+        internal fun setPlayerForTesting(player: Player?, isReady: Boolean = true) {
+            playerManager.setPlayerForTesting(player, isReady)
+        }
+
         override fun onCleared() {
             super.onCleared()
             playerManager.release()
@@ -228,12 +238,20 @@ class VideoPlayerScreenViewModel
     }
 
 private class PlayerManager {
-    private val _player: MutableStateFlow<MediaController?> = MutableStateFlow(null)
-    val player: StateFlow<MediaController?> = _player
+    private val _player: MutableStateFlow<Player?> = MutableStateFlow(null)
+    val player: StateFlow<Player?> = _player
     val currentMediaItem = MutableStateFlow(MediaItem.EMPTY)
     val isReadyToPlay = MutableStateFlow(false)
 
     val videoSize = MutableStateFlow(VideoSize.UNKNOWN)
+
+    fun setPlayerForTesting(
+        player: Player?,
+        isReady: Boolean = true,
+    ) {
+        _player.value = player
+        isReadyToPlay.value = isReady
+    }
 
     suspend fun request(context: Context) {
         release()
@@ -311,7 +329,7 @@ private class PlayerManager {
         }
     }
 
-    private suspend fun emit(player: MediaController?) {
+    private suspend fun emit(player: Player?) {
         _player.emit(player)
     }
 }

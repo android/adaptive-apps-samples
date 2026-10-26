@@ -115,6 +115,18 @@ fun VideoPlayerScreen(
         videoPlayerScreenViewModel.updateSpatialUiEnabled(isSpatialUiEnabled)
     }
 
+    VideoPlayerScreen(
+        uiState = uiState,
+        onBackPressed = onBackPressed,
+    )
+}
+
+@kotlin.OptIn(ExperimentalFoundationStyleApi::class)
+@Composable
+internal fun VideoPlayerScreen(
+    uiState: VideoPlayerScreenUiState,
+    onBackPressed: () -> Unit,
+) {
     when (val s = uiState) {
         is VideoPlayerScreenUiState.Loading -> {
             val backgroundColor = MaterialTheme.colorScheme.background
@@ -148,7 +160,7 @@ fun VideoPlayerScreen(
 }
 
 @Composable
-private fun VideoPlayerScreenContent(
+internal fun VideoPlayerScreenContent(
     nowPlayingInfo: NowPlayingInfo,
     player: Player,
     isReadyToPlay: Boolean,

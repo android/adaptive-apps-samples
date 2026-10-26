@@ -40,7 +40,7 @@ data class Movie(
 
     val videoUri: Uri
         get() {
-            return videoUriFor() ?: sources.values.first()
+            return videoUriFor() ?: sources.values.firstOrNull() ?: Uri.EMPTY
         }
 
     companion object {

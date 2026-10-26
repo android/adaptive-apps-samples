@@ -29,6 +29,7 @@ import com.google.jetstream.presentation.screens.categories.CategoryDetails
 import com.google.jetstream.presentation.screens.favourites.FavouriteScreenViewModel
 import com.google.jetstream.presentation.screens.favourites.FilterList
 import com.google.jetstream.presentation.screens.moviedetails.MovieDetailsList
+import com.google.jetstream.presentation.screens.profile.ProfileScreen
 import com.google.jetstream.presentation.screens.search.SearchResult
 import com.google.jetstream.presentation.screens.categories.Catalog as CategoriesCatalog
 import com.google.jetstream.presentation.screens.favourites.Catalog as FavouritesCatalog
@@ -178,4 +179,15 @@ fun SearchScreenScreenshot() {
     }
 }
 
-// ToDo: define screenshots tests for app level layouts.
+@PreviewTest
+@AdaptivePreview
+@Composable
+fun ProfileScreenScreenshot() {
+    JetStreamPreview {
+        Surface {
+            ProfileScreen(
+                onDestinationSelected = {},
+            )
+        }
+    }
+}

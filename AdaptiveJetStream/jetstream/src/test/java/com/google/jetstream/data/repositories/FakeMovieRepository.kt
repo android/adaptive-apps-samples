@@ -20,6 +20,7 @@ import com.google.jetstream.data.entities.Movie
 import com.google.jetstream.data.entities.MovieCategory
 import com.google.jetstream.data.entities.MovieCategoryDetails
 import com.google.jetstream.data.entities.MovieDetails
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
@@ -27,8 +28,17 @@ class FakeMovieRepository : MovieRepository {
     private val movieFlow = MutableStateFlow<List<Movie>>(emptyList())
     private val categoryFlow = MutableStateFlow<List<MovieCategory>>(emptyList())
 
+    var searchDelayMs: Long = 0L
+    var shouldThrowOnGetMovieDetails: Boolean = false
+    var customMovieDetails: MovieDetails? = null
+    val searchQueryHistory = mutableListOf<String>()
+
     fun setMovies(movies: List<Movie>) {
         movieFlow.value = movies
+    }
+
+    fun setCategories(categories: List<MovieCategory>) {
+        categoryFlow.value = categories
     }
 
     override fun getFeaturedMovies(): Flow<List<Movie>> = movieFlow
@@ -46,6 +56,10 @@ class FakeMovieRepository : MovieRepository {
     }
 
     override suspend fun getMovieDetails(movieId: String): MovieDetails {
+        if (shouldThrowOnGetMovieDetails) {
+            throw IllegalArgumentException("Movie not found: $movieId")
+        }
+        customMovieDetails?.let { return it }
         return MovieDetails(
             id = movieId,
             sources = emptyMap(),
@@ -70,7 +84,13 @@ class FakeMovieRepository : MovieRepository {
         )
     }
 
-    override suspend fun searchMovies(query: String): List<Movie> = emptyList()
+    override suspend fun searchMovies(query: String): List<Movie> {
+        searchQueryHistory.add(query)
+        if (searchDelayMs > 0L) {
+            delay(searchDelayMs)
+        }
+        return movieFlow.value.filter { it.name.contains(query, ignoreCase = true) }
+    }
 
     override fun getMoviesWithLongThumbnail(): Flow<List<Movie>> = movieFlow
 

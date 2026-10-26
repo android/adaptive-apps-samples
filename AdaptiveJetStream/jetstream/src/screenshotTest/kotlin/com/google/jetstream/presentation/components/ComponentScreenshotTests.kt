@@ -32,7 +32,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.android.tools.screenshot.PreviewTest
+import com.google.jetstream.presentation.app.DefaultNavigation
+import com.google.jetstream.presentation.app.Destination
+import com.google.jetstream.presentation.app.TopBarNavigation
 import com.google.jetstream.presentation.app.UserAvatar
+import androidx.compose.foundation.style.size as styleSize
 
 @PreviewTest
 @Preview
@@ -56,7 +60,7 @@ fun LoadingScreenshot() {
         Surface {
             Loading(
                 style = {
-                    size(300.dp)
+                    styleSize(300.dp)
                 },
             )
         }
@@ -123,6 +127,34 @@ fun UserAvatarScreenshot() {
             Box(Modifier.padding(16.dp)) {
                 UserAvatar(selected = true, onClick = {})
             }
+        }
+    }
+}
+
+@PreviewTest
+@Preview
+@Composable
+fun DefaultNavigationScreenshot() {
+    JetStreamPreview {
+        Surface {
+            DefaultNavigation.Navigation(
+                current = Destination.Home,
+                onNavigation = {},
+            )
+        }
+    }
+}
+
+@PreviewTest
+@Preview
+@Composable
+fun TopBarNavigationScreenshot() {
+    JetStreamPreview {
+        Surface {
+            TopBarNavigation.Navigation(
+                current = Destination.Home,
+                onNavigation = {},
+            )
         }
     }
 }
