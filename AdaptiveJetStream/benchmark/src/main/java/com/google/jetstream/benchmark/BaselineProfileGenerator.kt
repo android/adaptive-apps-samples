@@ -28,7 +28,8 @@ class BaselineProfileGenerator {
 
     @Test
     fun startup() = baselineProfileRule.collect(
-        packageName = JETSTREAM_PACKAGE_NAME
+        packageName = JETSTREAM_PACKAGE_NAME,
+        includeInStartupProfile = true,
     ) {
         startActivityAndWait()
         device.waitForIdle()
@@ -36,8 +37,10 @@ class BaselineProfileGenerator {
         device.run {
             // Wait until screen loads and Carousel gains focus
             wait(
-                Until.findObject(By.descContains(CAROUSEL_DESCRIPTION).focused(true)),
-                INITIAL_WAIT_TIMEOUT
+                Until.findObject(
+                    By.descContains(CAROUSEL_DESCRIPTION).hasDescendant(By.focused(true)),
+                ),
+                INITIAL_WAIT_TIMEOUT,
             )
 
             // Explore the Home tab

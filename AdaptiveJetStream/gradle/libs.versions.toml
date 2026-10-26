@@ -93,6 +93,5 @@ kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin-android" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt-android" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
-kotlin-parcelize = { id = "kotlin-parcelize" }
 screenshot = { id = "com.android.compose.screenshot", version.ref = "screenshot" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
