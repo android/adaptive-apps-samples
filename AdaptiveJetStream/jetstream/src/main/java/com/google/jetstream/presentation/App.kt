@@ -24,6 +24,7 @@ import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.navigation3.ListDetailSceneStrategy
 import androidx.compose.material3.adaptive.navigation3.rememberListDetailSceneStrategy
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -32,8 +33,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.input.key.Key
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
@@ -84,12 +85,32 @@ fun App(
     modifier: Modifier = Modifier,
 ) {
     val navigator = rememberNavigator(initialDestination = Destination.Home)
+    App(
+        navigator = navigator,
+        modifier = modifier,
+    )
+}
 
+@OptIn(ExperimentalFoundationStyleApi::class, ExperimentalMaterial3AdaptiveApi::class)
+@Composable
+internal fun App(
+    navigator: Navigator,
+    modifier: Modifier = Modifier,
+) {
     // Selects the navigation implementation (Rail, Bar, or TopBar) based on device type/mode
     val appNavigation = selectAppNavigation()
     // Tracks visibility of the top bar/navigation rail for hide-on-scroll behavior
     var isTopbarVisible by rememberSaveable { mutableStateOf(true) }
     var isTopbarFocused by remember { mutableStateOf(false) }
+    var requestTopbarFocusOnVisible by remember { mutableStateOf(false) }
+    val topbarFocusRequester = remember { FocusRequester() }
+
+    LaunchedEffect(isTopbarVisible, requestTopbarFocusOnVisible) {
+        if (isTopbarVisible && requestTopbarFocusOnVisible) {
+            requestTopbarFocusOnVisible = false
+            topbarFocusRequester.requestFocus()
+        }
+    }
 
     val keyboardShortcuts =
         remember(navigator) {
@@ -146,10 +167,12 @@ fun App(
                 .handleKeyboardShortcuts(keyboardShortcuts)
                 .leanbackBackHandler(
                     navigator = navigator,
+                    topbarFocusRequester = topbarFocusRequester,
                     isTopbarVisible = isTopbarVisible,
                     isTopbarFocused = isTopbarFocused,
                 ) {
                     isTopbarVisible = true
+                    requestTopbarFocusOnVisible = true
                 },
     ) {
         NavDisplay(
@@ -173,13 +196,9 @@ fun App(
                             Box(
                                 modifier =
                                     Modifier
-                                        .focusProperties {
-                                            onExit = {
-                                                isTopbarFocused = false
-                                            }
-                                            onEnter = {
-                                                isTopbarFocused = true
-                                            }
+                                        .focusRequester(topbarFocusRequester)
+                                        .onFocusChanged {
+                                            isTopbarFocused = it.hasFocus
                                         }
                                         .focusGroup(),
                             ) {
@@ -533,24 +552,33 @@ private fun EntryProviderScope<NavKey>.profileEntries(
 @Composable
 private fun Modifier.leanbackBackHandler(
     navigator: Navigator,
+    topbarFocusRequester: FocusRequester,
     isTopbarVisible: Boolean,
     isTopbarFocused: Boolean,
     requestTopbarBecomeVisible: () -> Unit,
 ): Modifier {
     return when (LocalEngagementMode.current) {
         is EngagementMode.Leanback -> {
-            val focusRequester = remember { FocusRequester() }
+            val isOverlay =
+                navigator.current is Destination.CategoryMovieList ||
+                    navigator.current is Destination.MovieDetails ||
+                    navigator.current is Destination.VideoPlayer
             onBackButtonPressed(
-                enabled = !isTopbarVisible || !isTopbarFocused || navigator.backStack.size > 1,
+                enabled =
+                    (!isOverlay && (!isTopbarVisible || !isTopbarFocused)) ||
+                        navigator.backStack.size > 1,
             ) {
                 when {
+                    isOverlay -> {
+                        navigator.goBack()
+                    }
+
                     !isTopbarVisible -> {
                         requestTopbarBecomeVisible()
-                        focusRequester.requestFocus()
                     }
 
                     !isTopbarFocused -> {
-                        focusRequester.requestFocus()
+                        topbarFocusRequester.requestFocus()
                     }
 
                     else -> {
@@ -558,8 +586,6 @@ private fun Modifier.leanbackBackHandler(
                     }
                 }
             }
-                .focusRequester(focusRequester)
-                .focusGroup()
         }
 
         else -> {
