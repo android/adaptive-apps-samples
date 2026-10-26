@@ -112,54 +112,7 @@ internal fun App(
         }
     }
 
-    val keyboardShortcuts =
-        remember(navigator) {
-            listOf(
-                KeyboardShortcut(
-                    key = Key.Comma,
-                    modifierKeys = setOf(ModifierKey.Ctrl),
-                    action = { navigator.navigate(Destination.Profile) },
-                ),
-                KeyboardShortcut(
-                    key = Key.P,
-                    modifierKeys = setOf(ModifierKey.Ctrl, ModifierKey.Alt),
-                    action = { navigator.navigate(Destination.Profile) },
-                ),
-                KeyboardShortcut(
-                    key = Key.H,
-                    modifierKeys = setOf(ModifierKey.Ctrl, ModifierKey.Alt),
-                    action = { navigator.navigate(Destination.Home) },
-                ),
-                KeyboardShortcut(
-                    key = Key.M,
-                    modifierKeys = setOf(ModifierKey.Ctrl, ModifierKey.Alt),
-                    action = { navigator.navigate(Destination.Movies) },
-                ),
-                KeyboardShortcut(
-                    key = Key.T,
-                    modifierKeys = setOf(ModifierKey.Ctrl, ModifierKey.Alt),
-                    action = { navigator.navigate(Destination.Shows) },
-                ),
-                KeyboardShortcut(
-                    key = Key.F,
-                    modifierKeys = setOf(ModifierKey.Ctrl, ModifierKey.Alt),
-                    action = { navigator.navigate(Destination.Favourites) },
-                ),
-                KeyboardShortcut(
-                    key = Key.S,
-                    modifierKeys = setOf(ModifierKey.Ctrl, ModifierKey.Alt),
-                    action = { navigator.navigate(Destination.Search) },
-                ),
-                KeyboardShortcut(
-                    key = Key.Slash,
-                    action = {
-                        if (navigator.current != Destination.Search) {
-                            navigator.navigate(Destination.Search)
-                        }
-                    },
-                ),
-            )
-        }
+    val keyboardShortcuts = rememberAppKeyboardShortcuts(navigator)
 
     Surface(
         modifier =
@@ -548,6 +501,56 @@ private fun EntryProviderScope<NavKey>.profileEntries(
         HelpAndSupportSection()
     }
 }
+
+@Composable
+internal fun rememberAppKeyboardShortcuts(navigator: Navigator): List<KeyboardShortcut> =
+    remember(navigator) {
+        listOf(
+            KeyboardShortcut(
+                key = Key.Comma,
+                modifierKeys = setOf(ModifierKey.Ctrl),
+                action = { navigator.navigate(Destination.Profile) },
+            ),
+            KeyboardShortcut(
+                key = Key.P,
+                modifierKeys = setOf(ModifierKey.Ctrl, ModifierKey.Alt),
+                action = { navigator.navigate(Destination.Profile) },
+            ),
+            KeyboardShortcut(
+                key = Key.H,
+                modifierKeys = setOf(ModifierKey.Ctrl, ModifierKey.Alt),
+                action = { navigator.navigate(Destination.Home) },
+            ),
+            KeyboardShortcut(
+                key = Key.M,
+                modifierKeys = setOf(ModifierKey.Ctrl, ModifierKey.Alt),
+                action = { navigator.navigate(Destination.Movies) },
+            ),
+            KeyboardShortcut(
+                key = Key.T,
+                modifierKeys = setOf(ModifierKey.Ctrl, ModifierKey.Alt),
+                action = { navigator.navigate(Destination.Shows) },
+            ),
+            KeyboardShortcut(
+                key = Key.F,
+                modifierKeys = setOf(ModifierKey.Ctrl, ModifierKey.Alt),
+                action = { navigator.navigate(Destination.Favourites) },
+            ),
+            KeyboardShortcut(
+                key = Key.S,
+                modifierKeys = setOf(ModifierKey.Ctrl, ModifierKey.Alt),
+                action = { navigator.navigate(Destination.Search) },
+            ),
+            KeyboardShortcut(
+                key = Key.Slash,
+                action = {
+                    if (navigator.current != Destination.Search) {
+                        navigator.navigate(Destination.Search)
+                    }
+                },
+            ),
+        )
+    }
 
 @Composable
 private fun Modifier.leanbackBackHandler(
