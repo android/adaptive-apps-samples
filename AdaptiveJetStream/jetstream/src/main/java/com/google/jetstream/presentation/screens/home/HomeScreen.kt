@@ -57,6 +57,8 @@ import com.google.jetstream.presentation.components.Error
 import com.google.jetstream.presentation.components.Loading
 import com.google.jetstream.presentation.components.MoviesRow
 import com.google.jetstream.presentation.components.NoScrollSpec
+import com.google.jetstream.presentation.components.feature.EngagementMode
+import com.google.jetstream.presentation.components.feature.LocalEngagementMode
 import com.google.jetstream.presentation.theme.JetStreamTokens
 import com.google.jetstream.presentation.theme.LocalContentPadding
 import com.google.jetstream.presentation.theme.LocalFeaturedCarouselHeight
@@ -170,9 +172,20 @@ private fun Catalog(
     onCollapsed: () -> Unit,
 ) {
     val contentPadding = LocalContentPadding.current
+    val engagementMode = LocalEngagementMode.current
     val (carousel, trending, top10, nowPlaying) = remember { FocusRequester.createRefs() }
     val bringIntoViewRequesterForTrending = remember { BringIntoViewRequester() }
     var isTrendingFocused by remember { mutableStateOf(false) }
+
+    LaunchedEffect(engagementMode, featuredMovies.isNotEmpty()) {
+        if (
+            engagementMode is EngagementMode.Leanback &&
+            featuredMovies.isNotEmpty() &&
+            lazyListState.firstVisibleItemIndex == 0
+        ) {
+            carousel.requestFocus()
+        }
+    }
 
     LaunchedEffect(LocalBringIntoViewSpec.current) {
         if (isTrendingFocused) {

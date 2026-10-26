@@ -25,7 +25,6 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
     alias(libs.plugins.androidx.baselineprofile)
-    alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.screenshot)
     alias(libs.plugins.spotless)
     id("jacoco")
@@ -126,11 +125,11 @@ tasks.register<JacocoReport>("jacocoTestReport") {
         )
 
     val javaClasses =
-        fileTree("${project.layout.buildDirectory.get()}/intermediates/javac/debug/classes") {
+        fileTree("${project.layout.buildDirectory.get()}/intermediates/javac/debug/compileDebugJavaWithJavac/classes") {
             exclude(fileFilter)
         }
     val kotlinClasses =
-        fileTree("${project.layout.buildDirectory.get()}/tmp/kotlin-classes/debug") {
+        fileTree("${project.layout.buildDirectory.get()}/intermediates/built_in_kotlinc/debug/compileDebugKotlin/classes") {
             exclude(fileFilter)
         }
 
