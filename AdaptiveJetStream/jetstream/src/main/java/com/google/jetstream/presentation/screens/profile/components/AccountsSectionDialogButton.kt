@@ -16,7 +16,6 @@
 
 package com.google.jetstream.presentation.screens.profile.components
 
-import androidx.compose.foundation.clickable
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,7 +31,7 @@ fun AccountsSectionDialogButton(
     Button(
         onClick = onClick,
         shape = JetStreamTokens.ButtonShape,
-        modifier = modifier.clickable(onClick = onClick),
+        modifier = modifier,
     ) {
         Text(text = text)
     }

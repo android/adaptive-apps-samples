@@ -30,6 +30,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
+import androidx.compose.foundation.style.contentPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -188,7 +189,7 @@ private fun Catalog(
     ) {
         item(contentType = "FeaturedMoviesCarousel") {
             FeaturedMovies(
-                moveList = featuredMovies,
+                movieList = featuredMovies,
                 onMovieSelected = goToVideoPlayer,
                 modifier =
                     Modifier

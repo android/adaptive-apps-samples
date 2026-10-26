@@ -1,0 +1,14 @@
+title: "List-detail layout using SlidingPaneLayout"
+description: "A sample demonstrating how to implement a List-Detail canonical layout using XML Views, Fragments, and SlidingPaneLayout."
+status:       PUBLISHED
+technologies: [Android, AndroidViews]
+categories:
+    - AndroidViewsLayouts
+languages:    [Kotlin]
+solutions:
+    - Mobile
+github:       android/adaptive-apps-samples
+level:        INTERMEDIATE
+apiRefs:
+    - android:androidx.slidingpanelayout.widget.SlidingPaneLayout
+license: apache2

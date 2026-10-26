@@ -1,0 +1,15 @@
+title: "Adaptive navigation suite scaffold sample"
+description: "A sample showcasing how to leverage NavigationSuiteScaffold to align navigation icons vertically (top, center, or bottom) in the Navigation Rail."
+status:       PUBLISHED
+technologies: [Android, JetpackCompose]
+categories:
+    - JetpackComposeLayouts
+languages:    [Kotlin]
+solutions:
+    - Mobile
+github:       android/adaptive-apps-samples
+level:        INTERMEDIATE
+apiRefs:
+    - android:androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
+    - android:androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteItem
+license: apache2

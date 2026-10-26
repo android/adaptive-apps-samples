@@ -1,0 +1,16 @@
+title: "Adaptive layouts using Grid in Jetpack Compose"
+description: "A sample demonstrating how to use the Grid API in Jetpack Compose to build flexible, grid-based adaptive apps optimized for all form factors."
+status:       PUBLISHED
+technologies: [Android, JetpackCompose]
+categories:
+    - JetpackComposeLayouts
+languages:    [Kotlin]
+solutions:
+    - Mobile
+    - JetpackNavigation
+github:       android/adaptive-apps-samples
+level:        INTERMEDIATE
+apiRefs:
+    - android:androidx.compose.Composable
+    - android:androidx.compose.layout.Grid
+license: apache2

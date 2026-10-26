@@ -19,6 +19,7 @@
 package com.google.jetstream.presentation.screens.categories
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
@@ -41,10 +42,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavType
-import androidx.navigation.navArgument
 import com.google.jetstream.data.entities.Movie
 import com.google.jetstream.data.entities.MovieCategoryDetails
+import com.google.jetstream.presentation.components.BackButton
 import com.google.jetstream.presentation.components.Error
 import com.google.jetstream.presentation.components.Loading
 import com.google.jetstream.presentation.components.MovieCard
@@ -54,10 +54,6 @@ import com.google.jetstream.presentation.theme.JetStreamTokens
 import com.google.jetstream.presentation.theme.LocalContentPadding
 import com.google.jetstream.presentation.theme.Padding
 import com.google.jetstream.presentation.utils.focusOnInitialVisibility
-
-object CategoryMovieListScreen {
-    const val CATEGORY_ID_BUNDLE_KEY = "categoryId"
-}
 
 @Composable
 fun CategoryMovieListScreen(
@@ -102,11 +98,20 @@ internal fun CategoryDetails(
 ) {
     BackHandler(onBack = onBackPressed)
     BackNavigationContextMenu(onBackPressed) {
-        CategoryMovieList(
-            categoryDetails = categoryDetails,
-            onMovieSelected = onMovieSelected,
-            modifier = modifier,
-        )
+        Box(modifier = modifier) {
+            CategoryMovieList(
+                categoryDetails = categoryDetails,
+                onMovieSelected = onMovieSelected,
+                modifier = Modifier.fillMaxSize(),
+            )
+            BackButton(
+                onClick = onBackPressed,
+                modifier =
+                    Modifier
+                        .align(Alignment.TopStart)
+                        .padding(16.dp),
+            )
+        }
     }
 }
 
@@ -136,7 +141,12 @@ internal fun CategoryMovieList(
         )
         LazyVerticalGrid(
             columns = JetStreamTokens.gridCells(),
-            contentPadding = PaddingValues(bottom = JetStreamTokens.VerticalListBottomPadding),
+            contentPadding =
+                PaddingValues(
+                    start = contentPadding.start,
+                    end = contentPadding.end,
+                    bottom = JetStreamTokens.VerticalListBottomPadding,
+                ),
         ) {
             itemsIndexed(
                 categoryDetails.movies,

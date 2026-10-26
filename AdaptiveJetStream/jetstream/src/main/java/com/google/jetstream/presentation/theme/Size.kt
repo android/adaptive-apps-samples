@@ -93,10 +93,16 @@ fun rememberCategoryGridColumns(): GridCells {
     val engagementMode = LocalEngagementMode.current
     return remember(engagementMode) {
         when (engagementMode) {
+            is EngagementMode.Compact -> {
+                GridCells.Fixed(1)
+            }
+
+            is EngagementMode.Medium -> {
+                GridCells.Fixed(2)
+            }
+
             is EngagementMode.Leanback, is EngagementMode.Cabin, is EngagementMode.Workstation -> {
-                GridCells.Fixed(
-                    4,
-                )
+                GridCells.Fixed(4)
             }
 
             else -> {

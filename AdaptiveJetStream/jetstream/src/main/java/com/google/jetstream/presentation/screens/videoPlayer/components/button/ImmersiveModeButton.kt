@@ -52,7 +52,7 @@ private fun ActualImmersiveButton(
 
     VideoPlayerControlsIcon(
         icon =
-            if (activity.isImmersive) {
+            if (isImmersive) {
                 Icons.Default.FullscreenExit
             } else {
                 Icons.Default.Fullscreen

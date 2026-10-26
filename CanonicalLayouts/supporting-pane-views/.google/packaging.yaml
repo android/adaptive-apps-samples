@@ -1,0 +1,15 @@
+title: "Supporting pane layout using custom views"
+description: "A sample demonstrating how to implement a Supporting Pane canonical layout using traditional Android XML Views, custom layouts, and resource qualifiers."
+status:       PUBLISHED
+technologies: [Android, AndroidViews]
+categories:
+    - AndroidViewsLayouts
+languages:    [Kotlin]
+solutions:
+    - Mobile
+github:       android/adaptive-apps-samples
+level:        INTERMEDIATE
+apiRefs:
+    - android:view.View
+    - android:androidx.constraintlayout.widget.ConstraintLayout
+license: apache2

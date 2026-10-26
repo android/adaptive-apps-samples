@@ -50,6 +50,7 @@ fun VideoPlayerMainFrame(
             TabletopVideoPlayerFrame(
                 mediaTitle = mediaTitle,
                 seeker = seeker,
+                modifier = modifier,
                 mediaActions = mediaActions,
                 more = more,
             )
@@ -59,6 +60,7 @@ fun VideoPlayerMainFrame(
             NonCompactVideoPlayerFrame(
                 mediaTitle = mediaTitle,
                 seeker = seeker,
+                modifier = modifier,
                 mediaActions = mediaActions,
                 more = more,
             )
@@ -68,6 +70,7 @@ fun VideoPlayerMainFrame(
             CompactVideoPlayerFrame(
                 mediaTitle = mediaTitle,
                 seeker = seeker,
+                modifier = modifier,
                 mediaActions = mediaActions,
                 more = more,
             )
@@ -79,10 +82,11 @@ fun VideoPlayerMainFrame(
 private fun CompactVideoPlayerFrame(
     mediaTitle: @Composable () -> Unit,
     seeker: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
     mediaActions: @Composable () -> Unit = {},
     more: (@Composable () -> Unit)? = null,
 ) {
-    Column(modifier = Modifier.fillMaxWidth()) {
+    Column(modifier = modifier.fillMaxWidth()) {
         mediaTitle()
         Spacer(Modifier.height(16.dp))
         seeker()
@@ -99,10 +103,11 @@ private fun CompactVideoPlayerFrame(
 private fun TabletopVideoPlayerFrame(
     mediaTitle: @Composable () -> Unit,
     seeker: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
     mediaActions: @Composable () -> Unit = {},
     more: (@Composable () -> Unit)? = null,
 ) {
-    Column(modifier = Modifier.fillMaxWidth()) {
+    Column(modifier = modifier.fillMaxWidth()) {
         Spacer(Modifier.height(16.dp))
         Row(modifier = Modifier.fillMaxWidth()) {
             seeker()

@@ -75,14 +75,24 @@ fun VideoPlayerSeeker(
         }
 
     val playPauseButton = remember { FocusRequester() }
+    val progress =
+        if (contentDuration.inWholeMilliseconds > 0) {
+            (contentProgress / contentDuration).toFloat().coerceIn(0f, 1f)
+        } else {
+            0f
+        }
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier =
-            modifier.focusProperties {
-                onEnter = {
-                    playPauseButton.requestFocus()
+            if (shouldShowPlayPauseButton) {
+                modifier.focusProperties {
+                    onEnter = {
+                        playPauseButton.requestFocus()
+                    }
                 }
+            } else {
+                modifier
             },
     ) {
         if (shouldShowPlayPauseButton) {
@@ -93,7 +103,7 @@ fun VideoPlayerSeeker(
         }
         VideoPlayerControllerText(text = contentProgressString)
         VideoPlayerControllerIndicator(
-            progress = (contentProgress / contentDuration).toFloat(),
+            progress = progress,
             onSeek = onSeek,
         )
         VideoPlayerControllerText(text = contentDurationString)

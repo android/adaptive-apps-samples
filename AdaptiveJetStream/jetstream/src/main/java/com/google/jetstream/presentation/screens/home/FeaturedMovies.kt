@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
 import androidx.compose.foundation.style.Style
+import androidx.compose.foundation.style.contentPadding
 import androidx.compose.foundation.style.fillSize
 import androidx.compose.foundation.style.styleable
 import androidx.compose.foundation.style.then
@@ -61,14 +62,14 @@ import com.google.jetstream.presentation.theme.LocalContentPadding
  * A container composable that switches between different carousel types based on the current
  * [EngagementMode].
  *
- * @param moveList The list of movies to be displayed in the carousel.
+ * @param movieList The list of movies to be displayed in the carousel.
  * @param onMovieSelected Callback triggered when a movie in the carousel is clicked.
  * @param modifier The modifier to be applied to the layout.
  * @param style The style to be applied to the carousel.
  */
 @Composable
 fun FeaturedMovies(
-    moveList: List<Movie>,
+    movieList: List<Movie>,
     onMovieSelected: (movie: Movie) -> Unit,
     modifier: Modifier = Modifier,
     style: Style = Style,
@@ -76,7 +77,7 @@ fun FeaturedMovies(
     when (featuredMovieCarouselType()) {
         FeaturedMovieCarouselType.Featured -> {
             FeaturedMovieCarousel(
-                movieList = moveList,
+                movieList = movieList,
                 onMovieSelected = onMovieSelected,
                 modifier = modifier,
                 style = style,
@@ -85,7 +86,7 @@ fun FeaturedMovies(
 
         else -> {
             HeroMovieCarousel(
-                movieList = moveList,
+                movieList = movieList,
                 onMovieSelected = onMovieSelected,
                 modifier = modifier,
                 style = style,
@@ -159,6 +160,7 @@ fun HeroMovieCarousel(
                     .styleable(style = style)
                     .carouselNavigation(
                         state = state,
+                        itemCount = movieList.size,
                         coroutineScope = rememberCoroutineScope(),
                     ),
         ) {

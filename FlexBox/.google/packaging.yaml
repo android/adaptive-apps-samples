@@ -1,0 +1,16 @@
+title: "Adaptive layouts using FlexBox in Jetpack Compose"
+description: "A sample demonstrating how to use the FlexBox API in Jetpack Compose to build flexible, flow-based adaptive apps optimized for all form factors."
+status:       PUBLISHED
+technologies: [Android, JetpackCompose]
+categories:
+    - JetpackComposeLayouts
+languages:    [Kotlin]
+solutions:
+    - Mobile
+    - JetpackNavigation
+github:       android/adaptive-apps-samples
+level:        INTERMEDIATE
+apiRefs:
+    - android:androidx.compose.Composable
+    - android:androidx.compose.foundation.layout.FlexBox
+license: apache2

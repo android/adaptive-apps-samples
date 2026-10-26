@@ -29,10 +29,12 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
 import androidx.compose.foundation.style.Style
+import androidx.compose.foundation.style.contentPadding
 import androidx.compose.foundation.style.styleable
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.focusRestorer
@@ -122,12 +124,13 @@ private fun CastAndCrewItem(
             )
         },
         image = {
+            val castColor = remember(castMember.id) { ourColors.random() }
             Box(
                 modifier =
                     Modifier
                         .fillMaxWidth()
                         .fillMaxHeight(0.725f)
-                        .background(ourColors.random()),
+                        .background(castColor),
             )
         },
         onClick = {},

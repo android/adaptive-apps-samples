@@ -16,7 +16,6 @@
 
 package com.google.jetstream.presentation.screens.categories
 
-import androidx.lifecycle.SavedStateHandle
 import com.google.jetstream.data.repositories.FakeMovieRepository
 import com.google.jetstream.util.MainDispatcherRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -35,20 +34,9 @@ class CategoryMovieListScreenViewModelTest {
     private val movieRepository = FakeMovieRepository()
 
     @Test
-    fun uiState_whenCategoryIdMissing_isError() =
-        runTest {
-            val savedStateHandle = SavedStateHandle()
-            val viewModel = CategoryMovieListScreenViewModel(savedStateHandle, movieRepository)
-
-            val state = viewModel.uiState.first { it !is CategoryMovieListScreenUiState.Loading }
-            assertEquals(CategoryMovieListScreenUiState.Error, state)
-        }
-
-    @Test
     fun uiState_whenCategoryIdPresent_isDone() =
         runTest {
-            val savedStateHandle = SavedStateHandle(mapOf(CategoryMovieListScreen.CATEGORY_ID_BUNDLE_KEY to "cat1"))
-            val viewModel = CategoryMovieListScreenViewModel(savedStateHandle, movieRepository)
+            val viewModel = CategoryMovieListScreenViewModel("cat1", movieRepository)
 
             val state = viewModel.uiState.first { it is CategoryMovieListScreenUiState.Done }
             assertTrue(state is CategoryMovieListScreenUiState.Done)

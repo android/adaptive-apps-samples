@@ -183,7 +183,6 @@ private class AppLayoutSceneDecorator(
     @OptIn(ExperimentalGridApi::class, ExperimentalFoundationStyleApi::class)
     override val content: @Composable (() -> Unit) = {
         val layout = selectLayout()
-        val subNavigationArea = layout.subNavigationArea
         val backgroundColor = MaterialTheme.colorScheme.surface
         Grid(
             config = layout.gridConfig,
@@ -193,30 +192,22 @@ private class AppLayoutSceneDecorator(
                 },
         ) {
             Box(
-                modifier =
-                    Modifier.gridItem(
-                        column = layout.navigationArea.column,
-                        row = layout.navigationArea.row,
-                        rowSpan = layout.navigationArea.rowSpan,
-                        columnSpan = layout.navigationArea.columnSpan,
-                    ),
+                modifier = Modifier.gridItem(AppLayoutArea.Navigation),
             ) {
                 navigation()
             }
-            if (subNavigationArea != null) {
+            if (layout.hasSubNavigation) {
                 Box(
-                    modifier =
-                        Modifier.gridItem(
-                            column = subNavigationArea.column,
-                            row = subNavigationArea.row,
-                            rowSpan = subNavigationArea.rowSpan,
-                            columnSpan = subNavigationArea.columnSpan,
-                        ),
+                    modifier = Modifier.gridItem(AppLayoutArea.SubNavigation),
                 ) {
                     subNavigation()
                 }
             }
-            scene.content()
+            Box(
+                modifier = Modifier.gridItem(AppLayoutArea.Content),
+            ) {
+                scene.content()
+            }
         }
     }
 
@@ -234,17 +225,13 @@ private class AppLayoutSceneDecorator(
     }
 }
 
-// ToDo: Update with named-area.
-
 /**
  * Interface defining the grid configuration and areas for different app layouts.
  */
 @OptIn(ExperimentalGridApi::class)
 private sealed interface AppLayout {
     val gridConfig: GridConfigurationScope.() -> Unit
-    val navigationArea: GridArea
-    val subNavigationArea: GridArea?
-    val contentArea: GridArea
+    val hasSubNavigation: Boolean
 
     /**
      * Layout using a bottom navigation bar, typically for Compact.
@@ -266,10 +253,11 @@ private sealed interface AppLayout {
             row(GridTrackSize.Auto)
             row(GridTrackSize.MinMax(200.dp, 1.fr))
             row(GridTrackSize.Auto)
+            area(AppLayoutArea.SubNavigation, row = 1, column = 1)
+            area(AppLayoutArea.Content, row = 2, column = 1)
+            area(AppLayoutArea.Navigation, row = 3, column = 1)
         }
-        override val navigationArea = GridArea(row = -1, column = 1)
-        override val subNavigationArea = GridArea(row = 1, column = 1)
-        override val contentArea = GridArea(row = 2, column = 1)
+        override val hasSubNavigation: Boolean = true
     }
 
     /**
@@ -285,17 +273,17 @@ private sealed interface AppLayout {
      *   A C C C C
      */
     object NavigationRail : AppLayout {
-        override val gridConfig: GridConfigurationScope.() -> Unit
-            get() = {
-                column(GridTrackSize.Auto)
-                column(GridTrackSize.MinMax(200.dp, 1.fr))
-                row(GridTrackSize.Auto)
-                row(GridTrackSize.MinMax(200.dp, 1.fr))
-                rowGap(8.dp)
-            }
-        override val navigationArea = GridArea(column = 1, row = 1, rowSpan = 2, columnSpan = 1)
-        override val subNavigationArea = GridArea(column = 2, row = 1)
-        override val contentArea = GridArea(column = 2, row = 2)
+        override val gridConfig: GridConfigurationScope.() -> Unit = {
+            column(GridTrackSize.Auto)
+            column(GridTrackSize.MinMax(200.dp, 1.fr))
+            row(GridTrackSize.Auto)
+            row(GridTrackSize.MinMax(200.dp, 1.fr))
+            rowGap(8.dp)
+            area(AppLayoutArea.Navigation, row = 1, column = 1, rowSpan = 2, columnSpan = 1)
+            area(AppLayoutArea.SubNavigation, row = 1, column = 2)
+            area(AppLayoutArea.Content, row = 2, column = 2)
+        }
+        override val hasSubNavigation: Boolean = true
     }
 
     /**
@@ -315,22 +303,21 @@ private sealed interface AppLayout {
             column(1f)
             row(GridTrackSize.Auto)
             row(GridTrackSize.MinMax(300.dp, 1.fr))
+            area(AppLayoutArea.Navigation, row = 1, column = 1)
+            area(AppLayoutArea.Content, row = 2, column = 1)
         }
-        override val navigationArea: GridArea = GridArea(row = 1, column = 1)
-        override val subNavigationArea: GridArea? = null
-        override val contentArea: GridArea = GridArea(row = 2, column = 1)
+        override val hasSubNavigation: Boolean = false
     }
 }
 
 /**
- * Data structure describing a grid area.
+ * Named areas within [AppLayout] grids.
  */
-private data class GridArea(
-    val row: Int = 0,
-    val column: Int = 0,
-    val rowSpan: Int = 1,
-    val columnSpan: Int = 1,
-)
+private enum class AppLayoutArea {
+    Navigation,
+    SubNavigation,
+    Content,
+}
 
 private fun DpVolumeSize.Companion.from(dpSize: DpSize): DpVolumeSize {
     return DpVolumeSize(width = dpSize.width, height = dpSize.height, depth = 0.dp)

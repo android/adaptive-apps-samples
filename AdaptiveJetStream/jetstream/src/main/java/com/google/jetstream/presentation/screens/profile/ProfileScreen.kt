@@ -26,6 +26,7 @@ import androidx.compose.foundation.style.Style
 import androidx.compose.foundation.style.fillWidth
 import androidx.compose.foundation.style.focused
 import androidx.compose.foundation.style.hovered
+import androidx.compose.foundation.style.size
 import androidx.compose.foundation.style.styleable
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
@@ -44,8 +45,8 @@ import androidx.lifecycle.compose.dropUnlessResumed
 import com.google.jetstream.R
 import com.google.jetstream.presentation.app.Destination
 import com.google.jetstream.presentation.app.NavigationItem
-import com.google.jetstream.presentation.components.shim.indication.borderIndication
 import com.google.jetstream.presentation.components.shim.indication.scaleIndication
+import com.google.jetstream.presentation.theme.JetStreamTokens
 import com.google.jetstream.presentation.theme.LocalContentPadding
 
 @OptIn(ExperimentalFoundationStyleApi::class)
@@ -92,11 +93,11 @@ private fun SectionListItem(
             MutableStyleState(interactionSource = interactionSource)
         }
 
+    val borderIndication = JetStreamTokens.borderIndication()
     val defaultStyle =
-        remember {
+        remember(tintColor) {
             Style {
                 fillWidth()
-                borderIndication()
                 scaleIndication()
 
                 focused {
@@ -141,6 +142,7 @@ private fun SectionListItem(
             modifier
                 .styleable(
                     styleState = styleState,
+                    borderIndication,
                     defaultStyle,
                     style,
                 )

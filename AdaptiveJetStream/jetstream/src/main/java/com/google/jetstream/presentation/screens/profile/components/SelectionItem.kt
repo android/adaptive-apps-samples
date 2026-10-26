@@ -20,6 +20,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
 import androidx.compose.foundation.style.MutableStyleState
+import androidx.compose.foundation.style.focused
+import androidx.compose.foundation.style.hovered
 import androidx.compose.foundation.style.styleable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -27,10 +29,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemColors
 import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.dropUnlessResumed
+import com.google.jetstream.presentation.theme.JetStreamTokens
 
 @OptIn(ExperimentalFoundationStyleApi::class)
 @Composable
@@ -44,6 +48,8 @@ fun SelectionItem(
     val interactionSource = remember { MutableInteractionSource() }
     val styleState =
         remember(interactionSource) { MutableStyleState(interactionSource = interactionSource) }
+    val borderIndication = JetStreamTokens.borderIndication()
+    val tintColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
 
     ListItem(
         headlineContent = {
@@ -67,8 +73,14 @@ fun SelectionItem(
                 )
                 .styleable(
                     styleState = styleState,
-                    style = {
-                        // ToDo: add hover & focus state
+                    borderIndication,
+                    {
+                        focused {
+                            foreground(tintColor)
+                        }
+                        hovered {
+                            foreground(tintColor)
+                        }
                     },
                 ),
     )

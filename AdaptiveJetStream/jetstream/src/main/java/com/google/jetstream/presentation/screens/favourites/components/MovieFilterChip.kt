@@ -19,7 +19,6 @@ package com.google.jetstream.presentation.screens.favourites.components
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
@@ -61,6 +60,7 @@ fun MovieFilterChip(
                 ),
         onClick = { onCheckedChange(!isChecked) },
         selected = isChecked,
+        interactionSource = interactionSource,
         leadingIcon = {
             AnimatedVisibility(visible = isChecked) {
                 Icon(
@@ -74,7 +74,6 @@ fun MovieFilterChip(
         label = {
             Box(
                 contentAlignment = Alignment.Center,
-                modifier = Modifier.fillMaxWidth(),
             ) {
                 Text(
                     text = label,

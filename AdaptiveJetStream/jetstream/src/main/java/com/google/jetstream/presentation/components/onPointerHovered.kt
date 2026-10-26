@@ -16,22 +16,28 @@
 
 package com.google.jetstream.presentation.components
 
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.pointerInput
 
+@Composable
 fun Modifier.onPointerHovered(
     onEnter: () -> Unit,
     onExit: () -> Unit,
     key: String = "onPointerHovered",
 ): Modifier {
+    val currentOnEnter by rememberUpdatedState(onEnter)
+    val currentOnExit by rememberUpdatedState(onExit)
     return pointerInput(key) {
         awaitPointerEventScope {
             while (true) {
                 val event = awaitPointerEvent()
                 when (event.type) {
-                    PointerEventType.Enter -> onEnter()
-                    PointerEventType.Exit -> onExit()
+                    PointerEventType.Enter -> currentOnEnter()
+                    PointerEventType.Exit -> currentOnExit()
                     else -> Unit
                 }
             }

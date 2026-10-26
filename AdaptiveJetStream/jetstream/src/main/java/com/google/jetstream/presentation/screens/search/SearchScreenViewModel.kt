@@ -22,10 +22,9 @@ import androidx.lifecycle.viewModelScope
 import com.google.jetstream.data.entities.Movie
 import com.google.jetstream.data.repositories.MovieRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -35,61 +34,29 @@ class SearchScreenViewModel
     constructor(
         private val movieRepository: MovieRepository,
     ) : ViewModel() {
-        private val searchCommandFlow = MutableSharedFlow<SearchCommand>()
         private var searchText = TextFieldValue("")
 
-        private val internalSearchState =
-            searchCommandFlow.map { command ->
-                when (command) {
-                    is SearchCommand.StartSearch -> {
-                        SearchState.Searching
-                    }
-
-                    is SearchCommand.UpdateSearchText -> {
-                        searchText = command.textFieldValue
-                        SearchState.Ready(searchText, emptyList())
-                    }
-
-                    is SearchCommand.SearchDone -> {
-                        SearchState.Ready(searchText, command.movieList)
-                    }
-                }
-            }
+        private val _searchState =
+            MutableStateFlow<SearchState>(SearchState.Ready(TextFieldValue(""), emptyList()))
+        val searchState: StateFlow<SearchState> = _searchState.asStateFlow()
 
         fun query() {
-            viewModelScope.launch { postQuery(searchText) }
+            val currentText = searchText
+            viewModelScope.launch {
+                _searchState.value = SearchState.Searching
+                val result = movieRepository.searchMovies(query = currentText.text)
+                _searchState.value = SearchState.Ready(searchText, result)
+            }
         }
 
         fun updateSearchText(textFieldValue: TextFieldValue) {
-            viewModelScope.launch {
-                searchCommandFlow.emit(SearchCommand.UpdateSearchText(textFieldValue))
-            }
+            searchText = textFieldValue
+            _searchState.value = SearchState.Ready(textFieldValue, emptyList())
         }
-
-        private suspend fun postQuery(textFieldValue: TextFieldValue) {
-            searchCommandFlow.emit(SearchCommand.StartSearch)
-            val result = movieRepository.searchMovies(query = textFieldValue.text)
-            searchCommandFlow.emit(SearchCommand.SearchDone(result))
-        }
-
-        val searchState =
-            internalSearchState.stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5_000),
-                initialValue = SearchState.Ready(TextFieldValue(""), emptyList()),
-            )
     }
 
 sealed interface SearchState {
     data object Searching : SearchState
 
     data class Ready(val textFieldValue: TextFieldValue, val movieList: List<Movie>) : SearchState
-}
-
-sealed interface SearchCommand {
-    data object StartSearch : SearchCommand
-
-    data class UpdateSearchText(val textFieldValue: TextFieldValue) : SearchCommand
-
-    data class SearchDone(val movieList: List<Movie>) : SearchCommand
 }

@@ -16,12 +16,15 @@
 
 package com.google.jetstream.presentation.screens.home
 
+import androidx.compose.ui.ComposeUiFlags
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import com.google.jetstream.data.entities.Movie
 import com.google.jetstream.data.util.StringConstants
 import com.google.jetstream.presentation.theme.JetStreamTheme
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -33,6 +36,12 @@ import org.robolectric.annotation.Config
 class HomeScreenTest {
     @get:Rule
     val composeTestRule = createComposeRule()
+
+    @OptIn(ExperimentalComposeUiApi::class)
+    @Before
+    fun setUp() {
+        ComposeUiFlags.isMediaQueryIntegrationEnabled = true
+    }
 
     private val testMovie =
         Movie(

@@ -44,7 +44,6 @@ import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.input.key.type
-import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -91,6 +90,7 @@ fun SearchScreen(
                 searchMovies = searchScreenViewModel::query,
                 updateSearchText = searchScreenViewModel::updateSearchText,
                 onMovieClick = onMovieClick,
+                lazyColumnState = lazyColumnState,
             )
         }
     }
@@ -144,7 +144,11 @@ internal fun SearchResult(
                                     }
 
                                     Key.DirectionDown -> {
-                                        focusManager.moveFocus(FocusDirection.Down)
+                                        if (movieList.isNotEmpty()) {
+                                            searchResult.requestFocus()
+                                        } else {
+                                            focusManager.moveFocus(FocusDirection.Down)
+                                        }
                                         true
                                     }
 
@@ -169,7 +173,11 @@ internal fun SearchResult(
                     KeyboardActions(
                         onSearch = {
                             searchMovies()
-                            focusManager.moveFocus(FocusDirection.Down)
+                            if (movieList.isNotEmpty()) {
+                                searchResult.requestFocus()
+                            } else {
+                                focusManager.moveFocus(FocusDirection.Down)
+                            }
                         },
                     ),
                 maxLines = 1,
@@ -185,8 +193,7 @@ internal fun SearchResult(
                     Modifier
                         .fillMaxSize()
                         .padding(top = contentPadding.top * 2)
-                        .focusRequester(searchResult)
-                        .onPlaced { searchResult.requestFocus() },
+                        .focusRequester(searchResult),
                 title = "",
                 movieList = movieList,
                 onMovieSelected = onMovieClick,

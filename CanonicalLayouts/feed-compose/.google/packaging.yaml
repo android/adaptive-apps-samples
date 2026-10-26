@@ -1,0 +1,15 @@
+title: "Feed canonical layout using Jetpack Compose"
+description: "A sample demonstrating how to implement a Feed canonical layout using Jetpack Compose, adapting the grid structure based on WindowSizeClass."
+status:       PUBLISHED
+technologies: [Android, JetpackCompose]
+categories:
+    - JetpackComposeLayouts
+languages:    [Kotlin]
+solutions:
+    - Mobile
+github:       android/adaptive-apps-samples
+level:        INTERMEDIATE
+apiRefs:
+    - android:androidx.compose.material3.windowsizeclass.WindowSizeClass
+    - android:androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
+license: apache2
