@@ -25,7 +25,6 @@ import com.google.jetstream.data.entities.Movie
 import com.google.jetstream.data.repositories.FakeMovieRepository
 import com.google.jetstream.data.util.StringConstants
 import com.google.jetstream.presentation.theme.JetStreamTheme
-import com.google.jetstream.util.MainDispatcherRule
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Rule
@@ -39,9 +38,6 @@ import org.robolectric.annotation.Config
 class FavouritesScreenTest {
     @get:Rule
     val composeTestRule = createComposeRule()
-
-    @get:Rule
-    val mainDispatcherRule = MainDispatcherRule()
 
     private val testMovies =
         List(29) { index ->

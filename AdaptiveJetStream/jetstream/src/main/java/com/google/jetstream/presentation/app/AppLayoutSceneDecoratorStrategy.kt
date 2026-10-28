@@ -40,10 +40,10 @@ import androidx.navigation3.scene.SceneDecoratorStrategy
 import androidx.navigation3.scene.SceneDecoratorStrategyScope
 import androidx.xr.compose.material3.ExperimentalMaterial3XrApi
 import androidx.xr.compose.spatial.Subspace
-import androidx.xr.compose.subspace.ResizePolicy
 import androidx.xr.compose.subspace.SpatialPanel
 import androidx.xr.compose.subspace.layout.SubspaceModifier
 import androidx.xr.compose.subspace.layout.movable
+import androidx.xr.compose.subspace.layout.resizable
 import androidx.xr.compose.unit.DpVolumeSize
 import com.google.jetstream.presentation.components.feature.EngagementMode
 import com.google.jetstream.presentation.components.feature.LocalEngagementMode
@@ -119,21 +119,18 @@ private class SpatialAppLayoutSceneDecorator(
 
     @OptIn(ExperimentalMaterial3XrApi::class)
     override val content: @Composable (() -> Unit) = {
-
-        val resizePolicy =
-            remember {
-                ResizePolicy(
-                    minimumSize = DpVolumeSize.from(JetStreamTokens.LeanbackWindowSize),
-                )
-            }
         val presentationType = scene.metadata[PresentationType.PresentationTypeKey]
 
         val isNavigationVisible = presentationType != PresentationType.Overlay
 
         Subspace {
             SpatialPanel(
-                resizePolicy = resizePolicy,
-                modifier = SubspaceModifier.movable(),
+                modifier =
+                    SubspaceModifier
+                        .movable()
+                        .resizable(
+                            minimumSize = DpVolumeSize.from(JetStreamTokens.LeanbackWindowSize),
+                        ),
             ) {
                 Surface {
                     MainPanel(
