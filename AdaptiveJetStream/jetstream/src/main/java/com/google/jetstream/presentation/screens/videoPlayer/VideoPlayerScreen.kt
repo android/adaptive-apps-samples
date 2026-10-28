@@ -233,11 +233,11 @@ private fun VideoPlayer(
                     action = {
                         when (engagementMode) {
                             is EngagementMode.Spatial -> {
-                                session?.scene?.requestHomeSpaceMode()
+                                session?.scene?.requestHomeSpace()
                             }
 
                             is EngagementMode.Enclosed -> {
-                                session?.scene?.requestFullSpaceMode()
+                                session?.scene?.requestFullSpace()
                             }
 
                             else -> {

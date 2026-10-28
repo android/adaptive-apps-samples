@@ -26,7 +26,6 @@ import com.google.jetstream.data.repositories.FakeMovieRepository
 import com.google.jetstream.presentation.components.feature.EngagementMode
 import com.google.jetstream.presentation.components.feature.LocalEngagementMode
 import com.google.jetstream.presentation.theme.JetStreamTheme
-import com.google.jetstream.util.MainDispatcherRule
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
@@ -39,9 +38,6 @@ import org.robolectric.annotation.Config
 class CategoriesScreenTest {
     @get:Rule
     val composeTestRule = createComposeRule()
-
-    @get:Rule
-    val mainDispatcherRule = MainDispatcherRule()
 
     private val testCategories =
         listOf(

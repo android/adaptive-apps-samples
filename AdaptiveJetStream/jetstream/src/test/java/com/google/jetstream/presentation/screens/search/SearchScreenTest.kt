@@ -23,7 +23,6 @@ import androidx.compose.ui.text.input.TextFieldValue
 import com.google.jetstream.data.entities.Movie
 import com.google.jetstream.data.repositories.FakeMovieRepository
 import com.google.jetstream.presentation.theme.JetStreamTheme
-import com.google.jetstream.util.MainDispatcherRule
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -35,9 +34,6 @@ import org.robolectric.annotation.Config
 class SearchScreenTest {
     @get:Rule
     val composeTestRule = createComposeRule()
-
-    @get:Rule
-    val mainDispatcherRule = MainDispatcherRule()
 
     private val testMovie =
         Movie(

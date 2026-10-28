@@ -26,7 +26,6 @@ import com.google.jetstream.data.repositories.FakeMovieRepository
 import com.google.jetstream.data.util.StringConstants
 import com.google.jetstream.presentation.components.Loading
 import com.google.jetstream.presentation.theme.JetStreamTheme
-import com.google.jetstream.util.MainDispatcherRule
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -38,9 +37,6 @@ import org.robolectric.annotation.Config
 class ShowsScreenTest {
     @get:Rule
     val composeTestRule = createComposeRule()
-
-    @get:Rule
-    val mainDispatcherRule = MainDispatcherRule()
 
     private val testMovie =
         Movie(

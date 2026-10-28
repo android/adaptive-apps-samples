@@ -200,7 +200,7 @@ object DefaultNavigation : JetStreamAppNavigation {
         NavigationRailItem(
             selected = false,
             onClick = {
-                session?.scene?.requestFullSpaceMode()
+                session?.scene?.requestFullSpace()
             },
             icon = {
                 Icon(
@@ -295,7 +295,7 @@ object SpatialNavigation : JetStreamAppNavigation {
         if (session != null) {
             NavigationRailItem(
                 selected = false,
-                onClick = { session.scene.requestHomeSpaceMode() },
+                onClick = { session.scene.requestHomeSpace() },
                 icon = {
                     Icon(
                         imageVector = ImageVector.vectorResource(R.drawable.ic_collapse_content),
