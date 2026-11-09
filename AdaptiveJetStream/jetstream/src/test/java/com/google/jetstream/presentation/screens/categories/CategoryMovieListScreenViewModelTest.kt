@@ -16,7 +16,6 @@
 
 package com.google.jetstream.presentation.screens.categories
 
-import androidx.lifecycle.SavedStateHandle
 import com.google.jetstream.data.repositories.FakeMovieRepository
 import com.google.jetstream.util.MainDispatcherRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -29,28 +28,18 @@ import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class CategoryMovieListScreenViewModelTest {
-
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 
     private val movieRepository = FakeMovieRepository()
 
     @Test
-    fun uiState_whenCategoryIdMissing_isError() = runTest {
-        val savedStateHandle = SavedStateHandle()
-        val viewModel = CategoryMovieListScreenViewModel(savedStateHandle, movieRepository)
-        
-        val state = viewModel.uiState.first { it !is CategoryMovieListScreenUiState.Loading }
-        assertEquals(CategoryMovieListScreenUiState.Error, state)
-    }
+    fun uiState_whenCategoryIdPresent_isDone() =
+        runTest {
+            val viewModel = CategoryMovieListScreenViewModel("cat1", movieRepository)
 
-    @Test
-    fun uiState_whenCategoryIdPresent_isDone() = runTest {
-        val savedStateHandle = SavedStateHandle(mapOf(CategoryMovieListScreen.CategoryIdBundleKey to "cat1"))
-        val viewModel = CategoryMovieListScreenViewModel(savedStateHandle, movieRepository)
-        
-        val state = viewModel.uiState.first { it is CategoryMovieListScreenUiState.Done }
-        assertTrue(state is CategoryMovieListScreenUiState.Done)
-        assertEquals("cat1", (state as CategoryMovieListScreenUiState.Done).movieCategoryDetails.id)
-    }
+            val state = viewModel.uiState.first { it is CategoryMovieListScreenUiState.Done }
+            assertTrue(state is CategoryMovieListScreenUiState.Done)
+            assertEquals("cat1", (state as CategoryMovieListScreenUiState.Done).movieCategoryDetails.id)
+        }
 }

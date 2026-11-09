@@ -23,24 +23,25 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class MovieCategoryDataSourceTest {
-
     private val fakeAssetReader = FakeAssetReader()
     private val dataSource = MovieCategoryDataSource(fakeAssetReader)
 
     @Test
-    fun getMovieCategoryList_returnsItems() = runTest {
-        val json = """
-            [
-              {
-                "id": "1",
-                "name": "Action"
-              }
-            ]
-        """.trimIndent()
-        fakeAssetReader.setResponse(StringConstants.Assets.MovieCategories, json)
+    fun getMovieCategoryList_returnsItems() =
+        runTest {
+            val json =
+                """
+                [
+                  {
+                    "id": "1",
+                    "name": "Action"
+                  }
+                ]
+                """.trimIndent()
+            fakeAssetReader.setResponse(StringConstants.Assets.MovieCategories, json)
 
-        val categories = dataSource.getMovieCategoryList()
-        assertEquals(1, categories.size)
-        assertEquals("Action", categories[0].name)
-    }
+            val categories = dataSource.getMovieCategoryList()
+            assertEquals(1, categories.size)
+            assertEquals("Action", categories[0].name)
+        }
 }

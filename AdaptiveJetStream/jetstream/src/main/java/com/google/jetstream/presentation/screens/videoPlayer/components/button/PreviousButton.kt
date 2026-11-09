@@ -39,6 +39,6 @@ fun PreviousButton(
         onClick = state::onClick,
         enabled = state.isEnabled,
         contentDescription = StringConstants.Composable.VideoPlayerControlSkipPreviousButton,
-        modifier = modifier
+        modifier = modifier,
     )
 }

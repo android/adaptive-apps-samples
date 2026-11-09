@@ -22,18 +22,23 @@ import com.google.jetstream.data.util.AssetReader
 import com.google.jetstream.data.util.StringConstants
 import javax.inject.Inject
 
-class TvDataSource @Inject constructor(
-    assetsReader: AssetReader
-) {
-    private val mostPopularTvShowsReader = CachedDataReader {
-        readMovieData(assetsReader, StringConstants.Assets.MostPopularTVShows)
-    }
+class TvDataSource
+    @Inject
+    constructor(
+        assetsReader: AssetReader,
+    ) {
+        private val mostPopularTvShowsReader =
+            CachedDataReader {
+                readMovieData(assetsReader, StringConstants.Assets.MostPopularTVShows)
+            }
 
-    suspend fun getTvShowList() = mostPopularTvShowsReader.read().subList(0, 5).map {
-        it.toMovie(ThumbnailType.Long)
-    }
+        suspend fun getTvShowList() =
+            mostPopularTvShowsReader.read().subList(0, 5).map {
+                it.toMovie(ThumbnailType.Long)
+            }
 
-    suspend fun getBingeWatchDramaList() = mostPopularTvShowsReader.read().subList(6, 15).map {
-        it.toMovie()
+        suspend fun getBingeWatchDramaList() =
+            mostPopularTvShowsReader.read().subList(6, 15).map {
+                it.toMovie()
+            }
     }
-}

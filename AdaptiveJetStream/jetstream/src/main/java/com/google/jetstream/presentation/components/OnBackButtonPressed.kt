@@ -24,11 +24,12 @@ import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.input.key.type
 
 fun Modifier.onBackButtonPressed(
+    enabled: Boolean = true,
     onBackPressed: () -> Unit,
 ): Modifier {
     return Modifier
         .onPreviewKeyEvent {
-            if (it.key == Key.Back && it.type == KeyEventType.KeyUp) {
+            if (enabled && it.key == Key.Back && it.type == KeyEventType.KeyUp) {
                 onBackPressed()
                 true
             } else {

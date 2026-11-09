@@ -33,19 +33,17 @@ class JetStreamApplication : Application()
 @InstallIn(SingletonComponent::class)
 @Module
 abstract class MovieRepositoryModule {
-
     @Binds
     abstract fun bindMovieRepository(
-        movieRepositoryImpl: MovieRepositoryImpl
+        movieRepositoryImpl: MovieRepositoryImpl,
     ): MovieRepository
 }
 
 @InstallIn(SingletonComponent::class)
 @Module
 abstract class AssetReaderModule {
-
     @Binds
     abstract fun bindAssetReader(
-        assetsReader: AssetsReader
+        assetsReader: AssetsReader,
     ): AssetReader
 }

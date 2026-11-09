@@ -1,5 +1,3 @@
-import com.android.build.api.dsl.ManagedVirtualDevice
-
 /*
  * Copyright 2023 Google LLC
  *
@@ -16,25 +14,30 @@ import com.android.build.api.dsl.ManagedVirtualDevice
  * limitations under the License.
  */
 
+import com.android.build.api.dsl.ManagedVirtualDevice
+import com.android.build.api.dsl.TestExtension
+
 plugins {
     alias(libs.plugins.android.test)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.androidx.baselineprofile)
 }
 
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(21)
+    compilerOptions {
+        languageVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_3
+    }
 }
 
-android {
+configure<TestExtension> {
     namespace = "com.google.jetstream.benchmark"
-    compileSdk = 35
+    compileSdk = 37
 
     defaultConfig {
         minSdk = 28
-        targetSdk = 35
+        targetSdk = 37
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments["androidx.benchmark.suppressErrors"] = "EMULATOR"
@@ -45,11 +48,15 @@ android {
         buildConfig = true
     }
 
-    testOptions.managedDevices.devices {
-        create<ManagedVirtualDevice>("tvApi34") {
-            device = "Television (1080p)"
-            apiLevel = 34
-            systemImageSource = "aosp"
+    testOptions {
+        managedDevices {
+            allDevices {
+                create<ManagedVirtualDevice>("tvApi34") {
+                    device = "Television (1080p)"
+                    apiLevel = 34
+                    systemImageSource = "aosp"
+                }
+            }
         }
     }
 

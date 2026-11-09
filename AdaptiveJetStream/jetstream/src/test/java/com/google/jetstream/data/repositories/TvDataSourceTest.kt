@@ -23,43 +23,44 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class TvDataSourceTest {
-
     private val fakeAssetReader = FakeAssetReader()
     private val tvDataSource = TvDataSource(fakeAssetReader)
 
     @Test
-    fun getTvShowList_returnsItems() = runTest {
-        val item = """
-            {
-              "id": "1",
-              "sources": [],
-              "subtitleUri": "",
-              "rank": 1,
-              "rankUpDown": "",
-              "title": "Show 1",
-              "fullTitle": "Show 1",
-              "year": 2021,
-              "releaseDate": "",
-              "image_16_9": "",
-              "image_2_3": "",
-              "runtimeMins": 120,
-              "runtimeStr": "",
-              "plot": "",
-              "contentRating": "",
-              "rating": 8.0,
-              "ratingCount": 1000,
-              "metaCriticRating": 80,
-              "genres": "",
-              "directors": "",
-              "stars": ""
-            }
-        """.trimIndent()
-        // We need at least 5 items for subList(0, 5) to work
-        val json = "[$item, $item, $item, $item, $item]"
-        fakeAssetReader.setResponse(StringConstants.Assets.MostPopularTVShows, json)
+    fun getTvShowList_returnsItems() =
+        runTest {
+            val item =
+                """
+                {
+                  "id": "1",
+                  "sources": [],
+                  "subtitleUri": "",
+                  "rank": 1,
+                  "rankUpDown": "",
+                  "title": "Show 1",
+                  "fullTitle": "Show 1",
+                  "year": 2021,
+                  "releaseDate": "",
+                  "image_16_9": "",
+                  "image_2_3": "",
+                  "runtimeMins": 120,
+                  "runtimeStr": "",
+                  "plot": "",
+                  "contentRating": "",
+                  "rating": 8.0,
+                  "ratingCount": 1000,
+                  "metaCriticRating": 80,
+                  "genres": "",
+                  "directors": "",
+                  "stars": ""
+                }
+                """.trimIndent()
+            // We need at least 5 items for subList(0, 5) to work
+            val json = "[$item, $item, $item, $item, $item]"
+            fakeAssetReader.setResponse(StringConstants.Assets.MostPopularTVShows, json)
 
-        val shows = tvDataSource.getTvShowList()
-        assertEquals(5, shows.size)
-        assertEquals("Show 1", shows[0].name)
-    }
+            val shows = tvDataSource.getTvShowList()
+            assertEquals(5, shows.size)
+            assertEquals("Show 1", shows[0].name)
+        }
 }

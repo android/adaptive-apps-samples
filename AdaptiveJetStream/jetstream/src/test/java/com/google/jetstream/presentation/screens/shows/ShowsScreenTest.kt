@@ -16,9 +16,9 @@
 
 package com.google.jetstream.presentation.screens.shows
 
+import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.hasScrollAction
-import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onRoot
 import com.google.jetstream.data.entities.Movie
@@ -26,7 +26,6 @@ import com.google.jetstream.data.repositories.FakeMovieRepository
 import com.google.jetstream.data.util.StringConstants
 import com.google.jetstream.presentation.components.Loading
 import com.google.jetstream.presentation.theme.JetStreamTheme
-import com.google.jetstream.util.MainDispatcherRule
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -36,21 +35,18 @@ import org.robolectric.annotation.Config
 @RunWith(RobolectricTestRunner::class)
 @Config(qualifiers = "w1280dp-h800dp")
 class ShowsScreenTest {
-
     @get:Rule
     val composeTestRule = createComposeRule()
 
-    @get:Rule
-    val mainDispatcherRule = MainDispatcherRule()
-
-    private val testMovie = Movie(
-        id = "1",
-        sources = emptyMap(),
-        subtitleUri = null,
-        posterUri = "",
-        name = "Show Name",
-        description = "Show Description"
-    )
+    private val testMovie =
+        Movie(
+            id = "1",
+            sources = emptyMap(),
+            subtitleUri = null,
+            posterUri = "",
+            name = "Show Name",
+            description = "Show Description",
+        )
     private val tvShowList = List(5) { testMovie.copy(id = "tv_$it", name = "TV Show $it") }
     private val bingeWatchDramaList = List(5) { testMovie.copy(id = "drama_$it", name = "Drama $it") }
 
@@ -63,7 +59,7 @@ class ShowsScreenTest {
                     bingeWatchDramaList = bingeWatchDramaList,
                     onTVShowClick = { _ -> },
                     onScroll = { _ -> },
-                    isTopBarVisible = true
+                    isTopBarVisible = true,
                 )
             }
         }
@@ -82,7 +78,7 @@ class ShowsScreenTest {
                     bingeWatchDramaList = bingeWatchDramaList,
                     onTVShowClick = { _ -> },
                     onScroll = { _ -> },
-                    isTopBarVisible = true
+                    isTopBarVisible = true,
                 )
             }
         }
@@ -90,7 +86,7 @@ class ShowsScreenTest {
         composeTestRule
             .onNodeWithText("Drama 0")
             .assertIsDisplayed()
-        
+
         composeTestRule
             .onNodeWithText("Drama 4")
             .assertIsDisplayed()
@@ -105,7 +101,7 @@ class ShowsScreenTest {
                     bingeWatchDramaList = bingeWatchDramaList,
                     onTVShowClick = { _ -> },
                     onScroll = { _ -> },
-                    isTopBarVisible = true
+                    isTopBarVisible = true,
                 )
             }
         }
@@ -127,7 +123,7 @@ class ShowsScreenTest {
                     onTVShowClick = {},
                     onScroll = {},
                     isTopBarVisible = true,
-                    showScreenViewModel = viewModel
+                    showScreenViewModel = viewModel,
                 )
             }
         }
@@ -137,6 +133,7 @@ class ShowsScreenTest {
             .assertIsDisplayed()
     }
 
+    @OptIn(ExperimentalFoundationStyleApi::class)
     @Test
     fun loading_isDisplayed() {
         composeTestRule.setContent {

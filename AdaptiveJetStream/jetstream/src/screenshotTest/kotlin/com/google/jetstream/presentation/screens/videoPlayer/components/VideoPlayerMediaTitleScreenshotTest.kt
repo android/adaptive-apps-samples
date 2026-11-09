@@ -33,7 +33,7 @@ fun VideoPlayerMediaTitlePreviewSeriesScreenshot() {
                 title = "True Detective",
                 secondaryText = "S1E5",
                 tertiaryText = "The Secret Fate Of All Life",
-                type = VideoPlayerMediaTitleType.DEFAULT
+                type = VideoPlayerMediaTitleType.DEFAULT,
             )
         }
     }
@@ -49,7 +49,7 @@ fun VideoPlayerMediaTitlePreviewLiveScreenshot() {
                 title = "MacLaren Reveal Their 2022 Car: The MCL36",
                 secondaryText = "Formula 1",
                 tertiaryText = "54K watching now",
-                type = VideoPlayerMediaTitleType.LIVE
+                type = VideoPlayerMediaTitleType.LIVE,
             )
         }
     }
@@ -65,7 +65,7 @@ fun VideoPlayerMediaTitlePreviewAdScreenshot() {
                 title = "Samsung Galaxy Note20 | Ultra 5G",
                 secondaryText = "Get the most powerful Note yet",
                 tertiaryText = "",
-                type = VideoPlayerMediaTitleType.AD
+                type = VideoPlayerMediaTitleType.AD,
             )
         }
     }

@@ -30,6 +30,6 @@ fun VideoPlayerControllerText(text: String) {
         modifier = Modifier.padding(horizontal = 12.dp),
         text = text,
         color = MaterialTheme.colorScheme.onSurface,
-        fontWeight = FontWeight.SemiBold
+        fontWeight = FontWeight.SemiBold,
     )
 }

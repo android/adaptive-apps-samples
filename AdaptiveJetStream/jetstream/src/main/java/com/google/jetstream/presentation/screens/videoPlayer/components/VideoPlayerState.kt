@@ -52,77 +52,89 @@ class VideoPlayerState internal constructor(
     }
 
     private fun hideControls() {
-        val operation = if (player.isPlaying) {
-            ControlsHideOperation.Hide
-        } else {
-            ControlsHideOperation.Cancel
-        }
+        val operation =
+            if (player.isPlaying) {
+                ControlsHideOperation.Hide
+            } else {
+                ControlsHideOperation.Cancel
+            }
         channel.trySend(operation)
     }
 
     private val channel = Channel<ControlsHideOperation>(CONFLATED)
 
-    private val playerEventFlow = callbackFlow {
-        val listener = @UnstableApi
-        object : Player.Listener {
-            override fun onIsPlayingChanged(isPlaying: Boolean) {
-                val event = if (isPlaying) {
-                    PlayerEvent.Started
-                } else {
-                    PlayerEvent.Paused
+    private val playerEventFlow =
+        callbackFlow {
+            val listener = @UnstableApi
+            object : Player.Listener {
+                override fun onIsPlayingChanged(isPlaying: Boolean) {
+                    val event =
+                        if (isPlaying) {
+                            PlayerEvent.Started
+                        } else {
+                            PlayerEvent.Paused
+                        }
+                    trySend(event)
                 }
-                trySend(event)
-            }
 
-            override fun onVideoSizeChanged(videoSize: VideoSize) {
-                val event = if (videoSize.width > 0 && videoSize.height > 0) {
-                    PlayerEvent.SizeChanged(videoSize)
-                } else {
-                    PlayerEvent.SizeUnknown
+                override fun onVideoSizeChanged(videoSize: VideoSize) {
+                    val event =
+                        if (videoSize.width > 0 && videoSize.height > 0) {
+                            PlayerEvent.SizeChanged(videoSize)
+                        } else {
+                            PlayerEvent.SizeUnknown
+                        }
+                    trySend(event)
                 }
-                trySend(event)
+            }
+            player.addListener(listener)
+
+            awaitClose {
+                player.removeListener(listener)
+            }
+        }.onEach {
+            when (it) {
+                PlayerEvent.Started -> {
+                    hideControls()
+                }
+
+                PlayerEvent.Paused -> {
+                    showControls()
+                }
+
+                else -> {}
             }
         }
-        player.addListener(listener)
 
-        awaitClose {
-            player.removeListener(listener)
+    val videoSize =
+        playerEventFlow.filter {
+            it is PlayerEvent.SizeChanged || it == PlayerEvent.SizeUnknown
+        }.map { event ->
+            when (event) {
+                is PlayerEvent.SizeChanged -> Size.from(event)
+                else -> Size(1920f, 1080f)
+            }
         }
-    }.onEach {
-        when (it) {
-            PlayerEvent.Started -> hideControls()
-            PlayerEvent.Paused -> showControls()
-            else -> {}
-        }
-    }
-
-    val videoSize = playerEventFlow.filter {
-        it is PlayerEvent.SizeChanged || it == PlayerEvent.SizeUnknown
-    }.map { event ->
-        when (event) {
-            is PlayerEvent.SizeChanged -> Size.from(event)
-            else -> Size(1920f, 1080f)
-        }
-    }
 
     suspend fun observe() {
         channel
             .consumeAsFlow()
             .collectLatest { operation ->
-                isControlsVisible = if (isTabletopMode) {
-                    true
-                } else {
-                    when (operation) {
-                        ControlsHideOperation.Hide -> {
-                            delay(hideSeconds * 1000L)
-                            false
-                        }
+                isControlsVisible =
+                    if (isTabletopMode) {
+                        true
+                    } else {
+                        when (operation) {
+                            ControlsHideOperation.Hide -> {
+                                delay(hideSeconds * 1000L)
+                                false
+                            }
 
-                        ControlsHideOperation.Cancel -> {
-                            true
+                            ControlsHideOperation.Cancel -> {
+                                true
+                            }
                         }
                     }
-                }
             }
     }
 }
@@ -155,11 +167,13 @@ fun rememberVideoPlayerState(
 
 private sealed interface PlayerEvent {
     data object Paused : PlayerEvent
+
     data object Started : PlayerEvent
+
     data class SizeChanged(val size: VideoSize) : PlayerEvent
+
     data object SizeUnknown : PlayerEvent
 }
-
 
 private fun Size.Companion.from(event: PlayerEvent.SizeChanged): Size {
     return Size.from(event.size)
@@ -168,7 +182,7 @@ private fun Size.Companion.from(event: PlayerEvent.SizeChanged): Size {
 private fun Size.Companion.from(videoSize: VideoSize): Size {
     return Size(
         width = videoSize.width.toFloat(),
-        height = videoSize.height.toFloat()
+        height = videoSize.height.toFloat(),
     )
 }
 

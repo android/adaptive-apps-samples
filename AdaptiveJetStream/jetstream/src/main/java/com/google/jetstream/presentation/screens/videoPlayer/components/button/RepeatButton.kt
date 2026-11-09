@@ -45,21 +45,23 @@ fun RepeatButton(
     val color = LocalContentColor.current
 
     VideoPlayerControlsIcon(
-        icon = when (repeatMode) {
-            Player.REPEAT_MODE_ONE -> Icons.Default.RepeatOne
-            else -> Icons.Default.Repeat
-        },
+        icon =
+            when (repeatMode) {
+                Player.REPEAT_MODE_ONE -> Icons.Default.RepeatOne
+                else -> Icons.Default.Repeat
+            },
         contentDescription = contentDescription,
         onClick = state::onClick,
-        modifier = modifier.drawBehind {
-            if (isRepeating) {
-                val radius = 2.dp.toPx()
-                drawCircle(
-                    color = color,
-                    radius = radius,
-                    center = Offset((size.width - radius) / 2, size.height - radius * 3)
-                )
-            }
-        }
+        modifier =
+            modifier.drawBehind {
+                if (isRepeating) {
+                    val radius = 2.dp.toPx()
+                    drawCircle(
+                        color = color,
+                        radius = radius,
+                        center = Offset((size.width - radius) / 2, size.height - radius * 3),
+                    )
+                }
+            },
     )
 }

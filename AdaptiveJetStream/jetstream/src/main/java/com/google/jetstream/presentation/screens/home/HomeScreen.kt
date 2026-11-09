@@ -16,19 +16,29 @@
 
 package com.google.jetstream.presentation.screens.home
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.focusGroup
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.gestures.LocalBringIntoViewSpec
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
+import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
+import androidx.compose.foundation.style.contentPadding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
@@ -42,15 +52,18 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.jetstream.data.entities.Movie
-import com.google.jetstream.data.entities.MovieList
 import com.google.jetstream.data.util.StringConstants
 import com.google.jetstream.presentation.components.Error
 import com.google.jetstream.presentation.components.Loading
 import com.google.jetstream.presentation.components.MoviesRow
-import com.google.jetstream.presentation.components.shim.tryRequestFocus
+import com.google.jetstream.presentation.components.NoScrollSpec
+import com.google.jetstream.presentation.components.feature.EngagementMode
+import com.google.jetstream.presentation.components.feature.LocalEngagementMode
+import com.google.jetstream.presentation.theme.JetStreamTokens
 import com.google.jetstream.presentation.theme.LocalContentPadding
 import com.google.jetstream.presentation.theme.LocalFeaturedCarouselHeight
 
+@OptIn(ExperimentalFoundationStyleApi::class)
 @Composable
 fun HomeScreen(
     onMovieClick: (movie: Movie) -> Unit,
@@ -76,26 +89,30 @@ fun HomeScreen(
             )
         }
 
-        is HomeScreenUiState.Loading -> Loading(modifier = Modifier.fillMaxSize())
-        is HomeScreenUiState.Error -> Error(modifier = Modifier.fillMaxSize())
+        is HomeScreenUiState.Loading -> {
+            Loading()
+        }
+
+        is HomeScreenUiState.Error -> {
+            Error(modifier = Modifier.fillMaxSize())
+        }
     }
 }
 
+@OptIn(ExperimentalFoundationStyleApi::class, ExperimentalFoundationApi::class)
 @Composable
 internal fun Catalog(
-    featuredMovies: MovieList,
-    trendingMovies: MovieList,
-    top10Movies: MovieList,
-    nowPlayingMovies: MovieList,
+    featuredMovies: List<Movie>,
+    trendingMovies: List<Movie>,
+    top10Movies: List<Movie>,
+    nowPlayingMovies: List<Movie>,
     onMovieClick: (movie: Movie) -> Unit,
     onScroll: (isTopBarVisible: Boolean) -> Unit,
     goToVideoPlayer: (movie: Movie) -> Unit,
     modifier: Modifier = Modifier,
     isTopBarVisible: Boolean = true,
 ) {
-
     val lazyListState = rememberLazyListState()
-    val contentPadding = LocalContentPadding.current
 
     val shouldShowTopBar by remember {
         derivedStateOf {
@@ -104,6 +121,13 @@ internal fun Catalog(
         }
     }
 
+    var isScrollLocked by remember { mutableStateOf(false) }
+    val currentBringIntoViewSpec =
+        if (isScrollLocked) {
+            NoScrollSpec
+        } else {
+            LocalBringIntoViewSpec.current
+        }
     LaunchedEffect(shouldShowTopBar) {
         onScroll(shouldShowTopBar)
     }
@@ -111,37 +135,102 @@ internal fun Catalog(
         if (isTopBarVisible) lazyListState.animateScrollToItem(0)
     }
 
+    CompositionLocalProvider(
+        LocalBringIntoViewSpec provides currentBringIntoViewSpec,
+    ) {
+        Catalog(
+            featuredMovies = featuredMovies,
+            trendingMovies = trendingMovies,
+            top10Movies = top10Movies,
+            nowPlayingMovies = nowPlayingMovies,
+            lazyListState = lazyListState,
+            onMovieClick = onMovieClick,
+            goToVideoPlayer = goToVideoPlayer,
+            modifier = modifier,
+            onExpanded = {
+                isScrollLocked = true
+            },
+            onCollapsed = {
+                isScrollLocked = false
+            },
+        )
+    }
+}
+
+@OptIn(ExperimentalFoundationStyleApi::class, ExperimentalFoundationApi::class)
+@Composable
+private fun Catalog(
+    featuredMovies: List<Movie>,
+    trendingMovies: List<Movie>,
+    top10Movies: List<Movie>,
+    nowPlayingMovies: List<Movie>,
+    lazyListState: LazyListState,
+    onMovieClick: (movie: Movie) -> Unit,
+    goToVideoPlayer: (movie: Movie) -> Unit,
+    modifier: Modifier = Modifier,
+    onExpanded: () -> Unit,
+    onCollapsed: () -> Unit,
+) {
+    val contentPadding = LocalContentPadding.current
+    val engagementMode = LocalEngagementMode.current
     val (carousel, trending, top10, nowPlaying) = remember { FocusRequester.createRefs() }
+    val bringIntoViewRequesterForTrending = remember { BringIntoViewRequester() }
+    var isTrendingFocused by remember { mutableStateOf(false) }
+
+    LaunchedEffect(engagementMode, featuredMovies.isNotEmpty()) {
+        if (
+            engagementMode is EngagementMode.Leanback &&
+            featuredMovies.isNotEmpty() &&
+            lazyListState.firstVisibleItemIndex == 0
+        ) {
+            carousel.requestFocus()
+        }
+    }
+
+    LaunchedEffect(LocalBringIntoViewSpec.current) {
+        if (isTrendingFocused) {
+            bringIntoViewRequesterForTrending.bringIntoView()
+        }
+    }
 
     LazyColumn(
         state = lazyListState,
-        contentPadding = PaddingValues(bottom = 108.dp),
+        contentPadding = JetStreamTokens.ScreenOverScanMargin,
         // Setting overscan margin to bottom to ensure the last row's visibility
         modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(JetStreamTokens.SectionGap),
     ) {
         item(contentType = "FeaturedMoviesCarousel") {
-            FeaturedMoviesCarousel(
-                movies = featuredMovies,
-                padding = contentPadding,
-                goToVideoPlayer = goToVideoPlayer,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(LocalFeaturedCarouselHeight.current)
-                    .focusRequester(carousel)
-                    .focusProperties {
-                        onExit = {
-                            when (requestedFocusDirection) {
-                                FocusDirection.Down -> {
-                                    trending.tryRequestFocus()
-                                }
+            FeaturedMovies(
+                movieList = featuredMovies,
+                onMovieSelected = goToVideoPlayer,
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(LocalFeaturedCarouselHeight.current)
+                        .focusRequester(carousel)
+                        .focusProperties {
+                            onExit = {
+                                when (requestedFocusDirection) {
+                                    FocusDirection.Down -> {
+                                        trending.requestFocus()
+                                    }
 
-                                FocusDirection.Next -> {
-                                    trending.tryRequestFocus()
+                                    FocusDirection.Next -> {
+                                        trending.requestFocus()
+                                    }
                                 }
                             }
                         }
-                    }
-                    .focusGroup()
+                        .focusGroup(),
+                style = {
+                    contentPadding(
+                        start = contentPadding.start,
+                        end = contentPadding.end,
+                        top = 0.dp,
+                        bottom = 0.dp,
+                    )
+                },
             )
         }
         item(contentType = "MoviesRow") {
@@ -149,16 +238,30 @@ internal fun Catalog(
                 movieList = trendingMovies,
                 title = StringConstants.Composable.HomeScreenTrendingTitle,
                 onMovieSelected = onMovieClick,
-                modifier = Modifier
-                    .padding(top = 16.dp)
-                    .focusRequester(trending)
+                modifier =
+                    Modifier
+                        .focusRequester(trending)
+                        .bringIntoViewRequester(bringIntoViewRequesterForTrending)
+                        .focusProperties {
+                            onEnter = {
+                                if (requestedFocusDirection == FocusDirection.Up) {
+                                    isTrendingFocused = true
+                                }
+                            }
+                            onExit = { isTrendingFocused = false }
+                        }
+                        .focusGroup(),
             )
         }
         item(contentType = "Top10MoviesList") {
             Top10MoviesList(
                 movieList = top10Movies,
                 onMovieClick = onMovieClick,
-                modifier = Modifier.focusRequester(top10)
+                modifier = Modifier.focusRequester(top10),
+                onExpanded = onExpanded,
+                onCollapsed = {
+                    onCollapsed()
+                },
             )
         }
         item(contentType = "MoviesRow") {
@@ -166,17 +269,18 @@ internal fun Catalog(
                 movieList = nowPlayingMovies,
                 title = StringConstants.Composable.HomeScreenNowPlayingMoviesTitle,
                 onMovieSelected = onMovieClick,
-                modifier = Modifier
-                    .padding(top = 16.dp)
-                    .focusRequester(nowPlaying)
-                    .focusProperties {
-                        onExit = {
-                            when (requestedFocusDirection) {
-                                FocusDirection.Up -> top10.tryRequestFocus()
-                                FocusDirection.Previous -> top10.tryRequestFocus()
+                modifier =
+                    Modifier
+                        .padding(top = 16.dp)
+                        .focusRequester(nowPlaying)
+                        .focusProperties {
+                            onExit = {
+                                when (requestedFocusDirection) {
+                                    FocusDirection.Up -> top10.requestFocus()
+                                    FocusDirection.Previous -> top10.requestFocus()
+                                }
                             }
-                        }
-                    }
+                        },
             )
         }
     }

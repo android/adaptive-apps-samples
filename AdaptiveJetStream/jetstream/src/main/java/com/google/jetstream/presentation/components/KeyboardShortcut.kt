@@ -64,7 +64,6 @@ data class KeyboardShortcut(
 }
 
 sealed interface ModifierKey : IsPressed, Into<Int> {
-
     data object Ctrl : ModifierKey {
         override fun isPressed(keyEvent: KeyEvent): Boolean {
             return keyEvent.isCtrlPressed

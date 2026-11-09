@@ -18,7 +18,7 @@ package com.google.jetstream.presentation.components.feature
 
 import androidx.window.core.layout.WindowSizeClass
 
-fun WindowSizeClass.isIWidthCompact(): Boolean {
+fun WindowSizeClass.isWidthCompact(): Boolean {
     return !isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND)
 }
 

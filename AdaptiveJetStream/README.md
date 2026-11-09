@@ -12,7 +12,7 @@ Jetstream is a sample media streaming application designed to adapt to various f
 
 ![Home screens on different form factors](Screenshots.png)
 
-This directory contains a version of the JetStream TV sample app that utilizes [Compose Material3](https://developer.android.com/jetpack/androidx/releases/compose-material3) components, with some exceptions like the [featured carousel](https://developer.android.com/design/ui/tv/guides/components/featured-carousel). It builds upon the original JetStream sample to offer experiences tailored to different device form factors. The original JetStream app for TV can be found at [https://github.com/android/tv-samples/](https://github.com/android/tv-samples/).
+This directory contains a version of the JetStream sample app that utilizes [Compose Material3](https://developer.android.com/jetpack/androidx/releases/compose-material3), [Compose Foundation](https://developer.android.com/jetpack/androidx/releases/compose-foundation), [Navigation 3](https://developer.android.com/jetpack/androidx/releases/navigation3), and [Jetpack XR Compose](https://developer.android.com/develop/xr/jetpack-xr-sdk). It builds upon the original JetStream sample to offer experiences tailored to different device form factors. The original JetStream app for TV can be found at [https://github.com/android/tv-samples/](https://github.com/android/tv-samples/).
 
 ## Requirements
 
@@ -22,7 +22,7 @@ This directory contains a version of the JetStream TV sample app that utilizes [
 
 ## Performance
 
-The `benchmarks` module contains sample tests written using the [Macrobenchmark](https://developer.android.com/studio/profile/macrobenchmark) library. It also contains the test to generate the baseline profile for JetStream app.
+The `benchmark` module contains sample tests written using the [Macrobenchmark](https://developer.android.com/studio/profile/macrobenchmark) library. It also contains the test to generate the baseline profile for JetStream app.
 
 ### Baseline profiles
 

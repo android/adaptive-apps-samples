@@ -23,43 +23,44 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class MovieDataSourceTest {
-
     private val fakeAssetReader = FakeAssetReader()
     private val movieDataSource = MovieDataSource(fakeAssetReader)
 
     @Test
-    fun getMovieList_returnsMoviesFromAsset() = runTest {
-        val json = """
-            [
-              {
-                "id": "1",
-                "sources": [],
-                "subtitleUri": "",
-                "rank": 1,
-                "rankUpDown": "",
-                "title": "Movie 1",
-                "fullTitle": "Movie 1",
-                "year": 2021,
-                "releaseDate": "",
-                "image_16_9": "",
-                "image_2_3": "",
-                "runtimeMins": 120,
-                "runtimeStr": "",
-                "plot": "",
-                "contentRating": "",
-                "rating": 8.0,
-                "ratingCount": 1000,
-                "metaCriticRating": 80,
-                "genres": "",
-                "directors": "",
-                "stars": ""
-              }
-            ]
-        """.trimIndent()
-        fakeAssetReader.setResponse(StringConstants.Assets.Top250Movies, json)
+    fun getMovieList_returnsMoviesFromAsset() =
+        runTest {
+            val json =
+                """
+                [
+                  {
+                    "id": "1",
+                    "sources": [],
+                    "subtitleUri": "",
+                    "rank": 1,
+                    "rankUpDown": "",
+                    "title": "Movie 1",
+                    "fullTitle": "Movie 1",
+                    "year": 2021,
+                    "releaseDate": "",
+                    "image_16_9": "",
+                    "image_2_3": "",
+                    "runtimeMins": 120,
+                    "runtimeStr": "",
+                    "plot": "",
+                    "contentRating": "",
+                    "rating": 8.0,
+                    "ratingCount": 1000,
+                    "metaCriticRating": 80,
+                    "genres": "",
+                    "directors": "",
+                    "stars": ""
+                  }
+                ]
+                """.trimIndent()
+            fakeAssetReader.setResponse(StringConstants.Assets.Top250Movies, json)
 
-        val movies = movieDataSource.getMovieList()
-        assertEquals(1, movies.size)
-        assertEquals("Movie 1", movies[0].name)
-    }
+            val movies = movieDataSource.getMovieList()
+            assertEquals(1, movies.size)
+            assertEquals("Movie 1", movies[0].name)
+        }
 }

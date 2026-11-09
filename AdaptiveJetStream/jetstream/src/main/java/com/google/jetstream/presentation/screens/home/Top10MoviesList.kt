@@ -14,330 +14,208 @@
  * limitations under the License.
  */
 
+@file:OptIn(ExperimentalFoundationStyleApi::class)
+
 package com.google.jetstream.presentation.screens.home
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.Crossfade
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.focusGroup
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.relocation.BringIntoViewRequester
-import androidx.compose.foundation.relocation.bringIntoViewRequester
+import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
+import androidx.compose.foundation.style.contentPadding
+import androidx.compose.foundation.style.fillWidth
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.carousel.CarouselState
+import androidx.compose.material3.carousel.HorizontalMultiBrowseCarousel
+import androidx.compose.material3.carousel.rememberCarouselState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawWithCache
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusProperties
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.InputMode
-import androidx.compose.ui.layout.LayoutCoordinates
-import androidx.compose.ui.node.ModifierNodeElement
-import androidx.compose.ui.platform.InspectorInfo
-import androidx.compose.ui.platform.LocalInputModeManager
-import androidx.compose.ui.relocation.BringIntoViewModifierNode
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.google.jetstream.R
 import com.google.jetstream.data.entities.Movie
-import com.google.jetstream.data.entities.MovieList
-import com.google.jetstream.presentation.components.ImmersiveListMoviesRow
-import com.google.jetstream.presentation.components.ItemDirection
+import com.google.jetstream.presentation.components.NextItemButton
 import com.google.jetstream.presentation.components.PosterImage
-import com.google.jetstream.presentation.components.shim.tryRequestFocus
+import com.google.jetstream.presentation.components.PreviousItemButton
+import com.google.jetstream.presentation.components.ScrollNavigationOverlay
+import com.google.jetstream.presentation.components.SectionTitle
+import com.google.jetstream.presentation.components.feature.EngagementMode
+import com.google.jetstream.presentation.components.feature.JetStreamUiMedia
+import com.google.jetstream.presentation.components.feature.LocalEngagementMode
+import com.google.jetstream.presentation.components.shim.carouselNavigation
+import com.google.jetstream.presentation.components.shim.styleable.StyleableBox
+import com.google.jetstream.presentation.screens.home.immersivelist.ImmersiveList
+import com.google.jetstream.presentation.theme.JetStreamTokens
 import com.google.jetstream.presentation.theme.LocalContentPadding
+import com.google.jetstream.presentation.theme.LocalListItemGap
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Top10MoviesList(
-    movieList: MovieList,
+    movieList: List<Movie>,
     modifier: Modifier = Modifier,
-    scrimColor: Color = MaterialTheme.colorScheme.surface.copy(alpha = 0.7f),
-    inputMode: InputMode = LocalInputModeManager.current.inputMode,
     onMovieClick: (movie: Movie) -> Unit = {},
+    onExpanded: () -> Unit = {},
+    onCollapsed: () -> Unit = {},
 ) {
-    var shouldExpand by remember { mutableStateOf(shouldExpand(false, inputMode)) }
-    var shouldShowDescription by remember {
-        mutableStateOf(
-            shouldShowDescription(
-                false,
-                inputMode
-            )
-        )
-    }
-    var selectedMovie by remember(movieList) { mutableStateOf(movieList.first()) }
-    val bringIntoViewRequester = remember { BringIntoViewRequester() }
-
-    ImmersiveList(
-        selectedMovie = selectedMovie,
-        shouldExpand = shouldExpand, // isListFocused,
-        shouldShowDescription = shouldShowDescription,
-        scrimColor = scrimColor,
-        movieList = movieList,
-        title = stringResource(R.string.top_10_movies_title),
-        onMovieClick = onMovieClick,
-        onMovieFocused = {
-            selectedMovie = it
-        },
-        modifier = modifier
-            .onFocusChanged {
-                shouldExpand = shouldExpand(it.hasFocus, inputMode)
-                shouldShowDescription = shouldShowDescription(it.hasFocus, inputMode)
-            }
-            .bringIntoViewRequester(bringIntoViewRequester)
-            .immersiveListBringIntoView(bringIntoViewRequester)
-    )
-}
-
-private fun shouldExpand(
-    hasFocus: Boolean,
-    inputMode: InputMode,
-): Boolean {
-    return inputMode == InputMode.Touch || hasFocus
-}
-
-private fun shouldShowDescription(
-    hasFocus: Boolean,
-    inputMode: InputMode,
-): Boolean {
-    return inputMode == InputMode.Keyboard && hasFocus
-}
-
-class ImmersiveListBringIntoViewModifierNode(
-    var bringIntoViewRequester: BringIntoViewRequester,
-) : Modifier.Node(), BringIntoViewModifierNode {
-    override suspend fun bringIntoView(
-        childCoordinates: LayoutCoordinates,
-        boundsProvider: () -> Rect?
-    ) {
-        bringIntoViewRequester.bringIntoView()
-    }
-}
-
-private class ImmersiveListBringIntoViewModifierElement(
-    val bringIntoViewRequester: BringIntoViewRequester,
-) : ModifierNodeElement<ImmersiveListBringIntoViewModifierNode>() {
-    override fun InspectorInfo.inspectableProperties() {
-        name = "ImmersiveListBringIntoViewModifier"
-    }
-
-    override fun create(): ImmersiveListBringIntoViewModifierNode {
-        return ImmersiveListBringIntoViewModifierNode(
-            bringIntoViewRequester = bringIntoViewRequester,
-        )
-    }
-
-    override fun equals(other: Any?): Boolean {
-        return other is ImmersiveListBringIntoViewModifierElement &&
-            other.bringIntoViewRequester == bringIntoViewRequester
-    }
-
-    override fun hashCode(): Int {
-        return bringIntoViewRequester.hashCode()
-    }
-
-    override fun update(node: ImmersiveListBringIntoViewModifierNode) {
-        node.bringIntoViewRequester = bringIntoViewRequester
-    }
-}
-
-private fun Modifier.immersiveListBringIntoView(
-    bringIntoViewRequester: BringIntoViewRequester,
-): Modifier =
-    this then ImmersiveListBringIntoViewModifierElement(
-        bringIntoViewRequester = bringIntoViewRequester,
-    )
-
-@Composable
-private fun ImmersiveList(
-    selectedMovie: Movie,
-    movieList: MovieList,
-    modifier: Modifier = Modifier,
-    title: String? = null,
-    shouldExpand: Boolean = false,
-    shouldShowDescription: Boolean = true,
-    scrimColor: Color = MaterialTheme.colorScheme.surface.copy(alpha = 0.7f),
-    onMovieFocused: (Movie) -> Unit = {},
-    onMovieClick: (Movie) -> Unit = {},
-) {
-    val moviesRow = remember { FocusRequester() }
-    val paddingBottom = if (shouldExpand) {
-        LocalContentPadding.current.bottom
-    } else {
-        0.dp
-    }
-
-    ImmersiveListFrame(
-        poster = {
-            AnimatedVisibility(
-                visible = shouldExpand,
-                enter = fadeIn() + expandVertically(),
-                exit = fadeOut() + shrinkVertically(),
-            ) {
-                Background(
-                    movie = selectedMovie,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .gradientOverlay(scrimColor)
-                )
-            }
-        },
-        description = {
-            AnimatedVisibility(
-                visible = shouldShowDescription,
-                enter = fadeIn() + expandVertically(),
-                exit = fadeOut() + shrinkVertically(),
-            ) {
-                MovieDescription(
-                    movie = selectedMovie,
-                    modifier = Modifier.padding(
-                        start = LocalContentPadding.current.start,
-                        bottom = 40.dp
-                    )
-                )
-            }
-        },
-        modifier = modifier
-            .focusProperties {
-                onEnter = {
-                    moviesRow.tryRequestFocus()
-                }
-            }
-            .focusGroup()
-    ) {
-        ImmersiveListMoviesRow(
+    Column {
+        SectionTitle(stringResource(R.string.top_10_movies_title))
+        Top10MoviesList(
             movieList = movieList,
-            itemDirection = ItemDirection.Horizontal,
-            title = if (shouldShowDescription) {
-                null
-            } else {
-                title
-            },
-            showItemTitle = !shouldExpand,
-            showIndexOverImage = true,
-            onMovieSelected = onMovieClick,
-            onMovieFocused = onMovieFocused,
-            modifier = Modifier
-                .focusRequester(moviesRow)
-                .padding(bottom = paddingBottom)
-        )
-    }
-}
-
-@Composable
-private fun ImmersiveListFrame(
-    modifier: Modifier = Modifier,
-    contentAlignment: Alignment = Alignment.BottomStart,
-    poster: @Composable () -> Unit = {},
-    description: @Composable () -> Unit = {},
-    list: @Composable () -> Unit = {},
-) {
-    Box(
-        contentAlignment = contentAlignment,
-        modifier = modifier,
-    ) {
-        poster()
-        Column {
-            description()
-            list()
-        }
-    }
-}
-
-@Composable
-private fun Background(
-    movie: Movie,
-    modifier: Modifier = Modifier,
-) {
-    Crossfade(
-        targetState = movie,
-        label = "posterUriCrossfade",
-    ) {
-        PosterImage(movie = it, modifier = modifier)
-    }
-}
-
-@Composable
-private fun MovieDescription(
-    movie: Movie,
-    modifier: Modifier = Modifier,
-) {
-    Crossfade(
-        movie
-    ) {
-        Column(
+            componentType = listComponentType(),
             modifier = modifier,
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            onMovieClick = onMovieClick,
+            onExpanded = onExpanded,
+            onCollapsed = onCollapsed,
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+private fun Top10MoviesList(
+    movieList: List<Movie>,
+    componentType: ListComponentType,
+    modifier: Modifier = Modifier,
+    onMovieClick: (movie: Movie) -> Unit = {},
+    onExpanded: () -> Unit = {},
+    onCollapsed: () -> Unit = {},
+) {
+    when (componentType) {
+        ListComponentType.ImmersiveList -> {
+            ImmersiveList(
+                movieList = movieList,
+                modifier = modifier,
+                onMovieSelected = onMovieClick,
+                onExpanded = onExpanded,
+                onCollapsed = onCollapsed,
+            )
+        }
+
+        else -> {
+            val itemWidth by JetStreamUiMedia.query {
+                minOf((windowWidth.value * 0.8).dp, 520.dp)
+            }
+            val carouselState = rememberCarouselState { movieList.size }
+            val contentPadding = LocalContentPadding.current
+
+            ScrollNavigationOverlay(
+                previous = {
+                    PreviousItemButton(
+                        carouselState = carouselState,
+                        style = {
+                            externalPaddingStart(contentPadding.start)
+                        },
+                    )
+                },
+                next = {
+                    NextItemButton(
+                        carouselState = carouselState,
+                        itemCount = movieList.size,
+                        style = {
+                            externalPaddingEnd(contentPadding.end)
+                        },
+                    )
+                },
+            ) {
+                Top10MovieListCarousel(carouselState, itemWidth, modifier, movieList, onMovieClick)
+            }
+        }
+    }
+}
+
+@Composable
+private fun Top10MovieListCarousel(
+    carouselState: CarouselState,
+    itemWidth: Dp,
+    modifier: Modifier,
+    movieList: List<Movie>,
+    onMovieClick: (Movie) -> Unit,
+) {
+    val surfaceColor = MaterialTheme.colorScheme.surface
+    val scrimColor =
+        remember(surfaceColor) {
+            surfaceColor.copy(alpha = 0.9f)
+        }
+
+    val scrimBrush =
+        Brush.composite(
+            Brush.linearGradient(
+                listOf(
+                    scrimColor,
+                    Color.Transparent,
+                ),
+                start = Offset(0f, Float.POSITIVE_INFINITY),
+                end = Offset(Float.POSITIVE_INFINITY, 0f),
+            ),
+            Brush.verticalGradient(
+                listOf(Color.Transparent, scrimColor),
+            ),
+            BlendMode.Darken,
+        )
+
+    HorizontalMultiBrowseCarousel(
+        state = carouselState,
+        preferredItemWidth = itemWidth,
+        itemSpacing = LocalListItemGap.current,
+        contentPadding = LocalContentPadding.current.intoPaddingValues(),
+        modifier =
+            modifier.carouselNavigation(
+                state = carouselState,
+                itemCount = movieList.size,
+                coroutineScope = rememberCoroutineScope(),
+            ),
+    ) { index ->
+        val movie = movieList[index]
+        // Set clearance around CarouselMovieCard to ensure border indication is visible.
+        StyleableBox(
+            style = {
+                contentPadding(4.dp)
+            },
         ) {
-            Text(text = it.name, style = MaterialTheme.typography.displaySmall)
-            Text(
-                modifier = Modifier.fillMaxWidth(0.5f),
-                text = it.description,
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.75f),
-                fontWeight = FontWeight.Light
+            CarouselMovieCard(
+                onClick = { onMovieClick(movie) },
+                // style = JetStreamTokens.contentColorIndication(),
+                title = {
+                    Text(
+                        text = "#${index + 1}: ${movie.name}",
+                        style = MaterialTheme.typography.titleLarge,
+                        softWrap = true,
+                    )
+                },
+                background = {
+                    PosterImage(
+                        movie = movie,
+                        style = {
+                            fillWidth()
+                            height((JetStreamTokens.PortraitCardSize.height.value * 1.414).dp)
+                            foreground(scrimBrush)
+                        },
+                    )
+                },
             )
         }
     }
 }
 
-private fun Modifier.gradientOverlay(gradientColor: Color): Modifier =
-    drawWithCache {
-        val horizontalGradient = Brush.horizontalGradient(
-            colors = listOf(
-                gradientColor,
-                Color.Transparent
-            ),
-            startX = size.width.times(0.2f),
-            endX = size.width.times(0.7f)
-        )
-        val verticalGradient = Brush.verticalGradient(
-            colors = listOf(
-                Color.Transparent,
-                gradientColor
-            ),
-            endY = size.width.times(0.3f)
-        )
-        val linearGradient = Brush.linearGradient(
-            colors = listOf(
-                gradientColor,
-                Color.Transparent
-            ),
-            start = Offset(
-                size.width.times(0.2f),
-                size.height.times(0.5f)
-            ),
-            end = Offset(
-                size.width.times(0.9f),
-                0f
-            )
-        )
+private enum class ListComponentType {
+    ImmersiveList,
+    Carousel,
+}
 
-        onDrawWithContent {
-            drawContent()
-            drawRect(horizontalGradient)
-            drawRect(verticalGradient)
-            drawRect(linearGradient)
-        }
+@Composable
+private fun listComponentType(): ListComponentType {
+    return when (LocalEngagementMode.current) {
+        is EngagementMode.Leanback -> ListComponentType.ImmersiveList
+        else -> ListComponentType.Carousel
     }
+}

@@ -16,43 +16,51 @@
 
 package com.google.jetstream.presentation.screens.categories
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.jetstream.data.entities.MovieCategoryDetails
 import com.google.jetstream.data.repositories.MovieRepository
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
-@HiltViewModel
-class CategoryMovieListScreenViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
-    movieRepository: MovieRepository
-) : ViewModel() {
+@HiltViewModel(assistedFactory = CategoryMovieListScreenViewModel.Factory::class)
+class CategoryMovieListScreenViewModel
+    @AssistedInject
+    constructor(
+        @Assisted categoryId: String,
+        movieRepository: MovieRepository,
+    ) : ViewModel() {
+        val uiState =
+            flowOf(categoryId)
+                .map<String, CategoryMovieListScreenUiState> { id ->
+                    val categoryDetails = movieRepository.getMovieCategoryDetails(id)
+                    CategoryMovieListScreenUiState.Done(categoryDetails)
+                }
+                .catch {
+                    emit(CategoryMovieListScreenUiState.Error)
+                }.stateIn(
+                    scope = viewModelScope,
+                    started = SharingStarted.WhileSubscribed(5_000),
+                    initialValue = CategoryMovieListScreenUiState.Loading,
+                )
 
-    val uiState =
-        savedStateHandle.getStateFlow<String?>(
-            CategoryMovieListScreen.CategoryIdBundleKey,
-            null
-        ).map { id ->
-            if (id == null) {
-                CategoryMovieListScreenUiState.Error
-            } else {
-                val categoryDetails = movieRepository.getMovieCategoryDetails(id)
-                CategoryMovieListScreenUiState.Done(categoryDetails)
-            }
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = CategoryMovieListScreenUiState.Loading
-        )
-}
+        @AssistedFactory
+        interface Factory {
+            fun create(categoryId: String): CategoryMovieListScreenViewModel
+        }
+    }
 
 sealed interface CategoryMovieListScreenUiState {
     object Loading : CategoryMovieListScreenUiState
+
     object Error : CategoryMovieListScreenUiState
+
     data class Done(val movieCategoryDetails: MovieCategoryDetails) : CategoryMovieListScreenUiState
 }

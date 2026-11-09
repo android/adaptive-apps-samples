@@ -17,13 +17,13 @@
 package com.google.jetstream.presentation.screens.favourites.components
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
+import androidx.compose.foundation.style.MutableStyleState
+import androidx.compose.foundation.style.styleable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.FilterChip
@@ -37,38 +37,43 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.google.jetstream.data.util.StringConstants
-import com.google.jetstream.presentation.components.shim.Border
-import com.google.jetstream.presentation.components.shim.borderIndication
-import com.google.jetstream.presentation.theme.JetStreamCardShape
+import com.google.jetstream.presentation.components.shim.indication.borderIndication
 
+@OptIn(ExperimentalFoundationStyleApi::class)
 @Composable
 fun MovieFilterChip(
     label: String,
     isChecked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
-    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
+    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
 ) {
+    val styleState = remember(interactionSource) { MutableStyleState(interactionSource) }
+
     FilterChip(
-        modifier = modifier
-            .padding(end = 16.dp)
-            .indication(interactionSource, borderIndication(focused = ChipFocusedBorder)),
+        modifier =
+            modifier
+                .padding(end = 16.dp)
+                .styleable(
+                    styleState = styleState,
+                    borderIndication(focused = 1.5.dp),
+                ),
         onClick = { onCheckedChange(!isChecked) },
         selected = isChecked,
+        interactionSource = interactionSource,
         leadingIcon = {
             AnimatedVisibility(visible = isChecked) {
                 Icon(
                     Icons.Default.Check,
                     contentDescription =
-                    StringConstants.Composable.ContentDescription.FilterSelected,
-                    modifier = Modifier.size(16.dp)
+                        StringConstants.Composable.ContentDescription.FilterSelected,
+                    modifier = Modifier.size(16.dp),
                 )
             }
         },
         label = {
             Box(
                 contentAlignment = Alignment.Center,
-                modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
                     text = label,
@@ -77,15 +82,6 @@ fun MovieFilterChip(
                     overflow = TextOverflow.Visible,
                 )
             }
-        }
+        },
     )
 }
-
-private val ChipFocusedBorder
-    @Composable get() = Border(
-        stroke = BorderStroke(
-            width = 1.5.dp,
-            color = MaterialTheme.colorScheme.onSurface,
-        ),
-        shape = JetStreamCardShape
-    )

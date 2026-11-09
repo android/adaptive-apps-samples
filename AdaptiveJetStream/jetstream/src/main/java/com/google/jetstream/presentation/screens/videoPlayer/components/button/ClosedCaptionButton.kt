@@ -29,6 +29,6 @@ fun ClosedCaptionButton(
     VideoPlayerControlsIcon(
         icon = Icons.Default.ClosedCaption,
         contentDescription = StringConstants.Composable.VideoPlayerControlClosedCaptionsButton,
-        modifier = modifier
+        modifier = modifier,
     )
 }

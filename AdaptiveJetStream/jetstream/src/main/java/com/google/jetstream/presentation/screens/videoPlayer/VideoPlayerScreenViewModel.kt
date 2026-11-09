@@ -23,7 +23,6 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.ui.geometry.Size
 import androidx.concurrent.futures.await
 import androidx.core.net.toUri
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.C
@@ -38,176 +37,230 @@ import com.google.jetstream.data.entities.Movie
 import com.google.jetstream.data.entities.MovieDetails
 import com.google.jetstream.data.entities.StereoscopicVisionType
 import com.google.jetstream.data.repositories.MovieRepository
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class VideoPlayerScreenViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
-    private val repository: MovieRepository,
-    @ApplicationContext private val context: Context
-) : ViewModel() {
+@HiltViewModel(assistedFactory = VideoPlayerScreenViewModel.Factory::class)
+class VideoPlayerScreenViewModel
+    @AssistedInject
+    constructor(
+        @Assisted movieId: String,
+        private val repository: MovieRepository,
+        @ApplicationContext private val context: Context,
+    ) : ViewModel() {
+        private val playerManager = PlayerManager()
 
-    private val playerManager = PlayerManager()
+        private val specifiedMovieDetails =
+            flowOf(movieId).map { id ->
+                if (id.isBlank()) {
+                    null
+                } else {
+                    runCatching { repository.getMovieDetails(movieId = id) }.getOrNull()
+                }
+            }
 
-    private val specifiedMovieDetails = savedStateHandle
-        .getStateFlow<String?>(VideoPlayerScreen.MOVIE_ID_BUNDLE_KEY, null)
-        .map {
-            if (it != null) {
-                repository.getMovieDetails(movieId = it)
-            } else {
-                null
+        private val isSpatialUiEnabledFlow = MutableStateFlow(false)
+
+        private val movieDetailsFlow =
+            combine(
+                playerManager.player,
+                specifiedMovieDetails,
+                playerManager.currentMediaItem,
+            ) { player, movieDetails, mediaItem ->
+                when {
+                    // Wait for the player to be initialized.
+                    player == null -> {
+                        null
+                    }
+
+                    // No movie is specified when the video player is opened.
+                    movieDetails == null && player.mediaItemCount == 0 -> {
+                        null
+                    }
+
+                    // Use the movie that the player remembers.
+                    movieDetails == null -> {
+                        val currentMediaItem = player.currentMediaItem
+                        val currentDetails =
+                            if (currentMediaItem == null) {
+                                null
+                            } else {
+                                repository.getMovieDetails(currentMediaItem.mediaId)
+                            }
+                        if (currentDetails == null) {
+                            null
+                        } else {
+                            ResolvedMovie(movieDetails = currentDetails, isPrepared = true)
+                        }
+                    }
+
+                    else -> {
+                        // Check if the specified movie is already in the queue,
+                        // and if not, create new queue from it.
+                        val isViewed =
+                            (0 until player.mediaItemCount).any { index ->
+                                player.getMediaItemAt(index).mediaId == movieDetails.id
+                            }
+                        val currentDetails =
+                            if (isViewed && mediaItem != MediaItem.EMPTY) {
+                                repository.getMovieDetails(mediaItem.mediaId) ?: movieDetails
+                            } else {
+                                movieDetails
+                            }
+                        ResolvedMovie(movieDetails = currentDetails, isPrepared = isViewed)
+                    }
+                }
+            }.distinctUntilChanged()
+
+        private val nowPlayingInfo =
+            combine(
+                movieDetailsFlow,
+                isSpatialUiEnabledFlow,
+                playerManager.videoSize,
+            ) { resolvedMovie, isSpatialUiEnabled, videoSize ->
+                if (resolvedMovie == null) {
+                    null
+                } else {
+                    val movieDetails = resolvedMovie.movieDetails
+                    val stereoscopicVisionType =
+                        StereoscopicVisionType.select(movieDetails, isSpatialUiEnabled)
+                    NowPlayingInfo(
+                        movieDetails = movieDetails,
+                        stereoscopicVisionType = stereoscopicVisionType,
+                        videoSize = videoSize.into(),
+                    )
+                }
+            }
+
+        init {
+            requestPlayer()
+            viewModelScope.launch {
+                combine(
+                    movieDetailsFlow.filterNotNull(),
+                    isSpatialUiEnabledFlow,
+                ) { resolvedMovie, isSpatialUiEnabled ->
+                    resolvedMovie to isSpatialUiEnabled
+                }
+                    .distinctUntilChanged()
+                    .collectLatest { (resolvedMovie, isSpatialUiEnabled) ->
+                        val movieDetails = resolvedMovie.movieDetails
+                        val stereoscopicVisionType =
+                            StereoscopicVisionType.select(movieDetails, isSpatialUiEnabled)
+                        val playingInfo =
+                            NowPlayingInfo(
+                                movieDetails = movieDetails,
+                                stereoscopicVisionType = stereoscopicVisionType,
+                                videoSize = playerManager.videoSize.value.into(),
+                            )
+                        if (!resolvedMovie.isPrepared) {
+                            playerManager.prepare(
+                                nowPlayingInfo = playingInfo,
+                                isSpatialUiEnabled = isSpatialUiEnabled,
+                            )
+                        } else {
+                            playerManager.updateCurrentMediaItem(playingInfo)
+                        }
+                    }
             }
         }
 
-    private var isSpatialUiEnabledFlow = MutableStateFlow(false)
+        val uiState =
+            combine(
+                playerManager.player,
+                playerManager.isReadyToPlay,
+                nowPlayingInfo,
+            ) { player, isReady, playingInfo ->
+                when {
+                    player == null -> {
+                        VideoPlayerScreenUiState.Loading
+                    }
 
-    private val movieDetailsFlow = combine(
-        playerManager.player,
-        specifiedMovieDetails,
-        playerManager.currentMediaItem,
-        isSpatialUiEnabledFlow,
-    ) { player, movieDetails, mediaItem, isSpatialUiEnabled ->
-        when {
-            // Wait for the player to be initialized.
-            player == null -> {
-                null
-            }
+                    playingInfo == null -> {
+                        // Movie should be specified when the video player is opened.
+                        VideoPlayerScreenUiState.Error
+                    }
 
-            // No movie is specified when the video player is opened.
-            movieDetails == null && player.mediaItemCount == 0 -> {
-                null
-            }
-
-            // Use the movie that the player remembers.
-            movieDetails == null -> {
-                val currentMediaItem = player.currentMediaItem
-                val movieDetails = if (currentMediaItem == null) {
-                    null
-                } else {
-                    repository.getMovieDetails(currentMediaItem.mediaId)
+                    else -> {
+                        VideoPlayerScreenUiState.Done(
+                            nowPlayingInfo = playingInfo,
+                            player = player,
+                            isReadyToPlay = isReady,
+                        )
+                    }
                 }
-                if(movieDetails == null) {
-                    null
-                } else {
-                    ResolvedMovie(movieDetails = movieDetails, isPrepared = true)
-                }
-            }
-
-            else -> {
-                // Check if the specified movie is already in the queue,
-                // and if not, create new queue from it.
-                val isViewed = (0 until player.mediaItemCount).any { index ->
-                    player.getMediaItemAt(index).mediaId == movieDetails.id
-                }
-                val movieDetails = if (isViewed) {
-                    repository.getMovieDetails(mediaItem.mediaId)
-                } else {
-                    movieDetails
-                }
-                ResolvedMovie(movieDetails = movieDetails, isPrepared = isViewed)
-            }
-        }
-    }
-
-    private val nowPlayingInfo = combine(
-        movieDetailsFlow,
-        isSpatialUiEnabledFlow,
-        playerManager.videoSize,
-    ) { resolvedMovie, isSpatialUiEnabled, videoSize ->
-        if(resolvedMovie == null) {
-            null
-        } else {
-            val movieDetails = resolvedMovie.movieDetails
-            val stereoscopicVisionType = StereoscopicVisionType.select(movieDetails, isSpatialUiEnabled)
-            val nowPlayingInfo = NowPlayingInfo(
-                movieDetails = movieDetails,
-                stereoscopicVisionType = stereoscopicVisionType,
-                videoSize = videoSize.into()
+            }.stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000),
+                initialValue = VideoPlayerScreenUiState.Loading,
             )
-            if(!resolvedMovie.isPrepared) {
-                playerManager.prepare(nowPlayingInfo)
-            }else {
-                playerManager.updateCurrentMediaItem(nowPlayingInfo)
-            }
-            nowPlayingInfo
-        }
-    }
 
-    val uiState = combine(
-        playerManager.player,
-        playerManager.isReadyToPlay,
-        nowPlayingInfo,
-    ) { player, isReady, playingInfo ->
-        when {
-            player == null -> {
-                requestPlayer()
-                VideoPlayerScreenUiState.Loading
-            }
-
-            playingInfo == null -> {
-                // Movie should be specified when the video player is opened.
-                VideoPlayerScreenUiState.Error
-            }
-
-            else -> {
-                VideoPlayerScreenUiState.Done(
-                    nowPlayingInfo = playingInfo,
-                    player = player,
-                    isReadyToPlay = isReady,
-                )
+        fun requestPlayer() {
+            viewModelScope.launch {
+                playerManager.request(context)
             }
         }
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = VideoPlayerScreenUiState.Loading
-    )
 
-    fun requestPlayer() {
-        viewModelScope.launch {
-            playerManager.request(context)
-        }
-    }
-
-    fun releasePlayer() {
-        viewModelScope.launch {
+        fun releasePlayer() {
             playerManager.release()
         }
-    }
 
-    fun updateSpatialUiEnabled(isEnabled: Boolean) {
-        viewModelScope.launch {
-            isSpatialUiEnabledFlow.emit(isEnabled)
+        fun updateSpatialUiEnabled(isEnabled: Boolean) {
+            isSpatialUiEnabledFlow.value = isEnabled
+        }
+
+        internal fun setPlayerForTesting(player: Player?, isReady: Boolean = true) {
+            playerManager.setPlayerForTesting(player, isReady)
+        }
+
+        override fun onCleared() {
+            super.onCleared()
+            playerManager.release()
+        }
+
+        @AssistedFactory
+        interface Factory {
+            fun create(movieId: String): VideoPlayerScreenViewModel
         }
     }
 
-}
-
 private class PlayerManager {
-    private val _player: MutableStateFlow<MediaController?> = MutableStateFlow(null)
-    val player: StateFlow<MediaController?> = _player
+    private val _player: MutableStateFlow<Player?> = MutableStateFlow(null)
+    val player: StateFlow<Player?> = _player
     val currentMediaItem = MutableStateFlow(MediaItem.EMPTY)
     val isReadyToPlay = MutableStateFlow(false)
 
     val videoSize = MutableStateFlow(VideoSize.UNKNOWN)
+
+    fun setPlayerForTesting(
+        player: Player?,
+        isReady: Boolean = true,
+    ) {
+        _player.value = player
+        isReadyToPlay.value = isReady
+    }
 
     suspend fun request(context: Context) {
         release()
         create(context)
     }
 
-    suspend fun release() {
-        player.value?.release()
-        emit(null)
+    fun release() {
+        _player.value?.release()
+        _player.value = null
     }
 
     fun prepare(
@@ -223,9 +276,10 @@ private class PlayerManager {
             p.addMediaItem(nowPlayingInfo.intoMediaItem())
             p.addMediaItems(
                 nowPlayingInfo.movieDetails.similarMovies.map {
-                    val stereoscopicVisionType = StereoscopicVisionType.select(it, isSpatialUiEnabled)
+                    val stereoscopicVisionType =
+                        StereoscopicVisionType.select(it, isSpatialUiEnabled)
                     it.intoMediaItem(stereoscopicVisionType)
-                }
+                },
             )
             p.prepare()
             videoSize.tryEmit(VideoSize.UNKNOWN)
@@ -235,13 +289,13 @@ private class PlayerManager {
     fun updateCurrentMediaItem(
         nowPlayingInfo: NowPlayingInfo,
     ) {
-       val p = player.value
-       if(p != null && p.mediaItemCount > 0) {
-           val currentMediaItemIndex = p.currentMediaItemIndex
-           val currentPosition = p.currentPosition
-           p.replaceMediaItem(currentMediaItemIndex, nowPlayingInfo.intoMediaItem())
-           p.seekTo(currentPosition)
-       }
+        val p = player.value
+        if (p != null && p.mediaItemCount > 0) {
+            val currentMediaItemIndex = p.currentMediaItemIndex
+            val currentPosition = p.currentPosition
+            p.replaceMediaItem(currentMediaItemIndex, nowPlayingInfo.intoMediaItem())
+            p.seekTo(currentPosition)
+        }
     }
 
     private suspend fun create(context: Context) {
@@ -251,30 +305,31 @@ private class PlayerManager {
 
         try {
             val controller = future.await()
-            controller.addListener(object : Player.Listener {
-                override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
-                    currentMediaItem.tryEmit(mediaItem ?: MediaItem.EMPTY)
-                }
+            controller.addListener(
+                object : Player.Listener {
+                    override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+                        currentMediaItem.tryEmit(mediaItem ?: MediaItem.EMPTY)
+                    }
 
-                override fun onPlaybackStateChanged(playbackState: Int) {
-                    isReadyToPlay.tryEmit(playbackState == Player.STATE_READY)
-                }
+                    override fun onPlaybackStateChanged(playbackState: Int) {
+                        isReadyToPlay.tryEmit(playbackState == Player.STATE_READY)
+                    }
 
-                override fun onVideoSizeChanged(updatedVideSize: VideoSize) {
-                    videoSize.tryEmit(updatedVideSize)
-                }
-            })
+                    override fun onVideoSizeChanged(updatedVideoSize: VideoSize) {
+                        videoSize.tryEmit(updatedVideoSize)
+                    }
+                },
+            )
             val mediaItem = controller.currentMediaItem
             if (mediaItem != null) {
                 currentMediaItem.emit(mediaItem)
             }
             emit(controller)
         } catch (_: Exception) {
-
         }
     }
 
-    private suspend fun emit(player: MediaController?) {
+    private suspend fun emit(player: Player?) {
         _player.emit(player)
     }
 }
@@ -282,11 +337,13 @@ private class PlayerManager {
 @Immutable
 sealed class VideoPlayerScreenUiState {
     data object Loading : VideoPlayerScreenUiState()
+
     data object Error : VideoPlayerScreenUiState()
+
     data class Done(
         val nowPlayingInfo: NowPlayingInfo,
         val player: Player,
-        val isReadyToPlay: Boolean
+        val isReadyToPlay: Boolean,
     ) : VideoPlayerScreenUiState()
 }
 
@@ -303,14 +360,14 @@ data class NowPlayingInfo(
 }
 
 private fun MovieDetails.intoMediaItem(
-    stereoscopicVisionType: StereoscopicVisionType = StereoscopicVisionType.Mono
+    stereoscopicVisionType: StereoscopicVisionType = StereoscopicVisionType.Mono,
 ): MediaItem {
     val movie = Movie.from(this)
     return movie.intoMediaItem(stereoscopicVisionType = stereoscopicVisionType)
 }
 
 private fun Movie.intoMediaItem(
-    stereoscopicVisionType: StereoscopicVisionType = StereoscopicVisionType.Mono
+    stereoscopicVisionType: StereoscopicVisionType = StereoscopicVisionType.Mono,
 ): MediaItem {
     val uri = videoUriFor(stereoscopicVisionType) ?: videoUri
 
@@ -327,9 +384,9 @@ private fun Movie.intoMediaItem(
                         .setMimeType("application/vtt")
                         .setLanguage("en")
                         .setSelectionFlags(C.SELECTION_FLAG_DEFAULT)
-                        .build()
+                        .build(),
                 )
-            }
+            },
         )
         .setMediaMetadata(intoMediaMetaData())
         .build()
@@ -350,7 +407,7 @@ private fun StereoscopicVisionType.Companion.select(
 ): StereoscopicVisionType {
     return StereoscopicVisionType.select(
         sources = movieDetails.sources,
-        isSpatialUiEnabled = isSpatialUiEnabled
+        isSpatialUiEnabled = isSpatialUiEnabled,
     )
 }
 
@@ -360,7 +417,7 @@ private fun StereoscopicVisionType.Companion.select(
 ): StereoscopicVisionType {
     return StereoscopicVisionType.select(
         sources = movie.sources,
-        isSpatialUiEnabled = isSpatialUiEnabled
+        isSpatialUiEnabled = isSpatialUiEnabled,
     )
 }
 
@@ -369,7 +426,10 @@ private fun StereoscopicVisionType.Companion.select(
     isSpatialUiEnabled: Boolean,
 ): StereoscopicVisionType {
     return if (isSpatialUiEnabled) {
-        StereoscopicVisionType.select(sources, listOf(StereoscopicVisionType.SideBySide, StereoscopicVisionType.Mono))
+        StereoscopicVisionType.select(
+            sources,
+            listOf(StereoscopicVisionType.SideBySide, StereoscopicVisionType.Mono),
+        )
     } else {
         StereoscopicVisionType.Mono
     }
@@ -377,7 +437,7 @@ private fun StereoscopicVisionType.Companion.select(
 
 private fun StereoscopicVisionType.Companion.select(
     sources: Map<StereoscopicVisionType, Uri>,
-    preference: List<StereoscopicVisionType>
+    preference: List<StereoscopicVisionType>,
 ): StereoscopicVisionType {
     return preference.find { sources.containsKey(it) } ?: StereoscopicVisionType.Mono
 }

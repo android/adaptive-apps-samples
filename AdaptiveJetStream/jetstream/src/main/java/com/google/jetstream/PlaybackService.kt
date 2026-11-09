@@ -55,7 +55,7 @@ class PlaybackService : MediaSessionService() {
             .setSeekForwardIncrementMs(10000)
             .setSeekBackIncrementMs(10000)
             .setMediaSourceFactory(
-                ProgressiveMediaSource.Factory(DefaultDataSource.Factory(this))
+                ProgressiveMediaSource.Factory(DefaultDataSource.Factory(this)),
             )
             .setVideoScalingMode(C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING)
             .build()

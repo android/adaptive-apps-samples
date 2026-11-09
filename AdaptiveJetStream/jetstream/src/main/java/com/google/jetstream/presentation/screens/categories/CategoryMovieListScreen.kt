@@ -14,17 +14,22 @@
  * limitations under the License.
  */
 
+@file:OptIn(ExperimentalFoundationStyleApi::class)
+
 package com.google.jetstream.presentation.screens.categories
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.foundation.style.ExperimentalFoundationStyleApi
+import androidx.compose.foundation.style.fillSize
+import androidx.compose.foundation.style.styleable
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,41 +42,30 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavType
-import androidx.navigation.navArgument
 import com.google.jetstream.data.entities.Movie
 import com.google.jetstream.data.entities.MovieCategoryDetails
+import com.google.jetstream.presentation.components.BackButton
 import com.google.jetstream.presentation.components.Error
 import com.google.jetstream.presentation.components.Loading
 import com.google.jetstream.presentation.components.MovieCard
 import com.google.jetstream.presentation.components.PosterImage
 import com.google.jetstream.presentation.components.desktop.BackNavigationContextMenu
-import com.google.jetstream.presentation.theme.JetStreamBottomListPadding
+import com.google.jetstream.presentation.theme.JetStreamTokens
 import com.google.jetstream.presentation.theme.LocalContentPadding
 import com.google.jetstream.presentation.theme.Padding
 import com.google.jetstream.presentation.utils.focusOnInitialVisibility
-
-object CategoryMovieListScreen {
-    const val CategoryIdBundleKey = "categoryId"
-}
-
-val categoryMovieListScreenArguments = listOf(
-    navArgument(CategoryMovieListScreen.CategoryIdBundleKey) {
-        type = NavType.StringType
-    }
-)
 
 @Composable
 fun CategoryMovieListScreen(
     onBackPressed: () -> Unit,
     onMovieSelected: (Movie) -> Unit,
-    categoryMovieListScreenViewModel: CategoryMovieListScreenViewModel = hiltViewModel()
+    categoryMovieListScreenViewModel: CategoryMovieListScreenViewModel = hiltViewModel(),
 ) {
     val uiState by categoryMovieListScreenViewModel.uiState.collectAsStateWithLifecycle()
 
     when (val s = uiState) {
         CategoryMovieListScreenUiState.Loading -> {
-            Loading(modifier = Modifier.fillMaxSize())
+            Loading()
         }
 
         CategoryMovieListScreenUiState.Error -> {
@@ -80,10 +74,16 @@ fun CategoryMovieListScreen(
 
         is CategoryMovieListScreenUiState.Done -> {
             val categoryDetails = s.movieCategoryDetails
+            val backgroundColor = MaterialTheme.colorScheme.surface
             CategoryDetails(
                 categoryDetails = categoryDetails,
                 onBackPressed = onBackPressed,
-                onMovieSelected = onMovieSelected
+                onMovieSelected = onMovieSelected,
+                modifier =
+                    Modifier.styleable {
+                        fillSize()
+                        background(backgroundColor)
+                    },
             )
         }
     }
@@ -94,15 +94,24 @@ internal fun CategoryDetails(
     categoryDetails: MovieCategoryDetails,
     onBackPressed: () -> Unit,
     onMovieSelected: (Movie) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     BackHandler(onBack = onBackPressed)
     BackNavigationContextMenu(onBackPressed) {
-        CategoryMovieList(
-            categoryDetails = categoryDetails,
-            onMovieSelected = onMovieSelected,
-            modifier = modifier
-        )
+        Box(modifier = modifier) {
+            CategoryMovieList(
+                categoryDetails = categoryDetails,
+                onMovieSelected = onMovieSelected,
+                modifier = Modifier.fillMaxSize(),
+            )
+            BackButton(
+                onClick = onBackPressed,
+                modifier =
+                    Modifier
+                        .align(Alignment.TopStart)
+                        .padding(16.dp),
+            )
+        }
     }
 }
 
@@ -111,7 +120,7 @@ internal fun CategoryMovieList(
     categoryDetails: MovieCategoryDetails,
     onMovieSelected: (Movie) -> Unit,
     modifier: Modifier = Modifier,
-    contentPadding: Padding = LocalContentPadding.current
+    contentPadding: Padding = LocalContentPadding.current,
 ) {
     val isFirstItemVisible = remember { mutableStateOf(false) }
 
@@ -121,33 +130,43 @@ internal fun CategoryMovieList(
     ) {
         Text(
             text = categoryDetails.name,
-            style = MaterialTheme.typography.displaySmall.copy(
-                fontWeight = FontWeight.SemiBold
-            ),
-            modifier = Modifier.padding(
-                vertical = contentPadding.top.times(3.5f)
-            )
+            style =
+                MaterialTheme.typography.displaySmall.copy(
+                    fontWeight = FontWeight.SemiBold,
+                ),
+            modifier =
+                Modifier.padding(
+                    vertical = contentPadding.top.times(3.5f),
+                ),
         )
         LazyVerticalGrid(
-            columns = GridCells.Fixed(6),
-            contentPadding = PaddingValues(bottom = JetStreamBottomListPadding)
+            columns = JetStreamTokens.gridCells(),
+            contentPadding =
+                PaddingValues(
+                    start = contentPadding.start,
+                    end = contentPadding.end,
+                    bottom = JetStreamTokens.VerticalListBottomPadding,
+                ),
         ) {
             itemsIndexed(
                 categoryDetails.movies,
                 key = { _, movie ->
                     movie.id
-                }
+                },
             ) { index, movie ->
                 MovieCard(
                     onClick = { onMovieSelected(movie) },
-                    modifier = Modifier
-                        .aspectRatio(1 / 1.5f)
-                        .padding(8.dp)
-                        .then(
-                            if (index == 0)
-                                Modifier.focusOnInitialVisibility(isFirstItemVisible)
-                            else Modifier
-                        ),
+                    modifier =
+                        Modifier
+                            .aspectRatio(1 / 1.5f)
+                            .padding(8.dp)
+                            .then(
+                                if (index == 0) {
+                                    Modifier.focusOnInitialVisibility(isFirstItemVisible)
+                                } else {
+                                    Modifier
+                                },
+                            ),
                 ) {
                     PosterImage(movie = movie, modifier = Modifier.fillMaxSize())
                 }

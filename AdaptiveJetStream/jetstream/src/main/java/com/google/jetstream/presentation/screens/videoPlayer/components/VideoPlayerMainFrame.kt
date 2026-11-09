@@ -43,15 +43,16 @@ fun VideoPlayerMainFrame(
     modifier: Modifier = Modifier,
     mediaActions: @Composable () -> Unit = {},
     more: (@Composable () -> Unit)? = null,
-    windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
+    windowSizeClass: WindowSizeClass = currentWindowAdaptiveInfo().windowSizeClass,
 ) {
     when {
         currentWindowAdaptiveInfo().windowPosture.isTabletop -> {
             TabletopVideoPlayerFrame(
                 mediaTitle = mediaTitle,
                 seeker = seeker,
+                modifier = modifier,
                 mediaActions = mediaActions,
-                more = more
+                more = more,
             )
         }
 
@@ -59,8 +60,9 @@ fun VideoPlayerMainFrame(
             NonCompactVideoPlayerFrame(
                 mediaTitle = mediaTitle,
                 seeker = seeker,
+                modifier = modifier,
                 mediaActions = mediaActions,
-                more = more
+                more = more,
             )
         }
 
@@ -68,8 +70,9 @@ fun VideoPlayerMainFrame(
             CompactVideoPlayerFrame(
                 mediaTitle = mediaTitle,
                 seeker = seeker,
+                modifier = modifier,
                 mediaActions = mediaActions,
-                more = more
+                more = more,
             )
         }
     }
@@ -79,10 +82,11 @@ fun VideoPlayerMainFrame(
 private fun CompactVideoPlayerFrame(
     mediaTitle: @Composable () -> Unit,
     seeker: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
     mediaActions: @Composable () -> Unit = {},
-    more: (@Composable () -> Unit)? = null
+    more: (@Composable () -> Unit)? = null,
 ) {
-    Column(modifier = Modifier.fillMaxWidth()) {
+    Column(modifier = modifier.fillMaxWidth()) {
         mediaTitle()
         Spacer(Modifier.height(16.dp))
         seeker()
@@ -99,10 +103,11 @@ private fun CompactVideoPlayerFrame(
 private fun TabletopVideoPlayerFrame(
     mediaTitle: @Composable () -> Unit,
     seeker: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
     mediaActions: @Composable () -> Unit = {},
-    more: (@Composable () -> Unit)? = null
+    more: (@Composable () -> Unit)? = null,
 ) {
-    Column(modifier = Modifier.fillMaxWidth()) {
+    Column(modifier = modifier.fillMaxWidth()) {
         Spacer(Modifier.height(16.dp))
         Row(modifier = Modifier.fillMaxWidth()) {
             seeker()
@@ -130,13 +135,13 @@ private fun NonCompactVideoPlayerFrame(
     seeker: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     mediaActions: @Composable () -> Unit = {},
-    more: (@Composable () -> Unit)? = null
+    more: (@Composable () -> Unit)? = null,
 ) {
     Column(modifier) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.Bottom
+            verticalAlignment = Alignment.Bottom,
         ) {
             Box(Modifier.weight(1f)) { mediaTitle() }
             mediaActions()
@@ -162,7 +167,7 @@ private fun MediaPlayerMainFramePreviewLayout() {
                     .border(2.dp, Color.Red)
                     .background(Color.LightGray)
                     .fillMaxWidth()
-                    .height(64.dp)
+                    .height(64.dp),
             )
         },
         mediaActions = {
@@ -170,7 +175,7 @@ private fun MediaPlayerMainFramePreviewLayout() {
                 Modifier
                     .border(2.dp, Color.Red)
                     .background(Color.LightGray)
-                    .size(196.dp, 40.dp)
+                    .size(196.dp, 40.dp),
             )
         },
         seeker = {
@@ -179,7 +184,7 @@ private fun MediaPlayerMainFramePreviewLayout() {
                     .border(2.dp, Color.Red)
                     .background(Color.LightGray)
                     .fillMaxWidth()
-                    .height(16.dp)
+                    .height(16.dp),
             )
         },
         more = {
@@ -187,7 +192,7 @@ private fun MediaPlayerMainFramePreviewLayout() {
                 Modifier
                     .border(2.dp, Color.Red)
                     .background(Color.LightGray)
-                    .size(145.dp, 16.dp)
+                    .size(145.dp, 16.dp),
             )
         },
     )
@@ -203,7 +208,7 @@ private fun MediaPlayerMainFramePreviewLayoutWithoutMore() {
                     .border(2.dp, Color.Red)
                     .background(Color.LightGray)
                     .fillMaxWidth()
-                    .height(64.dp)
+                    .height(64.dp),
             )
         },
         mediaActions = {
@@ -211,7 +216,7 @@ private fun MediaPlayerMainFramePreviewLayoutWithoutMore() {
                 Modifier
                     .border(2.dp, Color.Red)
                     .background(Color.LightGray)
-                    .size(196.dp, 40.dp)
+                    .size(196.dp, 40.dp),
             )
         },
         seeker = {
@@ -220,7 +225,7 @@ private fun MediaPlayerMainFramePreviewLayoutWithoutMore() {
                     .border(2.dp, Color.Red)
                     .background(Color.LightGray)
                     .fillMaxWidth()
-                    .height(16.dp)
+                    .height(16.dp),
             )
         },
         more = null,
@@ -237,7 +242,7 @@ private fun MediaPlayerMainFramePreviewLayoutOnPhone() {
                     .border(2.dp, Color.Red)
                     .background(Color.LightGray)
                     .fillMaxWidth()
-                    .height(64.dp)
+                    .height(64.dp),
             )
         },
         mediaActions = {
@@ -245,7 +250,7 @@ private fun MediaPlayerMainFramePreviewLayoutOnPhone() {
                 Modifier
                     .border(2.dp, Color.Red)
                     .background(Color.LightGray)
-                    .size(196.dp, 40.dp)
+                    .size(196.dp, 40.dp),
             )
         },
         seeker = {
@@ -254,7 +259,7 @@ private fun MediaPlayerMainFramePreviewLayoutOnPhone() {
                     .border(2.dp, Color.Red)
                     .background(Color.LightGray)
                     .fillMaxWidth()
-                    .height(16.dp)
+                    .height(16.dp),
             )
         },
         more = null,
