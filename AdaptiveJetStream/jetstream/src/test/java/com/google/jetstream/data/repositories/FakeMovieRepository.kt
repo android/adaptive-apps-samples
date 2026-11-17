@@ -16,32 +16,50 @@
 
 package com.google.jetstream.data.repositories
 
+import com.google.jetstream.data.entities.Movie
+import com.google.jetstream.data.entities.MovieCategory
 import com.google.jetstream.data.entities.MovieCategoryDetails
-import com.google.jetstream.data.entities.MovieCategoryList
 import com.google.jetstream.data.entities.MovieDetails
-import com.google.jetstream.data.entities.MovieList
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class FakeMovieRepository : MovieRepository {
-    private val movieFlow = MutableStateFlow<MovieList>(emptyList())
-    private val categoryFlow = MutableStateFlow<MovieCategoryList>(emptyList())
+    private val movieFlow = MutableStateFlow<List<Movie>>(emptyList())
+    private val categoryFlow = MutableStateFlow<List<MovieCategory>>(emptyList())
 
-    fun setMovies(movies: MovieList) {
+    var searchDelayMs: Long = 0L
+    var shouldThrowOnGetMovieDetails: Boolean = false
+    var customMovieDetails: MovieDetails? = null
+    val searchQueryHistory = mutableListOf<String>()
+
+    fun setMovies(movies: List<Movie>) {
         movieFlow.value = movies
     }
 
-    override fun getFeaturedMovies(): Flow<MovieList> = movieFlow
-    override fun getTrendingMovies(): Flow<MovieList> = movieFlow
-    override fun getTop10Movies(): Flow<MovieList> = movieFlow
-    override fun getNowPlayingMovies(): Flow<MovieList> = movieFlow
-    override fun getMovieCategories(): Flow<MovieCategoryList> = categoryFlow
+    fun setCategories(categories: List<MovieCategory>) {
+        categoryFlow.value = categories
+    }
+
+    override fun getFeaturedMovies(): Flow<List<Movie>> = movieFlow
+
+    override fun getTrendingMovies(): Flow<List<Movie>> = movieFlow
+
+    override fun getTop10Movies(): Flow<List<Movie>> = movieFlow
+
+    override fun getNowPlayingMovies(): Flow<List<Movie>> = movieFlow
+
+    override fun getMovieCategories(): Flow<List<MovieCategory>> = categoryFlow
 
     override suspend fun getMovieCategoryDetails(categoryId: String): MovieCategoryDetails {
         return MovieCategoryDetails(categoryId, "Category", emptyList())
     }
 
     override suspend fun getMovieDetails(movieId: String): MovieDetails {
+        if (shouldThrowOnGetMovieDetails) {
+            throw IllegalArgumentException("Movie not found: $movieId")
+        }
+        customMovieDetails?.let { return it }
         return MovieDetails(
             id = movieId,
             sources = emptyMap(),
@@ -62,16 +80,27 @@ class FakeMovieRepository : MovieRepository {
             budget = "",
             revenue = "",
             similarMovies = emptyList(),
-            reviewsAndRatings = emptyList()
+            reviewsAndRatings = emptyList(),
         )
     }
 
-    override suspend fun searchMovies(query: String): MovieList = emptyList()
+    override suspend fun searchMovies(query: String): List<Movie> {
+        searchQueryHistory.add(query)
+        if (searchDelayMs > 0L) {
+            delay(searchDelayMs)
+        }
+        return movieFlow.value.filter { it.name.contains(query, ignoreCase = true) }
+    }
 
-    override fun getMoviesWithLongThumbnail(): Flow<MovieList> = movieFlow
-    override fun getMovies(): Flow<MovieList> = movieFlow
-    override fun getPopularFilmsThisWeek(): Flow<MovieList> = movieFlow
-    override fun getTVShows(): Flow<MovieList> = movieFlow
-    override fun getBingeWatchDramas(): Flow<MovieList> = movieFlow
-    override fun getFavouriteMovies(): Flow<MovieList> = movieFlow
+    override fun getMoviesWithLongThumbnail(): Flow<List<Movie>> = movieFlow
+
+    override fun getMovies(): Flow<List<Movie>> = movieFlow
+
+    override fun getPopularFilmsThisWeek(): Flow<List<Movie>> = movieFlow
+
+    override fun getTVShows(): Flow<List<Movie>> = movieFlow
+
+    override fun getBingeWatchDramas(): Flow<List<Movie>> = movieFlow
+
+    override fun getFavouriteMovies(): Flow<List<Movie>> = movieFlow
 }

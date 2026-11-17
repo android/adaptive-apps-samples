@@ -16,11 +16,18 @@
 
 package com.google.jetstream.presentation.screens.moviedetails
 
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.junit4.v2.createComposeRule
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 import com.google.jetstream.data.entities.MovieDetails
+import com.google.jetstream.presentation.components.feature.EngagementMode
+import com.google.jetstream.presentation.components.feature.LocalEngagementMode
 import com.google.jetstream.presentation.theme.JetStreamTheme
+import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -28,32 +35,32 @@ import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
 class MovieDetailsScreenTest {
-
     @get:Rule
     val composeTestRule = createComposeRule()
 
-    private val testMovieDetails = MovieDetails(
-        id = "1",
-        sources = emptyMap(),
-        subtitleUri = "",
-        posterUri = "",
-        name = "Test Movie Title",
-        description = "Detailed description",
-        pgRating = "PG-13",
-        releaseDate = "2023",
-        categories = listOf("Action"),
-        duration = "2h",
-        director = "Director",
-        screenplay = "Screenplay",
-        music = "Music",
-        castAndCrew = emptyList(),
-        status = "Released",
-        originalLanguage = "English",
-        budget = "$10M",
-        revenue = "$50M",
-        similarMovies = emptyList(),
-        reviewsAndRatings = emptyList()
-    )
+    private val testMovieDetails =
+        MovieDetails(
+            id = "1",
+            sources = emptyMap(),
+            subtitleUri = "",
+            posterUri = "",
+            name = "Test Movie Title",
+            description = "Detailed description",
+            pgRating = "PG-13",
+            releaseDate = "2023",
+            categories = listOf("Action"),
+            duration = "2h",
+            director = "Director",
+            screenplay = "Screenplay",
+            music = "Music",
+            castAndCrew = emptyList(),
+            status = "Released",
+            originalLanguage = "English",
+            budget = "$10M",
+            revenue = "$50M",
+            similarMovies = emptyList(),
+            reviewsAndRatings = emptyList(),
+        )
 
     @Test
     fun movieDetails_displaysTitleAndDescription() {
@@ -63,12 +70,60 @@ class MovieDetailsScreenTest {
                     movieDetails = testMovieDetails,
                     goToMoviePlayer = {},
                     onBackPressed = {},
-                    refreshScreenWithNewMovie = {}
+                    refreshScreenWithNewMovie = {},
                 )
             }
         }
 
         composeTestRule.onNodeWithText(testMovieDetails.name).assertIsDisplayed()
         composeTestRule.onNodeWithText(testMovieDetails.description).assertIsDisplayed()
+    }
+
+    @Test
+    fun movieDetails_backButtonClick_invokesOnBackPressed() {
+        var backPressed = false
+        composeTestRule.setContent {
+            JetStreamTheme {
+                CompositionLocalProvider(
+                    LocalEngagementMode provides EngagementMode.Compact(isBackButtonRequired = true),
+                ) {
+                    Details(
+                        movieDetails = testMovieDetails,
+                        goToMoviePlayer = {},
+                        onBackPressed = { backPressed = true },
+                        refreshScreenWithNewMovie = {},
+                    )
+                }
+            }
+        }
+
+        composeTestRule
+            .onNodeWithContentDescription("Back from movie details screen")
+            .performClick()
+
+        assertTrue(backPressed)
+    }
+
+    @Test
+    fun movieDetails_systemBack_invokesOnBackPressed() {
+        var backPressed = false
+        var dispatcherOwner: androidx.activity.OnBackPressedDispatcherOwner? = null
+        composeTestRule.setContent {
+            dispatcherOwner = LocalOnBackPressedDispatcherOwner.current
+            JetStreamTheme {
+                Details(
+                    movieDetails = testMovieDetails,
+                    goToMoviePlayer = {},
+                    onBackPressed = { backPressed = true },
+                    refreshScreenWithNewMovie = {},
+                )
+            }
+        }
+
+        composeTestRule.runOnIdle {
+            dispatcherOwner?.onBackPressedDispatcher?.onBackPressed()
+        }
+
+        assertTrue(backPressed)
     }
 }

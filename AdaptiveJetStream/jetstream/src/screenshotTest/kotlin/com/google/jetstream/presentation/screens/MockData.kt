@@ -17,45 +17,48 @@
 package com.google.jetstream.presentation.screens
 
 import com.google.jetstream.data.entities.Movie
-import com.google.jetstream.data.entities.MovieDetails
 import com.google.jetstream.data.entities.MovieCategoryDetails
+import com.google.jetstream.data.entities.MovieDetails
 
-val TestMovie = Movie(
-    id = "1",
-    sources = emptyMap(),
-    subtitleUri = null,
-    posterUri = "",
-    name = "Movie Name",
-    description = "Movie Description"
-)
+val TestMovie =
+    Movie(
+        id = "1",
+        sources = emptyMap(),
+        subtitleUri = null,
+        posterUri = "",
+        name = "Movie Name",
+        description = "Movie Description",
+    )
 
 val TestMovieList = List(10) { TestMovie.copy(id = it.toString(), name = "Movie $it") }
 
-val TestMovieDetails = MovieDetails(
-    id = "1",
-    sources = emptyMap(),
-    subtitleUri = "",
-    posterUri = "",
-    name = "Movie Name",
-    description = "This is a detailed description of the movie. It is quite long to test how it looks in the UI.",
-    pgRating = "PG-13",
-    releaseDate = "2023-10-27",
-    categories = listOf("Action", "Drama"),
-    duration = "2h 15m",
-    director = "Director Name",
-    screenplay = "Screenplay Writer",
-    music = "Composer Name",
-    castAndCrew = emptyList(),
-    status = "Released",
-    originalLanguage = "English",
-    budget = "$100M",
-    revenue = "$500M",
-    similarMovies = TestMovieList,
-    reviewsAndRatings = emptyList()
-)
+val TestMovieDetails =
+    MovieDetails(
+        id = "1",
+        sources = emptyMap(),
+        subtitleUri = "",
+        posterUri = "",
+        name = "Movie Name",
+        description = "This is a detailed description of the movie. It is quite long to test how it looks in the UI.",
+        pgRating = "PG-13",
+        releaseDate = "2023-10-27",
+        categories = listOf("Action", "Drama"),
+        duration = "2h 15m",
+        director = "Director Name",
+        screenplay = "Screenplay Writer",
+        music = "Composer Name",
+        castAndCrew = emptyList(),
+        status = "Released",
+        originalLanguage = "English",
+        budget = "$100M",
+        revenue = "$500M",
+        similarMovies = TestMovieList,
+        reviewsAndRatings = emptyList(),
+    )
 
-val TestCategoryDetails = MovieCategoryDetails(
-    id = "action",
-    name = "Action Movies",
-    movies = TestMovieList
-)
+val TestCategoryDetails =
+    MovieCategoryDetails(
+        id = "action",
+        name = "Action Movies",
+        movies = TestMovieList,
+    )

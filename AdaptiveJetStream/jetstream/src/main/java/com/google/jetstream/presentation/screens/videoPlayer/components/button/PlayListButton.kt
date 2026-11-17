@@ -29,6 +29,6 @@ fun PlayListButton(
     VideoPlayerControlsIcon(
         icon = Icons.Default.AutoAwesomeMotion,
         contentDescription = StringConstants.Composable.VideoPlayerControlPlaylistButton,
-        modifier = modifier
+        modifier = modifier,
     )
 }

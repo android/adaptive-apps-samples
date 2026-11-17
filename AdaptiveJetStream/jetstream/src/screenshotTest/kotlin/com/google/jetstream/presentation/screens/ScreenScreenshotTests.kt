@@ -17,32 +17,19 @@
 package com.google.jetstream.presentation.screens
 
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.unit.dp
 import com.android.tools.screenshot.PreviewTest
-import com.google.jetstream.presentation.app.AppState
-import com.google.jetstream.presentation.app.withNavigationSuiteScaffold.AdaptiveAppNavigationItems
-import com.google.jetstream.presentation.app.withNavigationSuiteScaffold.NavigationSuiteScaffoldLayout
-import com.google.jetstream.presentation.app.withNavigationSuiteScaffold.TopAppBar
-import com.google.jetstream.presentation.app.withTopBarNavigation.TopBarWithNavigationLayout
 import com.google.jetstream.presentation.components.AdaptivePreview
-import com.google.jetstream.presentation.components.AutoPreview
-import com.google.jetstream.presentation.components.DesktopPreview
-import com.google.jetstream.presentation.components.FoldablePreview
 import com.google.jetstream.presentation.components.JetStreamPreview
-import com.google.jetstream.presentation.components.PhonePreview
-import com.google.jetstream.presentation.components.TabletPreview
-import com.google.jetstream.presentation.components.TvPreview
 import com.google.jetstream.presentation.components.mockCategoryScreenState
 import com.google.jetstream.presentation.screens.categories.CategoryDetails
 import com.google.jetstream.presentation.screens.favourites.FavouriteScreenViewModel
 import com.google.jetstream.presentation.screens.favourites.FilterList
 import com.google.jetstream.presentation.screens.moviedetails.MovieDetailsList
+import com.google.jetstream.presentation.screens.profile.ProfileScreen
 import com.google.jetstream.presentation.screens.search.SearchResult
 import com.google.jetstream.presentation.screens.categories.Catalog as CategoriesCatalog
 import com.google.jetstream.presentation.screens.favourites.Catalog as FavouritesCatalog
@@ -64,7 +51,7 @@ fun HomeScreenScreenshot() {
                 onMovieClick = { _ -> },
                 onScroll = { _ -> },
                 goToVideoPlayer = { _ -> },
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
             )
         }
     }
@@ -80,7 +67,7 @@ fun MovieDetailsScreenScreenshot() {
                 movieDetails = TestMovieDetails,
                 goToMoviePlayer = { _ -> },
                 refreshScreenWithNewMovie = { _ -> },
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
             )
         }
     }
@@ -96,7 +83,7 @@ fun CategoryMovieListScreenScreenshot() {
                 categoryDetails = TestCategoryDetails,
                 onBackPressed = {},
                 onMovieSelected = { _ -> },
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
             )
         }
     }
@@ -114,7 +101,7 @@ fun ShowsScreenScreenshot() {
                 onTVShowClick = { _ -> },
                 onScroll = { _ -> },
                 isTopBarVisible = true,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
             )
         }
     }
@@ -132,7 +119,7 @@ fun MoviesScreenScreenshot() {
                 onMovieClick = { _ -> },
                 onScroll = { _ -> },
                 isTopBarVisible = true,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
             )
         }
     }
@@ -148,7 +135,7 @@ fun CategoriesScreenScreenshot() {
                 movieCategories = mockCategoryScreenState.categoryList,
                 onCategoryClick = { _ -> },
                 onScroll = { _ -> },
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
             )
         }
     }
@@ -168,7 +155,7 @@ fun FavouritesScreenScreenshot() {
                 onScroll = { _ -> },
                 onSelectedFilterListUpdated = { _ -> },
                 isTopBarVisible = true,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
             )
         }
     }
@@ -186,84 +173,21 @@ fun SearchScreenScreenshot() {
                 searchMovies = {},
                 updateSearchText = { _ -> },
                 onMovieClick = { _ -> },
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
             )
         }
     }
 }
 
 @PreviewTest
-@PhonePreview
-@TabletPreview
-@FoldablePreview
+@AdaptivePreview
 @Composable
-fun NavigationSuiteScaffoldLayoutPreview() {
+fun ProfileScreenScreenshot() {
     JetStreamPreview {
         Surface {
-            val appState = AppState()
-
-            NavigationSuiteScaffoldLayout(
-                isNavigationVisible = true,
-                navigationItems = {
-                    AdaptiveAppNavigationItems(
-                        currentScreen = Screens.Home,
-                        screens = Screens.entries.filter { it.isMainNavigation },
-                        onSelectScreen = {}
-                    )
-                },
-                content = { padding ->
-                    HomeCatalog(
-                        featuredMovies = TestMovieList,
-                        trendingMovies = TestMovieList,
-                        top10Movies = TestMovieList,
-                        nowPlayingMovies = TestMovieList,
-                        onMovieClick = { _ -> },
-                        onScroll = { _ -> },
-                        goToVideoPlayer = { _ -> },
-                        modifier = Modifier.padding(padding).fillMaxSize()
-                    )
-                },
-                topBar = {
-                    TopAppBar(
-                        modifier = Modifier
-                            .padding(
-                                start = 24.dp,
-                                end = 24.dp,
-                                top = 0.dp
-                            ),
-                        selectedScreen = appState.selectedScreen,
-                        showScreen = { },
-                    )
-                }
+            ProfileScreen(
+                onDestinationSelected = {},
             )
-        }
-    }
-}
-
-
-@PreviewTest
-@DesktopPreview
-@TvPreview
-@AutoPreview
-@Composable
-fun TopBarWithNavigationLayoutPreview() {
-    JetStreamPreview {
-        Surface {
-            val appState = AppState()
-            TopBarWithNavigationLayout(
-                selectedScreen = appState.selectedScreen,
-                isNavigationVisible = appState.isNavigationVisible,
-                isTopBarVisible = appState.isNavigationVisible && appState.isTopBarVisible,
-                isTopBarFocussed = appState.isTopBarFocused,
-                onTopBarFocusChanged = { hasFocus ->
-                    appState.updateTopBarFocusState(hasFocus)
-                },
-                onTopBarVisible = { appState.showTopBar() },
-                onActivityBackPressed = { },
-                onShowScreen = {},
-            ) {
-                Text("Preview content")
-            }
         }
     }
 }

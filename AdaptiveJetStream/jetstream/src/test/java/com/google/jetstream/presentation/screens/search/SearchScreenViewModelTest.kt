@@ -17,6 +17,7 @@
 package com.google.jetstream.presentation.screens.search
 
 import androidx.compose.ui.text.input.TextFieldValue
+import com.google.jetstream.data.entities.Movie
 import com.google.jetstream.data.repositories.FakeMovieRepository
 import com.google.jetstream.util.MainDispatcherRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -24,6 +25,8 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.advanceTimeBy
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -32,34 +35,103 @@ import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class SearchScreenViewModelTest {
-
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 
     private val movieRepository = FakeMovieRepository()
 
     @Test
-    fun searchState_initiallyReady() = runTest {
-        val viewModel = SearchScreenViewModel(movieRepository)
-        assertTrue(viewModel.searchState.value is SearchState.Ready)
-        assertEquals("", (viewModel.searchState.value as SearchState.Ready).textFieldValue.text)
-    }
-
-    @Test
-    fun updateSearchText_updatesState() = runTest {
-        val viewModel = SearchScreenViewModel(movieRepository)
-        val newText = TextFieldValue("Action")
-        
-        // Start collecting to trigger WhileSubscribed
-        val collectJob = launch(UnconfinedTestDispatcher(testScheduler)) {
-            viewModel.searchState.collect()
+    fun searchState_initiallyReady() =
+        runTest {
+            val viewModel = SearchScreenViewModel(movieRepository)
+            assertTrue(viewModel.searchState.value is SearchState.Ready)
+            assertEquals("", (viewModel.searchState.value as SearchState.Ready).textFieldValue.text)
         }
 
-        viewModel.updateSearchText(newText)
-        
-        val state = viewModel.searchState.first { it is SearchState.Ready && it.textFieldValue.text == "Action" }
-        assertEquals("Action", (state as SearchState.Ready).textFieldValue.text)
-        
-        collectJob.cancel()
-    }
+    @Test
+    fun updateSearchText_updatesState() =
+        runTest {
+            val viewModel = SearchScreenViewModel(movieRepository)
+            val newText = TextFieldValue("Action")
+
+            // Start collecting to trigger WhileSubscribed
+            val collectJob =
+                launch(UnconfinedTestDispatcher(testScheduler)) {
+                    viewModel.searchState.collect()
+                }
+
+            viewModel.updateSearchText(newText)
+
+            val state = viewModel.searchState.first { it is SearchState.Ready && it.textFieldValue.text == "Action" }
+            assertEquals("Action", (state as SearchState.Ready).textFieldValue.text)
+
+            collectJob.cancel()
+        }
+
+    @Test
+    fun rapidQueries_cancelsInFlightQueryAndEmitsLatestResult() =
+        runTest {
+            val testMovies =
+                listOf(
+                    Movie(
+                        id = "1",
+                        sources = emptyMap(),
+                        subtitleUri = null,
+                        posterUri = "",
+                        name = "Alpha",
+                        description = "",
+                    ),
+                    Movie(
+                        id = "2",
+                        sources = emptyMap(),
+                        subtitleUri = null,
+                        posterUri = "",
+                        name = "Alphabet",
+                        description = "",
+                    ),
+                    Movie(
+                        id = "3",
+                        sources = emptyMap(),
+                        subtitleUri = null,
+                        posterUri = "",
+                        name = "Alphabetical",
+                        description = "",
+                    ),
+                )
+            movieRepository.setMovies(testMovies)
+            movieRepository.searchDelayMs = 300L
+
+            val viewModel = SearchScreenViewModel(movieRepository)
+
+            viewModel.updateSearchText(TextFieldValue("Alpha"))
+            viewModel.query()
+            advanceTimeBy(100L)
+
+            viewModel.updateSearchText(TextFieldValue("Alphabet"))
+            viewModel.query()
+            advanceTimeBy(100L)
+
+            viewModel.updateSearchText(TextFieldValue("Alphabetical"))
+            viewModel.query()
+            advanceUntilIdle()
+
+            val state = viewModel.searchState.value as SearchState.Ready
+            assertEquals("Alphabetical", state.textFieldValue.text)
+            assertEquals(1, state.movieList.size)
+            assertEquals("Alphabetical", state.movieList.single().name)
+        }
+
+    @Test
+    fun blankQuery_resetsToReadyWithoutInvokingRepositorySearch() =
+        runTest {
+            val viewModel = SearchScreenViewModel(movieRepository)
+
+            viewModel.updateSearchText(TextFieldValue("   "))
+            viewModel.query()
+            advanceUntilIdle()
+
+            val state = viewModel.searchState.value as SearchState.Ready
+            assertTrue(state.movieList.isEmpty())
+            assertTrue(movieRepository.searchQueryHistory.isEmpty())
+        }
 }

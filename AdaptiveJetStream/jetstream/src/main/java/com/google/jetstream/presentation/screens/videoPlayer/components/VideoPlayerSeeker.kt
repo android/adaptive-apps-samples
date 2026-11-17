@@ -29,11 +29,10 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.focusRequester
 import androidx.media3.common.Player
-import com.google.jetstream.presentation.components.shim.tryRequestFocus
 import com.google.jetstream.presentation.screens.videoPlayer.components.button.PlayPauseButton
+import kotlinx.coroutines.delay
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
-import kotlinx.coroutines.delay
 
 @Composable
 fun VideoPlayerSeeker(
@@ -43,7 +42,7 @@ fun VideoPlayerSeeker(
     onSeek: (Float) -> Unit = {
         player.seekTo(player.duration.times(it).toLong())
     },
-    shouldShowPlayPauseButton: Boolean
+    shouldShowPlayPauseButton: Boolean,
 ) {
     var contentCurrentPosition by remember(contentDuration) {
         mutableLongStateOf(player.currentPosition)
@@ -76,14 +75,25 @@ fun VideoPlayerSeeker(
         }
 
     val playPauseButton = remember { FocusRequester() }
+    val progress =
+        if (contentDuration.inWholeMilliseconds > 0) {
+            (contentProgress / contentDuration).toFloat().coerceIn(0f, 1f)
+        } else {
+            0f
+        }
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier.focusProperties {
-            onEnter = {
-                playPauseButton.tryRequestFocus()
-            }
-        }
+        modifier =
+            if (shouldShowPlayPauseButton) {
+                modifier.focusProperties {
+                    onEnter = {
+                        playPauseButton.requestFocus()
+                    }
+                }
+            } else {
+                modifier
+            },
     ) {
         if (shouldShowPlayPauseButton) {
             PlayPauseButton(
@@ -93,7 +103,7 @@ fun VideoPlayerSeeker(
         }
         VideoPlayerControllerText(text = contentProgressString)
         VideoPlayerControllerIndicator(
-            progress = (contentProgress / contentDuration).toFloat(),
+            progress = progress,
             onSeek = onSeek,
         )
         VideoPlayerControllerText(text = contentDurationString)

@@ -28,39 +28,42 @@ import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class FavouriteScreenViewModelTest {
-
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 
     private val movieRepository = FakeMovieRepository()
 
     @Test
-    fun uiState_initiallyLoading() = runTest {
-        val viewModel = FavouriteScreenViewModel(movieRepository)
-        assertEquals(FavouriteScreenUiState.Loading, viewModel.uiState.value)
-    }
-
-    @Test
-    fun uiState_whenDataLoaded_isReady() = runTest {
-        val viewModel = FavouriteScreenViewModel(movieRepository)
-        
-        movieRepository.setMovies(emptyList())
-        
-        val state = viewModel.uiState.first { it is FavouriteScreenUiState.Ready }
-        assertTrue(state is FavouriteScreenUiState.Ready)
-    }
-
-    @Test
-    fun updateSelectedFilterList_updatesState() = runTest {
-        val viewModel = FavouriteScreenViewModel(movieRepository)
-        movieRepository.setMovies(emptyList())
-        
-        val newFilterList = FilterList(listOf(FilterCondition.Movies))
-        viewModel.updateSelectedFilterList(newFilterList)
-        
-        val state = viewModel.uiState.first { 
-            it is FavouriteScreenUiState.Ready && it.selectedFilterList == newFilterList 
+    fun uiState_initiallyLoading() =
+        runTest {
+            val viewModel = FavouriteScreenViewModel(movieRepository)
+            assertEquals(FavouriteScreenUiState.Loading, viewModel.uiState.value)
         }
-        assertEquals(newFilterList, (state as FavouriteScreenUiState.Ready).selectedFilterList)
-    }
+
+    @Test
+    fun uiState_whenDataLoaded_isReady() =
+        runTest {
+            val viewModel = FavouriteScreenViewModel(movieRepository)
+
+            movieRepository.setMovies(emptyList())
+
+            val state = viewModel.uiState.first { it is FavouriteScreenUiState.Ready }
+            assertTrue(state is FavouriteScreenUiState.Ready)
+        }
+
+    @Test
+    fun updateSelectedFilterList_updatesState() =
+        runTest {
+            val viewModel = FavouriteScreenViewModel(movieRepository)
+            movieRepository.setMovies(emptyList())
+
+            val newFilterList = FilterList(listOf(FilterCondition.Movies))
+            viewModel.updateSelectedFilterList(newFilterList)
+
+            val state =
+                viewModel.uiState.first {
+                    it is FavouriteScreenUiState.Ready && it.selectedFilterList == newFilterList
+                }
+            assertEquals(newFilterList, (state as FavouriteScreenUiState.Ready).selectedFilterList)
+        }
 }

@@ -17,13 +17,12 @@
 package com.google.jetstream.presentation.screens.search
 
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.text.input.TextFieldValue
 import com.google.jetstream.data.entities.Movie
 import com.google.jetstream.data.repositories.FakeMovieRepository
 import com.google.jetstream.presentation.theme.JetStreamTheme
-import com.google.jetstream.util.MainDispatcherRule
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -33,21 +32,18 @@ import org.robolectric.annotation.Config
 @RunWith(RobolectricTestRunner::class)
 @Config(qualifiers = "w1280dp-h800dp")
 class SearchScreenTest {
-
     @get:Rule
     val composeTestRule = createComposeRule()
 
-    @get:Rule
-    val mainDispatcherRule = MainDispatcherRule()
-
-    private val testMovie = Movie(
-        id = "1",
-        sources = emptyMap(),
-        subtitleUri = null,
-        posterUri = "",
-        name = "Movie Name",
-        description = "Movie Description"
-    )
+    private val testMovie =
+        Movie(
+            id = "1",
+            sources = emptyMap(),
+            subtitleUri = null,
+            posterUri = "",
+            name = "Movie Name",
+            description = "Movie Description",
+        )
 
     @Test
     fun searchResult_displaysPlaceholder() {
@@ -58,7 +54,7 @@ class SearchScreenTest {
                     movieList = emptyList(),
                     searchMovies = {},
                     updateSearchText = {},
-                    onMovieClick = {}
+                    onMovieClick = {},
                 )
             }
         }
@@ -78,7 +74,7 @@ class SearchScreenTest {
                     movieList = movies,
                     searchMovies = {},
                     updateSearchText = {},
-                    onMovieClick = {}
+                    onMovieClick = {},
                 )
             }
         }
@@ -98,7 +94,7 @@ class SearchScreenTest {
                 SearchScreen(
                     onMovieClick = {},
                     onScroll = {},
-                    searchScreenViewModel = viewModel
+                    searchScreenViewModel = viewModel,
                 )
             }
         }

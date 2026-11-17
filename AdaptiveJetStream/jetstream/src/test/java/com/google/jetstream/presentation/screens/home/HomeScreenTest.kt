@@ -16,11 +16,15 @@
 
 package com.google.jetstream.presentation.screens.home
 
-import androidx.compose.ui.test.*
-import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.ComposeUiFlags
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.junit4.v2.createComposeRule
+import androidx.compose.ui.test.onNodeWithText
 import com.google.jetstream.data.entities.Movie
 import com.google.jetstream.data.util.StringConstants
 import com.google.jetstream.presentation.theme.JetStreamTheme
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -30,18 +34,24 @@ import org.robolectric.annotation.Config
 @RunWith(RobolectricTestRunner::class)
 @Config(qualifiers = "w1280dp-h2000dp")
 class HomeScreenTest {
-
     @get:Rule
     val composeTestRule = createComposeRule()
 
-    private val testMovie = Movie(
-        id = "1",
-        sources = emptyMap(),
-        subtitleUri = null,
-        posterUri = "",
-        name = "Movie Name",
-        description = "Movie Description"
-    )
+    @OptIn(ExperimentalComposeUiApi::class)
+    @Before
+    fun setUp() {
+        ComposeUiFlags.isMediaQueryIntegrationEnabled = true
+    }
+
+    private val testMovie =
+        Movie(
+            id = "1",
+            sources = emptyMap(),
+            subtitleUri = null,
+            posterUri = "",
+            name = "Movie Name",
+            description = "Movie Description",
+        )
     private val testMovieList = List(5) { testMovie.copy(id = it.toString(), name = "Movie $it") }
 
     @Test
@@ -55,7 +65,7 @@ class HomeScreenTest {
                     nowPlayingMovies = testMovieList,
                     onMovieClick = {},
                     onScroll = {},
-                    goToVideoPlayer = {}
+                    goToVideoPlayer = {},
                 )
             }
         }
@@ -76,7 +86,7 @@ class HomeScreenTest {
                     nowPlayingMovies = testMovieList,
                     onMovieClick = {},
                     onScroll = {},
-                    goToVideoPlayer = {}
+                    goToVideoPlayer = {},
                 )
             }
         }

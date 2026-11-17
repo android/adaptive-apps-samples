@@ -28,7 +28,8 @@ class BaselineProfileGenerator {
 
     @Test
     fun startup() = baselineProfileRule.collect(
-        packageName = JETSTREAM_PACKAGE_NAME
+        packageName = JETSTREAM_PACKAGE_NAME,
+        includeInStartupProfile = true,
     ) {
         startActivityAndWait()
         device.waitForIdle()
@@ -36,8 +37,10 @@ class BaselineProfileGenerator {
         device.run {
             // Wait until screen loads and Carousel gains focus
             wait(
-                Until.findObject(By.descContains(CAROUSEL_DESCRIPTION).focused(true)),
-                INITIAL_WAIT_TIMEOUT
+                Until.findObject(
+                    By.descContains(CAROUSEL_DESCRIPTION).hasDescendant(By.focused(true)),
+                ),
+                INITIAL_WAIT_TIMEOUT,
             )
 
             // Explore the Home tab
@@ -191,12 +194,12 @@ private const val JETSTREAM_PACKAGE_NAME = "com.google.jetstream"
 private const val INITIAL_WAIT_TIMEOUT = 2000L
 private const val WAIT_TIMEOUT = 1000L
 
-private const val PROFILE_BUTTON_DESCRIPTION = "User Profile"
+private const val PROFILE_BUTTON_DESCRIPTION = "User Profile Button"
 private const val HOME_TAB_LABEL = "Home"
 private const val CATEGORIES_TAB_LABEL = "Categories"
 private const val MOVIES_TAB_LABEL = "Movies"
 private const val SHOWS_TAB_LABEL = "Shows"
 private const val FAVOURITES_TAB_LABEL = "Favourites"
-private const val SEARCH_TAB_DESCRIPTION = "Dashboard Search"
+private const val SEARCH_TAB_DESCRIPTION = "Search"
 private const val TV_SHOWS_CHIP_LABEL = "TV Shows"
 private const val CAROUSEL_DESCRIPTION = "Carousel"

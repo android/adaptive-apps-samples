@@ -32,30 +32,31 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.google.jetstream.R
 import com.google.jetstream.data.util.StringConstants
-import com.google.jetstream.presentation.theme.IconSize
+import com.google.jetstream.presentation.theme.JetStreamTokens
 import com.google.jetstream.presentation.theme.LexendExa
 
 @Composable
 fun JetStreamLogo(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
             Icons.Default.PlayCircle,
             contentDescription = StringConstants.Composable.ContentDescription.BrandLogoImage,
-            modifier = Modifier
-                .padding(end = 4.dp)
-                .size(IconSize)
+            modifier =
+                Modifier
+                    .padding(end = 4.dp)
+                    .size(JetStreamTokens.IconSize),
         )
         Text(
             text = stringResource(R.string.brand_logo_text),
             style = MaterialTheme.typography.titleSmall,
             fontWeight = FontWeight.Medium,
             fontFamily = LexendExa,
-            modifier = Modifier.padding(horizontal = 16.dp)
+            modifier = Modifier.padding(horizontal = 16.dp),
         )
     }
 }

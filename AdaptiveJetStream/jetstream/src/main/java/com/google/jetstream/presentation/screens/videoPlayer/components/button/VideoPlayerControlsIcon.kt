@@ -36,25 +36,29 @@ fun VideoPlayerControlsIcon(
     icon: ImageVector,
     contentDescription: String? = null,
     enabled: Boolean = true,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
 ) {
     IconButton(
         onClick = onClick,
-        modifier = modifier
-            .size(40.dp)
-            .onSpaceBarPressed(onClick), // ToDo: remove when Compose 1.8.0 is available
-        colors = IconButtonDefaults.iconButtonColors(
-            containerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
-        ),
+        modifier =
+            modifier
+                .size(40.dp)
+                .onSpaceBarPressed(onClick),
+        // ToDo: remove when Compose 1.8.0 is available
+        colors =
+            IconButtonDefaults.iconButtonColors(
+                containerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f),
+            ),
         enabled = enabled,
     ) {
         Icon(
             icon,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(8.dp),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(8.dp),
             contentDescription = contentDescription,
-            tint = LocalContentColor.current
+            tint = LocalContentColor.current,
         )
     }
 }

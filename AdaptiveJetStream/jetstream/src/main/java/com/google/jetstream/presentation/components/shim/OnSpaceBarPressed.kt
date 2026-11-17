@@ -23,6 +23,11 @@ import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.input.key.type
 
+/**
+ * A modifier that triggers the [onPressed] callback when the spacebar is released (KeyUp).
+ *
+ * @param onPressed The callback to be invoked.
+ */
 fun Modifier.onSpaceBarPressed(onPressed: () -> Unit): Modifier {
     return onKeyEvent {
         if (it.key == Key.Spacebar && it.type == KeyEventType.KeyUp) {

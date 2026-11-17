@@ -22,7 +22,7 @@ import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasClickAction
 import androidx.compose.ui.test.junit4.StateRestorationTester
-import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
@@ -33,40 +33,43 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
+@Config(qualifiers = "w1280dp-h800dp")
 class CategoryMovieListScreenAdaptiveTest {
-
     @get:Rule
     val composeTestRule = createComposeRule()
 
-    private val testMovie = Movie(
-        id = "1",
-        sources = emptyMap(),
-        subtitleUri = null,
-        posterUri = "",
-        name = "Movie Name",
-        description = "Movie Description"
-    )
+    private val testMovie =
+        Movie(
+            id = "1",
+            sources = emptyMap(),
+            subtitleUri = null,
+            posterUri = "",
+            name = "Movie Name",
+            description = "Movie Description",
+        )
     private val testMovieList = List(5) { testMovie.copy(id = it.toString(), name = "Movie $it") }
 
-    private val testCategoryDetails = MovieCategoryDetails(
-        id = "1",
-        name = "Action Movies",
-        movies = testMovieList
-    )
+    private val testCategoryDetails =
+        MovieCategoryDetails(
+            id = "1",
+            name = "Action Movies",
+            movies = testMovieList,
+        )
 
     @Test
     fun categoryMovieList_displaysCategoryName_inLargeScreen() {
         composeTestRule.setContent {
             DeviceConfigurationOverride(
-                DeviceConfigurationOverride.ForcedSize(DpSize(1280.dp, 800.dp))
+                DeviceConfigurationOverride.ForcedSize(DpSize(1280.dp, 800.dp)),
             ) {
                 JetStreamTheme {
                     CategoryDetails(
                         categoryDetails = testCategoryDetails,
                         onBackPressed = {},
-                        onMovieSelected = {}
+                        onMovieSelected = {},
                     )
                 }
             }
@@ -79,10 +82,9 @@ class CategoryMovieListScreenAdaptiveTest {
     fun categoryMovieList_displaysAllMovies() {
         composeTestRule.setContent {
             JetStreamTheme {
-                CategoryDetails(
+                CategoryMovieList(
                     categoryDetails = testCategoryDetails,
-                    onBackPressed = {},
-                    onMovieSelected = {}
+                    onMovieSelected = {},
                 )
             }
         }
@@ -100,7 +102,7 @@ class CategoryMovieListScreenAdaptiveTest {
                 CategoryDetails(
                     categoryDetails = testCategoryDetails,
                     onBackPressed = {},
-                    onMovieSelected = {}
+                    onMovieSelected = {},
                 )
             }
         }

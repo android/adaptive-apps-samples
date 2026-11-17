@@ -21,12 +21,12 @@ import androidx.compose.runtime.Composable
 import com.android.tools.screenshot.PreviewTest
 import com.google.jetstream.presentation.components.AdaptivePreview
 import com.google.jetstream.presentation.components.JetStreamPreview
-import com.google.jetstream.presentation.screens.profile.compoents.AboutSection
-import com.google.jetstream.presentation.screens.profile.compoents.AccountsSection
-import com.google.jetstream.presentation.screens.profile.compoents.HelpAndSupportSection
-import com.google.jetstream.presentation.screens.profile.compoents.LanguageSection
-import com.google.jetstream.presentation.screens.profile.compoents.SearchHistorySection
-import com.google.jetstream.presentation.screens.profile.compoents.SubtitlesSection
+import com.google.jetstream.presentation.screens.profile.section.AboutSection
+import com.google.jetstream.presentation.screens.profile.section.AccountsSection
+import com.google.jetstream.presentation.screens.profile.section.HelpAndSupportSection
+import com.google.jetstream.presentation.screens.profile.section.LanguageSection
+import com.google.jetstream.presentation.screens.profile.section.SearchHistorySection
+import com.google.jetstream.presentation.screens.profile.section.SubtitlesSection
 
 @PreviewTest
 @AdaptivePreview

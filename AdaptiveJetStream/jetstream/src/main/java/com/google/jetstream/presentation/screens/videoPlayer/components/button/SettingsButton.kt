@@ -29,6 +29,6 @@ fun SettingsButton(
     VideoPlayerControlsIcon(
         icon = Icons.Default.Settings,
         contentDescription = StringConstants.Composable.VideoPlayerControlSettingsButton,
-        modifier = modifier
+        modifier = modifier,
     )
 }

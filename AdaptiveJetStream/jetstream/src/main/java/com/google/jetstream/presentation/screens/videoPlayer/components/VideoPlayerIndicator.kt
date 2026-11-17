@@ -47,45 +47,52 @@ fun RowScope.VideoPlayerControllerIndicator(
     var isSelected by remember { mutableStateOf(false) }
     val isFocused by interactionSource.collectIsFocusedAsState()
     val color by rememberUpdatedState(
-        newValue = if (isSelected) MaterialTheme.colorScheme.primary
-        else MaterialTheme.colorScheme.onSurface
+        newValue =
+            if (isSelected) {
+                MaterialTheme.colorScheme.primary
+            } else {
+                MaterialTheme.colorScheme.onSurface
+            },
     )
     val animatedIndicatorHeight by animateDpAsState(
-        targetValue = 4.dp.times((if (isFocused) 2.5f else 1f))
+        targetValue = 4.dp.times((if (isFocused) 2.5f else 1f)),
     )
     var seekProgress by remember { mutableStateOf(0f) }
 
-    val handleSeekEventModifier = Modifier.handleDPadKeyEvents(
-        onEnter = {
-            isSelected = !isSelected
-            onSeek(seekProgress)
-        },
-        onLeft = {
-            seekProgress = (seekProgress - 0.1f).coerceAtLeast(0f)
-        },
-        onRight = {
-            seekProgress = (seekProgress + 0.1f).coerceAtMost(1f)
-        }
-    )
+    val handleSeekEventModifier =
+        Modifier.handleDPadKeyEvents(
+            onEnter = {
+                isSelected = !isSelected
+                onSeek(seekProgress)
+            },
+            onLeft = {
+                seekProgress = (seekProgress - 0.1f).coerceAtLeast(0f)
+            },
+            onRight = {
+                seekProgress = (seekProgress + 0.1f).coerceAtMost(1f)
+            },
+        )
 
-    val handleDpadCenterClickModifier = Modifier.handleDPadKeyEvents(
-        onEnter = {
-            seekProgress = progress
-            isSelected = !isSelected
-        }
-    )
+    val handleDpadCenterClickModifier =
+        Modifier.handleDPadKeyEvents(
+            onEnter = {
+                seekProgress = progress
+                isSelected = !isSelected
+            },
+        )
 
     Canvas(
-        modifier = Modifier
-            .weight(1f)
-            .height(animatedIndicatorHeight)
-            .padding(horizontal = 4.dp)
-            .ifElse(
-                condition = isSelected,
-                ifTrueModifier = handleSeekEventModifier,
-                ifFalseModifier = handleDpadCenterClickModifier
-            )
-            .focusable(interactionSource = interactionSource),
+        modifier =
+            Modifier
+                .weight(1f)
+                .height(animatedIndicatorHeight)
+                .padding(horizontal = 4.dp)
+                .ifElse(
+                    condition = isSelected,
+                    ifTrueModifier = handleSeekEventModifier,
+                    ifFalseModifier = handleDpadCenterClickModifier,
+                )
+                .focusable(interactionSource = interactionSource),
         onDraw = {
             val yOffset = size.height.div(2)
             drawLine(
@@ -93,18 +100,19 @@ fun RowScope.VideoPlayerControllerIndicator(
                 start = Offset(x = 0f, y = yOffset),
                 end = Offset(x = size.width, y = yOffset),
                 strokeWidth = size.height,
-                cap = StrokeCap.Round
+                cap = StrokeCap.Round,
             )
             drawLine(
                 color = color,
                 start = Offset(x = 0f, y = yOffset),
-                end = Offset(
-                    x = size.width.times(if (isSelected) seekProgress else progress),
-                    y = yOffset
-                ),
+                end =
+                    Offset(
+                        x = size.width.times(if (isSelected) seekProgress else progress),
+                        y = yOffset,
+                    ),
                 strokeWidth = size.height,
-                cap = StrokeCap.Round
+                cap = StrokeCap.Round,
             )
-        }
+        },
     )
 }

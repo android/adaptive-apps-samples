@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 /*
  * Copyright 2023 Google LLC
  *
@@ -15,16 +13,20 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+
+import com.android.build.api.dsl.ApplicationExtension
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
     alias(libs.plugins.androidx.baselineprofile)
-    alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.screenshot)
+    alias(libs.plugins.spotless)
     id("jacoco")
 }
 
@@ -32,19 +34,20 @@ kotlin {
     jvmToolchain(21)
 
     compilerOptions {
+        languageVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_3
         jvmTarget = JvmTarget.JVM_21
     }
 }
 
-android {
+configure<ApplicationExtension> {
     namespace = "com.google.jetstream"
     // Needed for latest androidx snapshot build
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.google.jetstream"
         minSdk = 28
-        targetSdk = 36
+        targetSdk = 37
         versionCode = 1
         versionName = "1.0"
 
@@ -60,10 +63,11 @@ android {
         }
         getByName("release") {
             isMinifyEnabled = true
+            isShrinkResources = true
             signingConfig = signingConfigs.getByName("debug")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }
@@ -106,31 +110,63 @@ tasks.register<JacocoReport>("jacocoTestReport") {
         html.required.set(true)
     }
 
-    val fileFilter = listOf(
-        "**/R.class",
-        "**/R$*.class",
-        "**/BuildConfig.*",
-        "**/Manifest*.*",
-        "**/*Test*.*",
-        "android/**/*.*",
-        "**/hilt_aggregated_deps/**",
-        "**/*_HiltModules*.*",
-        "**/*_Factory*.*",
-        "**/*_MembersInjector*.*"
-    )
+    val fileFilter =
+        listOf(
+            "**/R.class",
+            "**/R$*.class",
+            "**/BuildConfig.*",
+            "**/Manifest*.*",
+            "**/*Test*.*",
+            "android/**/*.*",
+            "**/hilt_aggregated_deps/**",
+            "**/*_HiltModules*.*",
+            "**/*_Factory*.*",
+            "**/*_MembersInjector*.*",
+        )
 
-    val javaClasses = fileTree("${project.layout.buildDirectory.get()}/intermediates/javac/debug/classes") {
-        exclude(fileFilter)
-    }
-    val kotlinClasses = fileTree("${project.layout.buildDirectory.get()}/tmp/kotlin-classes/debug") {
-        exclude(fileFilter)
-    }
+    val javaClasses =
+        fileTree("${project.layout.buildDirectory.get()}/intermediates/javac/debug/compileDebugJavaWithJavac/classes") {
+            exclude(fileFilter)
+        }
+    val kotlinClasses =
+        fileTree("${project.layout.buildDirectory.get()}/intermediates/built_in_kotlinc/debug/compileDebugKotlin/classes") {
+            exclude(fileFilter)
+        }
 
     classDirectories.setFrom(files(javaClasses, kotlinClasses))
-    sourceDirectories.setFrom(files("${project.projectDir}/src/main/java", "${project.projectDir}/src/main/kotlin"))
-    executionData.setFrom(fileTree("${project.layout.buildDirectory.get()}") {
-        include("outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec")
-    })
+    sourceDirectories.setFrom(
+        files(
+            android.sourceSets.getByName("main").java.directories,
+            android.sourceSets.getByName("main").kotlin.directories,
+        ),
+    )
+
+    executionData.setFrom(
+        fileTree("${project.layout.buildDirectory.get()}") {
+            include("outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec")
+        },
+    )
+}
+
+spotless {
+    kotlin {
+        target("**/*.kt")
+        targetExclude("${layout.buildDirectory}/**/*.kt")
+        ktlint()
+        licenseHeaderFile(rootProject.file("spotless/copyright.kt"))
+    }
+
+    kotlinGradle {
+        target("*.gradle.kts")
+        targetExclude("${layout.buildDirectory}/**/*.kt")
+        ktlint()
+        // Look for the first line that doesn't have a block comment (assumed to be the license)
+        licenseHeaderFile(rootProject.file("spotless/copyright.kt"), "(^(?![\\/ ]\\*).*$)")
+    }
+}
+
+tasks.named("preBuild") {
+    dependsOn("spotlessApply")
 }
 
 tasks.withType<com.android.compose.screenshot.tasks.PreviewScreenshotValidationTask> {
@@ -151,9 +187,6 @@ dependencies {
     // extra material icons
     implementation(libs.androidx.material.icons.extended)
 
-    // Material components optimized for TV apps
-    implementation(libs.androidx.tv.material)
-
     // Material components for mobile
     implementation(libs.androidx.compose.material3)
 
@@ -161,7 +194,10 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose)
 
     // Compose Navigation
-    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.navigation3.runtime)
+    implementation(libs.androidx.navigation3.ui)
+    implementation(libs.androidx.material3.adaptive.navigation3)
+    implementation(libs.androidx.lifecycle.viewmodel.navigation3)
 
     // Coil
     implementation(libs.coil.compose)
@@ -172,7 +208,6 @@ dependencies {
     // Material 3 Adaptive
     implementation(libs.androidx.material3.adaptive)
     implementation(libs.androidx.material3.adaptive.layout)
-    implementation(libs.androidx.material3.adaptive.navigation)
     implementation(libs.androidx.material3.adaptive.navigation.suite)
 
     // Media3
@@ -186,8 +221,12 @@ dependencies {
     // Hilt
     implementation(libs.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)
-    implementation(libs.androidx.ui.tooling.preview)
-    debugImplementation(libs.androidx.ui.tooling)
+
+    // Experimental features
+    implementation(libs.androidx.compose.foundation)
+    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.ui.graphics)
+
     ksp(libs.hilt.compiler)
 
     // Baseline profile installer

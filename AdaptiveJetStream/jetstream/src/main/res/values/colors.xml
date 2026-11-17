@@ -39,6 +39,6 @@ https://www.apache.org/licenses/LICENSE-2.0
     <color name="onError">#690005</color>
     <color name="errorContainer">#93000A</color>
     <color name="onErrorContainer">#FFB4AB</color>
-    <color name="outline">#8E9099</color>
+    <color name="outline">#E3E2E6</color>
     <color name="ic_launcher_background">#1A1C1E</color>
 </resources>

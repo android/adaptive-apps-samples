@@ -34,11 +34,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.google.jetstream.presentation.screens.videoPlayer.components.VideoPlayerPulse.Type.NONE
-import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.debounce
+import kotlin.time.Duration.Companion.seconds
 
 object VideoPlayerPulse {
     enum class Type { FORWARD, BACK, NONE }
@@ -46,22 +46,24 @@ object VideoPlayerPulse {
 
 @Composable
 fun VideoPlayerPulse(
-    state: VideoPlayerPulseState = rememberVideoPlayerPulseState()
+    state: VideoPlayerPulseState = rememberVideoPlayerPulseState(),
 ) {
-    val icon = when (state.type) {
-        VideoPlayerPulse.Type.FORWARD -> Icons.Default.Forward10
-        VideoPlayerPulse.Type.BACK -> Icons.Default.Replay10
-        NONE -> null
-    }
+    val icon =
+        when (state.type) {
+            VideoPlayerPulse.Type.FORWARD -> Icons.Default.Forward10
+            VideoPlayerPulse.Type.BACK -> Icons.Default.Replay10
+            NONE -> null
+        }
     if (icon != null) {
         Icon(
             icon,
             contentDescription = null,
-            modifier = Modifier
-                .background(Color.Black.copy(alpha = 0.6f), CircleShape)
-                .size(88.dp)
-                .wrapContentSize()
-                .size(48.dp)
+            modifier =
+                Modifier
+                    .background(Color.Black.copy(alpha = 0.6f), CircleShape)
+                    .size(88.dp)
+                    .wrapContentSize()
+                    .size(48.dp),
         )
     }
 }

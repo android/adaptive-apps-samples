@@ -41,7 +41,7 @@ import com.google.jetstream.presentation.theme.Padding
 @Composable
 fun Modifier.requestBringIntoViewOnFocus(
     interactionSource: MutableInteractionSource,
-    padding: Padding = Padding(0.dp)
+    padding: Padding = Padding(0.dp),
 ): Modifier {
     val isFocused by interactionSource.collectIsFocusedAsState()
     return requestBringIntoView(isFocused, padding)
@@ -51,7 +51,7 @@ fun Modifier.requestBringIntoViewOnFocus(
 @Composable
 fun Modifier.requestBringIntoView(
     shouldRequest: Boolean,
-    padding: Padding = Padding(0.dp)
+    padding: Padding = Padding(0.dp),
 ): Modifier {
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
     val layoutDirection = LocalLayoutDirection.current
@@ -67,25 +67,26 @@ fun Modifier.requestBringIntoView(
 
     return bringIntoViewRequester(bringIntoViewRequester)
         .onSizeChanged { size ->
-            rect = calculateBoundingBox(
-                size = size,
-                padding = pxPadding,
-                layoutDirection = layoutDirection
-            )
+            rect =
+                calculateBoundingBox(
+                    size = size,
+                    padding = pxPadding,
+                    layoutDirection = layoutDirection,
+                )
         }
 }
 
 private class PxPadding(val top: Float, val bottom: Float, val start: Float, val end: Float)
 
 private fun Padding.toPx(
-    density: Density
+    density: Density,
 ): PxPadding {
     return with(density) {
         PxPadding(
             top = top.toPx(),
             bottom = bottom.toPx(),
             start = start.toPx(),
-            end = end.toPx()
+            end = end.toPx(),
         )
     }
 }
@@ -95,19 +96,20 @@ private fun calculateBoundingBox(
     padding: PxPadding,
     layoutDirection: LayoutDirection,
 ): Rect {
-    val (left, right) = when (layoutDirection) {
-        LayoutDirection.Ltr -> {
-            padding.start to padding.end
-        }
+    val (left, right) =
+        when (layoutDirection) {
+            LayoutDirection.Ltr -> {
+                padding.start to padding.end
+            }
 
-        LayoutDirection.Rtl -> {
-            padding.end to padding.start
+            LayoutDirection.Rtl -> {
+                padding.end to padding.start
+            }
         }
-    }
     return Rect(
         top = -padding.top,
         bottom = size.height + padding.bottom,
         left = -left,
-        right = size.width + right
+        right = size.width + right,
     )
 }
